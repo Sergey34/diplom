@@ -75,19 +75,15 @@ public class MainController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public Object login(@RequestParam(value = "error", required = false) String error,
                         @RequestParam(value = "logout", required = false) String logout) {
-        System.out.println("1");
         Object name = SecurityContextHolder.getContext().getAuthentication().getName();
         Boolean isLogin = SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
-        System.out.println("2");
         if (!"guest".equals(name) && isLogin) {
             return "redirect:/index";
         }
-        System.out.println("3");
         ModelAndView model = new ModelAndView();
         if (error != null) {
             model.addObject("error", "Invalid username and password!");
         }
-        System.out.println("3");
         if (logout != null) {
             model.addObject("msg", "You've been logged out successfully.");
         }
