@@ -6,7 +6,6 @@ import net.sergey.diplom.model.Settings;
 import net.sergey.diplom.service.AggregatorService;
 import net.sergey.diplom.service.Parsers.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,6 +20,7 @@ import java.util.Map;
 
 @Controller
 public class MainController {
+    public static final String SSU_PARSER = "net.schastny.contactmanager.service.Parsers.SSU_Table.faculty.Creator";
 
     @Autowired
     private AggregatorService aggregatorService;
@@ -41,14 +41,9 @@ public class MainController {
         map.put("setting", SettingLoad);
         //выпадающий список
 
-        ClassPathXmlApplicationContext context =
-                new ClassPathXmlApplicationContext("/WEB-INF/spring/root-context.xml");
-
-        Parser parser = context.getBean("net.schastny.contactmanager.service.Parsers.SSU_Table.faculty.Creator", Parser.class);
-
+        Parser parser = aggregatorService.getBeanParserByName(SSU_PARSER);
 
         String facultyStr = parser.getData("");
-        System.out.println(facultyStr);
         Map groupMap = jsonToObject(facultyStr);
         map.put("groupList", groupMap);
         return map;

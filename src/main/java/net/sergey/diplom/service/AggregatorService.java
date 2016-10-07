@@ -2,6 +2,7 @@ package net.sergey.diplom.service;
 
 import net.sergey.diplom.domain.Filter;
 import net.sergey.diplom.model.Settings;
+import net.sergey.diplom.service.Parsers.Parser;
 
 public interface AggregatorService {
 
@@ -10,4 +11,6 @@ public interface AggregatorService {
     Settings loadSetting(String SQL);
 
     String showData();
+
+    Parser getBeanParserByName(String parserImplementation);
 }

@@ -5,6 +5,7 @@ import net.sergey.diplom.service.Parsers.Hash;
 import net.sergey.diplom.service.Parsers.Parser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -26,6 +27,10 @@ public class Creator implements Parser {
 
     private Hash hash = Hash.INSTANCE;
 
+    @Bean
+    public Creator bean1() {
+        return new Creator();
+    }
     @Override
     public String getData(String jsonText) {
         Map<String, String> groupsMap = hash.getHashGroups();
