@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import net.sergey.diplom.model.Settings;
 import net.sergey.diplom.service.Parsers.Hash;
 import net.sergey.diplom.service.Parsers.Parser;
-import org.apache.log4j.Logger;
+import net.sergey.diplom.service.utils.UtilsLogger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -227,7 +229,7 @@ public final class Creator implements Parser {
         return listWeekDay;
     }
 
-    private final Logger logger = Logger.getLogger(String.valueOf(Creator.class));
+    private static final Logger logger = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
 
     public void initIt() {
         logger.info("заполняется кеш Cinema...");

@@ -4,10 +4,12 @@ package net.sergey.diplom.service.Parsers.SSU_Table;
 import com.google.gson.Gson;
 import net.sergey.diplom.service.Parsers.Hash;
 import net.sergey.diplom.service.Parsers.Parser;
-import org.apache.log4j.Logger;
+import net.sergey.diplom.service.utils.UtilsLogger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -34,7 +36,7 @@ public final class Creator implements Parser {
     private static final String SGU_SCHEDULE = "http://www.sgu.ru/schedule/";
     private static final String DO = "do";
     private static final String L_G = "l--g-";
-    private static final Logger logger = Logger.getLogger(String.valueOf(Creator.class));
+    private static final Logger logger = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final String[] timeSubject = new String[]{"08:20-09:50", "10:00-11:35", "12:05-13:40", "13:50-15:25",
             "15:35-17:10", "17:20-18:40"};
     private final List<String> weekDay = new ArrayList<String>();
