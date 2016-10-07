@@ -40,10 +40,12 @@ public class MainController {
                 aggregatorService.loadSetting("SELECT atribJson FROM filter WHERE username='" + name + "' ");
         map.put("setting", SettingLoad);
         //выпадающий список
+
         ClassPathXmlApplicationContext context =
                 new ClassPathXmlApplicationContext("/WEB-INF/spring/root-context.xml");
-        Parser parser =
-                (Parser) context.getBean("net.schastny.contactmanager.service.Parsers.SSU_Table.faculty.Creator");
+
+        Parser parser = context.getBean("net.schastny.contactmanager.service.Parsers.SSU_Table.faculty.Creator", Parser.class);
+
 
         String facultyStr = parser.getData("");
         System.out.println(facultyStr);
