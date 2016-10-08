@@ -3,8 +3,8 @@ package net.sergey.diplom.web;
 import com.google.gson.Gson;
 import net.sergey.diplom.domain.Filter;
 import net.sergey.diplom.model.Settings;
-import net.sergey.diplom.service.AggregatorService;
 import net.sergey.diplom.service.Parsers.Parser;
+import net.sergey.diplom.service.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -23,11 +23,11 @@ public class MainController {
     public static final String SSU_PARSER = "net.schastny.contactmanager.service.Parsers.SSU_Table.faculty.Creator";
 
     @Autowired
-    private AggregatorService aggregatorService;
+    private Service service;
 
     @RequestMapping("/index")
     public ModelAndView showData() {
-        String data = aggregatorService.showData(getCurrentUserName());
+        String data = service.showData(getCurrentUserName());
         ModelAndView model = new ModelAndView("context");
         model.addObject("info", data);
         return model;
@@ -40,11 +40,11 @@ public class MainController {
     @RequestMapping("/setting")
     public Map<String, Object> settings(Map<String, Object> map) throws IOException {
         Settings SettingLoad =
-                aggregatorService.loadSetting(getCurrentUserName());
+                service.loadSetting(getCurrentUserName());
         map.put("setting", SettingLoad);
         //выпадающий список
 
-        Parser parser = aggregatorService.getBeanParserByName(SSU_PARSER);
+        Parser parser = service.getBeanParserByName(SSU_PARSER);
 
         String facultyStr = parser.getData("");
         Map groupMap = jsonToObject(facultyStr);
@@ -67,7 +67,7 @@ public class MainController {
         Filter filter = new Filter();
         filter.setAtribJson(atribJson);
         filter.setUsername(getCurrentUserName());
-        aggregatorService.saveSettings(filter);
+        service.saveSettings(filter);
         return "redirect:/index";
     }
 

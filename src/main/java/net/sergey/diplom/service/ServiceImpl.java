@@ -8,14 +8,13 @@ import net.sergey.diplom.model.Settings;
 import net.sergey.diplom.service.Parsers.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
 
-@Service
-public class AggregatorServiceImpl implements AggregatorService {
+@org.springframework.stereotype.Service
+public class ServiceImpl implements Service {
     @Autowired
     private ApplicationContext applicationContext;
     @Autowired
