@@ -2,8 +2,9 @@ package net.sergey.diplom.dao;
 
 import net.sergey.diplom.domain.Filter;
 import net.sergey.diplom.domain.ParserImplements;
-import net.sergey.diplom.domain.SettingLoadJSON;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -15,17 +16,25 @@ public class DAOImpl implements DAO {
     @Autowired
     private SessionFactory sessionFactory;
 
+    @Override
     public void saveSettings(Filter filter) {
         sessionFactory.getCurrentSession().saveOrUpdate(filter);
     }
 
-    @SuppressWarnings("unchecked")
-    public List<SettingLoadJSON> loadSetting(String SQL) {
-        return sessionFactory.getCurrentSession().createSQLQuery(SQL).addEntity(SettingLoadJSON.class).list();
+    @Override
+    public List<Filter> loadSetting(String name) {
+        Criteria filter = sessionFactory.getCurrentSession().createCriteria(Filter.class).
+                add(Restrictions.eq("username", name));
+        @SuppressWarnings("unchecked")
+        List<Filter> userNameList = filter.list();
+        return userNameList;
     }
 
     @Override
-    public List<ParserImplements> loadParsersImplementation(String s) {
-        return sessionFactory.getCurrentSession().createSQLQuery(s).addEntity(ParserImplements.class).list();
+    public List<ParserImplements> loadParsersImplementation() {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ParserImplements.class);
+        @SuppressWarnings("unchecked")
+        List<ParserImplements> parserImplementsList = criteria.list();
+        return parserImplementsList;
     }
 }

@@ -10,7 +10,7 @@ public interface AggregatorService {
 
     Settings loadSetting(String SQL);
 
-    String showData();
+    String showData(String name);
 
     Parser getBeanParserByName(String parserImplementation);
 }

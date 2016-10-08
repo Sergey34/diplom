@@ -4,12 +4,10 @@ import com.google.gson.Gson;
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.Filter;
 import net.sergey.diplom.domain.ParserImplements;
-import net.sergey.diplom.domain.SettingLoadJSON;
 import net.sergey.diplom.model.Settings;
 import net.sergey.diplom.service.Parsers.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,34 +22,34 @@ public class AggregatorServiceImpl implements AggregatorService {
     private DAO DAO;
 
     @Transactional
+    @Override
     public void saveSettings(Filter filter) {
         DAO.saveSettings(filter);
     }
 
     @Transactional
-    public Settings loadSetting(String SQL) {
-        List<SettingLoadJSON> settingJSONList = DAO.loadSetting(SQL);
+    @Override
+    public Settings loadSetting(String name) {
+        List<Filter> settingJSONList = DAO.loadSetting(name);
         String settingJSON;
         if (settingJSONList.size() > 0) {
-            settingJSON = DAO.loadSetting(SQL).get(0).getFilterJson();
+            settingJSON = settingJSONList.get(0).getAtribJson();
             return jsonToObject(settingJSON);
         }
         return new Settings();
     }
 
     @Transactional
-    public String showData() {
-        Object name = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<SettingLoadJSON> filtersJSINList =
-                DAO.loadSetting("SELECT atribJson FROM filter WHERE username='" + name + "' ");
-        List<ParserImplements> parsersImplementation =
-                DAO.loadParsersImplementation("SELECT Implementation FROM parsers ");
-        if (filtersJSINList.size() > 0) {
+    @Override
+    public String showData(String name) {
+        List<Filter> settingJSONList = DAO.loadSetting(name);
+        List<ParserImplements> parsersImplementation = DAO.loadParsersImplementation();
+        if (settingJSONList.size() > 0) {
             String result = "";
             for (ParserImplements parserImplementation : parsersImplementation) {
                 Parser parser = getBeanParserByName(parserImplementation.getParserImplements());
                 try {
-                    result += parser.getData(filtersJSINList.get(0).getFilterJson()) + "</br>";
+                    result += parser.getData(settingJSONList.get(0).getAtribJson()) + "</br>";
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -61,6 +59,7 @@ public class AggregatorServiceImpl implements AggregatorService {
         return "нет информации по запрсу";//ничего не напарсили
     }
 
+    @Override
     public Parser getBeanParserByName(String parserImplementation) {
         return applicationContext.getBean(parserImplementation, Parser.class);
     }

@@ -13,23 +13,31 @@ import javax.persistence.Table;
 public final class Filter {
     @Id
     @Column(name = "username")
-    private String userName;
+    private String username;
 
     @Column(name = "atribJson")
     private String atribJson;
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public String getAtribJson() {
+        return atribJson;
+    }
+
+    public void setUsername(String userName) {
+        this.username = userName;
     }
 
     public void setAtribJson(String atribJson) {
         this.atribJson = atribJson;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     @Override
     public String toString() {
         return "Filter{" +
-                ", userName='" + userName + '\'' +
+                ", userName='" + username + '\'' +
                 ", atribJson='" + atribJson + '\'' +
                 '}';
     }

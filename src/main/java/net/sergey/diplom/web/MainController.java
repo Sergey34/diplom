@@ -27,17 +27,20 @@ public class MainController {
 
     @RequestMapping("/index")
     public ModelAndView showData() {
-        String data = aggregatorService.showData();
+        String data = aggregatorService.showData(getCurrentUserName());
         ModelAndView model = new ModelAndView("context");
         model.addObject("info", data);
         return model;
     }
 
+    private String getCurrentUserName() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
     @RequestMapping("/setting")
     public Map<String, Object> settings(Map<String, Object> map) throws IOException {
-        Object name = SecurityContextHolder.getContext().getAuthentication().getName();
         Settings SettingLoad =
-                aggregatorService.loadSetting("SELECT atribJson FROM filter WHERE username='" + name + "' ");
+                aggregatorService.loadSetting(getCurrentUserName());
         map.put("setting", SettingLoad);
         //выпадающий список
 
@@ -60,11 +63,10 @@ public class MainController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String saveSettings(@ModelAttribute("setting") Settings setting) {
-        Object name = SecurityContextHolder.getContext().getAuthentication().getName();
         String atribJson = setting.toString();
         Filter filter = new Filter();
         filter.setAtribJson(atribJson);
-        filter.setUserName(name.toString());
+        filter.setUsername(getCurrentUserName());
         aggregatorService.saveSettings(filter);
         return "redirect:/index";
     }
@@ -72,9 +74,9 @@ public class MainController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public Object login(@RequestParam(value = "error", required = false) String error,
                         @RequestParam(value = "logout", required = false) String logout) {
-        Object name = SecurityContextHolder.getContext().getAuthentication().getName();
+
         Boolean isLogin = SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
-        if (!"guest".equals(name) && isLogin) {
+        if (!"guest".equals(getCurrentUserName()) && isLogin) {
             return "redirect:/index";
         }
         ModelAndView model = new ModelAndView();
