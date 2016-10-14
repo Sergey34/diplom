@@ -8,5 +8,6 @@
 
     <!-- Определяем папку, в которой будем искать веб компоненты (контроллеры)-->
     <context:component-scan base-package="net.sergey.diplom.web"/>
+    <context:component-scan base-package="net.sergey.diplom.rest"/>
 
 </beans>

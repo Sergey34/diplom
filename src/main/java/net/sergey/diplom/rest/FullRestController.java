@@ -1,21 +1,18 @@
-package net.sergey.diplom.web;
+package net.sergey.diplom.rest;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 
 
 @RequestMapping(value = "/rest")
-@Controller
+@RestController
 public class FullRestController {
 
     @RequestMapping(value = "/greeting", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    HashMap<String, Integer> greeting() {
+    public HashMap<String, Integer> greeting() {
         System.out.println("###############");
         HashMap<String, Integer> stringIntegerHashMap = new HashMap<String, Integer>();
         stringIntegerHashMap.put("qwe1", 123);
@@ -26,9 +23,7 @@ public class FullRestController {
     }
 
     @RequestMapping(value = "/greeting3", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    HashMap<String, Integer> greeting3() {
+    public HashMap<String, Integer> greeting3() {
         HashMap<String, Integer> stringIntegerHashMap = new HashMap<String, Integer>();
         stringIntegerHashMap.put("qwe1", 123);
         stringIntegerHashMap.put("qwe2", 1232);
