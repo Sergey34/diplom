@@ -1,16 +1,17 @@
-<beans:beans xmlns="http://www.springframework.org/schema/security"
-	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-http://www.springframework.org/schema/security
-http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 xmlns="http://www.springframework.org/schema/security"
+			 xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
-	<http access-denied-page="/WEB-INF/views/error403.jsp">
+	<http disable-url-rewriting="false">
 		<intercept-url pattern="/index**" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/setting**" access="ROLE_USER,ROLE_ADMIN"/>
 		<intercept-url pattern="/add*" access="ROLE_USER,ROLE_ADMIN" />
 		<intercept-url pattern="/delete/*" access="ROLE_ADMIN" />
 		<intercept-url pattern="/rest/*" access="ROLE_USER,ROLE_ADMIN,ROLE_ANONYMOUS"/>
+		<access-denied-handler error-page="/WEB-INF/views/error403.jsp"/>
 
 		<form-login login-page="/login"
 					default-target-url="/index"
@@ -33,5 +34,6 @@ http://www.springframework.org/schema/security/spring-security-3.0.xsd">
 									   "select username, role from user_roles where username =?  " />
 		</authentication-provider>
 	</authentication-manager>
+
 
 </beans:beans>
