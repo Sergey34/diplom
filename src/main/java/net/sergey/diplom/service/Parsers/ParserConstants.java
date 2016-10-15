@@ -4,9 +4,6 @@ package net.sergey.diplom.service.Parsers;
  * Created by sergey on 08.03.16.
  */
 public class ParserConstants {
-    private ParserConstants() {
-    }
-
     public static final String TABLE_HEAD = "<table border=\"1\" cellpadding=\"4\" cellspacing=\"0\" width=\"100%\">\n";
     public static final String CAPTION = "\t<caption>";
     public static final String TH = "<th>";
@@ -22,4 +19,7 @@ public class ParserConstants {
     public static final String TD_END = "</td>";
     public static final String TBODY = "<tbody>";
     public static final String TABLE_SUB = "<table cellpadding=\"2\" cellspacing=\"1\" style=\"width:100%\">";
+
+    private ParserConstants() {
+    }
 }

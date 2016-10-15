@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Controller
 public class MainController {
-    public static final String SSU_PARSER = "net.schastny.contactmanager.service.Parsers.SSU_Table.faculty.Creator";
+    private static final String SSU_PARSER = "net.schastny.contactmanager.service.Parsers.SSU_Table.faculty.Creator";
 
     @Autowired
     private Service service;
@@ -55,6 +55,7 @@ public class MainController {
     private HashMap jsonToObject(String jsonText) {
         return new Gson().fromJson(jsonText, HashMap.class);
     }
+
 
     @RequestMapping("/")
     public String home() {

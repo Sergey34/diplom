@@ -16,6 +16,7 @@ import java.util.HashMap;
 @RestController
 public class FullRestController {
     private static final Logger logger = Logger.getLogger(UtilsLogger.getStaticClassName());
+
     @RequestMapping(value = "/greeting", method = RequestMethod.GET)
     public HashMap<String, Integer> greeting() throws IOException, InterruptedException {
         logger.info("#####jgh");

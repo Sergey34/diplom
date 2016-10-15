@@ -1,6 +1,24 @@
 package net.sergey.diplom.service.Parsers.SSU_Table;
 
 final class Subject {
+    private String CHtitle = "",//название предмета
+            CHname = "",//имя препода
+            CHaudit = "",//аудитори
+            CHlecPr = "",//лекция/практика
+            CHtype = "",//доп классификация
+            CHchisZnam = "";//числитель/знаменатель
+    private String Ztitle = "",//название предмета
+            Zname = "",//имя препода
+            Zaudit = "",//аудитори
+            ZlecPr = "",//лекция/практика
+            Ztype = "",//доп классификация
+            ZchisZnam = "";//числитель/знаменатель
+    private String title = "",//название предмета
+            name = "",//имя препода
+            audit = "",//аудитори
+            lecPr = "",//лекция/практика
+            numberGroup = "";
+
     public String getTitle() {
         return title;
     }
@@ -136,26 +154,6 @@ final class Subject {
     public void setZchisZnam(String zchisZnam) {
         ZchisZnam = zchisZnam;
     }
-
-    private String CHtitle = "",//название предмета
-            CHname = "",//имя препода
-            CHaudit = "",//аудитори
-            CHlecPr = "",//лекция/практика
-            CHtype = "",//доп классификация
-            CHchisZnam = "";//числитель/знаменатель
-
-    private String Ztitle = "",//название предмета
-            Zname = "",//имя препода
-            Zaudit = "",//аудитори
-            ZlecPr = "",//лекция/практика
-            Ztype = "",//доп классификация
-            ZchisZnam = "";//числитель/знаменатель
-
-    private String title = "",//название предмета
-            name = "",//имя препода
-            audit = "",//аудитори
-            lecPr = "",//лекция/практика
-            numberGroup = "";
 
     @Override
     public String toString() {

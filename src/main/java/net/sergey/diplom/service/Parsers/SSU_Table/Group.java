@@ -10,15 +10,15 @@ public final class Group {
         this.group = groupString;
     }
 
+    public Group() {
+    }
+
     public String getGroup() {
         return group;
     }
 
     public void setGroup(String group) {
         this.group = group;
-    }
-
-    public Group() {
     }
 
 }

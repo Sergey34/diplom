@@ -12,17 +12,16 @@ import java.util.Map;
 public enum Hash {
     INSTANCE;
 
-    private Map<String, List<Film>> hashCinema = new HashMap<String, List<Film>>();
-    private Map<String, ManySubject[][]> hashTable = new HashMap<String, ManySubject[][]>();
-
-    public void setHashGroups(Map<String, String> hashGroups) {
-        this.hashGroups = new HashMap<String, String>(hashGroups);
-    }
-
+    private final Map<String, List<Film>> hashCinema = new HashMap<String, List<Film>>();
+    private final Map<String, ManySubject[][]> hashTable = new HashMap<String, ManySubject[][]>();
     private Map<String, String> hashGroups = new HashMap<String, String>();
 
     public Map<String, String> getHashGroups() {
         return new HashMap<String, String>(hashGroups);
+    }
+
+    public void setHashGroups(Map<String, String> hashGroups) {
+        this.hashGroups = new HashMap<String, String>(hashGroups);
     }
 
     public Map<String, ManySubject[][]> getHashTable() {

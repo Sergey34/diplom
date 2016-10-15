@@ -20,6 +20,10 @@ public class ServiceImpl implements Service {
     @Autowired
     private DAO DAO;
 
+    private static Settings jsonToObject(String jsonText) {
+        return new Gson().fromJson(jsonText, Settings.class);
+    }
+
     @Transactional
     @Override
     public void saveSettings(Filter filter) {
@@ -61,9 +65,5 @@ public class ServiceImpl implements Service {
     @Override
     public Parser getBeanParserByName(String parserImplementation) {
         return applicationContext.getBean(parserImplementation, Parser.class);
-    }
-
-    private static Settings jsonToObject(String jsonText) {
-        return new Gson().fromJson(jsonText, Settings.class);
     }
 }

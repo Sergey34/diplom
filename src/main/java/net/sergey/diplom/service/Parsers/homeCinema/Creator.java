@@ -18,9 +18,6 @@ import java.util.regex.Pattern;
 
 import static net.sergey.diplom.service.Parsers.ParserConstants.*;
 
-/**
- * Created by sergey on 10.02.16.
- */
 @Service(value = "net.schastny.contactmanager.service.Parsers.homeCinema.Creator")
 public final class Creator implements Parser {
     private static final String DOMKINOSAR_AFISHA = "http://www.domkinosar.ru/afisha.html?date=";
@@ -38,9 +35,9 @@ public final class Creator implements Parser {
     private static final String U = "u";
     private static final String I = "i";
     private static final String TOP_BOX_PARENT = "top_box_parent";
-    private Hash hash = Hash.INSTANCE;
-
-    private Map<String, Integer> weekDayToData = new HashMap<String, Integer>();
+    private static final Logger logger = Logger.getLogger(UtilsLogger.getStaticClassName());
+    private final Hash hash = Hash.INSTANCE;
+    private final Map<String, Integer> weekDayToData = new HashMap<>();
 
     {
         weekDayToData.put("Понедельник", 2);
@@ -55,7 +52,7 @@ public final class Creator implements Parser {
     @Override
     public String getData(String jsonText) throws IOException {
         List<String> weekDays = jsonToObject(jsonText);
-        Map<String, List<Film>> result = new LinkedHashMap<String, List<Film>>();
+        Map<String, List<Film>> result = new LinkedHashMap<>();
         Map<String, List<Film>> hashCinema = hash.getHashCinema();
         for (String weekDay : weekDays) {
             if (hashCinema.containsKey(weekDay)) {
@@ -80,7 +77,7 @@ public final class Creator implements Parser {
     private Map<String, List<Film>> reloadData(String jsonText) throws IOException {
         List<String> weekDays = jsonToObject(jsonText);
         List<String> dates = getNearestDateList(weekDays);
-        Map<String, List<Film>> result = new HashMap<String, List<Film>>();
+        Map<String, List<Film>> result = new HashMap<>();
         for (int i = 0; i < dates.size(); i++) {
             List<Film> listFilm = parsing(DOMKINOSAR_AFISHA + dates.get(i));
             result.put(weekDays.get(i), listFilm);
@@ -100,11 +97,11 @@ public final class Creator implements Parser {
             filmList.addAll(createListFilm(boxClosed, 0, boxClosed.length));
             return filmList;
         }
-        return new ArrayList<Film>();
+        return new ArrayList<>();
     }
 
     private List<Film> createListFilm(String[] box, int start, int size) {
-        List<Film> listFilm = new ArrayList<Film>();
+        List<Film> listFilm = new ArrayList<>();
         for (int i = start; i < size; i++) {
             Film film = new Film();
             String title = Jsoup.parse(box[i]).body().getElementsByClass(TOP_BOX_PARENT).html();
@@ -176,7 +173,7 @@ public final class Creator implements Parser {
     }
 
     private List<String> getNearestDateList(List<String> weekDays) {
-        List<String> dates = new ArrayList<String>();
+        List<String> dates = new ArrayList<>();
         for (String days : weekDays) {
             dates.add(getNearestDate(days));
         }
@@ -203,7 +200,7 @@ public final class Creator implements Parser {
 
     private List<String> jsonToObject(String jsonText) {
         Settings setting = new Gson().fromJson(jsonText, Settings.class);
-        List<String> listWeekDay = new ArrayList<String>();
+        List<String> listWeekDay = new ArrayList<>();
         if (setting.isMonday()) {
             listWeekDay.add("Понедельник");
         }
@@ -227,8 +224,6 @@ public final class Creator implements Parser {
         }
         return listWeekDay;
     }
-
-    private static final Logger logger = Logger.getLogger(UtilsLogger.getStaticClassName());
 
     public void initIt() {
         logger.info("заполняется кеш Cinema...");

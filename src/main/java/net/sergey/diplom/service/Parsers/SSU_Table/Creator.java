@@ -38,7 +38,7 @@ public final class Creator implements Parser {
     private final String[] timeSubject = new String[]{"08:20-09:50", "10:00-11:35", "12:05-13:40", "13:50-15:25",
             "15:35-17:10", "17:20-18:40"};
     private final List<String> weekDay = new ArrayList<String>();
-    private Hash hash = Hash.INSTANCE;
+    private final Hash hash = Hash.INSTANCE;
 
     {
         weekDay.add(SPASE);
@@ -121,7 +121,7 @@ public final class Creator implements Parser {
                     subject.setLecPr(manySubjectHtml.body().getElementsByClass(L_PR_T).text());
                     table[i][j].addSubject(subject);
                     if (table[i][j].getSubject().size() > 1) {
-                        table[i][j].setF(true);
+                        table[i][j].setF();
                     }
                 }
             }

@@ -22,16 +22,16 @@ public final class Filter {
         return atribJson;
     }
 
-    public void setUsername(String userName) {
-        this.username = userName;
-    }
-
     public void setAtribJson(String atribJson) {
         this.atribJson = atribJson;
     }
 
     public String getUsername() {
         return username;
+    }
+
+    public void setUsername(String userName) {
+        this.username = userName;
     }
 
     @Override

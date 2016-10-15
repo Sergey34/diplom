@@ -25,12 +25,13 @@ public class Creator implements Parser {
     private static final String URL_PATTERN = "^.+do/(.+)\"";
     private static final char ENDL = '\n';
 
-    private Hash hash = Hash.INSTANCE;
+    private final Hash hash = Hash.INSTANCE;
 
     @Bean
     public Creator bean1() {
         return new Creator();
     }
+
     @Override
     public String getData(String jsonText) {
         Map<String, String> groupsMap = hash.getHashGroups();
