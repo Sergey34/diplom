@@ -1,5 +1,7 @@
 package net.sergey.diplom.rest;
 
+import net.sergey.diplom.service.utils.UtilsLogger;
+import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,13 +12,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 
-
 @RequestMapping(value = "/rest")
 @RestController
 public class FullRestController {
-
+    private static final Logger logger = Logger.getLogger(UtilsLogger.getStaticClassName());
     @RequestMapping(value = "/greeting", method = RequestMethod.GET)
     public HashMap<String, Integer> greeting() throws IOException, InterruptedException {
+        logger.info("#####jgh");
         String args = "aargs";
         Process p = Runtime.getRuntime().exec("python3 /home/sergey/workspace/IdeaProjects/diplom/diplom/src/main/resources/myscript.py " + args);
         int i = p.waitFor();
