@@ -1,7 +1,8 @@
 package net.sergey.diplom.rest;
 
 import net.sergey.diplom.service.utils.UtilsLogger;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +16,7 @@ import java.util.HashMap;
 @RequestMapping(value = "/rest")
 @RestController
 public class FullRestController {
-    private static final Logger logger = Logger.getLogger(UtilsLogger.getStaticClassName());
+    private static final Logger logger = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
 
     @RequestMapping(value = "/greeting", method = RequestMethod.GET)
     public HashMap<String, Integer> greeting() throws IOException, InterruptedException {
