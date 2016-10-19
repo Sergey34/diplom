@@ -22,8 +22,12 @@ import java.util.Map;
 public class MainController {
     private static final String SSU_PARSER = "net.schastny.contactmanager.service.Parsers.SSU_Table.faculty.Creator";
 
+    private final Service service;
+
     @Autowired
-    private Service service;
+    public MainController(Service service) {
+        this.service = service;
+    }
 
     @RequestMapping("/index")
     public ModelAndView showData() {

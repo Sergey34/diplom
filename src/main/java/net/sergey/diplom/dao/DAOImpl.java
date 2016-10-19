@@ -13,8 +13,12 @@ import java.util.List;
 @Repository
 public class DAOImpl implements DAO {
 
+    private final SessionFactory sessionFactory;
+
     @Autowired
-    private SessionFactory sessionFactory;
+    public DAOImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     @Override
     public void saveSettings(Filter filter) {

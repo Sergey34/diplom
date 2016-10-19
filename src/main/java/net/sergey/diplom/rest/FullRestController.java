@@ -1,8 +1,10 @@
 package net.sergey.diplom.rest;
 
+import net.sergey.diplom.service.Service;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,14 +14,21 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 @RequestMapping(value = "/rest")
 @RestController
 public class FullRestController {
+    final Service service;
     private static final Logger logger = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
 
+    @Autowired
+    public FullRestController(Service service) {
+        this.service = service;
+    }
+
     @RequestMapping(value = "/greeting", method = RequestMethod.GET)
-    public HashMap<String, Integer> greeting() throws IOException, InterruptedException {
+    public Map<String, Integer> greeting() throws IOException, InterruptedException {
         logger.info("#####jgh");
         String args = "aargs";
         Process p = Runtime.getRuntime().exec("python3 /home/sergey/workspace/IdeaProjects/diplom/diplom/src/main/resources/myscript.py " + args);
@@ -40,12 +49,8 @@ public class FullRestController {
     }
 
     @RequestMapping(value = "/greeting3", method = RequestMethod.GET)
-    public HashMap<String, Integer> greeting3() {
-        HashMap<String, Integer> stringIntegerHashMap = new HashMap<String, Integer>();
-        stringIntegerHashMap.put("qwe1", 123);
-        stringIntegerHashMap.put("qwe2", 1232);
-        stringIntegerHashMap.put("qwe3", 1233);
-        stringIntegerHashMap.put("qwe4", 1235);
-        return stringIntegerHashMap;
+    public Map<String, String> getMenu() throws IOException {
+        Map<String, String> menu = service.getMenu();
+        return menu;
     }
 }
