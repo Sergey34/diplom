@@ -65,4 +65,8 @@
         <param-name>log4jConfiguration</param-name>
         <param-value>/webapp/log4j.properties</param-value>
     </context-param>
+
+    <welcome-file-list>
+        <welcome-file>list.html</welcome-file>
+    </welcome-file-list>
 </web-app>

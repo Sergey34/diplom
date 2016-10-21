@@ -1,5 +1,6 @@
 package net.sergey.diplom.rest;
 
+import net.sergey.diplom.model.Settings;
 import net.sergey.diplom.service.Service;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.slf4j.Logger;
@@ -25,6 +26,18 @@ public class FullRestController {
     @Autowired
     public FullRestController(Service service) {
         this.service = service;
+    }
+
+
+    int i = 0;
+
+    @RequestMapping(value = "/geta", method = RequestMethod.GET)
+    public Settings getA() {
+        Settings settings = new Settings();
+        settings.setFriday(false);
+        settings.setGroup("123" + i);
+        i++;
+        return settings;
     }
 
     @RequestMapping(value = "/greeting", method = RequestMethod.GET)

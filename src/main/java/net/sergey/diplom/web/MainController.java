@@ -37,6 +37,12 @@ public class MainController {
         return model;
     }
 
+
+    @RequestMapping("/ii")
+    public String showHTML() {
+        System.out.println("start showHTML()");
+        return "static/list.html";
+    }
     private String getCurrentUserName() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
