@@ -9,10 +9,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
 
+@Transactional
 @Repository
 public class DAOImpl implements DAO {
 
@@ -22,7 +24,6 @@ public class DAOImpl implements DAO {
     public DAOImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
-
 
     @Override
     public Set<Profile> getProfilesByPrefix(char prefix) {
@@ -90,7 +91,7 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public void updateUserPasword(String password) {
+    public void updateUserPassword(String password) {
 
     }
 

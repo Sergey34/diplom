@@ -11,7 +11,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -35,7 +34,7 @@ public class ServiceImpl implements Service {
         return new Gson().fromJson(jsonText, Settings.class);
     }
 
-    @Transactional
+
     @Override
     public void saveSettings(Profile filter) {
         //DAO.saveSettings(filter);
@@ -116,7 +115,6 @@ public class ServiceImpl implements Service {
         return null;
     }
 
-    @Transactional
     @Override
     public List<User> getUser(String alex) {
         return DAO.getUserById(alex);

@@ -35,7 +35,7 @@ public interface DAO {
 
     boolean addUser(User user);
 
-    void updateUserPasword(String password);
+    void updateUserPassword(String password);
 
     List<User> getUserById(String name);
 
