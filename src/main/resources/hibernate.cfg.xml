@@ -5,8 +5,9 @@
 
 <hibernate-configuration>
 	<session-factory>
-		<mapping class="net.sergey.diplom.domain.Filter" />
-		<mapping class="net.sergey.diplom.domain.SettingLoadJSON" />
-		<mapping class="net.sergey.diplom.domain.ParserImplements" />
+		<mapping class="net.sergey.diplom.domain.Link"/>
+		<mapping class="net.sergey.diplom.domain.Profile"/>
+		<mapping class="net.sergey.diplom.domain.MenuItem"/>
+		<mapping class="net.sergey.diplom.domain.Menu"/>
 	</session-factory>
 </hibernate-configuration>

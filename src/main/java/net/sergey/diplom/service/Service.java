@@ -1,6 +1,6 @@
 package net.sergey.diplom.service;
 
-import net.sergey.diplom.domain.Filter;
+import net.sergey.diplom.domain.Profile;
 import net.sergey.diplom.model.Settings;
 import net.sergey.diplom.service.Parsers.Parser;
 
@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface Service {
 
-    void saveSettings(Filter filter);
+    void saveSettings(Profile filter);
 
     Settings loadSetting(String SQL);
 

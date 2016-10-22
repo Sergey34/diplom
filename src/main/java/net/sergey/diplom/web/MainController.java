@@ -1,7 +1,6 @@
 package net.sergey.diplom.web;
 
 import com.google.gson.Gson;
-import net.sergey.diplom.domain.Filter;
 import net.sergey.diplom.model.Settings;
 import net.sergey.diplom.service.Parsers.Parser;
 import net.sergey.diplom.service.Service;
@@ -74,11 +73,11 @@ public class MainController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String saveSettings(@ModelAttribute("setting") Settings setting) {
-        String atribJson = setting.toString();
-        Filter filter = new Filter();
-        filter.setAtribJson(atribJson);
-        filter.setUsername(getCurrentUserName());
-        service.saveSettings(filter);
+//        String atribJson = setting.toString();
+//        Filter filter = new Filter();
+//        filter.setAtribJson(atribJson);
+//        filter.setUsername(getCurrentUserName());
+//        service.saveSettings(filter);
         return "redirect:/index";
     }
 

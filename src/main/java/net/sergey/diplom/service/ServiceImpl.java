@@ -2,8 +2,7 @@ package net.sergey.diplom.service;
 
 import com.google.gson.Gson;
 import net.sergey.diplom.dao.DAO;
-import net.sergey.diplom.domain.Filter;
-import net.sergey.diplom.domain.ParserImplements;
+import net.sergey.diplom.domain.Profile;
 import net.sergey.diplom.model.Settings;
 import net.sergey.diplom.service.Parsers.Parser;
 import org.jsoup.Jsoup;
@@ -15,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,41 +35,20 @@ public class ServiceImpl implements Service {
 
     @Transactional
     @Override
-    public void saveSettings(Filter filter) {
-        DAO.saveSettings(filter);
+    public void saveSettings(Profile filter) {
+        //DAO.saveSettings(filter);
     }
 
-    @Transactional
     @Override
-    public Settings loadSetting(String name) {
-        List<Filter> settingJSONList = DAO.loadSetting(name);
-        String settingJSON;
-        if (settingJSONList.size() > 0) {
-            settingJSON = settingJSONList.get(0).getAtribJson();
-            return jsonToObject(settingJSON);
-        }
-        return new Settings();
+    public Settings loadSetting(String SQL) {
+        return null;
     }
 
-    @Transactional
     @Override
     public String showData(String name) {
-        List<Filter> settingJSONList = DAO.loadSetting(name);
-        List<ParserImplements> parsersImplementation = DAO.loadParsersImplementation();
-        if (settingJSONList.size() > 0) {
-            String result = "";
-            for (ParserImplements parserImplementation : parsersImplementation) {
-                Parser parser = getBeanParserByName(parserImplementation.getParserImplements());
-                try {
-                    result += parser.getData(settingJSONList.get(0).getAtribJson()) + "</br>";
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return result;
-        }
-        return "нет информации по запрсу";//ничего не напарсили
+        return null;
     }
+
 
     @Override
     public Parser getBeanParserByName(String parserImplementation) {
