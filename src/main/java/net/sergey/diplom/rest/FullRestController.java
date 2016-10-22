@@ -33,6 +33,7 @@ public class FullRestController {
 
     @RequestMapping(value = "/geta", method = RequestMethod.GET)
     public Settings getA() {
+        logger.info("getA() start");
         Settings settings = new Settings();
         settings.setFriday(false);
         settings.setGroup("123" + i);
