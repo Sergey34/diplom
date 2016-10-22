@@ -9,6 +9,7 @@
 
     <http auto-config="true">
         <intercept-url pattern="/rest/**" access="ROLE_USER,ROLE_ADMIN"/>
+        <logout logout-url="/rest/logout"/>
         <logout/>
     </http>
 
