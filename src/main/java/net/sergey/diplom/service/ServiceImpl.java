@@ -3,6 +3,7 @@ package net.sergey.diplom.service;
 import com.google.gson.Gson;
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.Profile;
+import net.sergey.diplom.domain.User;
 import net.sergey.diplom.model.Settings;
 import net.sergey.diplom.service.Parsers.Parser;
 import org.jsoup.Jsoup;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -112,5 +114,11 @@ public class ServiceImpl implements Service {
 
 
         return null;
+    }
+
+    @Transactional
+    @Override
+    public List<User> getUser(String alex) {
+        return DAO.getUserById(alex);
     }
 }

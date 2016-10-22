@@ -9,5 +9,7 @@
 		<mapping class="net.sergey.diplom.domain.Profile"/>
 		<mapping class="net.sergey.diplom.domain.MenuItem"/>
 		<mapping class="net.sergey.diplom.domain.Menu"/>
+		<mapping class="net.sergey.diplom.domain.User"/>
+		<mapping class="net.sergey.diplom.domain.UserRole"/>
 	</session-factory>
 </hibernate-configuration>

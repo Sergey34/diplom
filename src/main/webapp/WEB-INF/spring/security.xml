@@ -1,39 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
-			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			 xmlns="http://www.springframework.org/schema/security"
-			 xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.springframework.org/schema/security"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
-	<http disable-url-rewriting="false">
-		<intercept-url pattern="/index**" access="ROLE_USER,ROLE_ADMIN" />
-		<intercept-url pattern="/setting**" access="ROLE_USER,ROLE_ADMIN"/>
-		<intercept-url pattern="/add*" access="ROLE_USER,ROLE_ADMIN" />
-		<intercept-url pattern="/delete/*" access="ROLE_ADMIN" />
-		<intercept-url pattern="/rest/*" access="ROLE_USER,ROLE_ADMIN,ROLE_ANONYMOUS"/>
-		<access-denied-handler error-page="/WEB-INF/views/error403.jsp"/>
+    <http disable-url-rewriting="false">
+        <intercept-url pattern="/rest/*" access="ROLE_USER,ROLE_ADMIN,ROLE_ANONYMOUS"/>
+        <access-denied-handler error-page="/WEB-INF/views/error403.jsp"/>
 
-		<form-login login-page="/login"
-					default-target-url="/index"
-					authentication-failure-url="/login?error"/>
+        <form-login login-page="/login"
+                    default-target-url="/index"
+                    authentication-failure-url="/login?error"/>
 
-		<logout logout-url="/logout" logout-success-url="/index" />
-		<anonymous username="guest" granted-authority="ROLE_ANONYMOUS" />
-		<remember-me />
-	</http>
+        <logout logout-url="/logout" logout-success-url="/index"/>
+        <anonymous username="guest" granted-authority="ROLE_ANONYMOUS"/>
+        <remember-me/>
+    </http>
 
 
-
-
-	<authentication-manager>
-		<authentication-provider>
-			<jdbc-user-service data-source-ref="dataSource"
-							   users-by-username-query=
-									   "select username,password, enabled from users where username=?"
-							   authorities-by-username-query=
-									   "select username, role from user_roles where username =?  " />
-		</authentication-provider>
-	</authentication-manager>
+    <authentication-manager>
+        <authentication-provider>
+            <jdbc-user-service data-source-ref="dataSource"
+                               users-by-username-query=
+                                       "select username,password, enabled from users where username=?"
+                               authorities-by-username-query=
+                                       "SELECT username, role
+                                       FROM user_role, roles, users
+                                       WHERE
+                                        users.id=? AND
+                                        user_role.id_role=roles.role_id AND
+                                        user_role.id_user=users.id  "/>
+        </authentication-provider>
+    </authentication-manager>
 
 
 </beans:beans>

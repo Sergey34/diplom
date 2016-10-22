@@ -1,10 +1,12 @@
 package net.sergey.diplom.service;
 
 import net.sergey.diplom.domain.Profile;
+import net.sergey.diplom.domain.User;
 import net.sergey.diplom.model.Settings;
 import net.sergey.diplom.service.Parsers.Parser;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public interface Service {
@@ -20,4 +22,6 @@ public interface Service {
     Map<String, String> getMenu() throws IOException;
 
     Object getAirfoilsByLiteral(String literal) throws IOException;
+
+    List<User> getUser(String alex);
 }

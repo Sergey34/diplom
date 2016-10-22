@@ -1,6 +1,7 @@
 package net.sergey.diplom.web;
 
 import com.google.gson.Gson;
+import net.sergey.diplom.domain.User;
 import net.sergey.diplom.model.Settings;
 import net.sergey.diplom.service.Parsers.Parser;
 import net.sergey.diplom.service.Service;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -39,9 +41,14 @@ public class MainController {
 
     @RequestMapping("/ii")
     public String showHTML() {
+        List<User> users = service.getUser("alex");
+        System.out.println(users);
+
         System.out.println("start showHTML()");
         return "static/list.html";
     }
+
+
     private String getCurrentUserName() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
