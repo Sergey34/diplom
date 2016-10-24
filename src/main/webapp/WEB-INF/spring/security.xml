@@ -8,9 +8,21 @@
 
 
     <http auto-config="true">
-        <intercept-url pattern="/rest/**" access="ROLE_USER,ROLE_ADMIN"/>
-        <logout logout-url="/rest/logout"/>
+        <intercept-url pattern="/rest/*" access="ROLE_ANONYMOUS, ROLE_USER, ROLE_ADMIN"/>
+        <intercept-url pattern="/rest/admin/*" access="ROLE_ADMIN"/>
+        <intercept-url pattern="/rest/write/*" access="ROLE_USER, ROLE_ADMIN"/>
+
+        <intercept-url pattern="/ii" access="ROLE_USER,ROLE_ADMIN"/>
+
+        <form-login login-page="/login"
+                    default-target-url="/ii"
+                    authentication-failure-url="/login?error"/>
+
+
+        <logout logout-url="/logout" logout-success-url="/login"/>
         <logout/>
+        <anonymous username="guest" granted-authority="ROLE_ANONYMOUS"/>
+        <remember-me/>
     </http>
 
 
@@ -28,14 +40,6 @@
                                         user_role.id_user=users.id  "/>
         </authentication-provider>
     </authentication-manager>
-
-    <!--<authentication-manager>
-        <authentication-provider>
-            <user-service >
-                <user name="alex" password="123456" authorities="ROLE_USER" />
-            </user-service>
-        </authentication-provider>
-    </authentication-manager>-->
 
 
 </beans:beans>

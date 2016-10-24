@@ -20,7 +20,7 @@ import java.util.Map;
 @RequestMapping(value = "/rest")
 @RestController
 public class FullRestController {
-    final Service service;
+    private final Service service;
     private static final Logger logger = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
 
     @Autowired
@@ -41,7 +41,7 @@ public class FullRestController {
         return settings;
     }
 
-    @RequestMapping(value = "/greeting", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/greeting", method = RequestMethod.GET)
     public Map<String, Integer> greeting() throws IOException, InterruptedException {
         logger.info("#####jgh");
         String args = "aargs";

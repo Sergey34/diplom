@@ -48,6 +48,12 @@ public class MainController {
         return "static/list.html";
     }
 
+    /*@RequestMapping(value = "/login", method = {RequestMethod.POST, RequestMethod.GET})
+    public String login() {
+        System.out.println("Login");
+        return "static/login.html";
+    }
+*/
 
     private String getCurrentUserName() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
@@ -89,13 +95,13 @@ public class MainController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public Object login(@RequestParam(value = "error", required = false) String error,
-                        @RequestParam(value = "logout", required = false) String logout) {
+    public ModelAndView login(@RequestParam(value = "error", required = false) String error,
+                              @RequestParam(value = "logout", required = false) String logout) {
 
-        Boolean isLogin = SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
+        /*Boolean isLogin = SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
         if (!"guest".equals(getCurrentUserName()) && isLogin) {
             return "redirect:/index";
-        }
+        }*/
         ModelAndView model = new ModelAndView();
         if (error != null) {
             model.addObject("error", "Invalid username and password!");
@@ -103,7 +109,7 @@ public class MainController {
         if (logout != null) {
             model.addObject("msg", "You've been logged out successfully.");
         }
-        model.setViewName("login");
+        model.setViewName("static/login.html");
         return model;
     }
 }
