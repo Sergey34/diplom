@@ -112,4 +112,10 @@ public class MainController {
         model.setViewName("static/login.html");
         return model;
     }
+
+    @RequestMapping(value = "/loginError", method = RequestMethod.GET)
+    public String login() {
+        return "static/loginError.html";
+    }
+
 }

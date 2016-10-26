@@ -16,7 +16,7 @@
 
         <form-login login-page="/login"
                     default-target-url="/ii"
-                    authentication-failure-url="/login?error"/>
+                    authentication-failure-url="/loginError"/>
 
 
         <logout logout-url="/logout" logout-success-url="/login"/>
