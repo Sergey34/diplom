@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
@@ -95,27 +94,18 @@ public class MainController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ModelAndView login(@RequestParam(value = "error", required = false) String error,
-                              @RequestParam(value = "logout", required = false) String logout) {
-
-        /*Boolean isLogin = SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
-        if (!"guest".equals(getCurrentUserName()) && isLogin) {
-            return "redirect:/index";
-        }*/
-        ModelAndView model = new ModelAndView();
-        if (error != null) {
-            model.addObject("error", "Invalid username and password!");
-        }
-        if (logout != null) {
-            model.addObject("msg", "You've been logged out successfully.");
-        }
-        model.setViewName("static/login.html");
-        return model;
+    public String login() {
+        return "static/login.html";
     }
 
     @RequestMapping(value = "/loginError", method = RequestMethod.GET)
-    public String login() {
+    public String loginError() {
         return "static/loginError.html";
+    }
+
+    @RequestMapping(value = "/context", method = RequestMethod.GET)
+    public String showContext() {
+        return "static/context.html";
     }
 
 }

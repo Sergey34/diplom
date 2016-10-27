@@ -2,10 +2,13 @@ package net.sergey.diplom.service;
 
 import com.google.gson.Gson;
 import net.sergey.diplom.dao.DAO;
+import net.sergey.diplom.domain.Menu;
+import net.sergey.diplom.domain.MenuItem;
 import net.sergey.diplom.domain.Profile;
 import net.sergey.diplom.domain.User;
 import net.sergey.diplom.model.Settings;
 import net.sergey.diplom.service.Parsers.Parser;
+import net.sergey.diplom.service.utils.UtilParser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -13,14 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @org.springframework.stereotype.Service
 public class ServiceImpl implements Service {
+    public static final String HTTP_AIRFOILTOOLS_COM = "http://airfoiltools.com/";
     private final ApplicationContext applicationContext;
     private final DAO DAO;
 
@@ -57,20 +62,26 @@ public class ServiceImpl implements Service {
     }
 
     @Override
-    public Map<String, String> getMenu() throws IOException {
-        Map<String, String> menu = new LinkedHashMap<>();
-        Element body = Jsoup.connect("http://airfoiltools.com/").get().body();
-        Elements menuList = body.getElementsByClass("mmenu").get(0).getElementsByTag("ul");
-
-        for (Element menuElement : menuList) {
+    public List<Menu> getMenu() throws IOException {
+        Element mmenu = Jsoup.connect(HTTP_AIRFOILTOOLS_COM).get().body().getElementsByClass("mmenu").get(0);
+        Elements menuList = mmenu.getElementsByTag("ul");
+        Elements headerMenu = mmenu.getElementsByTag("h3");
+        ArrayList<Menu> menus = new ArrayList<>();
+        for (int i = 0; i < menuList.size(); i++) {
+            Element menuElement = menuList.get(i);
+            Menu menu1 = new Menu();
+            Elements element = headerMenu.get(i).getElementsByTag("h3");
+            menu1.setHeader(element.text());
+            Set<MenuItem> menuItems = new LinkedHashSet<>();
             Elements links = menuElement.getElementsByTag("li");
             for (Element link : links) {
                 Element a = link.getElementsByTag("a").first();
-                menu.put(a.text(), a.attr("href"));
+                menuItems.add(new MenuItem(a.text(), a.attr("href")));
             }
-
+            menu1.setMenuItems(menuItems);
+            menus.add(menu1);
         }
-        return menu;
+        return menus;
     }
 
     private int createString(String item, String pattern) {
@@ -84,9 +95,9 @@ public class ServiceImpl implements Service {
 
     @Override
     public Object getAirfoilsByLiteral(String literal) throws IOException {
-        Map<String, String> menu = getMenu();
-        String url = menu.get(literal);
-        String fullUrl = "http://airfoiltools.com/" + url.substring(0, url.length() - 1);
+        List<Menu> menu = getMenu();
+        String url = UtilParser.getUrlMenuByTitle(menu, literal);
+        String fullUrl = HTTP_AIRFOILTOOLS_COM + url.substring(0, url.length() - 1);
         int n = createString(Jsoup.connect(fullUrl + 0).get().html(), "Page 1 of ([0-9]+).+");
         for (int i = 0; i < n; i++) {
             Elements tr = Jsoup.connect(fullUrl + i).get().body().getElementsByClass("afSearchResult").

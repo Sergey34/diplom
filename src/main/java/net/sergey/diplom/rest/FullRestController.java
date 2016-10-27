@@ -1,5 +1,6 @@
 package net.sergey.diplom.rest;
 
+import net.sergey.diplom.domain.Menu;
 import net.sergey.diplom.model.Settings;
 import net.sergey.diplom.service.Service;
 import net.sergey.diplom.service.utils.UtilsLogger;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping(value = "/rest")
@@ -62,9 +64,9 @@ public class FullRestController {
         return stringIntegerHashMap;
     }
 
-    @RequestMapping(value = "/greeting3", method = RequestMethod.GET)
-    public Map<String, String> getMenu() throws IOException {
-        Map<String, String> menu = service.getMenu();
+    @RequestMapping(value = "/menu", method = RequestMethod.GET)
+    public List<Menu> getMenu() throws IOException {
+        List<Menu> menu = service.getMenu();
         return menu;
     }
 }
