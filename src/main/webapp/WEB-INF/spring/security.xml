@@ -15,7 +15,7 @@
         <intercept-url pattern="/ii" access="ROLE_USER,ROLE_ADMIN"/>
 
         <form-login login-page="/login"
-                    default-target-url="/ii"
+                    default-target-url="/context"
                     authentication-failure-url="/loginError"/>
 
 

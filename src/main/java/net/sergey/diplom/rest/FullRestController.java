@@ -7,6 +7,7 @@ import net.sergey.diplom.service.utils.UtilsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -68,5 +69,18 @@ public class FullRestController {
     public List<Menu> getMenu() throws IOException {
         List<Menu> menu = service.getMenu();
         return menu;
+    }
+
+    private String getCurrentUserName() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
+    public String getUserInfo() throws IOException {
+        Boolean isLogin = SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
+        if (!"guest".equals(getCurrentUserName()) && isLogin) {
+            return getCurrentUserName();
+        }
+        return null;
     }
 }

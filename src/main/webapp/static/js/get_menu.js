@@ -7,7 +7,7 @@ $(document).ready(function () {
     }).then(function (data) {
         data.forEach(logArrayElements);
         function logArrayElements(element, index, array) {
-            console.log('a[' + index + '] = ' + element.header);
+            // console.log('a[' + index + '] = ' + element.header);
             // элемент-список UL
             var list = document.getElementById('list');
             // новый элемент
@@ -21,7 +21,7 @@ $(document).ready(function () {
         }
 
         function logMenuElements(element, index, array) {
-            console.log(element.name + '   ' + element.url);
+            // console.log(element.name + '   ' + element.url);
             // элемент-список UL
             var list = document.getElementById('list');
             // новый элемент
