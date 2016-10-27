@@ -5,15 +5,14 @@ import net.sergey.diplom.domain.Profile;
 import net.sergey.diplom.domain.User;
 
 import java.util.List;
-import java.util.Set;
 
 public interface DAO {
 
-    Set<Profile> getProfilesByPrefix(char prefix);
+    List<Profile> getProfilesByPrefix(char prefix);
 
-    Set<Profile> getProfilesByName(String name);
+    List<Profile> getProfilesByName(String name);
 
-    Set<Profile> getAllProfiles();
+    List<Profile> getAllProfiles();
 
     boolean addProfile(Profile profile);
 
@@ -25,9 +24,9 @@ public interface DAO {
 
     boolean deleteProfileByPrefix(char prefix);
 
-    Set<Menu> getAllMenu();
+    List<Menu> getAllMenu();
 
-    Set<Menu> getMenuByHeader(String header);
+    List<Menu> getMenuByHeader(String header);
 
     boolean addMenu(Menu menu);
 

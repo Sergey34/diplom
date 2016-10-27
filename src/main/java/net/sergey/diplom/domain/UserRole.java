@@ -35,12 +35,8 @@ public class UserRole {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         UserRole userRole = (UserRole) o;
-
-        if (roleId != userRole.roleId) return false;
-        return role != null ? role.equals(userRole.role) : userRole.role == null;
-
+        return roleId == userRole.roleId && (role != null ? role.equals(userRole.role) : userRole.role == null);
     }
 
     @Override

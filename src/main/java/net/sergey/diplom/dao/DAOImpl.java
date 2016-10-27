@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 
 @Transactional
 @Repository
@@ -26,17 +25,17 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public Set<Profile> getProfilesByPrefix(char prefix) {
+    public List<Profile> getProfilesByPrefix(char prefix) {
         return null;
     }
 
     @Override
-    public Set<Profile> getProfilesByName(String name) {
+    public List<Profile> getProfilesByName(String name) {
         return null;
     }
 
     @Override
-    public Set<Profile> getAllProfiles() {
+    public List<Profile> getAllProfiles() {
         return null;
     }
 
@@ -66,12 +65,12 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public Set<Menu> getAllMenu() {
+    public List<Menu> getAllMenu() {
         return null;
     }
 
     @Override
-    public Set<Menu> getMenuByHeader(String header) {
+    public List<Menu> getMenuByHeader(String header) {
         return null;
     }
 

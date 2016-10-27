@@ -76,7 +76,6 @@ public class ServiceImplTest {
 
     @Test
     public void getAirfoilsByLiteral() throws Exception {
-        ServiceImpl service = new ServiceImpl(null, null);
         service.getAirfoilsByLiteral("A a18 to avistar (88)");
     }
 

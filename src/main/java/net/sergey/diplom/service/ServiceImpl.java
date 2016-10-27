@@ -1,19 +1,17 @@
 package net.sergey.diplom.service;
 
-import com.google.gson.Gson;
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.Menu;
 import net.sergey.diplom.domain.MenuItem;
-import net.sergey.diplom.domain.Profile;
 import net.sergey.diplom.domain.User;
-import net.sergey.diplom.model.Settings;
-import net.sergey.diplom.service.Parsers.Parser;
 import net.sergey.diplom.service.utils.UtilParser;
+import net.sergey.diplom.service.utils.UtilsLogger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,41 +23,24 @@ import java.util.regex.Pattern;
 
 @org.springframework.stereotype.Service
 public class ServiceImpl implements Service {
-    public static final String HTTP_AIRFOILTOOLS_COM = "http://airfoiltools.com/";
-    private final ApplicationContext applicationContext;
+    private static final String HTTP_AIRFOILTOOLS_COM = "http://airfoiltools.com/";
+    //private final ApplicationContext applicationContext;
     private final DAO DAO;
 
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
+
     @Autowired
+    public ServiceImpl(DAO dao) {
+        DAO = dao;
+    }
+
+    /*@Autowired
     public ServiceImpl(ApplicationContext applicationContext, DAO DAO) {
         this.applicationContext = applicationContext;
         this.DAO = DAO;
-    }
+    }*/
 
-    private static Settings jsonToObject(String jsonText) {
-        return new Gson().fromJson(jsonText, Settings.class);
-    }
-
-
-    @Override
-    public void saveSettings(Profile filter) {
-        //DAO.saveSettings(filter);
-    }
-
-    @Override
-    public Settings loadSetting(String SQL) {
-        return null;
-    }
-
-    @Override
-    public String showData(String name) {
-        return null;
-    }
-
-
-    @Override
-    public Parser getBeanParserByName(String parserImplementation) {
-        return applicationContext.getBean(parserImplementation, Parser.class);
-    }
 
     @Override
     public List<Menu> getMenu() throws IOException {
@@ -102,7 +83,7 @@ public class ServiceImpl implements Service {
         for (int i = 0; i < n; i++) {
             Elements tr = Jsoup.connect(fullUrl + i).get().body().getElementsByClass("afSearchResult").
                     first().getElementsByTag("tr");
-            System.out.println(i);
+            LOGGER.info(String.valueOf(i));
             for (int j = 0; j < tr.size(); j += 2) {
                 Elements cell12 = tr.get(j).getElementsByClass("cell12");
                 if (cell12.first() == null) {
@@ -113,13 +94,13 @@ public class ServiceImpl implements Service {
                     String image = tr.get(j + 1).getElementsByClass("cell1").first().getElementsByTag("a").attr("href");
                     String description = tr.get(j + 1).getElementsByClass("cell2").text();
 
-                    System.out.println(name);
-                    System.out.println(links);
-                    System.out.println(image);
-                    System.out.println(description);
+
+                    LOGGER.info(name);
+                    LOGGER.info(String.valueOf(links));
+                    LOGGER.info(image);
+                    LOGGER.info(description);
                 }
             }
-
         }
 
 

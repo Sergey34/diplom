@@ -15,6 +15,11 @@ public class User {
     private String password;
     @Column(name = "enabled")
     private int enabled;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_role",
+            joinColumns = {@JoinColumn(name = "id_user")},
+            inverseJoinColumns = {@JoinColumn(name = "id_role")})
+    private Set<UserRole> userRoles;
 
     public Set<UserRole> getUserRoles() {
         return userRoles;
@@ -23,13 +28,6 @@ public class User {
     public void setUserRoles(Set<UserRole> userRoles) {
         this.userRoles = userRoles;
     }
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_role",
-            joinColumns = {@JoinColumn(name = "id_user")},
-            inverseJoinColumns = {@JoinColumn(name = "id_role")})
-    private Set<UserRole> userRoles;
-
 
     public String getUserName() {
         return userName;
