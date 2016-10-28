@@ -9,6 +9,7 @@ import javax.persistence.Table;
 @Table(name = "roles")
 public class UserRole {
     @Id
+    //@GeneratedValue
     @Column(name = "role_id")
     private int roleId;
     @Column(name = "role")
@@ -35,15 +36,16 @@ public class UserRole {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         UserRole userRole = (UserRole) o;
-        return roleId == userRole.roleId && (role != null ? role.equals(userRole.role) : userRole.role == null);
+
+        return role != null ? role.equals(userRole.role) : userRole.role == null;
+
     }
 
     @Override
     public int hashCode() {
-        int result = roleId;
-        result = 31 * result + (role != null ? role.hashCode() : 0);
-        return result;
+        return role != null ? role.hashCode() : 0;
     }
 
     @Override

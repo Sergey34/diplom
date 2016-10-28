@@ -57,12 +57,19 @@ public class ServiceImpl implements Service {
             Elements links = menuElement.getElementsByTag("li");
             for (Element link : links) {
                 Element a = link.getElementsByTag("a").first();
-                menuItems.add(new MenuItem(a.text(), a.attr("href")));
+                MenuItem menuItem = new MenuItem(a.text(), a.attr("href"));
+                menuItem.setId(menuItem.hashCode());
+                menuItems.add(menuItem);
             }
             menu1.setMenuItems(menuItems);
+            menu1.setId(i + 1);
             menus.add(menu1);
         }
-        return menus;
+
+        DAO.addMenus(menus);
+
+        List<Menu> allMenu = DAO.getAllMenu();
+        return allMenu;
     }
 
     private int createString(String item, String pattern) {
@@ -109,6 +116,6 @@ public class ServiceImpl implements Service {
 
     @Override
     public List<User> getUser(String alex) {
-        return DAO.getUserById(alex);
+        return DAO.getUserByName(alex);
     }
 }

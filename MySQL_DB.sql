@@ -1,5 +1,3 @@
-CREATE DATABASE test;
-use test;
 
 CREATE  TABLE users (
   id INT NOT NULL AUTO_INCREMENT,
@@ -44,4 +42,31 @@ FROM user_role, roles, users
 WHERE
   users.id=2 AND
   user_role.id_role=roles.role_id AND
-  user_role.id_user=users.id
+  user_role.id_user = users.id;
+
+CREATE TABLE links (
+  id   INT NOT NULL AUTO_INCREMENT,
+  name TEXT,
+  link TEXT,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE menuHeader (
+  id     INT NOT NULL AUTO_INCREMENT,
+  header TEXT,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE menuItem (
+  id   INT NOT NULL AUTO_INCREMENT,
+  name TEXT,
+  url  TEXT,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE menuHeader_menuItem (
+  headerId INT,
+  ItemId   INT,
+  FOREIGN KEY (headerId) REFERENCES menuHeader (id),
+  FOREIGN KEY (ItemId) REFERENCES menuItem (id)
+)

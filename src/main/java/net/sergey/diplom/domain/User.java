@@ -7,6 +7,7 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
     @Column(name = "username")
@@ -15,7 +16,9 @@ public class User {
     private String password;
     @Column(name = "enabled")
     private int enabled;
-    @ManyToMany(fetch = FetchType.LAZY)
+
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "user_role",
             joinColumns = {@JoinColumn(name = "id_user")},
             inverseJoinColumns = {@JoinColumn(name = "id_role")})

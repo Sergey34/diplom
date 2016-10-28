@@ -4,6 +4,7 @@ import net.sergey.diplom.domain.Menu;
 import net.sergey.diplom.domain.Profile;
 import net.sergey.diplom.domain.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface DAO {
@@ -28,14 +29,15 @@ public interface DAO {
 
     List<Menu> getMenuByHeader(String header);
 
-    boolean addMenu(Menu menu);
+    void addMenu(Menu menu);
 
     Menu updateMenu(Menu menu);
 
-    boolean addUser(User user);
+    void addUser(User user);
 
     void updateUserPassword(String password);
 
-    List<User> getUserById(String name);
+    List<User> getUserByName(String name);
 
+    void addMenus(ArrayList<Menu> menus);
 }

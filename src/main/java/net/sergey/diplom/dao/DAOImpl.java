@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -66,7 +67,14 @@ public class DAOImpl implements DAO {
 
     @Override
     public List<Menu> getAllMenu() {
-        return null;
+        @SuppressWarnings("unchecked")
+        List<Menu> menus = sessionFactory.getCurrentSession().createCriteria(Menu.class).list();
+        for (Menu menu : menus) {
+            if (menu != null) {
+                Hibernate.initialize(menu.getMenuItems());
+            }
+        }
+        return menus;
     }
 
     @Override
@@ -75,8 +83,8 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public boolean addMenu(Menu menu) {
-        return false;
+    public void addMenu(Menu menu) {
+        save(menu);
     }
 
     @Override
@@ -85,8 +93,8 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public boolean addUser(User user) {
-        return false;
+    public void addUser(User user) {
+        save(user);
     }
 
     @Override
@@ -95,7 +103,7 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public List<User> getUserById(String name) {
+    public List<User> getUserByName(String name) {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(User.class)
                 .add(Restrictions.eq("userName", name));
         @SuppressWarnings("unchecked")
@@ -106,5 +114,17 @@ public class DAOImpl implements DAO {
             }
         }
         return users;
+    }
+
+
+    private <T> void save(T object) {
+        sessionFactory.getCurrentSession().saveOrUpdate(object);
+    }
+
+    @Override
+    public void addMenus(ArrayList<Menu> menus) {
+        for (Menu menu : menus) {
+            save(menu);
+        }
     }
 }

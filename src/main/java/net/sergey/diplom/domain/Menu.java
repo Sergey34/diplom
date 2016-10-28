@@ -8,13 +8,14 @@ import java.util.Set;
 @Table(name = "menuHeader")
 public class Menu {
     @Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
     @Column(name = "header")
     private String header;
 
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "menuHeader_menuItem",
             joinColumns = {@JoinColumn(name = "headerId")},
             inverseJoinColumns = {@JoinColumn(name = "ItemId")})
@@ -43,5 +44,35 @@ public class Menu {
 
     public void setMenuItems(Set<MenuItem> menuItems) {
         this.menuItems = menuItems;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Menu menu = (Menu) o;
+
+        if (id != menu.id) return false;
+        if (header != null ? !header.equals(menu.header) : menu.header != null) return false;
+        return menuItems != null ? menuItems.equals(menu.menuItems) : menu.menuItems == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (header != null ? header.hashCode() : 0);
+        result = 31 * result + (menuItems != null ? menuItems.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "id=" + id +
+                ", header='" + header + '\'' +
+                ", menuItems=" + menuItems +
+                '}';
     }
 }
