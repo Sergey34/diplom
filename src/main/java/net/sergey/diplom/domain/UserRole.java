@@ -9,12 +9,18 @@ import javax.persistence.Table;
 @Table(name = "roles")
 public class UserRole {
     @Id
-    //@GeneratedValue
     @Column(name = "role_id")
     private int roleId;
     @Column(name = "role")
     private String role;
 
+    public UserRole(String roleName, int id) {
+        this.role = roleName;
+        this.roleId = id;
+    }
+
+    public UserRole() {
+    }
 
     public String getRole() {
         return role;

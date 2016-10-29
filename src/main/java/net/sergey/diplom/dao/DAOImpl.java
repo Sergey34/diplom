@@ -3,6 +3,7 @@ package net.sergey.diplom.dao;
 import net.sergey.diplom.domain.Menu;
 import net.sergey.diplom.domain.Profile;
 import net.sergey.diplom.domain.User;
+import net.sergey.diplom.domain.UserRole;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.SessionFactory;
@@ -123,8 +124,15 @@ public class DAOImpl implements DAO {
 
     @Override
     public void addMenus(ArrayList<Menu> menus) {
-        for (Menu menu : menus) {
+        menus.forEach(this::save);
+        /*for (Menu menu : menus) {
             save(menu);
-        }
+        }*/
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<UserRole> getAllUserRoles() {
+        return sessionFactory.getCurrentSession().createCriteria(UserRole.class).list();
     }
 }

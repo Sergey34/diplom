@@ -27,4 +27,9 @@ public class MainController {
         return "static/context.html";
     }
 
+    @RequestMapping(value = "/adduser", method = RequestMethod.GET)
+    public String showAddUser() {
+        return "static/registration_user.html";
+    }
+
 }

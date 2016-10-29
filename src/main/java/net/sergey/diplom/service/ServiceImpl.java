@@ -4,7 +4,9 @@ import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.Menu;
 import net.sergey.diplom.domain.MenuItem;
 import net.sergey.diplom.domain.User;
+import net.sergey.diplom.domain.UserRole;
 import net.sergey.diplom.service.utils.UtilParser;
+import net.sergey.diplom.service.utils.UtilRoles;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -13,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -109,13 +112,31 @@ public class ServiceImpl implements Service {
                 }
             }
         }
-
-
         return null;
     }
 
     @Override
-    public List<User> getUser(String alex) {
-        return DAO.getUserByName(alex);
+    public List<User> getUser(String name) {
+        return DAO.getUserByName(name);
+    }
+
+    @Override
+    public boolean isValidUser(String name) {
+        return getUser(name).size() == 0;
+    }
+
+    @Override
+    public void addUser(User user) {
+        DAO.addUser(user);
+    }
+
+    @Override
+    public List<UserRole> getAllUserRoles() {
+        return DAO.getAllUserRoles();
+    }
+
+    @PostConstruct
+    public void init() {
+        UtilRoles.init(DAO.getAllUserRoles());
     }
 }

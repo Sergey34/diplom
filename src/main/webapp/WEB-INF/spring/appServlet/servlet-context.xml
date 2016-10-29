@@ -11,6 +11,7 @@
     <!--<beans:bean id="initMethodHomeCinema" class="net.sergey.diplom.service.Parsers.homeCinema.Creator"
                 init-method="initIt">
     </beans:bean>
+    --><!--
     <beans:bean id="initMethodSSU_Table" class="net.sergey.diplom.service.Parsers.SSU_Table.Creator"
                 init-method="initIt">
     </beans:bean>-->

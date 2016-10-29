@@ -3,6 +3,7 @@ package net.sergey.diplom.dao;
 import net.sergey.diplom.domain.Menu;
 import net.sergey.diplom.domain.Profile;
 import net.sergey.diplom.domain.User;
+import net.sergey.diplom.domain.UserRole;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,4 +41,6 @@ public interface DAO {
     List<User> getUserByName(String name);
 
     void addMenus(ArrayList<Menu> menus);
+
+    List<UserRole> getAllUserRoles();
 }
