@@ -12,12 +12,12 @@
         <intercept-url pattern="/rest/admin/*" access="ROLE_ADMIN"/>
         <intercept-url pattern="/rest/write/*" access="ROLE_USER, ROLE_ADMIN"/>
 
-        <intercept-url pattern="/adduser" access="ROLE_ADMIN"/>
+        <intercept-url pattern="/adduser" access="ROLE_USER, ROLE_ADMIN"/>
+        <intercept-url pattern="/adminka" access="ROLE_ADMIN"/>
 
         <form-login login-page="/login"
                     default-target-url="/context"
                     authentication-failure-url="/loginError"/>
-
 
         <logout logout-url="/logout" logout-success-url="/login"/>
         <logout/>

@@ -69,7 +69,7 @@ public class FullRestController {
         return null;
     }
 
-    @RequestMapping(value = "/addUser", method = RequestMethod.POST)
+    @RequestMapping(value = "/write/addUser", method = RequestMethod.POST)
     public Object addUser(@RequestBody UserView userView) {
         if (service.isValidUser(userView.getName())) {
             User user = new User();

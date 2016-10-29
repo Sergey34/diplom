@@ -32,4 +32,9 @@ public class MainController {
         return "static/registration_user.html";
     }
 
+    @RequestMapping(value = "/adminka", method = RequestMethod.GET)
+    public String showAdminka() {
+        return "static/adminka.html";
+    }
+
 }
