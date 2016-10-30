@@ -30,7 +30,7 @@ public class FullRestController {
     }
 
 
-    @RequestMapping(value = "/admin/greeting", method = RequestMethod.GET)
+    @RequestMapping(value = "/greeting", method = RequestMethod.GET)
     public String greeting() throws IOException, InterruptedException {
         LOGGER.info("!!!тестовый метод!!! запуск python скрипта");
         String args = "aargs";

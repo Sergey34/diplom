@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
 public class ServiceImpl implements Service {
@@ -77,8 +78,7 @@ public class ServiceImpl implements Service {
         }
 
 
-        List<Menu> allMenu = DAO.getAllMenu();
-        return allMenu;
+        return DAO.getAllMenu();
     }
 
     private int createString(String item, String pattern) {
@@ -128,11 +128,14 @@ public class ServiceImpl implements Service {
     }
 
     private Set<Link> parseLinks(Elements links) {
-        HashSet<Link> linksSet = new HashSet<>();
+        return links.first().getElementsByTag("a").stream().map(link
+                -> new Link(link.text(), link.attr("href"))).collect(Collectors.toCollection(HashSet::new));
+
+        /*HashSet<Link> linksSet = new HashSet<>();
         for (Element link : links.first().getElementsByTag("a")) {
             linksSet.add(new Link(link.text(), link.attr("href")));
         }
-        return linksSet;
+        return linksSet;*/
     }
 
     @Override
