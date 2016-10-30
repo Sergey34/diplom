@@ -1,10 +1,12 @@
 package net.sergey.diplom.dao;
 
-import net.sergey.diplom.domain.User;
-import net.sergey.diplom.domain.UserRole;
+import net.sergey.diplom.domain.user.User;
+import net.sergey.diplom.domain.user.UserRole;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -98,7 +100,12 @@ public class DAOImplTest {
 
         user.setUserRoles(userRoles);
         System.out.println(user);
-        dao.addUser(user);
+        try {
+            dao.addUser(user);
+        } catch (ConstraintViolationException e) {
+            throw new DuplicateKeyException("duplicated key");
+        }
+
     }
 
     @Test

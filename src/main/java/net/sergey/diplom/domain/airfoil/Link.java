@@ -1,20 +1,26 @@
-package net.sergey.diplom.domain;
+package net.sergey.diplom.domain.airfoil;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "links")
 public class Link {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private int id;
     @Column(name = "name")
     private String name;
     @Column(name = "link")
     private String link;
+
+    public Link(String name, String link) {
+        this.name = name;
+        this.link = link;
+    }
+
+    public Link() {
+    }
 
     public int getId() {
         return id;

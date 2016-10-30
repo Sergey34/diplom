@@ -1,6 +1,6 @@
 package net.sergey.diplom.service.utils;
 
-import net.sergey.diplom.domain.UserRole;
+import net.sergey.diplom.domain.user.UserRole;
 
 import java.util.*;
 

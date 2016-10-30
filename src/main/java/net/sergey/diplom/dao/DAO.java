@@ -1,24 +1,25 @@
 package net.sergey.diplom.dao;
 
-import net.sergey.diplom.domain.Menu;
-import net.sergey.diplom.domain.Profile;
-import net.sergey.diplom.domain.User;
-import net.sergey.diplom.domain.UserRole;
+import net.sergey.diplom.domain.airfoil.Airfoil;
+import net.sergey.diplom.domain.airfoil.Prefix;
+import net.sergey.diplom.domain.menu.Menu;
+import net.sergey.diplom.domain.user.User;
+import net.sergey.diplom.domain.user.UserRole;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public interface DAO {
 
-    List<Profile> getProfilesByPrefix(char prefix);
+    List<Airfoil> getProfilesByPrefix(char prefix);
 
-    List<Profile> getProfilesByName(String name);
+    List<Airfoil> getProfilesByName(String name);
 
-    List<Profile> getAllProfiles();
+    List<Airfoil> getAllProfiles();
 
-    boolean addProfile(Profile profile);
+    boolean addProfile(Airfoil profile);
 
-    Profile updateProfile(Profile profile);
+    Airfoil updateProfile(Airfoil profile);
 
     boolean deleteProfileById(int id);
 
@@ -43,4 +44,8 @@ public interface DAO {
     void addMenus(ArrayList<Menu> menus);
 
     List<UserRole> getAllUserRoles();
+
+    void cleanAllTables();
+
+    void addPrefix(Prefix prefix1);
 }

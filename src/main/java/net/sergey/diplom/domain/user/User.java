@@ -1,4 +1,4 @@
-package net.sergey.diplom.domain;
+package net.sergey.diplom.domain.user;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -10,7 +10,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String userName;
     @Column(name = "password")
     private String password;

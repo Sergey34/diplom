@@ -1,4 +1,4 @@
-package net.sergey.diplom.domain;
+package net.sergey.diplom.domain.user;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

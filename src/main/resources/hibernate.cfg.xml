@@ -10,11 +10,14 @@
         <property name="show_sql">true</property>
         <property name="format_sql">true</property>
         <property name="use_sql_comments">true</property>
-        <mapping class="net.sergey.diplom.domain.Link"/>
-        <mapping class="net.sergey.diplom.domain.Profile"/>
-        <mapping class="net.sergey.diplom.domain.MenuItem"/>
-        <mapping class="net.sergey.diplom.domain.Menu"/>
-        <mapping class="net.sergey.diplom.domain.User"/>
-        <mapping class="net.sergey.diplom.domain.UserRole"/>
+
+        <mapping class="net.sergey.diplom.domain.airfoil.Link"/>
+        <mapping class="net.sergey.diplom.domain.menu.MenuItem"/>
+        <mapping class="net.sergey.diplom.domain.menu.Menu"/>
+        <mapping class="net.sergey.diplom.domain.user.User"/>
+        <mapping class="net.sergey.diplom.domain.user.UserRole"/>
+        <mapping class="net.sergey.diplom.domain.airfoil.Airfoil"/>
+        <mapping class="net.sergey.diplom.domain.airfoil.Link"/>
+        <mapping class="net.sergey.diplom.domain.airfoil.Prefix"/>
     </session-factory>
 </hibernate-configuration>

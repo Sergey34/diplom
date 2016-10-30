@@ -1,9 +1,10 @@
 package net.sergey.diplom.dao;
 
-import net.sergey.diplom.domain.Menu;
-import net.sergey.diplom.domain.Profile;
-import net.sergey.diplom.domain.User;
-import net.sergey.diplom.domain.UserRole;
+import net.sergey.diplom.domain.airfoil.Airfoil;
+import net.sergey.diplom.domain.airfoil.Prefix;
+import net.sergey.diplom.domain.menu.Menu;
+import net.sergey.diplom.domain.user.User;
+import net.sergey.diplom.domain.user.UserRole;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.SessionFactory;
@@ -27,27 +28,27 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public List<Profile> getProfilesByPrefix(char prefix) {
+    public List<Airfoil> getProfilesByPrefix(char prefix) {
         return null;
     }
 
     @Override
-    public List<Profile> getProfilesByName(String name) {
+    public List<Airfoil> getProfilesByName(String name) {
         return null;
     }
 
     @Override
-    public List<Profile> getAllProfiles() {
+    public List<Airfoil> getAllProfiles() {
         return null;
     }
 
     @Override
-    public boolean addProfile(Profile profile) {
+    public boolean addProfile(Airfoil profile) {
         return false;
     }
 
     @Override
-    public Profile updateProfile(Profile profile) {
+    public Airfoil updateProfile(Airfoil profile) {
         return null;
     }
 
@@ -134,5 +135,16 @@ public class DAOImpl implements DAO {
     @SuppressWarnings("unchecked")
     public List<UserRole> getAllUserRoles() {
         return sessionFactory.getCurrentSession().createCriteria(UserRole.class).list();
+    }
+
+    @Override
+    public void cleanAllTables() {
+        //// TODO: 30.10.16 список имен таблиц кроме системных (пользователи, настройки парсеров)
+        sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM links");
+    }
+
+    @Override
+    public void addPrefix(Prefix prefix1) {
+        save(prefix1);
     }
 }

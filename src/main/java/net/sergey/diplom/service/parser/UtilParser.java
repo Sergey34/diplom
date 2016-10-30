@@ -1,7 +1,7 @@
-package net.sergey.diplom.service.utils;
+package net.sergey.diplom.service.parser;
 
-import net.sergey.diplom.domain.Menu;
-import net.sergey.diplom.domain.MenuItem;
+import net.sergey.diplom.domain.menu.Menu;
+import net.sergey.diplom.domain.menu.MenuItem;
 
 import java.util.List;
 

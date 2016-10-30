@@ -1,4 +1,4 @@
-package net.sergey.diplom.domain;
+package net.sergey.diplom.domain.menu;
 
 
 import javax.persistence.*;
@@ -8,7 +8,7 @@ import java.util.Set;
 @Table(name = "menuHeader")
 public class Menu {
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
     @Column(name = "header")

@@ -9,7 +9,7 @@ public class MainController {
 
     @RequestMapping("/")
     public String home() {
-        return "redirect:/login";
+        return "redirect:/context";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
