@@ -18,6 +18,5 @@
         <mapping class="net.sergey.diplom.domain.user.UserRole"/>
         <mapping class="net.sergey.diplom.domain.airfoil.Airfoil"/>
         <mapping class="net.sergey.diplom.domain.airfoil.Link"/>
-        <mapping class="net.sergey.diplom.domain.airfoil.Prefix"/>
     </session-factory>
 </hibernate-configuration>

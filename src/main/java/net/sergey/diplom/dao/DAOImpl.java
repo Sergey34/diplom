@@ -1,13 +1,13 @@
 package net.sergey.diplom.dao;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.SessionFactory;
+import org.hibernate.classic.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -28,8 +28,17 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public List<Airfoil> getProfilesByPrefix(char prefix) {
-        return null;
+    public List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Airfoil.class)
+                .add(Restrictions.eq("prefix", prefix)).setFirstResult(startNumber);
+        if (count != 0) {
+            criteria.setMaxResults(count);
+        }
+        List<Airfoil> airfoils = criteria.list();
+        for (Airfoil airfoil : airfoils) {
+            Hibernate.initialize(airfoil.getLinks());
+        }
+        return airfoils;
     }
 
     @Override
@@ -144,7 +153,10 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public void addPrefix(Prefix prefix1) {
-        save(prefix1);
+    public void addAirfoils(List<Airfoil> airfoils) {
+        Session currentSession = sessionFactory.getCurrentSession();
+        for (Airfoil airfoil : airfoils) {
+            currentSession.saveOrUpdate(airfoil);
+        }
     }
 }

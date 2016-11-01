@@ -1,13 +1,15 @@
 package net.sergey.diplom.rest;
 
+import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.UserRole;
-import net.sergey.diplom.service.Service;
+import net.sergey.diplom.service.ServiceInt;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,10 +24,10 @@ import java.util.List;
 @RestController
 public class FullRestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-    private final Service service;
+    private final ServiceInt service;
 
     @Autowired
-    public FullRestController(Service service) {
+    public FullRestController(ServiceInt service) {
         this.service = service;
     }
 
@@ -70,5 +72,13 @@ public class FullRestController {
     public List<UserRole> getUserRole() throws IOException {
         return service.getAllUserRoles();
     }
+
+    @RequestMapping(value = "/getContext/{prefix}/{startNumber}/{count}", method = RequestMethod.GET)
+    public List<Airfoil> getUserRole(@PathVariable char prefix, @PathVariable int startNumber, @PathVariable int count) throws IOException {
+        System.out.println(startNumber);
+        return service.getAirfoilsByPrefix(prefix, startNumber, count);
+    }
+
+
 
 }

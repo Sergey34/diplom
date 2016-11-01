@@ -23,16 +23,29 @@ public class Airfoil {
             inverseJoinColumns = {@JoinColumn(name = "id_links")})
     private Set<Link> links;
 
+    @Column(name = "prefix")
+    private char prefix;
+
+
+    public char getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(char prefix) {
+        this.prefix = prefix;
+    }
+
 
     public Airfoil() {
         this.links = new HashSet<>();
     }
 
-    public Airfoil(String name, String description, String image) {
+    public Airfoil(String name, String description, String image, char prefix) {
         this.name = name;
         this.description = description;
         this.image = image;
         this.links = new HashSet<>();
+        this.prefix = prefix;
     }
 
     public void addLink(Link link) {

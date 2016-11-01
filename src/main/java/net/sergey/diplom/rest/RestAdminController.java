@@ -1,7 +1,7 @@
 package net.sergey.diplom.rest;
 
 
-import net.sergey.diplom.service.Service;
+import net.sergey.diplom.service.ServiceInt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class RestAdminController {
 
     @Autowired
-    Service service;
+    ServiceInt service;
 
     @RequestMapping(value = "/initDB", method = RequestMethod.GET)
     public void initDB() {

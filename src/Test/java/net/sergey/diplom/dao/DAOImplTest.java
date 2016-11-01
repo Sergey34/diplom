@@ -56,6 +56,7 @@ public class DAOImplTest {
 
     @Test
     public void deleteProfileByPrefix() throws Exception {
+        dao.getAirfoilsByPrefix('A', 0, 0);
 
     }
 

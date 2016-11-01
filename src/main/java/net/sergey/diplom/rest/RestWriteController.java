@@ -2,7 +2,7 @@ package net.sergey.diplom.rest;
 
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.model.UserView;
-import net.sergey.diplom.service.Service;
+import net.sergey.diplom.service.ServiceInt;
 import net.sergey.diplom.service.utils.UtilRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController(value = "write")
 public class RestWriteController {
     @Autowired
-    Service service;
+    ServiceInt service;
 
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)
-    public Object addUser(@RequestBody UserView userView) {
+    public String addUser(@RequestBody UserView userView) {
         User user = new User();
         user.setEnabled(1);
         user.setPassword(userView.getPassword());

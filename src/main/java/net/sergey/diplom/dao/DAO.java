@@ -1,7 +1,6 @@
 package net.sergey.diplom.dao;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
@@ -11,7 +10,7 @@ import java.util.List;
 
 public interface DAO {
 
-    List<Airfoil> getProfilesByPrefix(char prefix);
+    List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count);
 
     List<Airfoil> getProfilesByName(String name);
 
@@ -47,5 +46,9 @@ public interface DAO {
 
     void cleanAllTables();
 
-    void addPrefix(Prefix prefix1);
+    void addAirfoils(List<Airfoil> airfoils);
+
+    /*void addPrefix(Prefix prefix1);
+
+    Prefix getPrefix(char prefix);*/
 }
