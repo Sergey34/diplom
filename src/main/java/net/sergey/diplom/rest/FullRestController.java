@@ -36,11 +36,11 @@ public class FullRestController {
     public String greeting() throws IOException, InterruptedException {
         LOGGER.info("!!!тестовый метод!!! запуск python скрипта");
         String args = "aargs";
-        Process p = Runtime.getRuntime().exec("python3 /home/sergey/workspace/IdeaProjects/diplom/diplom/src/main/resources/myscript.py " + args);
+        Process p = Runtime.getRuntime().exec("python3 /resources/myscript.py " + args);
         int i = p.waitFor();
         LOGGER.info(String.valueOf(i));
 
-        File file = new File("/home/sergey/workspace/IdeaProjects/diplom/diplom/src/main/resources/" + args + ".txt");
+        File file = new File("/resources/" + args + ".txt");
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
         String s = bufferedReader.readLine();
         LOGGER.info(s);
