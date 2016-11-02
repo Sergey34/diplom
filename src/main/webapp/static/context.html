@@ -11,6 +11,8 @@
     <script src="/static/js/get_content.js"></script>
 
     <link rel="stylesheet" href="/static/css/main.css" type="text/css"/>
+
+
 </head>
 
 <body>
@@ -30,7 +32,8 @@
 
         <div class="container">
             <div class="content">
-                <strong>Content:</strong>
+                <strong><input id="edit_btn" value="Редактировать" type="button"></strong>
+
                 <ul id="airfoil_list">
 
                 </ul>
@@ -54,5 +57,36 @@
 
 </div>
 
+
+<script>
+    document.getElementById("edit_btn").onclick = someFunc;
+    var is_editable = false;
+    function someFunc() {
+        is_editable = !is_editable;
+        function documentEdit(elementsEditable, is_edit) {
+            for (var i = 0; i < elementsEditable.length; i++) {
+                elementsEditable[i].setAttribute('contentEditable', is_edit);
+            }
+        }
+
+        var elementsEditable = document.getElementsByClassName("editable");//style.outline ='2px solid #000';
+
+        if (is_editable) {
+            document.getElementById("edit_btn").value = "Отменить";
+            //todo перезагрузить страницу со свежими данными
+            for (var i = 0; i < elementsEditable.length; i++) {
+                elementsEditable[i].style.outline = '2px solid #000';
+            }
+        } else {
+            document.getElementById("edit_btn").value = "Редактировать";
+            for (var i = 0; i < elementsEditable.length; i++) {
+                elementsEditable[i].style.outline = '';
+            }
+        }
+        documentEdit(elementsEditable, is_editable);
+    }
+
+
+</script>
 </body>
 </html>

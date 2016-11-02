@@ -159,4 +159,9 @@ public class DAOImpl implements DAO {
             currentSession.saveOrUpdate(airfoil);
         }
     }
+
+    @Override
+    public <T> void update(T t) {
+        sessionFactory.getCurrentSession().update(t);
+    }
 }

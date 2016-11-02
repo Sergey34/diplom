@@ -83,6 +83,7 @@ public class DAOImplTest {
     @Test
     public void addUser() throws Exception {
         User user = new User();
+        user.setId(3);
         user.setUserName("Sergey");
         user.setPassword("343434");
         user.setEnabled(1);
@@ -111,7 +112,10 @@ public class DAOImplTest {
 
     @Test
     public void updateUserPassword() throws Exception {
-
+        List<User> alex = dao.getUserByName("alex");
+        User user = alex.get(0);
+        user.setPassword("123456");
+        dao.addUser(user);
     }
 
     @Autowired
