@@ -2,9 +2,12 @@ package net.sergey.diplom.dao;
 
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
+import net.sergey.diplom.service.utils.UtilsLogger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,9 +22,10 @@ import java.util.Set;
 @ContextConfiguration(locations = "classpath:/WEB-INF/spring/root-context.xml")
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class DAOImplTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     @Test
     public void getProfilesByPrefix() throws Exception {
-
+        LOGGER.info("kfsdhfbhsdbf11111111111");
     }
 
     @Test
