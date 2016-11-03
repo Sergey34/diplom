@@ -11,12 +11,12 @@
         <property name="format_sql">true</property>
         <property name="use_sql_comments">true</property>
 
-        <mapping class="net.sergey.diplom.domain.airfoil.Link"/>
+        <mapping class="net.sergey.diplom.domain.airfoil.Prefix"/>
         <mapping class="net.sergey.diplom.domain.menu.MenuItem"/>
         <mapping class="net.sergey.diplom.domain.menu.Menu"/>
         <mapping class="net.sergey.diplom.domain.user.User"/>
         <mapping class="net.sergey.diplom.domain.user.UserRole"/>
         <mapping class="net.sergey.diplom.domain.airfoil.Airfoil"/>
-        <mapping class="net.sergey.diplom.domain.airfoil.Link"/>
+        <mapping class="net.sergey.diplom.domain.airfoil.Links"/>
     </session-factory>
 </hibernate-configuration>

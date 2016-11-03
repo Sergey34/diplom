@@ -50,6 +50,8 @@ public interface DAO {
 
     <T> void update(T t);
 
+    void addAirfoils(Airfoil airfoil);
+
     /*void addPrefix(Prefix prefix1);
 
     Prefix getPrefix(char prefix);*/

@@ -19,7 +19,7 @@ public class ParserTest {
     public void initTest() throws Exception {
         Assert.assertTrue(parser != null);
         Assert.assertTrue(parser.dao != null);
-        parser.getAirfoilsByPrefix("A a18 to avistar (88)");
+        parser.getAirfoilsByPrefix("C c141a to curtisc72 (40)");
     }
 
 }

@@ -1,5 +1,8 @@
 package net.sergey.diplom.dao;
 
+import net.sergey.diplom.domain.airfoil.Airfoil;
+import net.sergey.diplom.domain.airfoil.Links;
+import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.service.utils.UtilsLogger;
@@ -30,7 +33,13 @@ public class DAOImplTest {
 
     @Test
     public void getProfilesByName() throws Exception {
-
+        Airfoil airfoil = new Airfoil("name", "discription", "img", new Prefix('Z'));
+        Set<Links> linkses = new HashSet<>();
+        linkses.add(new Links("url", "name"));
+        linkses.add(new Links("url2", "name2"));
+        airfoil.setLinks(linkses);
+        System.out.println(airfoil);
+        dao.addAirfoils(airfoil);
     }
 
     @Test

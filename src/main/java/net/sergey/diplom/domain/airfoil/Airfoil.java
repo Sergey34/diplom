@@ -1,56 +1,52 @@
 package net.sergey.diplom.domain.airfoil;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "airfoil")
 public class Airfoil {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Basic
     @Column(name = "name")
     private String name;
+    @Basic
     @Column(name = "description")
     private String description;
+    @Basic
     @Column(name = "image")
     private String image;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "prefix")
+    private Prefix prefix;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "airfoil_links", joinColumns = {@JoinColumn(name = "id_airfoil")},
             inverseJoinColumns = {@JoinColumn(name = "id_links")})
-    private Set<Link> links;
+    private Set<Links> links;
 
-    @Column(name = "prefix")
-    private char prefix;
-
-
-    public char getPrefix() {
-        return prefix;
-    }
-
-    public void setPrefix(char prefix) {
-        this.prefix = prefix;
-    }
-
-
-    public Airfoil() {
-        this.links = new HashSet<>();
-    }
-
-    public Airfoil(String name, String description, String image, char prefix) {
+    public Airfoil(String name, String description, String image, Prefix prefix) {
         this.name = name;
         this.description = description;
         this.image = image;
-        this.links = new HashSet<>();
         this.prefix = prefix;
     }
 
-    public void addLink(Link link) {
-        this.links.add(link);
+    public Airfoil() {
     }
+
+    public Prefix getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(Prefix prefix) {
+        this.prefix = prefix;
+    }
+
 
     public int getId() {
         return id;
@@ -60,6 +56,7 @@ public class Airfoil {
         this.id = id;
     }
 
+
     public String getName() {
         return name;
     }
@@ -68,13 +65,15 @@ public class Airfoil {
         this.name = name;
     }
 
+
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String descriptions) {
-        this.description = descriptions;
+    public void setDescription(String description) {
+        this.description = description;
     }
+
 
     public String getImage() {
         return image;
@@ -82,14 +81,6 @@ public class Airfoil {
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public Set<Link> getLinks() {
-        return links;
-    }
-
-    public void setLinks(Set<Link> links) {
-        this.links = links;
     }
 
     @Override
@@ -101,11 +92,10 @@ public class Airfoil {
 
         if (id != airfoil.id) return false;
         if (name != null ? !name.equals(airfoil.name) : airfoil.name != null) return false;
-        if (description != null ? !description.equals(airfoil.description) : airfoil.description != null)
-            return false;
+        if (description != null ? !description.equals(airfoil.description) : airfoil.description != null) return false;
         if (image != null ? !image.equals(airfoil.image) : airfoil.image != null) return false;
-        return links != null ? links.equals(airfoil.links) : airfoil.links == null;
 
+        return true;
     }
 
     @Override
@@ -114,7 +104,14 @@ public class Airfoil {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (image != null ? image.hashCode() : 0);
-        result = 31 * result + (links != null ? links.hashCode() : 0);
         return result;
+    }
+
+    public Set<Links> getLinks() {
+        return links;
+    }
+
+    public void setLinks(Set<Links> links) {
+        this.links = links;
     }
 }

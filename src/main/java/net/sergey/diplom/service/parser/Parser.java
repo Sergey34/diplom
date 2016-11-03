@@ -2,7 +2,8 @@ package net.sergey.diplom.service.parser;
 
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.domain.airfoil.Link;
+import net.sergey.diplom.domain.airfoil.Links;
+import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.service.utils.UtilsLogger;
@@ -67,7 +68,7 @@ public class Parser {
         String url = UtilParser.getUrlMenuByTitle(menu, prefix);
         String fullUrl = HTTP_AIRFOILTOOLS_COM + url.substring(0, url.length() - 1);
 
-
+        Prefix prefix1 = new Prefix(prefix.charAt(0));
         List<Airfoil> airfoils = new ArrayList<>();
         int n = createString(Jsoup.connect(fullUrl + 0).get().html(), "Page 1 of ([0-9]+).+");
         for (int i = 0; i < n; i++) {
@@ -84,7 +85,8 @@ public class Parser {
                     String image = airfoilList.get(j + 1).getElementsByClass("cell1").first().getElementsByTag("a").attr("href");
                     String description = airfoilList.get(j + 1).getElementsByClass("cell2").text();
 
-                    Airfoil airfoil = new Airfoil(name, description, image, prefix.charAt(0));
+
+                    Airfoil airfoil = new Airfoil(name, description, image, prefix1);
 
                     airfoil.setLinks(parseLinks(links));
 
@@ -107,9 +109,9 @@ public class Parser {
         return 0;
     }
 
-    private Set<Link> parseLinks(Elements links) {
+    private Set<Links> parseLinks(Elements links) {
         return links.first().getElementsByTag("a").stream().map(link
-                -> new Link(link.text(), link.attr("href"))).collect(Collectors.toCollection(HashSet::new));
+                -> new Links(link.text(), link.attr("href"))).collect(Collectors.toCollection(HashSet::new));
 
         /*HashSet<Link> linksSet = new HashSet<>();
         for (Element link : links.first().getElementsByTag("a")) {
