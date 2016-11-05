@@ -85,7 +85,7 @@ CREATE TABLE airfoil (
 CREATE TABLE links (
   id   INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(255),
-  link VARCHAR(255) UNIQUE,
+  link VARCHAR(255),
   PRIMARY KEY (id)
 );
 
