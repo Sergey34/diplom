@@ -2,7 +2,6 @@ package net.sergey.diplom.service.parser;
 
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.domain.airfoil.Links;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
@@ -17,7 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -100,7 +102,7 @@ public class Parser {
                 String description = airfoilList.get(j + 1).getElementsByClass("cell2").text();
 
                 Airfoil airfoil = new Airfoil(name, description, image, prefix1);
-                airfoil.setLinks(parseLinks(links));
+                airfoil.setLinks(UtilParser.parseLinks(links));
                 airfoils.add(airfoil);
             }
         }
@@ -121,11 +123,5 @@ public class Parser {
         return 0;
     }
 
-    private Set<Links> parseLinks(Elements links) {
-        Set<Links> linksSet = new HashSet<>();
-        for (Element link : links.first().getElementsByTag("a")) {
-            linksSet.add(new Links(link.text(), link.attr("href")));
-        }
-        return linksSet;
-    }
+
 }

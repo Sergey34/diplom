@@ -1,6 +1,7 @@
 package net.sergey.diplom.rest;
 
 import net.sergey.diplom.domain.user.User;
+import net.sergey.diplom.model.AirfoilView;
 import net.sergey.diplom.model.UserView;
 import net.sergey.diplom.service.ServiceInt;
 import net.sergey.diplom.service.utils.UtilRoles;
@@ -28,4 +29,14 @@ public class RestWriteController {
         }
         return "error";
     }
+
+    @RequestMapping(value = "/editAirfoil", method = RequestMethod.POST)
+    public String editAirfoil(@RequestBody AirfoilView airfoilView) {
+        if (service.updateAirfoil(airfoilView)) {
+            return "{\"msg\":\"success\"}";
+        }
+        return "error";
+    }
+
+
 }

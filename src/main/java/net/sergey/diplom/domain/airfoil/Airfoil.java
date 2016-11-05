@@ -39,6 +39,16 @@ public class Airfoil {
     public Airfoil() {
     }
 
+    public Airfoil(String name, String description, String image, int id, Prefix prefix) {
+        this.name = name;
+        this.description = description;
+        this.image = image;
+        this.id = id;
+        this.prefix = prefix;
+    }
+
+
+
     public Prefix getPrefix() {
         return prefix;
     }

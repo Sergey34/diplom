@@ -161,7 +161,7 @@ public class DAOImpl implements DAO {
     public void addAirfoils(List<Airfoil> airfoils) {
         Session currentSession = sessionFactory.getCurrentSession();
         for (Airfoil airfoil : airfoils) {
-            currentSession.saveOrUpdate(airfoil);
+            currentSession.merge(airfoil);
         }
     }
 
@@ -173,5 +173,10 @@ public class DAOImpl implements DAO {
     @Override
     public void addAirfoils(Airfoil airfoil) {
         save(airfoil);
+    }
+
+    @Override
+    public int getIdLinkByUrl(String link) {
+        return (int) sessionFactory.getCurrentSession().createSQLQuery("SELECT id FROM links WHERE link='" + link + '\'').list().get(0);
     }
 }

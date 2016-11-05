@@ -52,6 +52,8 @@ public interface DAO {
 
     void addAirfoils(Airfoil airfoil);
 
+    int getIdLinkByUrl(String link);
+
     /*void addPrefix(Prefix prefix1);
 
     Prefix getPrefix(char prefix);*/

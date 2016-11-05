@@ -21,10 +21,60 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.junit.Assert.assertTrue;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:/WEB-INF/spring/root-context.xml")
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class DAOImplTest {
+    @Test
+    public void getAirfoilsByPrefix() throws Exception {
+
+    }
+
+    @Test
+    public void getUserByName() throws Exception {
+
+    }
+
+    @Test
+    public void addMenus() throws Exception {
+
+    }
+
+    @Test
+    public void getAllUserRoles() throws Exception {
+
+    }
+
+    @Test
+    public void cleanAllTables() throws Exception {
+
+    }
+
+    @Test
+    public void addAirfoils() throws Exception {
+
+    }
+
+    @Test
+    public void update() throws Exception {
+
+    }
+
+    @Test
+    public void addAirfoils1() throws Exception {
+
+    }
+
+    @Test
+    public void getIdLinkByUrl() throws Exception {
+        int idLinkByUrl = dao.getIdLinkByUrl("/airfoil/details?airfoil=a18-il");
+        assertTrue(idLinkByUrl == 563);
+    }
+
+
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     @Test
     public void getProfilesByPrefix() throws Exception {
