@@ -22,4 +22,12 @@ public class ParserTest {
         parser.getAirfoilsByPrefix("A a18 to avistar (88)");
     }
 
+    @Test
+    public void initTest2() throws Exception {
+        parser.parseMenu();
+        System.out.println(Integer.MAX_VALUE);
+    }
+
+
+
 }

@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -138,7 +137,7 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public void addMenus(ArrayList<Menu> menus) {
+    public void addMenus(List<Menu> menus) {
         menus.forEach(this::save);
         /*for (Menu menu : menus) {
             save(menu);

@@ -1,12 +1,23 @@
-function getContext() {
+var currentPrefix = '';
+function getContent(prefix) {
+    console.log(currentPrefix);
+    if (currentPrefix != '') {
+        console.log('updatePage');
+        document.getElementById("contentid").removeChild(document.getElementById("airfoil_list"));
+    }
+    currentPrefix = prefix;
     $(document).ready(function () {
         $.ajax({
-            url: "/rest/getContext/A/0/0"
+            url: "/rest/getContext/" + prefix + "/0/0"
         }).then(function (data) {
             console.log(data);
             var airfoil_list = document.createElement('ul');
             airfoil_list.id = 'airfoil_list';
-            data.forEach(logArrayElements);
+            if (data.length == 0) {
+                airfoil_list.innerHTML = "не удалось загрузить airfoil с перфиксом " + prefix
+            } else {
+                data.forEach(logArrayElements);
+            }
             function logArrayElements(element, index, array) {
                 var id_airfoil = element.id;
                 var div = document.createElement('div');

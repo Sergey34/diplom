@@ -33,11 +33,11 @@ public class Parser {
 
     private static final String HTTP_AIRFOILTOOLS_COM = "http://airfoiltools.com/";
 
-    private void parseMenu() throws IOException {
+    public void parseMenu() throws IOException {
         Element mmenu = Jsoup.connect(HTTP_AIRFOILTOOLS_COM).get().body().getElementsByClass("mmenu").get(0);
         Elements menuList = mmenu.getElementsByTag("ul");
         Elements headerMenu = mmenu.getElementsByTag("h3");
-        ArrayList<Menu> menus = new ArrayList<>();
+        List<Menu> menus = new ArrayList<>();
         for (int i = 0; i < menuList.size(); i++) {
             Element menuElement = menuList.get(i);
             Menu menu1 = new Menu();
@@ -50,8 +50,10 @@ public class Parser {
                 Element a = link.getElementsByTag("a").first();
                 MenuItem menuItem;
                 if (menu1.getHeader().equals("Airfoils A to Z")) {
-                    String urlAction = a.attr("href");//// TODO: 05.11.16 сделать строку вызывающую js
+//                    <a href="Javascript:getContent()"'>Click me</a>
                     String text = a.text();//// TODO: 05.11.16 выделить префикс, удалить количество
+                    String prefix = createPrefix(text);
+                    String urlAction = "Javascript:getContent('" + prefix + "')";
                     menuItem = new MenuItem(text, urlAction);
                 } else {
                     menuItem = new MenuItem(a.text(), a.attr("href"));
@@ -67,7 +69,16 @@ public class Parser {
 //            return true;
         } catch (ConstraintViolationException e) {
             LOGGER.warn("Элемент меню: {} \n уже существует в базе {}", menus, e.getStackTrace());
+            throw e;
 //            return false;
+        }
+    }
+
+    private String createPrefix(String text) {
+        if (!"List of all airfoils".equals(text)) {
+            return String.valueOf(text.charAt(0));
+        } else {
+            return "allAirfoil";
         }
     }
 

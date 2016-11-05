@@ -5,7 +5,6 @@ import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface DAO {
@@ -40,7 +39,7 @@ public interface DAO {
 
     List<User> getUserByName(String name);
 
-    void addMenus(ArrayList<Menu> menus);
+    void addMenus(List<Menu> menus);
 
     List<UserRole> getAllUserRoles();
 
