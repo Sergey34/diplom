@@ -3,7 +3,7 @@ CREATE  TABLE users (
   id       INT         NOT NULL AUTO_INCREMENT,
   username VARCHAR(45) NOT NULL UNIQUE,
   password VARCHAR(45) NOT NULL ,
-  enabled  TINYINT     NOT NULL DEFAULT 1 ,
+  enabled  TINYINT     NOT NULL DEFAULT 1,
   PRIMARY KEY (id));
 
 CREATE TABLE roles (
@@ -65,26 +65,21 @@ CREATE TABLE menuHeader_menuItem (
   CONSTRAINT FOREIGN KEY (ItemId) REFERENCES menuItem (id)
 );
 
+
 /* Airfoils */
-ALTER TABLE test.airfoil_links
-  DROP FOREIGN KEY airfoil_links_ibfk_1;
-ALTER TABLE test.airfoil_links
-  DROP FOREIGN KEY airfoil_links_ibfk_2;
-ALTER TABLE test.prefix_airfoil
-  DROP FOREIGN KEY prefix_airfoil_ibfk_1;
-ALTER TABLE test.prefix_airfoil
-  DROP FOREIGN KEY prefix_airfoil_ibfk_2;
-DROP TABLE test.airfoil_links;
-DROP TABLE test.prefix_airfoil;
-DROP TABLE test.links;
-DROP TABLE test.airfoil;
-DROP TABLE test.prefix;
+
+CREATE TABLE prefix (
+  id_prefix INT PRIMARY KEY AUTO_INCREMENT,
+  prefix    CHAR UNIQUE
+);
 
 CREATE TABLE airfoil (
   id          INT PRIMARY KEY AUTO_INCREMENT,
   name        VARCHAR(255) UNIQUE,
   description VARCHAR(255),
-  image       VARCHAR(60)
+  image       VARCHAR(60),
+  prefix      INT,
+  FOREIGN KEY (prefix) REFERENCES prefix (id_prefix)
 );
 
 CREATE TABLE links (
@@ -96,19 +91,7 @@ CREATE TABLE links (
 
 CREATE TABLE airfoil_links (
   id_airfoil INT,
-  id_links   INT,
+  id_links   INT UNIQUE,
   FOREIGN KEY (id_airfoil) REFERENCES airfoil (id),
   FOREIGN KEY (id_links) REFERENCES links (id)
-);
-
-CREATE TABLE prefix (
-  id     INT PRIMARY KEY AUTO_INCREMENT,
-  prefix CHAR UNIQUE
-);
-
-CREATE TABLE prefix_airfoil (
-  id_prefix  INT,
-  id_airfoil INT,
-  FOREIGN KEY (id_prefix) REFERENCES prefix (id),
-  FOREIGN KEY (id_airfoil) REFERENCES airfoil (id)
 );
