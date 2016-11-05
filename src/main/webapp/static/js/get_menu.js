@@ -7,7 +7,7 @@ $(document).ready(function () {
     }).then(function (data) {
         data.forEach(logArrayElements);
         function logArrayElements(element, index, array) {
-            // console.log('a[' + index + '] = ' + element.header);
+            console.log(element.header);
             // элемент-список UL
             var list = document.getElementById('list');
             // новый элемент

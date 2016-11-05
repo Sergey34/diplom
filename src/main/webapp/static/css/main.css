@@ -90,6 +90,49 @@ body {
     padding: 0 0 0 270px;
 }
 
+.descr, .img, .link, .div_input {
+    position: absolute;
+}
+
+.descr, .img, .link, .div_input {
+    overflow: auto;
+    padding: 10px;
+}
+
+.descr {
+    width: 240px;
+    text-align: left;
+    font-size: 0.8em;
+    left: 660px;
+    border: 1px solid #000;
+}
+
+.img {
+    border: 1px solid #000;
+    height: 150px;
+    width: 360px;
+}
+
+.link {
+    font-size: 0.8em;
+    border: 1px solid #000;
+    height: 180px;
+    width: 160px;
+    left: 930px;
+}
+
+#airfoil_item {
+    height: 240px;
+}
+
+.name {
+    width: 360px;
+}
+
+.div_input {
+    left: 1110px;
+}
+
 /* Left Sidebar
 -----------------------------------------------------------------------------*/
 #menu {

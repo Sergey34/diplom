@@ -31,14 +31,12 @@
     <div class="middle">
 
         <div class="container">
-            <div class="content">
-                <img src="/resources/img/img1.png" alt="картинка"/>
+            <div class="content" id="contentid">
+                <!--<img src="/resources/img/img1.png" alt="картинка"/>-->
 
-                <strong><input id="edit_btn" value="Редактировать" type="button"></strong>
+                <!--<ul id="airfoil_list">
 
-                <ul id="airfoil_list">
-
-                </ul>
+                </ul>-->
             </div>
         </div>
 
@@ -61,34 +59,47 @@
 
 
 <script>
-    document.getElementById("edit_btn").onclick = someFunc;
     var is_editable = false;
-    function someFunc() {
+    function edit(id) {
+        console.log(id);
         is_editable = !is_editable;
-        function documentEdit(elementsEditable, is_edit) {
-            for (var i = 0; i < elementsEditable.length; i++) {
-                elementsEditable[i].setAttribute('contentEditable', is_edit);
-            }
-        }
+        var name = document.getElementById("name_" + id);
+        var descr = document.getElementById("airfoil_description_" + id);
+        var link = document.getElementById("link_" + id);
 
-        var elementsEditable = document.getElementsByClassName("editable");//style.outline ='2px solid #000';
+        name.setAttribute('contentEditable', is_editable);
+        descr.setAttribute('contentEditable', is_editable);
+        link.setAttribute('contentEditable', is_editable);
 
         if (is_editable) {
             document.getElementById("edit_btn").value = "Отменить";
-            //todo перезагрузить страницу со свежими данными
-            for (var i = 0; i < elementsEditable.length; i++) {
-                elementsEditable[i].style.outline = '2px solid #000';
-            }
+
+            var div_input = document.getElementById("div_input");
+            console.log(div_input);
+            var but = document.createElement('input');
+            but.type = 'button';
+            but.setAttribute('onclick', 'save(' + id + ');');
+            but.value = "Сохранить";
+            but.id = "btn_save";
+            div_input.appendChild(but);
+            //todo отобразить кнопку сохранить
+            name.style.outline = '2px solid #000';
+            descr.style.outline = '2px solid #000';
+            link.style.outline = '2px solid #000';
         } else {
             document.getElementById("edit_btn").value = "Редактировать";
-            for (var i = 0; i < elementsEditable.length; i++) {
-                elementsEditable[i].style.outline = '';
-            }
+            document.getElementById("div_input").removeChild(document.getElementById("btn_save"));
+            name.style.outline = '';
+            descr.style.outline = '';
+            link.style.outline = '';
         }
-        documentEdit(elementsEditable, is_editable);
     }
 
+    function save(id) {
+        console.log("save");
+        console.log(id);
 
+    }
 </script>
 </body>
 </html>

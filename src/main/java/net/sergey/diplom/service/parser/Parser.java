@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Component
 public class Parser {
@@ -44,9 +43,17 @@ public class Parser {
             menu1.setHeader(element.text());
             Set<MenuItem> menuItems = new LinkedHashSet<>();
             Elements links = menuElement.getElementsByTag("li");
+
             for (Element link : links) {
                 Element a = link.getElementsByTag("a").first();
-                MenuItem menuItem = new MenuItem(a.text(), a.attr("href"));
+                MenuItem menuItem;
+                if (menu1.getHeader().equals("Airfoils A to Z")) {
+                    String urlAction = a.attr("href");//// TODO: 05.11.16 сделать строку вызывающую js
+                    String text = a.text();//// TODO: 05.11.16 выделить префикс, удалить количество
+                    menuItem = new MenuItem(text, urlAction);
+                } else {
+                    menuItem = new MenuItem(a.text(), a.attr("href"));
+                }
                 menuItems.add(menuItem);
             }
             menu1.setMenuItems(menuItems);
@@ -70,37 +77,42 @@ public class Parser {
 
         Prefix prefix1 = new Prefix(prefix.charAt(0));
         List<Airfoil> airfoils = new ArrayList<>();
-        int n = createString(Jsoup.connect(fullUrl + 0).get().html(), "Page 1 of ([0-9]+).+");
-        for (int i = 0; i < n; i++) {
+        int countPages = getCountPages(Jsoup.connect(fullUrl + 0).get().html(), "Page 1 of ([0-9]+).+");
+        for (int i = 0; i < countPages; i++) {
             Elements airfoilList = Jsoup.connect(fullUrl + i).get().body().getElementsByClass("afSearchResult").
                     first().getElementsByTag("tr");
-            LOGGER.info(String.valueOf(i));
-            for (int j = 0; j < airfoilList.size(); j += 2) {
-                Elements cell12 = airfoilList.get(j).getElementsByClass("cell12");
-                if (cell12.first() == null) {
-                    j--;
-                } else {
-                    String name = cell12.text();
-                    Elements links = airfoilList.get(j).getElementsByClass("cell3");
-                    String image = airfoilList.get(j + 1).getElementsByClass("cell1").first().getElementsByTag("a").attr("href");
-                    String description = airfoilList.get(j + 1).getElementsByClass("cell2").text();
-
-
-                    Airfoil airfoil = new Airfoil(name, description, image, prefix1);
-
-                    airfoil.setLinks(parseLinks(links));
-
-                    airfoils.add(airfoil);
-
-
-                }
-            }
+            parsePage(prefix1, airfoils, airfoilList);
         }
         dao.addAirfoils(airfoils);
+        //// TODO: 05.11.16 если положили успешно обновить значение count для соответствующей строки в таблице menuItem
         return airfoils;
     }
 
-    private int createString(String item, String pattern) {
+    private void parsePage(Prefix prefix1, List<Airfoil> airfoils, Elements airfoilList) {
+        for (int j = 0; j < airfoilList.size(); j += 2) {
+            Elements cell12 = airfoilList.get(j).getElementsByClass("cell12");
+            if (cell12.first() == null) {
+                j--;//фильтруем реламу
+            } else {
+                String name = cell12.text();
+                Elements links = airfoilList.get(j).getElementsByClass("cell3");
+                String image = downloadImage(airfoilList, j);
+                String description = airfoilList.get(j + 1).getElementsByClass("cell2").text();
+
+                Airfoil airfoil = new Airfoil(name, description, image, prefix1);
+                airfoil.setLinks(parseLinks(links));
+                airfoils.add(airfoil);
+            }
+        }
+    }
+
+    private String downloadImage(Elements airfoilList, int j) {
+        String imgUrl = airfoilList.get(j + 1).getElementsByClass("cell1").first().getElementsByTag("a").attr("href");
+        //// TODO: 05.11.16 скачать картинку
+        return imgUrl;
+    }
+
+    private int getCountPages(String item, String pattern) {
         Pattern pt = Pattern.compile(pattern);
         Matcher matcher = pt.matcher(item);
         if (matcher.find()) {
@@ -110,13 +122,10 @@ public class Parser {
     }
 
     private Set<Links> parseLinks(Elements links) {
-        return links.first().getElementsByTag("a").stream().map(link
-                -> new Links(link.text(), link.attr("href"))).collect(Collectors.toCollection(HashSet::new));
-
-        /*HashSet<Link> linksSet = new HashSet<>();
+        Set<Links> linksSet = new HashSet<>();
         for (Element link : links.first().getElementsByTag("a")) {
-            linksSet.add(new Link(link.text(), link.attr("href")));
+            linksSet.add(new Links(link.text(), link.attr("href")));
         }
-        return linksSet;*/
+        return linksSet;
     }
 }
