@@ -74,9 +74,13 @@ public class FullRestController {
     }
 
     @RequestMapping(value = "/getContext/{prefix}/{startNumber}/{count}", method = RequestMethod.GET)
-    public List<Airfoil> getUserRole(@PathVariable char prefix, @PathVariable int startNumber, @PathVariable int count) throws IOException {
-        System.out.println(startNumber);
+    public List<Airfoil> getAirfoilByPrefix(@PathVariable char prefix, @PathVariable int startNumber, @PathVariable int count) throws IOException {
         return service.getAirfoilsByPrefix(prefix, startNumber, count);
+    }
+
+    @RequestMapping(value = "/getContext/allAirfoil/{startNumber}/{count}", method = RequestMethod.GET)
+    public List<Airfoil> getAirfoilByPrefix(@PathVariable int startNumber, @PathVariable int count) throws IOException {
+        return service.getAllAirfoils(startNumber, count);
     }
 
 

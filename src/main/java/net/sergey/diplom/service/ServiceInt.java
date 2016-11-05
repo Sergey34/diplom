@@ -28,4 +28,6 @@ public interface ServiceInt {
     List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count);
 
     boolean updateAirfoil(AirfoilView airfoilView);
+
+    List<Airfoil> getAllAirfoils(int startNumber, int count);
 }

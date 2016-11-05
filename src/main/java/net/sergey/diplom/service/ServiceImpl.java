@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -102,6 +103,11 @@ public class ServiceImpl implements ServiceInt {
         System.out.println(airfoil);
         dao.addAirfoils(airfoil);
         return false;
+    }
+
+    @Override
+    public List<Airfoil> getAllAirfoils(int startNumber, int count) {
+        return new ArrayList<>();
     }
 
     private Set<Links> setIdLinkByUrl(Set<Links> links) {

@@ -25,13 +25,20 @@ import java.util.regex.Pattern;
 
 @Component
 public class Parser {
+    private static final Pattern GET_PREFIX_BY_URL_PATTERN = Pattern.compile("page=(.)");
+    private static final Pattern GET_COUNT_PAGES_PATTERN = Pattern.compile("Page 1 of ([0-9]+).+");
     @Autowired
     DAO dao;
-
+    List<String> airfoilMenu = new ArrayList<>();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
 
     private static final String HTTP_AIRFOILTOOLS_COM = "http://airfoiltools.com/";
+
+    public void init() throws IOException {
+        parseMenu();
+        getAirfoilsByPrefix();
+    }
 
     public void parseMenu() throws IOException {
         Element mmenu = Jsoup.connect(HTTP_AIRFOILTOOLS_COM).get().body().getElementsByClass("mmenu").get(0);
@@ -50,11 +57,14 @@ public class Parser {
                 Element a = link.getElementsByTag("a").first();
                 MenuItem menuItem;
                 if (menu1.getHeader().equals("Airfoils A to Z")) {
-//                    <a href="Javascript:getContent()"'>Click me</a>
                     String text = a.text();//// TODO: 05.11.16 выделить префикс, удалить количество
                     String prefix = createPrefix(text);
                     String urlAction = "Javascript:getContent('" + prefix + "')";
                     menuItem = new MenuItem(text, urlAction);
+
+                    if (!"List of all airfoils".equals(text)) {
+                        airfoilMenu.add(a.attr("href"));
+                    }
                 } else {
                     menuItem = new MenuItem(a.text(), a.attr("href"));
                 }
@@ -83,22 +93,24 @@ public class Parser {
     }
 
 
-    public List<Airfoil> getAirfoilsByPrefix(String prefix) throws IOException {
-        List<Menu> menu = dao.getAllMenu();
-        String url = UtilParser.getUrlMenuByTitle(menu, prefix);
-        String fullUrl = HTTP_AIRFOILTOOLS_COM + url.substring(0, url.length() - 1);
+    public void getAirfoilsByPrefix() throws IOException {
+        //airfoilMenu.add("/search/list?page=b&no=0");
+        for (String url : airfoilMenu) {
+            String fullUrl = HTTP_AIRFOILTOOLS_COM + url;
 
-        Prefix prefix1 = new Prefix(prefix.charAt(0));
-        List<Airfoil> airfoils = new ArrayList<>();
-        int countPages = getCountPages(Jsoup.connect(fullUrl + 0).get().html(), "Page 1 of ([0-9]+).+");
-        for (int i = 0; i < countPages; i++) {
-            Elements airfoilList = Jsoup.connect(fullUrl + i).get().body().getElementsByClass("afSearchResult").
-                    first().getElementsByTag("tr");
-            parsePage(prefix1, airfoils, airfoilList);
+            Prefix prefix1 = new Prefix(createCharByPattern(url, GET_PREFIX_BY_URL_PATTERN));
+            List<Airfoil> airfoils = new ArrayList<>();
+            int countPages = createIntByPattern(Jsoup.connect(fullUrl + 0).get().html(), GET_COUNT_PAGES_PATTERN);
+            for (int i = 0; i < countPages; i++) {
+                Elements airfoilList = Jsoup.connect(fullUrl + i).get().body().getElementsByClass("afSearchResult").
+                        first().getElementsByTag("tr");
+                parsePage(prefix1, airfoils, airfoilList);
+            }
+            dao.addAirfoils(airfoils);
         }
-        dao.addAirfoils(airfoils);
+
         //// TODO: 05.11.16 если положили успешно обновить значение count для соответствующей строки в таблице menuItem
-        return airfoils;
+
     }
 
     private void parsePage(Prefix prefix1, List<Airfoil> airfoils, Elements airfoilList) {
@@ -125,9 +137,17 @@ public class Parser {
         return imgUrl;
     }
 
-    private int getCountPages(String item, String pattern) {
-        Pattern pt = Pattern.compile(pattern);
-        Matcher matcher = pt.matcher(item);
+
+    private char createCharByPattern(String item, Pattern pattern) {
+        Matcher matcher = pattern.matcher(item);
+        if (matcher.find()) {
+            return matcher.group(1).charAt(0);
+        }
+        return '0';
+    }
+
+    private int createIntByPattern(String item, Pattern pattern) {
+        Matcher matcher = pattern.matcher(item);
         if (matcher.find()) {
             return Integer.parseInt(matcher.group(1));
         }
