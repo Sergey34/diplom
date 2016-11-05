@@ -94,7 +94,6 @@ public class Parser {
 
 
     public void getAirfoilsByPrefix() throws IOException {
-        //airfoilMenu.add("/search/list?page=b&no=0");
         for (String url : airfoilMenu) {
             String fullUrl = HTTP_AIRFOILTOOLS_COM + url;
 

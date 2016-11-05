@@ -49,6 +49,16 @@ public class FullRestController {
         return "";
     }
 
+    @RequestMapping(value = "/aaa", method = RequestMethod.GET)
+    public List<Menu> getMaa() throws IOException {
+        LOGGER.info("ifoLogger {} ", "wqe");
+        LOGGER.debug("ifoLogger");
+        LOGGER.warn("ifoLogger");
+        LOGGER.error("ifoLogger");
+        return service.getMenu();
+    }
+
+
     @RequestMapping(value = "/menu", method = RequestMethod.GET)
     public List<Menu> getMenu() throws IOException {
         return service.getMenu();
