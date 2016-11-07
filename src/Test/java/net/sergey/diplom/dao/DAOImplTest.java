@@ -27,9 +27,16 @@ import static org.junit.Assert.assertTrue;
 @ContextConfiguration(locations = "classpath:/WEB-INF/spring/root-context.xml")
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class DAOImplTest {
+    @Autowired
+    private DAO dao;
+
     @Test
     public void getAirfoilsByPrefix() throws Exception {
-
+        long start = System.currentTimeMillis();
+        List<Airfoil> a = dao.getAirfoilsByPrefix('G', 0, 0);//900-700
+        System.out.println(a.get(0).getLinks());
+        long stop = System.currentTimeMillis();
+        System.out.println("time: " + (stop - start));
     }
 
     @Test
@@ -67,18 +74,17 @@ public class DAOImplTest {
 
     }
 
+
     @Test
     public void getIdLinkByUrl() throws Exception {
         int idLinkByUrl = dao.getIdLinkByUrl("/airfoil/details?airfoil=a18-il");
         assertTrue(idLinkByUrl == 563);
     }
 
-
-
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
+
     @Test
     public void getProfilesByPrefix() throws Exception {
-        LOGGER.info("kfsdhfbhsdbf11111111111");
     }
 
     @Test
@@ -180,9 +186,6 @@ public class DAOImplTest {
         user.setPassword("123456");
         dao.addUser(user);
     }
-
-    @Autowired
-    private DAO dao;
 
 
     @Test

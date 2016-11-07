@@ -26,7 +26,7 @@ public class Airfoil {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "airfoil_links", joinColumns = {@JoinColumn(name = "id_airfoil")},
-            inverseJoinColumns = {@JoinColumn(name = "id_links")})
+            inverseJoinColumns = {@JoinColumn(name = "id_links", unique = true)})
     private Set<Links> links;
 
     public Airfoil(String name, String description, String image, Prefix prefix) {

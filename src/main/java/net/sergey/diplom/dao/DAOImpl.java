@@ -176,6 +176,7 @@ public class DAOImpl implements DAO {
 
     @Override
     public int getIdLinkByUrl(String link) {
+        //// TODO: 06.11.16 переделать на параметр
         return (int) sessionFactory.getCurrentSession().createSQLQuery("SELECT id FROM links WHERE link='" + link + '\'').list().get(0);
     }
 }
