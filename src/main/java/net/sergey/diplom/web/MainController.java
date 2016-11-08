@@ -37,4 +37,9 @@ public class MainController {
         return "static/adminka.html";
     }
 
+    @RequestMapping(value = "/load", method = RequestMethod.GET)
+    public String showLoaderFile() {
+        return "static/fileUpload.html";
+    }
+
 }

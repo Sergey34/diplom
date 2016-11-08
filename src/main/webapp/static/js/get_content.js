@@ -34,7 +34,11 @@ function getContent(prefix) {
                 extracted(prefix, element.prefix.prefix, 'prefix_' + id_airfoil, 'prefix');
 
                 var image = document.createElement('div');
+                var img = document.createElement('img');
+                img.setAttribute("src", "/resources/airfoil_img" + element.image);
+                console.log(img);
                 extracted(image, element.image, 'airfoil_image_' + id_airfoil, 'img');
+                image.appendChild(img);
 
                 var description = document.createElement('div');
                 extracted(description, element.description, 'airfoil_description_' + id_airfoil, 'descr');

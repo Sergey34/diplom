@@ -15,7 +15,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -29,6 +34,9 @@ public class Parser {
     private static final Pattern GET_COUNT_PAGES_PATTERN = Pattern.compile("Page 1 of ([0-9]+).+");
     @Autowired
     DAO dao;
+    @Autowired
+    private ServletContext servletContext;
+
     List<String> airfoilMenu = new ArrayList<>();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
@@ -75,7 +83,7 @@ public class Parser {
         }
 
         try {
-            dao.addMenus(menus);
+            //dao.addMenus(menus);
 //            return true;
         } catch (ConstraintViolationException e) {
             LOGGER.warn("Элемент меню: {} \n уже существует в базе {}", menus, e.getStackTrace());
@@ -84,6 +92,7 @@ public class Parser {
         }
     }
 
+
     private String createPrefix(String text) {
         if (!"List of all airfoils".equals(text)) {
             return String.valueOf(text.charAt(0));
@@ -91,7 +100,6 @@ public class Parser {
             return "allAirfoil";
         }
     }
-
 
     public void getAirfoilsByPrefix() throws IOException {
         for (String url : airfoilMenu) {
@@ -105,14 +113,14 @@ public class Parser {
                         first().getElementsByTag("tr");
                 parsePage(prefix1, airfoils, airfoilList);
             }
-            dao.addAirfoils(airfoils);
+            //dao.addAirfoils(airfoils);
         }
 
         //// TODO: 05.11.16 если положили успешно обновить значение count для соответствующей строки в таблице menuItem
 
     }
 
-    private void parsePage(Prefix prefix1, List<Airfoil> airfoils, Elements airfoilList) {
+    private void parsePage(Prefix prefix1, List<Airfoil> airfoils, Elements airfoilList) throws IOException {
         for (int j = 0; j < airfoilList.size(); j += 2) {
             Elements cell12 = airfoilList.get(j).getElementsByClass("cell12");
             if (cell12.first() == null) {
@@ -130,8 +138,18 @@ public class Parser {
         }
     }
 
-    private String downloadImage(Elements airfoilList, int j) {
+    private String downloadImage(Elements airfoilList, int j) throws IOException {
         String imgUrl = airfoilList.get(j + 1).getElementsByClass("cell1").first().getElementsByTag("a").attr("href");
+
+        String path = servletContext.getRealPath("/resources/airfoil_img/");
+        BufferedImage img = ImageIO.read(new URL(HTTP_AIRFOILTOOLS_COM + imgUrl));
+        File file = new File(path + imgUrl);
+        if (!file.exists()) {
+            if (!file.createNewFile()) {
+                throw new IOException("не создался");
+            }
+        }
+        ImageIO.write(img, "png", file);
         //// TODO: 05.11.16 скачать картинку
         return imgUrl;
     }

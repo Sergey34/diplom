@@ -16,6 +16,7 @@
                 init-method="initIt">
     </beans:bean>-->
 
+
     <!-- Разрешаем использование аннотаций Spring MVC (то есть @Controller и.т.д) -->
     <annotation-driven/>
 
