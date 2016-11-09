@@ -2,10 +2,12 @@ package net.sergey.diplom.service.parser;
 
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.airfoil.Airfoil;
+import net.sergey.diplom.domain.airfoil.Links;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.service.utils.UtilsLogger;
+import org.apache.commons.io.FileUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -28,9 +30,15 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static net.sergey.diplom.service.ConstantApi.GET_DETAILS;
+import static net.sergey.diplom.service.ConstantApi.GET_FILE_CSV;
+
 @Component
 public class Parser {
     private static final Pattern GET_PREFIX_BY_URL_PATTERN = Pattern.compile("page=(.)");
+    private static final Pattern GET_ID_BY_FULL_NAME_PATTERN = Pattern.compile("\\((.+)\\) .*");
+    //    /polar/details?polar=xf-a18-il-50000
+    private static final Pattern GET_FILE_NAME_BY_URL_PATTERN = Pattern.compile("polar=(.+)$");
     private static final Pattern GET_COUNT_PAGES_PATTERN = Pattern.compile("Page 1 of ([0-9]+).+");
     @Autowired
     DAO dao;
@@ -41,7 +49,7 @@ public class Parser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
 
-    private static final String HTTP_AIRFOILTOOLS_COM = "http://airfoiltools.com/";
+    private static final String HTTP_AIRFOIL_TOOLS_COM = "http://airfoiltools.com/";
 
     public void init() throws IOException {
         parseMenu();
@@ -49,7 +57,7 @@ public class Parser {
     }
 
     public void parseMenu() throws IOException {
-        Element mmenu = Jsoup.connect(HTTP_AIRFOILTOOLS_COM).get().body().getElementsByClass("mmenu").get(0);
+        Element mmenu = Jsoup.connect(HTTP_AIRFOIL_TOOLS_COM).get().body().getElementsByClass("mmenu").get(0);
         Elements menuList = mmenu.getElementsByTag("ul");
         Elements headerMenu = mmenu.getElementsByTag("h3");
         List<Menu> menus = new ArrayList<>();
@@ -103,7 +111,7 @@ public class Parser {
 
     public void getAirfoilsByPrefix() throws IOException {
         for (String url : airfoilMenu) {
-            String fullUrl = HTTP_AIRFOILTOOLS_COM + url;
+            String fullUrl = HTTP_AIRFOIL_TOOLS_COM + url;
 
             Prefix prefix1 = new Prefix(createCharByPattern(url, GET_PREFIX_BY_URL_PATTERN));
             List<Airfoil> airfoils = new ArrayList<>();
@@ -132,7 +140,11 @@ public class Parser {
                 String description = airfoilList.get(j + 1).getElementsByClass("cell2").text();
 
                 Airfoil airfoil = new Airfoil(name, description, image, prefix1);
-                airfoil.setLinks(UtilParser.parseLinks(links));
+                String idAirfoil = createStringByPattern(name, GET_ID_BY_FULL_NAME_PATTERN);
+                Set<Links> linksSet = UtilParser.parseLinks(links);
+                downloadDetailInfo(idAirfoil);
+
+                airfoil.setLinks(linksSet);
                 airfoils.add(airfoil);
             }
         }
@@ -142,7 +154,7 @@ public class Parser {
         String imgUrl = airfoilList.get(j + 1).getElementsByClass("cell1").first().getElementsByTag("a").attr("href");
 
         String path = servletContext.getRealPath("/resources/airfoil_img/");
-        BufferedImage img = ImageIO.read(new URL(HTTP_AIRFOILTOOLS_COM + imgUrl));
+        BufferedImage img = ImageIO.read(new URL(HTTP_AIRFOIL_TOOLS_COM + imgUrl));
         File file = new File(path + imgUrl);
         if (!file.exists()) {
             if (!file.createNewFile()) {
@@ -150,7 +162,6 @@ public class Parser {
             }
         }
         ImageIO.write(img, "png", file);
-        //// TODO: 05.11.16 скачать картинку
         return imgUrl;
     }
 
@@ -163,6 +174,14 @@ public class Parser {
         return '0';
     }
 
+    private String createStringByPattern(String item, Pattern pattern) {
+        Matcher matcher = pattern.matcher(item);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return "0";
+    }
+
     private int createIntByPattern(String item, Pattern pattern) {
         Matcher matcher = pattern.matcher(item);
         if (matcher.find()) {
@@ -171,5 +190,28 @@ public class Parser {
         return 0;
     }
 
+
+    public void downloadDetailInfo(String airfoil) throws IOException {
+        String url = GET_DETAILS + airfoil;
+        Elements polar1 = Jsoup.connect(url).get().getElementsByClass("polar");
+        LOGGER.debug("url {}", url);
+        if (polar1.size() == 0) {
+            return;
+        }
+        Elements polar = polar1.first().getElementsByClass("cell7");
+        for (Element element : polar) {
+            Elements a = element.getElementsByTag("a");
+            if (a.size() != 0) {
+                String fileName = createStringByPattern(a.attr("href"), GET_FILE_NAME_BY_URL_PATTERN);
+                URL urlFile = new URL(GET_FILE_CSV + fileName);
+                String path = servletContext.getRealPath("/resources/");
+
+                File file = new File(path + fileName + ".csv");
+                FileUtils.copyURLToFile(urlFile, file);
+
+                System.out.println(element);
+            }
+        }
+    }
 
 }

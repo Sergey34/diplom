@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,6 +15,7 @@ import java.util.regex.Pattern;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:/WEB-INF/spring/root-context.xml")
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
+@WebAppConfiguration
 public class ParserTest {
     @Autowired
     Parser parser;
@@ -57,4 +59,12 @@ public class ParserTest {
         }
         return (T) "a";
     }
+
+
+    @Test
+    public void initTest4() throws Exception {
+        parser.init();
+    }
+
+
 }
