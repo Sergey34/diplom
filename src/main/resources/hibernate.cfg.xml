@@ -15,5 +15,6 @@
         <mapping class="net.sergey.diplom.domain.user.UserRole"/>
         <mapping class="net.sergey.diplom.domain.airfoil.Airfoil"/>
         <mapping class="net.sergey.diplom.domain.airfoil.Links"/>
+        <mapping class="net.sergey.diplom.domain.airfoil.Coordinates"/>
     </session-factory>
 </hibernate-configuration>

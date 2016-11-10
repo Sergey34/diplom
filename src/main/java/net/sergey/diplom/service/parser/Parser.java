@@ -1,13 +1,15 @@
 package net.sergey.diplom.service.parser;
 
+import au.com.bytecode.opencsv.CSVReader;
+import com.google.gson.Gson;
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.airfoil.Airfoil;
+import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Links;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.service.utils.UtilsLogger;
-import org.apache.commons.io.FileUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -22,11 +24,9 @@ import javax.servlet.ServletContext;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,7 +37,6 @@ import static net.sergey.diplom.service.ConstantApi.GET_FILE_CSV;
 public class Parser {
     private static final Pattern GET_PREFIX_BY_URL_PATTERN = Pattern.compile("page=(.)");
     private static final Pattern GET_ID_BY_FULL_NAME_PATTERN = Pattern.compile("\\((.+)\\) .*");
-    //    /polar/details?polar=xf-a18-il-50000
     private static final Pattern GET_FILE_NAME_BY_URL_PATTERN = Pattern.compile("polar=(.+)$");
     private static final Pattern GET_COUNT_PAGES_PATTERN = Pattern.compile("Page 1 of ([0-9]+).+");
     @Autowired
@@ -113,7 +112,7 @@ public class Parser {
         for (String url : airfoilMenu) {
             String fullUrl = HTTP_AIRFOIL_TOOLS_COM + url;
 
-            Prefix prefix1 = new Prefix(createCharByPattern(url, GET_PREFIX_BY_URL_PATTERN));
+            Prefix prefix1 = new Prefix(createStringByPattern(url, GET_PREFIX_BY_URL_PATTERN).charAt(0));
             List<Airfoil> airfoils = new ArrayList<>();
             int countPages = createIntByPattern(Jsoup.connect(fullUrl + 0).get().html(), GET_COUNT_PAGES_PATTERN);
             for (int i = 0; i < countPages; i++) {
@@ -142,7 +141,7 @@ public class Parser {
                 Airfoil airfoil = new Airfoil(name, description, image, prefix1);
                 String idAirfoil = createStringByPattern(name, GET_ID_BY_FULL_NAME_PATTERN);
                 Set<Links> linksSet = UtilParser.parseLinks(links);
-                downloadDetailInfo(idAirfoil);
+                airfoil.setCoordinates(downloadDetailInfo(idAirfoil));
 
                 airfoil.setLinks(linksSet);
                 airfoils.add(airfoil);
@@ -165,21 +164,12 @@ public class Parser {
         return imgUrl;
     }
 
-
-    private char createCharByPattern(String item, Pattern pattern) {
-        Matcher matcher = pattern.matcher(item);
-        if (matcher.find()) {
-            return matcher.group(1).charAt(0);
-        }
-        return '0';
-    }
-
     private String createStringByPattern(String item, Pattern pattern) {
         Matcher matcher = pattern.matcher(item);
         if (matcher.find()) {
             return matcher.group(1);
         }
-        return "0";
+        return "";
     }
 
     private int createIntByPattern(String item, Pattern pattern) {
@@ -191,27 +181,45 @@ public class Parser {
     }
 
 
-    public void downloadDetailInfo(String airfoil) throws IOException {
-        String url = GET_DETAILS + airfoil;
-        Elements polar1 = Jsoup.connect(url).get().getElementsByClass("polar");
-        LOGGER.debug("url {}", url);
+    public Set<Coordinates> downloadDetailInfo(String airfoil) throws IOException {
+        Elements polar1 = Jsoup.connect(GET_DETAILS + airfoil).get().getElementsByClass("polar");
+        LOGGER.debug("url {}{}", GET_DETAILS, airfoil);
         if (polar1.size() == 0) {
-            return;
+            return Collections.emptySet();
         }
         Elements polar = polar1.first().getElementsByClass("cell7");
+        Set<Coordinates> coordinates = new HashSet<>();
         for (Element element : polar) {
             Elements a = element.getElementsByTag("a");
             if (a.size() != 0) {
                 String fileName = createStringByPattern(a.attr("href"), GET_FILE_NAME_BY_URL_PATTERN);
                 URL urlFile = new URL(GET_FILE_CSV + fileName);
-                String path = servletContext.getRealPath("/resources/");
-
-                File file = new File(path + fileName + ".csv");
-                FileUtils.copyURLToFile(urlFile, file);
-
-                System.out.println(element);
+                coordinates.add(new Coordinates(parseFileCSVtoJson(urlFile), fileName));
             }
         }
+        return coordinates;
+    }
+
+    private String parseFileCSVtoJson(URL urlFile) throws IOException {
+        Map<String, List<Double>> coordinates;
+        try (CSVReader csvReader = new CSVReader(new InputStreamReader(urlFile.openStream()), ',', '\'', 10)) {
+            List<String[]> strings = csvReader.readAll();
+            coordinates = generateMapping(strings.get(0));
+            for (int i = 0; i < strings.get(0).length; i++) {
+                for (int j = 1; j < strings.size(); j++) {
+                    coordinates.get(strings.get(0)[i]).add(Double.parseDouble(strings.get(j)[i]));
+                }
+            }
+        }
+        return new Gson().toJson(coordinates);
+    }
+
+    private Map<String, List<Double>> generateMapping(String[] keys) {
+        HashMap<String, List<Double>> coordinates = new HashMap<>();
+        for (String key : keys) {
+            coordinates.put(key, new ArrayList<>());
+        }
+        return coordinates;
     }
 
 }

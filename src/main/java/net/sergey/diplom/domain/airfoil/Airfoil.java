@@ -29,6 +29,15 @@ public class Airfoil {
             inverseJoinColumns = {@JoinColumn(name = "id_links", unique = true)})
     private Set<Links> links;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "airfoil_coordinates", joinColumns = {@JoinColumn(name = "id_airfoil")},
+            inverseJoinColumns = {@JoinColumn(name = "id_coordinates", unique = true)})
+    private Set<Coordinates> coordinates;
+
+    public Set<Coordinates> getCoordinates() {
+        return coordinates;
+    }
+
     public Airfoil(String name, String description, String image, Prefix prefix) {
         this.name = name;
         this.description = description;
@@ -123,5 +132,9 @@ public class Airfoil {
 
     public void setLinks(Set<Links> links) {
         this.links = links;
+    }
+
+    public void setCoordinates(Set<Coordinates> coordinates) {
+        this.coordinates = coordinates;
     }
 }
