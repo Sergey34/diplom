@@ -12,7 +12,7 @@ public class MenuItem {
     @Column(name = "name")
     private String name;
     @Column(name = "url")
-    private String url;
+    private String url;//// TODO: 11.11.16 заменить поле url на prefix, сделать связь "один к одному" с таблицей Prefix
 
     public MenuItem(String name, String url) {
         this.name = name;

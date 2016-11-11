@@ -9,6 +9,7 @@ import net.sergey.diplom.domain.airfoil.Links;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
+import net.sergey.diplom.service.ConstantApi;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jsoup.Jsoup;
@@ -39,12 +40,13 @@ public class Parser {
     private static final Pattern GET_ID_BY_FULL_NAME_PATTERN = Pattern.compile("\\((.+)\\) .*");
     private static final Pattern GET_FILE_NAME_BY_URL_PATTERN = Pattern.compile("polar=(.+)$");
     private static final Pattern GET_COUNT_PAGES_PATTERN = Pattern.compile("Page 1 of ([0-9]+).+");
+    private static final Pattern GET_MENU_TITLE_PATTERN = Pattern.compile("^(.+) \\([0-9]*\\)$");
     @Autowired
     DAO dao;
     @Autowired
     private ServletContext servletContext;
 
-    List<String> airfoilMenu = new ArrayList<>();
+    private List<String> airfoilMenu = new ArrayList<>();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
 
@@ -70,27 +72,23 @@ public class Parser {
 
             for (Element link : links) {
                 Element a = link.getElementsByTag("a").first();
-                MenuItem menuItem;
                 if (menu1.getHeader().equals("Airfoils A to Z")) {
-                    String text = a.text();//// TODO: 05.11.16 выделить префикс, удалить количество
+                    String text = createStringByPattern(a.text(), GET_MENU_TITLE_PATTERN);
                     String prefix = createPrefix(text);
-                    String urlAction = "Javascript:getContent('" + prefix + "')";
-                    menuItem = new MenuItem(text, urlAction);
+                    MenuItem menuItem = new MenuItem(text, prefix);//// TODO: 11.11.16 класть префикс
 
                     if (!"List of all airfoils".equals(text)) {
-                        airfoilMenu.add(a.attr("href"));
+                        airfoilMenu.add(a.attr("href"));//todo класть префикс
                     }
-                } else {
-                    menuItem = new MenuItem(a.text(), a.attr("href"));
+                    menuItems.add(menuItem);
                 }
-                menuItems.add(menuItem);
             }
             menu1.setMenuItems(menuItems);
             menus.add(menu1);
         }
 
         try {
-            //dao.addMenus(menus);
+            dao.addMenus(menus);
 //            return true;
         } catch (ConstraintViolationException e) {
             LOGGER.warn("Элемент меню: {} \n уже существует в базе {}", menus, e.getStackTrace());
@@ -110,7 +108,7 @@ public class Parser {
 
     public void getAirfoilsByPrefix() throws IOException {
         for (String url : airfoilMenu) {
-            String fullUrl = HTTP_AIRFOIL_TOOLS_COM + url;
+            String fullUrl = ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX + url;
 
             Prefix prefix1 = new Prefix(createStringByPattern(url, GET_PREFIX_BY_URL_PATTERN).charAt(0));
             List<Airfoil> airfoils = new ArrayList<>();
@@ -120,7 +118,7 @@ public class Parser {
                         first().getElementsByTag("tr");
                 parsePage(prefix1, airfoils, airfoilList);
             }
-            //dao.addAirfoils(airfoils);
+            dao.addAirfoils(airfoils);
         }
 
         //// TODO: 05.11.16 если положили успешно обновить значение count для соответствующей строки в таблице menuItem

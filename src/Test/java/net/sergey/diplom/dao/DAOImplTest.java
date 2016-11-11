@@ -33,7 +33,7 @@ public class DAOImplTest {
     @Test
     public void getAirfoilsByPrefix() throws Exception {
         long start = System.currentTimeMillis();
-        List<Airfoil> a = dao.getAirfoilsByPrefix('G', 0, 0);//900-700
+        List<Airfoil> a = dao.getAirfoilsWithLinksByPrefix('G', 0, 0);//900-700
         System.out.println(a.get(0).getLinks());
         long stop = System.currentTimeMillis();
         System.out.println("time: " + (stop - start));
@@ -125,7 +125,7 @@ public class DAOImplTest {
 
     @Test
     public void deleteProfileByPrefix() throws Exception {
-        dao.getAirfoilsByPrefix('A', 0, 0);
+        dao.getAirfoilsWithLinksByPrefix('A', 0, 0);
 
     }
 

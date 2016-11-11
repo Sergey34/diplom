@@ -76,7 +76,7 @@ public class ServiceImplTest {
 
     @Test
     public void getAirfoilsByLiteral() throws Exception {
-        // service.getAirfoilsByPrefix("A a18 to avistar (88)");
+        // service.getAirfoilsWithLinksByPrefix("A a18 to avistar (88)");
     }
 
 }

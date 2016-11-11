@@ -29,7 +29,24 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
+    public List<Airfoil> getAirfoilsWithLinksByPrefix(char prefix, int startNumber, int count) {
+        List<Airfoil> airfoils = getAirfoilsByPrefix(prefix, startNumber, count);
+        for (Airfoil airfoil : airfoils) {
+            Hibernate.initialize(airfoil.getLinks());
+        }
+        return airfoils;
+    }
+
+    @Override
+    public List<Airfoil> getAirfoilsWithCoordinatesByPrefix(char prefix, int startNumber, int count) {
+        List<Airfoil> airfoils = getAirfoilsByPrefix(prefix, startNumber, count);
+        for (Airfoil airfoil : airfoils) {
+            Hibernate.initialize(airfoil.getCoordinates());
+        }
+        return airfoils;
+    }
+
+    private List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
         Prefix prefixTemplate = new Prefix(prefix);
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Airfoil.class)
                 .createCriteria("prefix")
@@ -37,47 +54,9 @@ public class DAOImpl implements DAO {
         if (count != 0) {
             criteria.setMaxResults(count);
         }
+        @SuppressWarnings("unchecked")
         List<Airfoil> airfoils = criteria.list();
-        for (Airfoil airfoil : airfoils) {
-            Hibernate.initialize(airfoil.getLinks());
-            Hibernate.initialize(airfoil.getPrefix());
-        }
         return airfoils;
-    }
-
-    @Override
-    public List<Airfoil> getProfilesByName(String name) {
-        return null;
-    }
-
-    @Override
-    public List<Airfoil> getAllProfiles() {
-        return null;
-    }
-
-    @Override
-    public boolean addProfile(Airfoil profile) {
-        return false;
-    }
-
-    @Override
-    public Airfoil updateProfile(Airfoil profile) {
-        return null;
-    }
-
-    @Override
-    public boolean deleteProfileById(int id) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteProfileByName(String name) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteProfileByPrefix(char prefix) {
-        return false;
     }
 
     @Override
@@ -93,28 +72,8 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public List<Menu> getMenuByHeader(String header) {
-        return null;
-    }
-
-    @Override
-    public void addMenu(Menu menu) {
-        save(menu);
-    }
-
-    @Override
-    public Menu updateMenu(Menu menu) {
-        return null;
-    }
-
-    @Override
     public void addUser(User user) {
         save(user);
-    }
-
-    @Override
-    public void updateUserPassword(String password) {
-
     }
 
     @Override
@@ -131,17 +90,15 @@ public class DAOImpl implements DAO {
         return users;
     }
 
-
     private <T> void save(T object) {
         sessionFactory.getCurrentSession().saveOrUpdate(object);
     }
 
     @Override
     public void addMenus(List<Menu> menus) {
-        menus.forEach(this::save);
-        /*for (Menu menu : menus) {
+        for (Menu menu : menus) {
             save(menu);
-        }*/
+        }
     }
 
     @Override
@@ -162,11 +119,6 @@ public class DAOImpl implements DAO {
         for (Airfoil airfoil : airfoils) {
             currentSession.merge(airfoil);
         }
-    }
-
-    @Override
-    public <T> void update(T t) {
-        sessionFactory.getCurrentSession().update(t);
     }
 
     @Override

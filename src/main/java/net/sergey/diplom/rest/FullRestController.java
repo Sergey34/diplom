@@ -3,6 +3,7 @@ package net.sergey.diplom.rest;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.UserRole;
+import net.sergey.diplom.model.AirfoilAbstract;
 import net.sergey.diplom.service.ServiceInt;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.slf4j.Logger;
@@ -84,7 +85,7 @@ public class FullRestController {
     }
 
     @RequestMapping(value = "/getContext/{prefix}/{startNumber}/{count}", method = RequestMethod.GET)
-    public List<Airfoil> getAirfoilByPrefix(@PathVariable char prefix, @PathVariable int startNumber, @PathVariable int count) throws IOException {
+    public List<AirfoilAbstract> getAirfoilByPrefix(@PathVariable char prefix, @PathVariable int startNumber, @PathVariable int count) throws IOException {
         return service.getAirfoilsByPrefix(prefix, startNumber, count);
     }
 

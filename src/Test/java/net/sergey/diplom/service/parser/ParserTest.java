@@ -1,6 +1,5 @@
 package net.sergey.diplom.service.parser;
 
-import au.com.bytecode.opencsv.CSVReader;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,10 +9,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,19 +63,9 @@ public class ParserTest {
 
     @Test
     public void initTest4() throws Exception {
-        URL urlFile = new URL("http://airfoiltools.com/polar/csv?polar=xf-a18-il-50000");
+        String s = "S s1010 to supermarine371ii (174)";
 
 
-        Coordinates Coordinates;
-        try (CSVReader csvReader = new CSVReader(new InputStreamReader(urlFile.openStream()), ',', '\'', 10)) {
-            List<String[]> strings = csvReader.readAll();
-            Coordinates = new Coordinates(new HashMap<>(), strings.get(0));
-            for (int i = 0; i < strings.get(0).length; i++) {
-                for (int j = 1; j < strings.size(); j++) {
-                    Coordinates.getCoordinates().get(strings.get(0)[i]).add(Double.parseDouble(strings.get(j)[i]));
-                }
-            }
-        }
     }
 
 

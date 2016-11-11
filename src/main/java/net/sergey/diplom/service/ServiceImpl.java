@@ -7,6 +7,7 @@ import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
+import net.sergey.diplom.model.AirfoilAbstract;
 import net.sergey.diplom.model.AirfoilView;
 import net.sergey.diplom.service.parser.UtilParser;
 import net.sergey.diplom.service.utils.UtilRoles;
@@ -85,8 +86,8 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
-        return dao.getAirfoilsByPrefix(prefix, startNumber, count);
+    public List<AirfoilAbstract> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
+        return Mapper.mappAirfoilOnAirfoilLink(dao.getAirfoilsWithLinksByPrefix(prefix, startNumber, count));
 
     }
 

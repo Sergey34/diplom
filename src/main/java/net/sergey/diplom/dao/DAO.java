@@ -9,33 +9,13 @@ import java.util.List;
 
 public interface DAO {
 
-    List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count);
+    List<Airfoil> getAirfoilsWithLinksByPrefix(char prefix, int startNumber, int count);
 
-    List<Airfoil> getProfilesByName(String name);
-
-    List<Airfoil> getAllProfiles();
-
-    boolean addProfile(Airfoil profile);
-
-    Airfoil updateProfile(Airfoil profile);
-
-    boolean deleteProfileById(int id);
-
-    boolean deleteProfileByName(String name);
-
-    boolean deleteProfileByPrefix(char prefix);
+    List<Airfoil> getAirfoilsWithCoordinatesByPrefix(char prefix, int startNumber, int count);
 
     List<Menu> getAllMenu();
 
-    List<Menu> getMenuByHeader(String header);
-
-    void addMenu(Menu menu);
-
-    Menu updateMenu(Menu menu);
-
     void addUser(User user);
-
-    void updateUserPassword(String password);
 
     List<User> getUserByName(String name);
 
@@ -47,13 +27,7 @@ public interface DAO {
 
     void addAirfoils(List<Airfoil> airfoils);
 
-    <T> void update(T t);
-
     void addAirfoils(Airfoil airfoil);
 
     int getIdLinkByUrl(String link);
-
-    /*void addPrefix(Prefix prefix1);
-
-    Prefix getPrefix(char prefix);*/
 }

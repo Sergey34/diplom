@@ -1,6 +1,9 @@
 package net.sergey.diplom.domain.airfoil;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "prefix")
@@ -8,7 +11,6 @@ public class Prefix {
     @Id
     @Column(name = "id_prefix")
     private int id;
-    @Basic
     @Column(name = "prefix")
     private char prefix;
 

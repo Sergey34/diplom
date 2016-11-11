@@ -1,9 +1,6 @@
 $(document).ready(function () {
     $.ajax({
         url: "/rest/menu"
-        /*headers: {
-         "Authorization": "Basic " + btoa(username + ":" + password)
-         }*/
     }).then(function (data) {
         data.forEach(logArrayElements);
         function logArrayElements(element, index, array) {
@@ -27,7 +24,7 @@ $(document).ready(function () {
             // новый элемент
             var li = document.createElement('LI');
             // <a href="/plotter/index">Airfoil plotter</a>
-            li.innerHTML = '<a href=\"' + element.url + '\">' + element.name + '</a>';
+            li.innerHTML = '<a href="/context?prefix=' + element.url + '\">' + element.name + '</a>';
             // добавление в конец
             list.appendChild(li)
         }

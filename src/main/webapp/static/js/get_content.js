@@ -1,5 +1,7 @@
 var currentPrefix = '';
-function getContent(prefix) {
+function getContent() {
+    var prefix = $.getUrlVar('prefix') != undefined ? $.getUrlVar('prefix') : 'A';
+
     console.log(currentPrefix);
     if (currentPrefix != '') {
         console.log('updatePage');
@@ -19,69 +21,44 @@ function getContent(prefix) {
                 data.forEach(logArrayElements);
             }
             function logArrayElements(element, index, array) {
-                var id_airfoil = element.id;
                 var div = document.createElement('div');
                 div.id = 'airfoil_item';
 
                 var name = document.createElement('div');
-                extracted(name, element.name, 'name_' + id_airfoil, 'name');
-
-                var id = document.createElement('div');
-                id.style.display = "none";
-                extracted(id, element.id, 'airfoil_id_' + id_airfoil, 'id');
-                var prefix = document.createElement('div');
-                prefix.style.display = "none";
-                extracted(prefix, element.prefix.prefix, 'prefix_' + id_airfoil, 'prefix');
+                extracted(name, element.name, 'name');
 
                 var image = document.createElement('div');
                 var img = document.createElement('img');
                 img.setAttribute("src", "/resources/airfoil_img" + element.image);
-                console.log(img);
-                extracted(image, element.image, 'airfoil_image_' + id_airfoil, 'img');
+                extracted(image, '', 'img');
                 image.appendChild(img);
 
                 var description = document.createElement('div');
-                extracted(description, element.description, 'airfoil_description_' + id_airfoil, 'descr');
+                extracted(description, element.description, 'descr');
 
                 var links = document.createElement('div');
-                links.id = 'link_' + id_airfoil;
                 links.setAttribute('class', 'link');
                 for (var i = 0; i < element.links.length; i++) {
                     var linkItem = document.createElement('p');
                     var innerHtml = '<a href="' + element.links[i].link + '">' + element.links[i].name + '</a>';
-                    extracted(linkItem, innerHtml, 'airfoil_links_' + id_airfoil);
+                    extracted(linkItem, innerHtml);
                     links.appendChild(linkItem);
                 }
-
-                var divInput = document.createElement('div');
-                divInput.setAttribute('class', 'div_input');
-                divInput.id = 'div_input_' + id_airfoil;
-                var but = document.createElement('input');
-                but.type = 'button';
-                but.id = 'edit_btn_' + id_airfoil;
-                but.setAttribute('onclick', 'edit(' + element.id + ');');
-                but.value = "Редактировать";
-                divInput.appendChild(but);
 
                 div.appendChild(name);
                 div.appendChild(image);
                 div.appendChild(description);
                 div.appendChild(links);
-                div.appendChild(id);
-                div.appendChild(prefix);
-                div.appendChild(divInput);
                 // добавление в конец
                 airfoil_list.appendChild(div);
-
             }
 
             document.getElementById('contentid').appendChild(airfoil_list);
         });
     });
 }
-function extracted(element, value, id, className) {
+function extracted(element, value, className) {
     element.innerHTML = value;
-    element.setAttribute('class', 'editable ' + className);
-    element.id = id;
+    element.setAttribute('class', className);
 }
 
