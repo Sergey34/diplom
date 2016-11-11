@@ -32,6 +32,9 @@ import static org.junit.Assert.assertTrue;
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 @WebAppConfiguration
 public class DAOImplTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
+    private static final Type TYPE_FILTER = new TypeToken<Map<String, List<Double>>>() {
+    }.getType();
     @Autowired
     private DAO dao;
 
@@ -79,22 +82,16 @@ public class DAOImplTest {
 
     }
 
-
     @Test
     public void getIdLinkByUrl() throws Exception {
         int idLinkByUrl = dao.getIdLinkByUrl("/airfoil/details?airfoil=a18-il");
         assertTrue(idLinkByUrl == 563);
     }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-
     @Test
     public void getProfilesByPrefix() throws Exception {
     }
 
-
-    private static final Type TYPE_FILTER = new TypeToken<Map<String, List<Double>>>() {
-    }.getType();
     @Test
     public void getCoord() throws Exception {
         Coordinates coord = (Coordinates) dao.getCoord().get(0);
@@ -111,7 +108,6 @@ public class DAOImplTest {
         dao.getAirfoilsWithLinksByPrefix('A', 0, 0);
 
     }
-
 
 
     @Test

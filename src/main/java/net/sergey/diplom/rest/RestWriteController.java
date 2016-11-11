@@ -21,9 +21,10 @@ import java.io.IOException;
 public class RestWriteController {
     @Autowired
     private ServletContext servletContext;
-
     @Autowired
     private ServiceInt service;
+    @Autowired
+    private Parser parser;
 
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)
     public String addUser(@RequestBody UserView userView) {
@@ -37,7 +38,6 @@ public class RestWriteController {
         }
         return "error";
     }
-
 
     @RequestMapping(value = "/editAirfoil", method = RequestMethod.POST)
     public String editAirfoil(@RequestBody AirfoilView airfoilView) {
@@ -67,9 +67,6 @@ public class RestWriteController {
             return "Вам не удалось загрузить " + name + " потому что файл пустой.";
         }
     }
-
-    @Autowired
-    private Parser parser;
 
     @RequestMapping(value = "/init", method = RequestMethod.GET)
     public String init() {

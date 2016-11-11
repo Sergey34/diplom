@@ -39,16 +39,13 @@ public class Parser {
     private static final Pattern GET_FILE_NAME_BY_URL_PATTERN = Pattern.compile("polar=(.+)$");
     private static final Pattern GET_COUNT_PAGES_PATTERN = Pattern.compile("Page 1 of ([0-9]+).+");
     private static final Pattern GET_MENU_TITLE_PATTERN = Pattern.compile("^(.+) \\([0-9]*\\)$");
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
+    private static final String HTTP_AIRFOIL_TOOLS_COM = "http://airfoiltools.com/";
     @Autowired
     DAO dao;
     @Autowired
     private ServletContext servletContext;
-
     private List<String> airfoilMenu = new ArrayList<>();
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-
-    private static final String HTTP_AIRFOIL_TOOLS_COM = "http://airfoiltools.com/";
 
     public void init() throws IOException {
         parseMenu();

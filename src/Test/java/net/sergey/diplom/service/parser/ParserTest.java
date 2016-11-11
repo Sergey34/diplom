@@ -19,6 +19,9 @@ import java.util.regex.Pattern;
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 @WebAppConfiguration
 public class ParserTest {
+    @Autowired
+    Parser parser;
+
     @Test
     public void init() throws Exception {
 
@@ -40,9 +43,6 @@ public class ParserTest {
         //Set<Coordinates> coordinates = parser.downloadDetailInfo("goe279-il");
         System.out.println(coordinates);
     }
-
-    @Autowired
-    Parser parser;
 
     @Test
     public void initTest() throws Exception {

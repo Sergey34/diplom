@@ -24,11 +24,9 @@ import java.util.List;
 @Service
 public class ServiceImpl implements ServiceInt {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     //private final ApplicationContext applicationContext;
     private final DAO dao;
-
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
 
     @Autowired
     public ServiceImpl(DAO dao) {

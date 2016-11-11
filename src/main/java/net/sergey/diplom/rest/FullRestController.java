@@ -93,7 +93,4 @@ public class FullRestController {
     public List<Airfoil> getAirfoilByPrefix(@PathVariable int startNumber, @PathVariable int count) throws IOException {
         return service.getAllAirfoils(startNumber, count);
     }
-
-
-
 }
