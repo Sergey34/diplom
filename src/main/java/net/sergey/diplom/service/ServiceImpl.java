@@ -2,14 +2,12 @@ package net.sergey.diplom.service;
 
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.domain.airfoil.Links;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.model.AirfoilAbstract;
 import net.sergey.diplom.model.AirfoilView;
-import net.sergey.diplom.service.parser.UtilParser;
 import net.sergey.diplom.service.utils.UtilRoles;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.hibernate.exception.ConstraintViolationException;
@@ -22,7 +20,6 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ServiceImpl implements ServiceInt {
@@ -98,10 +95,6 @@ public class ServiceImpl implements ServiceInt {
                 airfoilView.getImage(),
                 airfoilView.getId(),
                 new Prefix(airfoilView.getPrefix().charAt(0)));
-        Set<Links> links = UtilParser.parseLinks(airfoilView.getLink());
-        links = setIdLinkByUrl(links);
-        airfoil.setLinks(links);
-        System.out.println(airfoil);
         dao.addAirfoils(airfoil);
         return false;
     }
@@ -109,12 +102,5 @@ public class ServiceImpl implements ServiceInt {
     @Override
     public List<Airfoil> getAllAirfoils(int startNumber, int count) {
         return new ArrayList<>();
-    }
-
-    private Set<Links> setIdLinkByUrl(Set<Links> links) {
-        for (Links link : links) {
-            link.setId(dao.getIdLinkByUrl(link.getLink()));
-        }
-        return links;
     }
 }

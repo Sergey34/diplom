@@ -1,6 +1,7 @@
 package net.sergey.diplom.dao;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
+import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.User;
@@ -31,9 +32,6 @@ public class DAOImpl implements DAO {
     @Override
     public List<Airfoil> getAirfoilsWithLinksByPrefix(char prefix, int startNumber, int count) {
         List<Airfoil> airfoils = getAirfoilsByPrefix(prefix, startNumber, count);
-        for (Airfoil airfoil : airfoils) {
-            Hibernate.initialize(airfoil.getLinks());
-        }
         return airfoils;
     }
 
@@ -130,5 +128,15 @@ public class DAOImpl implements DAO {
     public int getIdLinkByUrl(String link) {
         //// TODO: 06.11.16 переделать на параметр
         return (int) sessionFactory.getCurrentSession().createSQLQuery("SELECT id FROM links WHERE link='" + link + '\'').list().get(0);
+    }
+
+    @Override
+    public List getCoord() {
+        return sessionFactory.getCurrentSession().createCriteria(Coordinates.class).add(Restrictions.eq("id", -2145363502)).list();
+    }
+
+    @Override
+    public Airfoil getAirfoilById(int id) {
+        return (Airfoil) sessionFactory.getCurrentSession().createCriteria(Airfoil.class).add(Restrictions.eq("id", id)).uniqueResult();
     }
 }

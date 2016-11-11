@@ -8,18 +8,25 @@ import java.util.Set;
 @Table(name = "menuHeader")
 public class Menu {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
     @Column(name = "header")
     private String header;
-
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "menuHeader_menuItem",
             joinColumns = {@JoinColumn(name = "headerId")},
             inverseJoinColumns = {@JoinColumn(name = "ItemId")})
     private Set<MenuItem> menuItems;
+
+
+    public Menu() {
+    }
+
+    public Menu(String header) {
+        this.header = header;
+        this.id = header.hashCode();
+    }
 
     public int getId() {
         return id;

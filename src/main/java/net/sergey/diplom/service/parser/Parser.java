@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
-import net.sergey.diplom.domain.airfoil.Links;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
@@ -36,8 +35,7 @@ import static net.sergey.diplom.service.ConstantApi.GET_FILE_CSV;
 
 @Component
 public class Parser {
-    private static final Pattern GET_PREFIX_BY_URL_PATTERN = Pattern.compile("page=(.)");
-    private static final Pattern GET_ID_BY_FULL_NAME_PATTERN = Pattern.compile("\\((.+)\\) .*");
+    private static final Pattern GET_ID_BY_FULL_NAME_PATTERN = Pattern.compile("\\(([a-zA-Z0-9_-]+)\\) .*");
     private static final Pattern GET_FILE_NAME_BY_URL_PATTERN = Pattern.compile("polar=(.+)$");
     private static final Pattern GET_COUNT_PAGES_PATTERN = Pattern.compile("Page 1 of ([0-9]+).+");
     private static final Pattern GET_MENU_TITLE_PATTERN = Pattern.compile("^(.+) \\([0-9]*\\)$");
@@ -64,27 +62,29 @@ public class Parser {
         List<Menu> menus = new ArrayList<>();
         for (int i = 0; i < menuList.size(); i++) {
             Element menuElement = menuList.get(i);
-            Menu menu1 = new Menu();
             Elements element = headerMenu.get(i).getElementsByTag("h3");
-            menu1.setHeader(element.text());
-            Set<MenuItem> menuItems = new LinkedHashSet<>();
-            Elements links = menuElement.getElementsByTag("li");
+            if ("Airfoils A to Z".equals(element.text())) {
+                Menu menu1 = new Menu(element.text());
+                Set<MenuItem> menuItems = new LinkedHashSet<>();
+                Elements links = menuElement.getElementsByTag("li");
 
-            for (Element link : links) {
-                Element a = link.getElementsByTag("a").first();
-                if (menu1.getHeader().equals("Airfoils A to Z")) {
-                    String text = createStringByPattern(a.text(), GET_MENU_TITLE_PATTERN);
-                    String prefix = createPrefix(text);
-                    MenuItem menuItem = new MenuItem(text, prefix);//// TODO: 11.11.16 класть префикс
+                for (Element link : links) {
+                    Element a = link.getElementsByTag("a").first();
+                    if (menu1.getHeader().equals("Airfoils A to Z")) {
+                        String text = createStringByPattern(a.text(), GET_MENU_TITLE_PATTERN);
+                        String prefix = createPrefix(text);
+                        MenuItem menuItem = new MenuItem(text, prefix);
 
-                    if (!"List of all airfoils".equals(text)) {
-                        airfoilMenu.add(a.attr("href"));//todo класть префикс
+                        if (!prefix.equals("allAirfoil")) {
+                            airfoilMenu.add(prefix);
+                            menuItems.add(menuItem);
+                        }
+
                     }
-                    menuItems.add(menuItem);
                 }
+                menu1.setMenuItems(menuItems);
+                menus.add(menu1);
             }
-            menu1.setMenuItems(menuItems);
-            menus.add(menu1);
         }
 
         try {
@@ -99,7 +99,7 @@ public class Parser {
 
 
     private String createPrefix(String text) {
-        if (!"List of all airfoils".equals(text)) {
+        if (!"".equals(text)) {
             return String.valueOf(text.charAt(0));
         } else {
             return "allAirfoil";
@@ -110,19 +110,16 @@ public class Parser {
         for (String url : airfoilMenu) {
             String fullUrl = ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX + url;
 
-            Prefix prefix1 = new Prefix(createStringByPattern(url, GET_PREFIX_BY_URL_PATTERN).charAt(0));
+            Prefix prefix1 = new Prefix(url.charAt(0));
             List<Airfoil> airfoils = new ArrayList<>();
-            int countPages = createIntByPattern(Jsoup.connect(fullUrl + 0).get().html(), GET_COUNT_PAGES_PATTERN);
+            int countPages = createIntByPattern(Jsoup.connect(fullUrl).get().html(), GET_COUNT_PAGES_PATTERN);
             for (int i = 0; i < countPages; i++) {
-                Elements airfoilList = Jsoup.connect(fullUrl + i).get().body().getElementsByClass("afSearchResult").
+                Elements airfoilList = Jsoup.connect(fullUrl + "&no=" + i).get().body().getElementsByClass("afSearchResult").
                         first().getElementsByTag("tr");
                 parsePage(prefix1, airfoils, airfoilList);
             }
             dao.addAirfoils(airfoils);
         }
-
-        //// TODO: 05.11.16 если положили успешно обновить значение count для соответствующей строки в таблице menuItem
-
     }
 
     private void parsePage(Prefix prefix1, List<Airfoil> airfoils, Elements airfoilList) throws IOException {
@@ -132,16 +129,12 @@ public class Parser {
                 j--;//фильтруем реламу
             } else {
                 String name = cell12.text();
-                Elements links = airfoilList.get(j).getElementsByClass("cell3");
                 String image = downloadImage(airfoilList, j);
                 String description = airfoilList.get(j + 1).getElementsByClass("cell2").text();
 
-                Airfoil airfoil = new Airfoil(name, description, image, prefix1);
                 String idAirfoil = createStringByPattern(name, GET_ID_BY_FULL_NAME_PATTERN);
-                Set<Links> linksSet = UtilParser.parseLinks(links);
+                Airfoil airfoil = new Airfoil(name, description, image, prefix1, idAirfoil);
                 airfoil.setCoordinates(downloadDetailInfo(idAirfoil));
-
-                airfoil.setLinks(linksSet);
                 airfoils.add(airfoil);
             }
         }
@@ -181,7 +174,6 @@ public class Parser {
 
     public Set<Coordinates> downloadDetailInfo(String airfoil) throws IOException {
         Elements polar1 = Jsoup.connect(GET_DETAILS + airfoil).get().getElementsByClass("polar");
-        LOGGER.debug("url {}{}", GET_DETAILS, airfoil);
         if (polar1.size() == 0) {
             return Collections.emptySet();
         }
@@ -192,6 +184,7 @@ public class Parser {
             if (a.size() != 0) {
                 String fileName = createStringByPattern(a.attr("href"), GET_FILE_NAME_BY_URL_PATTERN);
                 URL urlFile = new URL(GET_FILE_CSV + fileName);
+                LOGGER.debug("url {}{}", GET_FILE_CSV, fileName);
                 coordinates.add(new Coordinates(parseFileCSVtoJson(urlFile), fileName));
             }
         }
@@ -200,14 +193,19 @@ public class Parser {
 
     private String parseFileCSVtoJson(URL urlFile) throws IOException {
         Map<String, List<Double>> coordinates;
-        try (CSVReader csvReader = new CSVReader(new InputStreamReader(urlFile.openStream()), ',', '\'', 10)) {
+        try (CSVReader csvReader = new CSVReader(new InputStreamReader(urlFile.openStream()), ',')) {
             List<String[]> strings = csvReader.readAll();
-            coordinates = generateMapping(strings.get(0));
-            for (int i = 0; i < strings.get(0).length; i++) {
-                for (int j = 1; j < strings.size(); j++) {
-                    coordinates.get(strings.get(0)[i]).add(Double.parseDouble(strings.get(j)[i]));
+            coordinates = generateMapping(strings.get(10));
+            int count = strings.get(10).length;
+            for (int i = 0; i < count; i++) {
+                String key = strings.get(10)[i];
+                for (int j = 11; j < strings.size(); j++) {
+                    coordinates.get(key).add(Double.parseDouble(strings.get(j)[i]));
                 }
             }
+        } catch (NumberFormatException | IOException e) {
+            LOGGER.warn("невалидный файл!!! {}\n{}", urlFile, e.getMessage());
+            return new Gson().toJson(null);
         }
         return new Gson().toJson(coordinates);
     }

@@ -1,22 +1,25 @@
 package net.sergey.diplom.domain.menu;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "menuItem")
 public class MenuItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
     @Column(name = "name")
     private String name;
     @Column(name = "url")
-    private String url;//// TODO: 11.11.16 заменить поле url на prefix, сделать связь "один к одному" с таблицей Prefix
+    private String url;//// TODO: 11.11.16 переименовать поле url на prefix
 
     public MenuItem(String name, String url) {
         this.name = name;
         this.url = url;
+        this.id = name.hashCode();
     }
 
     public MenuItem() {

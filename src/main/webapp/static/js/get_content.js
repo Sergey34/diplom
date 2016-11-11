@@ -38,12 +38,8 @@ function getContent() {
 
                 var links = document.createElement('div');
                 links.setAttribute('class', 'link');
-                for (var i = 0; i < element.links.length; i++) {
-                    var linkItem = document.createElement('p');
-                    var innerHtml = '<a href="' + element.links[i].link + '">' + element.links[i].name + '</a>';
-                    extracted(linkItem, innerHtml);
-                    links.appendChild(linkItem);
-                }
+                links.innerHTML = '<a href="/getDetailInfo?airfoilId=' + element.id + '">Airfoil details</a>';
+
 
                 div.appendChild(name);
                 div.appendChild(image);

@@ -1,5 +1,6 @@
 package net.sergey.diplom.model;
 
+@Deprecated
 public class AirfoilView {
     private int id;
     private String name;

@@ -1,8 +1,9 @@
 package net.sergey.diplom.dao;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.domain.airfoil.Links;
-import net.sergey.diplom.domain.airfoil.Prefix;
+import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.service.utils.UtilsLogger;
@@ -16,9 +17,12 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertTrue;
@@ -26,6 +30,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:/WEB-INF/spring/root-context.xml")
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
+@WebAppConfiguration
 public class DAOImplTest {
     @Autowired
     private DAO dao;
@@ -34,7 +39,7 @@ public class DAOImplTest {
     public void getAirfoilsByPrefix() throws Exception {
         long start = System.currentTimeMillis();
         List<Airfoil> a = dao.getAirfoilsWithLinksByPrefix('G', 0, 0);//900-700
-        System.out.println(a.get(0).getLinks());
+//        System.out.println(a.get(0).getLinks());
         long stop = System.currentTimeMillis();
         System.out.println("time: " + (stop - start));
     }
@@ -87,41 +92,19 @@ public class DAOImplTest {
     public void getProfilesByPrefix() throws Exception {
     }
 
+
+    private static final Type TYPE_FILTER = new TypeToken<Map<String, List<Double>>>() {
+    }.getType();
     @Test
-    public void getProfilesByName() throws Exception {
-        Airfoil airfoil = new Airfoil("name", "discription", "img", new Prefix('Z'));
-        Set<Links> linkses = new HashSet<>();
-        linkses.add(new Links("url", "name"));
-        linkses.add(new Links("url2", "name2"));
-        airfoil.setLinks(linkses);
+    public void getCoord() throws Exception {
+        Coordinates coord = (Coordinates) dao.getCoord().get(0);
+        Map<String, List<Double>> map = new Gson().fromJson(coord.getCoordinatesJson(), TYPE_FILTER);
+        System.out.println(map);
+
+        Airfoil airfoil = dao.getAirfoilById("p51hroot-il".hashCode());
         System.out.println(airfoil);
-        dao.addAirfoils(airfoil);
     }
 
-    @Test
-    public void getAllProfiles() throws Exception {
-
-    }
-
-    @Test
-    public void addProfile() throws Exception {
-
-    }
-
-    @Test
-    public void updateProfile() throws Exception {
-
-    }
-
-    @Test
-    public void deleteProfileById() throws Exception {
-
-    }
-
-    @Test
-    public void deleteProfileByName() throws Exception {
-
-    }
 
     @Test
     public void deleteProfileByPrefix() throws Exception {
@@ -129,25 +112,7 @@ public class DAOImplTest {
 
     }
 
-    @Test
-    public void getAllMenu() throws Exception {
 
-    }
-
-    @Test
-    public void getMenuByHeader() throws Exception {
-
-    }
-
-    @Test
-    public void addMenu() throws Exception {
-
-    }
-
-    @Test
-    public void updateMenu() throws Exception {
-
-    }
 
     @Test
     public void addUser() throws Exception {

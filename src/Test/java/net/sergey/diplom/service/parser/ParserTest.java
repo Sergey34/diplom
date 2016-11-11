@@ -1,5 +1,6 @@
 package net.sergey.diplom.service.parser;
 
+import net.sergey.diplom.domain.airfoil.Coordinates;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,6 +19,28 @@ import java.util.regex.Pattern;
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 @WebAppConfiguration
 public class ParserTest {
+    @Test
+    public void init() throws Exception {
+
+    }
+
+    @Test
+    public void parseMenu() throws Exception {
+
+    }
+
+    @Test
+    public void getAirfoilsByPrefix() throws Exception {
+
+    }
+
+    @Test
+    public void downloadDetailInfo() throws Exception {
+        Set<Coordinates> coordinates = parser.downloadDetailInfo("goe280-il");
+        //Set<Coordinates> coordinates = parser.downloadDetailInfo("goe279-il");
+        System.out.println(coordinates);
+    }
+
     @Autowired
     Parser parser;
 

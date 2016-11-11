@@ -82,16 +82,24 @@ CREATE TABLE airfoil (
   FOREIGN KEY (prefix) REFERENCES prefix (id_prefix)
 );
 
-CREATE TABLE links (
-  id   INT NOT NULL AUTO_INCREMENT,
-  name VARCHAR(255),
-  link VARCHAR(255),
-  PRIMARY KEY (id)
+CREATE TABLE coordinates (
+  id              INT NOT NULL PRIMARY KEY,
+  coordinatesJson TEXT
 );
 
-CREATE TABLE airfoil_links (
-  id_airfoil INT,
-  id_links   INT UNIQUE,
+CREATE TABLE airfoil_coordinates (
+  id_airfoil     INT,
+  id_coordinates INT UNIQUE,
   FOREIGN KEY (id_airfoil) REFERENCES airfoil (id),
-  FOREIGN KEY (id_links) REFERENCES links (id)
+  FOREIGN KEY (id_coordinates) REFERENCES coordinates (id)
 );
+
+SELECT count(*)
+FROM airfoil;
+
+SELECT
+  table_schema                                  "database_name",
+  sum(data_length + index_length) / 1024 / 1024 "Data Base Size in MB"
+FROM information_schema.TABLES
+GROUP BY table_schema;
+

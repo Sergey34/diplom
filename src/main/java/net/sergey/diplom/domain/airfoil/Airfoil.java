@@ -8,7 +8,6 @@ import java.util.Set;
 public class Airfoil {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Basic
     @Column(name = "name")
@@ -25,11 +24,6 @@ public class Airfoil {
     private Prefix prefix;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "airfoil_links", joinColumns = {@JoinColumn(name = "id_airfoil")},
-            inverseJoinColumns = {@JoinColumn(name = "id_links", unique = true)})
-    private Set<Links> links;
-
-    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "airfoil_coordinates", joinColumns = {@JoinColumn(name = "id_airfoil")},
             inverseJoinColumns = {@JoinColumn(name = "id_coordinates", unique = true)})
     private Set<Coordinates> coordinates;
@@ -38,11 +32,12 @@ public class Airfoil {
         return coordinates;
     }
 
-    public Airfoil(String name, String description, String image, Prefix prefix) {
+    public Airfoil(String name, String description, String image, Prefix prefix, String idAirfoil) {
         this.name = name;
         this.description = description;
         this.image = image;
         this.prefix = prefix;
+        this.id = idAirfoil.hashCode();
     }
 
     public Airfoil() {
@@ -124,14 +119,6 @@ public class Airfoil {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (image != null ? image.hashCode() : 0);
         return result;
-    }
-
-    public Set<Links> getLinks() {
-        return links;
-    }
-
-    public void setLinks(Set<Links> links) {
-        this.links = links;
     }
 
     public void setCoordinates(Set<Coordinates> coordinates) {

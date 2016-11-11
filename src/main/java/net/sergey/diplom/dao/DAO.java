@@ -30,4 +30,8 @@ public interface DAO {
     void addAirfoils(Airfoil airfoil);
 
     int getIdLinkByUrl(String link);
+
+    List getCoord();
+
+    Airfoil getAirfoilById(int id);
 }
