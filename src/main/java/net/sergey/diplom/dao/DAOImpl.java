@@ -132,11 +132,15 @@ public class DAOImpl implements DAO {
 
     @Override
     public List getCoord() {
-        return sessionFactory.getCurrentSession().createCriteria(Coordinates.class).add(Restrictions.eq("id", -2145363502)).list();
+        return sessionFactory.getCurrentSession().createCriteria(Coordinates.class).add(Restrictions.eq("id", -2147459337)).list();
     }
 
     @Override
     public Airfoil getAirfoilById(int id) {
-        return (Airfoil) sessionFactory.getCurrentSession().createCriteria(Airfoil.class).add(Restrictions.eq("id", id)).uniqueResult();
+        Airfoil airfoil = (Airfoil) sessionFactory.getCurrentSession().createCriteria(Airfoil.class).add(Restrictions.eq("id", id)).uniqueResult();
+        if (null != airfoil) {
+            Hibernate.initialize(airfoil.getCoordinates());
+        }
+        return airfoil;
     }
 }

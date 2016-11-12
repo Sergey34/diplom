@@ -5,6 +5,7 @@ import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.model.AirfoilAbstract;
+import net.sergey.diplom.model.AirfoilDetail;
 import net.sergey.diplom.model.AirfoilView;
 
 import java.io.IOException;
@@ -31,4 +32,6 @@ public interface ServiceInt {
     boolean updateAirfoil(AirfoilView airfoilView);
 
     List<Airfoil> getAllAirfoils(int startNumber, int count);
+
+    AirfoilDetail getDetailInfo(int airfoilId);
 }

@@ -39,6 +39,7 @@ public class Parser {
     private static final Pattern GET_FILE_NAME_BY_URL_PATTERN = Pattern.compile("polar=(.+)$");
     private static final Pattern GET_COUNT_PAGES_PATTERN = Pattern.compile("Page 1 of ([0-9]+).+");
     private static final Pattern GET_MENU_TITLE_PATTERN = Pattern.compile("^(.+) \\([0-9]*\\)$");
+    private static final Pattern GET_FILE_NAME_PATTERN = Pattern.compile("^(.+)\\..+");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static final String HTTP_AIRFOIL_TOOLS_COM = "http://airfoiltools.com/";
     @Autowired
@@ -53,7 +54,7 @@ public class Parser {
     }
 
     public void parseMenu() throws IOException {
-        Element mmenu = Jsoup.connect(HTTP_AIRFOIL_TOOLS_COM).get().body().getElementsByClass("mmenu").get(0);
+        Element mmenu = Jsoup.connect(HTTP_AIRFOIL_TOOLS_COM).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get().body().getElementsByClass("mmenu").get(0);
         Elements menuList = mmenu.getElementsByTag("ul");
         Elements headerMenu = mmenu.getElementsByTag("h3");
         List<Menu> menus = new ArrayList<>();
@@ -81,6 +82,7 @@ public class Parser {
                 }
                 menu1.setMenuItems(menuItems);
                 menus.add(menu1);
+                break;
             }
         }
 
@@ -109,9 +111,9 @@ public class Parser {
 
             Prefix prefix1 = new Prefix(url.charAt(0));
             List<Airfoil> airfoils = new ArrayList<>();
-            int countPages = createIntByPattern(Jsoup.connect(fullUrl).get().html(), GET_COUNT_PAGES_PATTERN);
+            int countPages = createIntByPattern(Jsoup.connect(fullUrl).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get().html(), GET_COUNT_PAGES_PATTERN);
             for (int i = 0; i < countPages; i++) {
-                Elements airfoilList = Jsoup.connect(fullUrl + "&no=" + i).get().body().getElementsByClass("afSearchResult").
+                Elements airfoilList = Jsoup.connect(fullUrl + "&no=" + i).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get().body().getElementsByClass("afSearchResult").
                         first().getElementsByTag("tr");
                 parsePage(prefix1, airfoils, airfoilList);
             }
@@ -170,7 +172,7 @@ public class Parser {
 
 
     public Set<Coordinates> downloadDetailInfo(String airfoil) throws IOException {
-        Elements polar1 = Jsoup.connect(GET_DETAILS + airfoil).get().getElementsByClass("polar");
+        Elements polar1 = Jsoup.connect(GET_DETAILS + airfoil).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get().getElementsByClass("polar");
         if (polar1.size() == 0) {
             return Collections.emptySet();
         }

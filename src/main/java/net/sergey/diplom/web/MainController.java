@@ -42,4 +42,9 @@ public class MainController {
         return "static/fileUpload.html";
     }
 
+    @RequestMapping(value = "/getDetailInfo", method = RequestMethod.GET)
+    public String showDetailInfo() {
+        return "static/detailInfo.html";
+    }
+
 }

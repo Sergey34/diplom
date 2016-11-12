@@ -1,9 +1,6 @@
 package net.sergey.diplom.dao;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.service.utils.UtilsLogger;
@@ -19,10 +16,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertTrue;
@@ -33,8 +28,6 @@ import static org.junit.Assert.assertTrue;
 @WebAppConfiguration
 public class DAOImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-    private static final Type TYPE_FILTER = new TypeToken<Map<String, List<Double>>>() {
-    }.getType();
     @Autowired
     private DAO dao;
 
@@ -92,16 +85,11 @@ public class DAOImplTest {
     public void getProfilesByPrefix() throws Exception {
     }
 
-    @Test
-    public void getCoord() throws Exception {
-        Coordinates coord = (Coordinates) dao.getCoord().get(0);
-        Map<String, List<Double>> map = new Gson().fromJson(coord.getCoordinatesJson(), TYPE_FILTER);
-        System.out.println(map);
 
-        Airfoil airfoil = dao.getAirfoilById("p51hroot-il".hashCode());
-        System.out.println(airfoil);
+    public static void main(String[] args) throws Exception {
+
+
     }
-
 
     @Test
     public void deleteProfileByPrefix() throws Exception {

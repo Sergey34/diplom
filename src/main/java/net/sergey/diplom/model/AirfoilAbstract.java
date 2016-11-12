@@ -15,6 +15,9 @@ public class AirfoilAbstract {
         this.image = airfoil.getImage();
     }
 
+    public AirfoilAbstract() {
+    }
+
     public String getName() {
         return name;
     }

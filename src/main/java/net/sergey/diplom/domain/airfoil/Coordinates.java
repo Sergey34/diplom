@@ -13,9 +13,12 @@ public class Coordinates {
     private int id;
     @Column(name = "coordinatesJson")
     private String coordinatesJson;
+    @Column(name = "fileName")
+    private String fileName;
 
     public Coordinates(String coordinatesJson, String fileNameId) {
         this.coordinatesJson = coordinatesJson;
+        this.fileName = fileNameId;
         this.id = fileNameId.hashCode();
     }
 
@@ -55,5 +58,13 @@ public class Coordinates {
 
     public void setCoordinatesJson(String coordinatesJson) {
         this.coordinatesJson = coordinatesJson;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }
