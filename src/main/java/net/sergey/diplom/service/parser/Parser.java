@@ -1,7 +1,5 @@
 package net.sergey.diplom.service.parser;
 
-import au.com.bytecode.opencsv.CSVReader;
-import com.google.gson.Gson;
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
@@ -22,6 +20,7 @@ import org.springframework.stereotype.Component;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -184,37 +183,25 @@ public class Parser {
                 String fileName = createStringByPattern(a.attr("href"), GET_FILE_NAME_BY_URL_PATTERN);
                 URL urlFile = new URL(GET_FILE_CSV + fileName);
                 LOGGER.debug("url {}{}", GET_FILE_CSV, fileName);
-                coordinates.add(new Coordinates(parseFileCSVtoJson(urlFile), fileName));
+                coordinates.add(new Coordinates(csvToString(urlFile), fileName));
             }
         }
         return coordinates;
     }
 
-    private String parseFileCSVtoJson(URL urlFile) throws IOException {
-        Map<String, List<Double>> coordinates;
-        try (CSVReader csvReader = new CSVReader(new InputStreamReader(urlFile.openStream()), ',')) {
-            List<String[]> strings = csvReader.readAll();
-            coordinates = generateMapping(strings.get(10));
-            int count = strings.get(10).length;
-            for (int i = 0; i < count; i++) {
-                String key = strings.get(10)[i];
-                for (int j = 11; j < strings.size(); j++) {
-                    coordinates.get(key).add(Double.parseDouble(strings.get(j)[i]));
-                }
+
+    public String csvToString(URL urlFile) throws IOException {
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlFile.openStream()))) {
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line).append('\n');
             }
-        } catch (NumberFormatException | IOException e) {
-            LOGGER.warn("невалидный файл!!! {}\n{}", urlFile, e.getMessage());
-            return new Gson().toJson(null);
+            return stringBuilder.toString();
         }
-        return new Gson().toJson(coordinates);
     }
 
-    private Map<String, List<Double>> generateMapping(String[] keys) {
-        HashMap<String, List<Double>> coordinates = new HashMap<>();
-        for (String key : keys) {
-            coordinates.put(key, new ArrayList<>());
-        }
-        return coordinates;
-    }
+
 
 }

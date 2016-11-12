@@ -1,7 +1,7 @@
 package net.sergey.diplom.service;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import au.com.bytecode.opencsv.CSVParser;
+import au.com.bytecode.opencsv.CSVWriter;
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
@@ -26,11 +26,14 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 public class ServiceImpl implements ServiceInt {
@@ -113,13 +116,12 @@ public class ServiceImpl implements ServiceInt {
         return new ArrayList<>();
     }
 
-    private static final Type TYPE_FILTER = new TypeToken<Map<String, List<Double>>>() {
-    }.getType();
     @Autowired
     private ServletContext servletContext;
 
     @Override
     public AirfoilDetail getDetailInfo(int airfoilId) {
+        long start = System.currentTimeMillis();
         Airfoil airfoil = dao.getAirfoilById(airfoilId);
         if (null == airfoil) {
             return AirfoilDetail.getAirfoilDetailError("airfoil не найден");
@@ -137,6 +139,7 @@ public class ServiceImpl implements ServiceInt {
 
         fillXYChart(airfoil, chartClCd, chartClAlpha, chartCdAlpha, chartCmAlpha, chartClCdAlpha);
         String path = servletContext.getRealPath("/resources/chartTemp/");
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
         try {
             BitmapEncoder.saveBitmap(chartClCd, path + airfoil.getId() + "ClCd", BitmapEncoder.BitmapFormat.PNG);
             BitmapEncoder.saveBitmap(chartClAlpha, path + airfoil.getId() + "ClAlpha", BitmapEncoder.BitmapFormat.PNG);
@@ -146,12 +149,17 @@ public class ServiceImpl implements ServiceInt {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        long stop = System.currentTimeMillis();
+        System.out.println(stop - start);
         return new AirfoilDetail(airfoil);
     }
 
     private void fillXYChart(Airfoil airfoil, XYChart chartClCd, XYChart chartClAlpha, XYChart chartCdAlpha, XYChart chartCmAlpha, XYChart chartClCdAlpha) {
         for (Coordinates coordinates : airfoil.getCoordinates()) {
-            Map<String, List<Double>> map = new Gson().fromJson(coordinates.getCoordinatesJson(), TYPE_FILTER);
+            Map<String, List<Double>> map = parseStrCSVtoMap(coordinates.getCoordinatesJson(), coordinates.getFileName());
+            if (map == null) {
+                return;
+            }
             chartClCd.addSeries(coordinates.getFileName(), map.get("Cd"), map.get("Cl")).setMarker(SeriesMarkers.NONE);
             chartClAlpha.addSeries(coordinates.getFileName(), map.get("Alpha"), map.get("Cl")).setMarker(SeriesMarkers.NONE);
             List<Double> clDivCd = divListValue(map.get("Cl"), map.get("Cd"));
@@ -167,6 +175,35 @@ public class ServiceImpl implements ServiceInt {
             clDivCd.add(cl.get(i) / cd.get(i));
         }
         return clDivCd;
+    }
 
+    private Map<String, List<Double>> parseStrCSVtoMap(String coordinateStr, String fileName) {
+        Map<String, List<Double>> coordinates;
+        try (CSVWriter csvWriter = new CSVWriter(new FileWriter(servletContext.getRealPath("/resources/tmpCsv/") + "/" + fileName + ".csv"))) {
+            CSVParser csvParser = new CSVParser();
+            String[] csvLines = coordinateStr.split("\n");
+            String[] keys = csvParser.parseLine(csvLines[10]);
+            coordinates = generateMapping(keys);
+            for (int j = 11; j < csvLines.length; j++) {
+                String[] strings = csvParser.parseLine(csvLines[j]);
+                csvWriter.writeNext(strings);
+                for (int i = 0; i < strings.length; i++) {
+                    coordinates.get(keys[i]).add(Double.parseDouble(strings[i]));
+                }
+            }
+        } catch (NumberFormatException | IOException e) {
+            LOGGER.warn("невалидный файл!!! {}\n{}", fileName, e.getMessage());
+            return null;
+        }
+        return coordinates;
+
+    }
+
+    private Map<String, List<Double>> generateMapping(String[] keys) {
+        HashMap<String, List<Double>> coordinates = new HashMap<>();
+        for (String key : keys) {
+            coordinates.put(key, new ArrayList<>());
+        }
+        return coordinates;
     }
 }

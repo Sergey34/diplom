@@ -115,7 +115,7 @@ public class DAOImpl implements DAO {
     public void addAirfoils(List<Airfoil> airfoils) {
         Session currentSession = sessionFactory.getCurrentSession();
         for (Airfoil airfoil : airfoils) {
-            currentSession.merge(airfoil);
+            currentSession.saveOrUpdate(airfoil);
         }
     }
 

@@ -1,16 +1,25 @@
 package net.sergey.diplom.service.parser;
 
+import au.com.bytecode.opencsv.CSVParser;
+import au.com.bytecode.opencsv.CSVWriter;
 import net.sergey.diplom.domain.airfoil.Coordinates;
+import net.sergey.diplom.service.utils.UtilsLogger;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.Set;
+import javax.servlet.ServletContext;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,22 +29,47 @@ import java.util.regex.Pattern;
 @WebAppConfiguration
 public class ParserTest {
     @Autowired
+    private ServletContext servletContext;
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
+    @Test
+    public void parseFileCSVtoJson() throws IOException {
+        URL url = new URL("http://airfoiltools.com/polar/csv?polar=xf-a18-il-50000");
+        String s = parser.csvToString(url);
+
+        try (CSVWriter csvWriter = new CSVWriter(new FileWriter(servletContext.getRealPath("/resources/") + "/xf-a18-il-50000.csv"))) {
+            CSVParser csvParser = new CSVParser();
+            String[] csvLines = s.split("\n");
+            String[] keys = csvParser.parseLine(csvLines[10]);
+            Map<String, List<Double>> coordinates = generateMapping(keys);
+
+
+            for (int j = 11; j < csvLines.length; j++) {
+                String[] strings = csvParser.parseLine(csvLines[j]);
+                csvWriter.writeNext(strings);
+                for (int i = 0; i < strings.length; i++) {
+                    coordinates.get(keys[i]).add(Double.parseDouble(strings[i]));
+                }
+            }
+            System.out.println(coordinates);
+        } catch (NumberFormatException | IOException e) {
+            LOGGER.warn("невалидный файл!!! ");
+            throw e;
+        }
+
+
+        System.out.println(s);
+    }
+
+    private Map<String, List<Double>> generateMapping(String[] keys) {
+        HashMap<String, List<Double>> coordinates = new HashMap<>();
+        for (String key : keys) {
+            coordinates.put(key, new ArrayList<>());
+        }
+        return coordinates;
+    }
+
+    @Autowired
     Parser parser;
-
-    @Test
-    public void init() throws Exception {
-
-    }
-
-    @Test
-    public void parseMenu() throws Exception {
-
-    }
-
-    @Test
-    public void getAirfoilsByPrefix() throws Exception {
-
-    }
 
     @Test
     public void downloadDetailInfo() throws Exception {
