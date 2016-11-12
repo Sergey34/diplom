@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletContext;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,14 +37,20 @@ public class Parser {
     private static final Pattern GET_FILE_NAME_BY_URL_PATTERN = Pattern.compile("polar=(.+)$");
     private static final Pattern GET_COUNT_PAGES_PATTERN = Pattern.compile("Page 1 of ([0-9]+).+");
     private static final Pattern GET_MENU_TITLE_PATTERN = Pattern.compile("^(.+) \\([0-9]*\\)$");
-    private static final Pattern GET_FILE_NAME_PATTERN = Pattern.compile("^(.+)\\..+");
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static final String HTTP_AIRFOIL_TOOLS_COM = "http://airfoiltools.com/";
+    private final List<String> airfoilMenu = new ArrayList<>();
+    private String PATH;
     @Autowired
-    DAO dao;
-    @Autowired
-    private ServletContext servletContext;
-    private List<String> airfoilMenu = new ArrayList<>();
+    private DAO dao;
+
+    public Parser(String path) {
+        this.PATH = path;
+    }
+
+    public Parser() {
+    }
 
     public void init() throws IOException {
         parseMenu();
@@ -104,7 +109,7 @@ public class Parser {
         }
     }
 
-    public void getAirfoilsByPrefix() throws IOException {
+    private void getAirfoilsByPrefix() throws IOException {
         for (String url : airfoilMenu) {
             String fullUrl = ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX + url;
 
@@ -140,10 +145,8 @@ public class Parser {
 
     private String downloadImage(Elements airfoilList, int j) throws IOException {
         String imgUrl = airfoilList.get(j + 1).getElementsByClass("cell1").first().getElementsByTag("a").attr("href");
-
-        String path = servletContext.getRealPath("/resources/airfoil_img/");
         BufferedImage img = ImageIO.read(new URL(HTTP_AIRFOIL_TOOLS_COM + imgUrl));
-        File file = new File(path + imgUrl);
+        File file = new File(PATH + "/airfoil_img/" + imgUrl);
         if (!file.exists()) {
             if (!file.createNewFile()) {
                 throw new IOException("не создался");
@@ -170,7 +173,7 @@ public class Parser {
     }
 
 
-    public Set<Coordinates> downloadDetailInfo(String airfoil) throws IOException {
+    private Set<Coordinates> downloadDetailInfo(String airfoil) throws IOException {
         Elements polar1 = Jsoup.connect(GET_DETAILS + airfoil).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get().getElementsByClass("polar");
         if (polar1.size() == 0) {
             return Collections.emptySet();
@@ -190,7 +193,7 @@ public class Parser {
     }
 
 
-    public String csvToString(URL urlFile) throws IOException {
+    private String csvToString(URL urlFile) throws IOException {
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlFile.openStream()))) {
             StringBuilder stringBuilder = new StringBuilder();
@@ -203,5 +206,8 @@ public class Parser {
     }
 
 
-
+    public Parser setPath(String path) {
+        this.PATH = path;
+        return this;
+    }
 }

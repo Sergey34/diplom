@@ -7,6 +7,8 @@ import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.model.AirfoilAbstract;
 import net.sergey.diplom.model.AirfoilDetail;
 import net.sergey.diplom.model.AirfoilView;
+import net.sergey.diplom.model.UserView;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,11 +21,11 @@ public interface ServiceInt {
 
     boolean isValidUser(String name);
 
-    boolean addUser(User user);
+    boolean addUser(UserView user);
 
     List<UserRole> getAllUserRoles();
 
-    public void init();
+    void init();
 
     void clean();
 
@@ -34,4 +36,8 @@ public interface ServiceInt {
     List<Airfoil> getAllAirfoils(int startNumber, int count);
 
     AirfoilDetail getDetailInfo(int airfoilId);
+
+    String fileUpload(String name, MultipartFile bytes);
+
+    void parse() throws IOException;
 }

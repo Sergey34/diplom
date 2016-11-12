@@ -1,7 +1,5 @@
 package net.sergey.diplom.service;
 
-import au.com.bytecode.opencsv.CSVParser;
-import au.com.bytecode.opencsv.CSVWriter;
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
@@ -12,46 +10,42 @@ import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.model.AirfoilAbstract;
 import net.sergey.diplom.model.AirfoilDetail;
 import net.sergey.diplom.model.AirfoilView;
+import net.sergey.diplom.model.UserView;
+import net.sergey.diplom.service.parser.Parser;
 import net.sergey.diplom.service.utils.UtilRoles;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.hibernate.exception.ConstraintViolationException;
-import org.knowm.xchart.BitmapEncoder;
-import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYChartBuilder;
-import org.knowm.xchart.style.markers.SeriesMarkers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
-import java.io.FileWriter;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Service
 public class ServiceImpl implements ServiceInt {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-    //private final ApplicationContext applicationContext;
+    private static final List<String> CHART_NAMES = Arrays.asList("Cl v Cd", "Cl v Alpha", "Alpha v Cd", "Alpha v Cm", "Cl|Cd v Alpha");
+    private static String PATH;
     private final DAO dao;
+    @Autowired
+    Parser parser;
+    @Autowired
+    private ServletContext servletContext;
 
     @Autowired
     public ServiceImpl(DAO dao) {
         this.dao = dao;
     }
-
-    /*@Autowired
-    public ServiceImpl(ApplicationContext applicationContext, dao dao) {
-        this.applicationContext = applicationContext;
-        this.dao = dao;
-    }*/
 
     @Override
     public List<Menu> getMenu() throws IOException {
@@ -69,7 +63,12 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public boolean addUser(User user) {
+    public boolean addUser(UserView userView) {
+        User user = new User();
+        user.setEnabled(1);
+        user.setPassword(userView.getPassword());
+        user.setUserName(userView.getName());
+        user.setUserRoles(UtilRoles.findUserRoleByName(userView.getRole()));
         try {
             dao.addUser(user);
             return true;
@@ -87,6 +86,7 @@ public class ServiceImpl implements ServiceInt {
     @PostConstruct
     public void init() {
         UtilRoles.init(dao.getAllUserRoles());
+        PATH = servletContext.getRealPath("/resources/");
     }
 
     @Override
@@ -116,94 +116,50 @@ public class ServiceImpl implements ServiceInt {
         return new ArrayList<>();
     }
 
-    @Autowired
-    private ServletContext servletContext;
-
     @Override
     public AirfoilDetail getDetailInfo(int airfoilId) {
-        long start = System.currentTimeMillis();
         Airfoil airfoil = dao.getAirfoilById(airfoilId);
         if (null == airfoil) {
             return AirfoilDetail.getAirfoilDetailError("airfoil не найден");
         }
-        XYChart chartClCd = new XYChartBuilder().width(700).height(400).title("Cl v Cd").
-                xAxisTitle("Cd").yAxisTitle("Cl").build();
-        XYChart chartClAlpha = new XYChartBuilder().width(700).height(400).title("Cl v Alpha").
-                xAxisTitle("Cd").yAxisTitle("Cl").build();
-        XYChart chartCdAlpha = new XYChartBuilder().width(700).height(400).title("Alpha v Cd").
-                xAxisTitle("Cd").yAxisTitle("Cl").build();
-        XYChart chartCmAlpha = new XYChartBuilder().width(700).height(400).title("Alpha v Cm").
-                xAxisTitle("Cd").yAxisTitle("Cl").build();
-        XYChart chartClCdAlpha = new XYChartBuilder().width(700).height(400).title("Cl v Cd").
-                xAxisTitle("Cd").yAxisTitle("Cl").build();
-
-        fillXYChart(airfoil, chartClCd, chartClAlpha, chartCdAlpha, chartCmAlpha, chartClCdAlpha);
-        String path = servletContext.getRealPath("/resources/chartTemp/");
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
-        try {
-            BitmapEncoder.saveBitmap(chartClCd, path + airfoil.getId() + "ClCd", BitmapEncoder.BitmapFormat.PNG);
-            BitmapEncoder.saveBitmap(chartClAlpha, path + airfoil.getId() + "ClAlpha", BitmapEncoder.BitmapFormat.PNG);
-            BitmapEncoder.saveBitmap(chartCdAlpha, path + airfoil.getId() + "CdAlpha", BitmapEncoder.BitmapFormat.PNG);
-            BitmapEncoder.saveBitmap(chartCmAlpha, path + airfoil.getId() + "CmAlpha", BitmapEncoder.BitmapFormat.PNG);
-            BitmapEncoder.saveBitmap(chartClCdAlpha, path + airfoil.getId() + "ClCdAlpha", BitmapEncoder.BitmapFormat.PNG);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!filesExist(airfoil)) {
+            new BuilderFiles(PATH).draw(airfoil);
         }
-        long stop = System.currentTimeMillis();
-        System.out.println(stop - start);
         return new AirfoilDetail(airfoil);
     }
 
-    private void fillXYChart(Airfoil airfoil, XYChart chartClCd, XYChart chartClAlpha, XYChart chartCdAlpha, XYChart chartCmAlpha, XYChart chartClCdAlpha) {
+    @Override
+    public String fileUpload(String name, MultipartFile file) {
+        try {
+            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(
+                    new File(PATH + "/airfoil_img/" + name + "-uploaded")));
+            stream.write(file.getBytes());
+            stream.close();
+            return "Вы удачно загрузили " + name + " в " + name + "-uploaded !";
+        } catch (IOException e) {
+            LOGGER.warn("Ошибка при загрузке файла {}\n{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+            return "Вам не удалось загрузить " + name + " => " + e.getMessage();
+        }
+    }
+
+    @Override
+    public void parse() throws IOException {
+        parser.setPath(PATH).init();
+    }
+
+    private boolean filesExist(Airfoil airfoil) {
         for (Coordinates coordinates : airfoil.getCoordinates()) {
-            Map<String, List<Double>> map = parseStrCSVtoMap(coordinates.getCoordinatesJson(), coordinates.getFileName());
-            if (map == null) {
-                return;
+            File file = new File(PATH + "/tmpCsv/" + coordinates.getFileName() + ".csv");
+            if (!file.exists()) {
+                return false;
             }
-            chartClCd.addSeries(coordinates.getFileName(), map.get("Cd"), map.get("Cl")).setMarker(SeriesMarkers.NONE);
-            chartClAlpha.addSeries(coordinates.getFileName(), map.get("Alpha"), map.get("Cl")).setMarker(SeriesMarkers.NONE);
-            List<Double> clDivCd = divListValue(map.get("Cl"), map.get("Cd"));
-            chartClCdAlpha.addSeries(coordinates.getFileName(), map.get("Alpha"), clDivCd).setMarker(SeriesMarkers.NONE);
-            chartCdAlpha.addSeries(coordinates.getFileName(), map.get("Alpha"), map.get("Cd")).setMarker(SeriesMarkers.NONE);
-            chartCmAlpha.addSeries(coordinates.getFileName(), map.get("Alpha"), map.get("Cm")).setMarker(SeriesMarkers.NONE);
         }
-    }
-
-    private List<Double> divListValue(List<Double> cl, List<Double> cd) {
-        ArrayList<Double> clDivCd = new ArrayList<>();
-        for (int i = 0; i < cl.size(); i++) {
-            clDivCd.add(cl.get(i) / cd.get(i));
-        }
-        return clDivCd;
-    }
-
-    private Map<String, List<Double>> parseStrCSVtoMap(String coordinateStr, String fileName) {
-        Map<String, List<Double>> coordinates;
-        try (CSVWriter csvWriter = new CSVWriter(new FileWriter(servletContext.getRealPath("/resources/tmpCsv/") + "/" + fileName + ".csv"))) {
-            CSVParser csvParser = new CSVParser();
-            String[] csvLines = coordinateStr.split("\n");
-            String[] keys = csvParser.parseLine(csvLines[10]);
-            coordinates = generateMapping(keys);
-            for (int j = 11; j < csvLines.length; j++) {
-                String[] strings = csvParser.parseLine(csvLines[j]);
-                csvWriter.writeNext(strings);
-                for (int i = 0; i < strings.length; i++) {
-                    coordinates.get(keys[i]).add(Double.parseDouble(strings[i]));
-                }
+        for (String chartName : CHART_NAMES) {
+            File file = new File(PATH + "/chartTemp/" + airfoil.getId() + chartName + ".bmp");
+            if (!file.exists()) {
+                return false;
             }
-        } catch (NumberFormatException | IOException e) {
-            LOGGER.warn("невалидный файл!!! {}\n{}", fileName, e.getMessage());
-            return null;
         }
-        return coordinates;
-
-    }
-
-    private Map<String, List<Double>> generateMapping(String[] keys) {
-        HashMap<String, List<Double>> coordinates = new HashMap<>();
-        for (String key : keys) {
-            coordinates.put(key, new ArrayList<>());
-        }
-        return coordinates;
+        return true;
     }
 }

@@ -3,11 +3,11 @@ package net.sergey.diplom.model;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 
 public class AirfoilAbstract {
-    protected String name;
+    private String name;
 
-    protected String description;
+    private String description;
 
-    protected String image;
+    private String image;
 
     public AirfoilAbstract(Airfoil airfoil) {
         this.name = airfoil.getName();
