@@ -31,10 +31,15 @@ public class DAOImplTest {
     @Autowired
     private DAO dao;
 
+    public static void main(String[] args) throws Exception {
+
+
+    }
+
     @Test
     public void getAirfoilsByPrefix() throws Exception {
         long start = System.currentTimeMillis();
-        List<Airfoil> a = dao.getAirfoilsWithLinksByPrefix('G', 0, 0);//900-700
+        List<Airfoil> a = dao.getAirfoilsByPrefix('G', 0, 0);//900-700
 //        System.out.println(a.get(0).getLinks());
         long stop = System.currentTimeMillis();
         System.out.println("time: " + (stop - start));
@@ -85,15 +90,9 @@ public class DAOImplTest {
     public void getProfilesByPrefix() throws Exception {
     }
 
-
-    public static void main(String[] args) throws Exception {
-
-
-    }
-
     @Test
     public void deleteProfileByPrefix() throws Exception {
-        dao.getAirfoilsWithLinksByPrefix('A', 0, 0);
+        dao.getAirfoilsByPrefix('A', 0, 0);
 
     }
 

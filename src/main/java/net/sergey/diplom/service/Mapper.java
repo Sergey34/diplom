@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Mapper {
-    public static List<AirfoilAbstract> mappAirfoilOnAirfoilLink(List<Airfoil> airfoils) {
+    public static List<AirfoilAbstract> mapAirfoilOnAirfoilId(List<Airfoil> airfoils) {
         List<AirfoilAbstract> airfoilAbstracts = new ArrayList<>();
         for (Airfoil airfoil : airfoils) {
             airfoilAbstracts.add(new AirfoilId(airfoil));

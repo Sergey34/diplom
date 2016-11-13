@@ -37,14 +37,14 @@ public class ServiceImpl implements ServiceInt {
     private static final List<String> CHART_NAMES = Arrays.asList("Cl v Cd", "Cl v Alpha", "Alpha v Cd", "Alpha v Cm", "Cl|Cd v Alpha");
     private static String PATH;
     private final DAO dao;
-    @Autowired
-    Parser parser;
-    @Autowired
-    private ServletContext servletContext;
+    private final Parser parser;
+    private final ServletContext servletContext;
 
     @Autowired
-    public ServiceImpl(DAO dao) {
+    public ServiceImpl(DAO dao, ServletContext servletContext, Parser parser) {
         this.dao = dao;
+        this.servletContext = servletContext;
+        this.parser = parser;
     }
 
     @Override
@@ -96,7 +96,7 @@ public class ServiceImpl implements ServiceInt {
 
     @Override
     public List<AirfoilAbstract> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
-        return Mapper.mappAirfoilOnAirfoilLink(dao.getAirfoilsWithLinksByPrefix(prefix, startNumber, count));
+        return Mapper.mapAirfoilOnAirfoilId(dao.getAirfoilsByPrefix(prefix, startNumber, count));
 
     }
 
@@ -152,6 +152,16 @@ public class ServiceImpl implements ServiceInt {
     public void parse() throws IOException {
         parser.setPath(PATH).init();
     }
+
+    @Override
+    public String getUserInfo() {
+        Boolean isLogin = UtilsLogger.getAuthentication().isAuthenticated();
+        if (!"guest".equals(UtilsLogger.getAuthentication().getName()) && isLogin) {
+            return UtilsLogger.getAuthentication().getName();
+        }
+        return null;
+    }
+
 
     private boolean filesExist(Airfoil airfoil) {
         for (Coordinates coordinates : airfoil.getCoordinates()) {

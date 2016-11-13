@@ -1,5 +1,8 @@
 package net.sergey.diplom.service.utils;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 public class UtilsLogger {
     public static String getStaticClassName() {
         String className;
@@ -10,4 +13,9 @@ public class UtilsLogger {
         }
         return className;
     }
+
+    public static Authentication getAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
+    }
+
 }

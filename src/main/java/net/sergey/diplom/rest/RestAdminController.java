@@ -11,12 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RestAdminController {
 
+    private final ServiceInt service;
+
     @Autowired
-    ServiceInt service;
+    public RestAdminController(ServiceInt service) {
+        this.service = service;
+    }
 
     @RequestMapping(value = "/initDB", method = RequestMethod.GET)
     public void initDB() {
-
     }
 
     @RequestMapping(value = "/cleanInitDB", method = RequestMethod.GET)

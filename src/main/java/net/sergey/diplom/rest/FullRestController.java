@@ -10,7 +10,6 @@ import net.sergey.diplom.service.utils.UtilsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,9 +45,7 @@ public class FullRestController {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
         String s = bufferedReader.readLine();
         LOGGER.info(s);
-
-
-        return "";
+        return "testMethod";
     }
 
     @RequestMapping(value = "/aaa", method = RequestMethod.GET)
@@ -60,25 +57,15 @@ public class FullRestController {
         return service.getMenu();
     }
 
-
     @RequestMapping(value = "/menu", method = RequestMethod.GET)
     public List<Menu> getMenu() throws IOException {
         return service.getMenu();
     }
 
-    private String getCurrentUserName() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
-    }
-
     @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
-    public String getUserInfo() throws IOException {
-        Boolean isLogin = SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
-        if (!"guest".equals(getCurrentUserName()) && isLogin) {
-            return getCurrentUserName();
-        }
-        return null;
+    public String getUserInfo() {
+        return service.getUserInfo();
     }
-
 
     @RequestMapping(value = "/userRoles", method = RequestMethod.GET)
     public List<UserRole> getUserRole() throws IOException {

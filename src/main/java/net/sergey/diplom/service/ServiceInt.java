@@ -40,4 +40,6 @@ public interface ServiceInt {
     String fileUpload(String name, MultipartFile bytes);
 
     void parse() throws IOException;
+
+    String getUserInfo();
 }

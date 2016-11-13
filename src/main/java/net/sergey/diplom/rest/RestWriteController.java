@@ -12,8 +12,12 @@ import java.io.IOException;
 @RequestMapping(value = "/rest/write")
 @RestController(value = "write")
 public class RestWriteController {
+    private final ServiceInt service;
+
     @Autowired
-    private ServiceInt service;
+    public RestWriteController(ServiceInt service) {
+        this.service = service;
+    }
 
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)
     public String addUser(@RequestBody UserView userView) {

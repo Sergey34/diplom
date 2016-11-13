@@ -9,9 +9,7 @@ import java.util.List;
 
 public interface DAO {
 
-    List<Airfoil> getAirfoilsWithLinksByPrefix(char prefix, int startNumber, int count);
-
-    List<Airfoil> getAirfoilsWithCoordinatesByPrefix(char prefix, int startNumber, int count);
+    List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count);
 
     List<Menu> getAllMenu();
 
@@ -30,8 +28,6 @@ public interface DAO {
     void addAirfoils(Airfoil airfoil);
 
     int getIdLinkByUrl(String link);
-
-    List getCoord();
 
     Airfoil getAirfoilById(int id);
 }

@@ -14,11 +14,11 @@ public class MenuItem {
     @Column(name = "name")
     private String name;
     @Column(name = "url")
-    private String url;//// TODO: 11.11.16 переименовать поле url на prefix
+    private String urlCode;
 
-    public MenuItem(String name, String url) {
+    public MenuItem(String name, String urlCode) {
         this.name = name;
-        this.url = url;
+        this.urlCode = urlCode;
         this.id = name.hashCode();
     }
 
@@ -41,12 +41,12 @@ public class MenuItem {
         this.name = name;
     }
 
-    public String getUrl() {
-        return url;
+    public String getUrlCode() {
+        return urlCode;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUrlCode(String url) {
+        this.urlCode = url;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class MenuItem {
 
         if (id != menuItem.id) return false;
         if (name != null ? !name.equals(menuItem.name) : menuItem.name != null) return false;
-        return url != null ? url.equals(menuItem.url) : menuItem.url == null;
+        return urlCode != null ? urlCode.equals(menuItem.urlCode) : menuItem.urlCode == null;
 
     }
 
@@ -66,7 +66,7 @@ public class MenuItem {
     public int hashCode() {
         int result = id;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + (urlCode != null ? urlCode.hashCode() : 0);
         return result;
     }
 
@@ -75,7 +75,7 @@ public class MenuItem {
         return "MenuItem{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", url='" + url + '\'' +
+                ", url='" + urlCode + '\'' +
                 '}';
     }
 }
