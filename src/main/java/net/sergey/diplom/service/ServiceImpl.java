@@ -123,9 +123,15 @@ public class ServiceImpl implements ServiceInt {
             return AirfoilDetail.getAirfoilDetailError("airfoil не найден");
         }
         if (!filesExist(airfoil)) {
-            new BuilderFiles(PATH).draw(airfoil);
+            try {
+                new BuilderFiles(PATH).draw(airfoil);
+            } catch (Exception e) {
+                e.printStackTrace();
+                LOGGER.warn("Ошибка при обработке файловк с координатами {}\n{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+                return new AirfoilDetail(airfoil, e.getMessage());
+            }
         }
-        return new AirfoilDetail(airfoil);
+        return new AirfoilDetail(airfoil, CHART_NAMES);
     }
 
     @Override

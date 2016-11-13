@@ -29,7 +29,7 @@ public class BuilderFiles {
         this.PATH = path;
     }
 
-    public void draw(Airfoil airfoil) {
+    public void draw(final Airfoil airfoil) throws Exception {
         XYChart chartClCd = getXYChart().title("Cl v Cd").xAxisTitle("Cd").yAxisTitle("Cl").build();
         XYChart chartClAlpha = getXYChart().title("Cl v Alpha").xAxisTitle("Alpha").yAxisTitle("Cl").build();
         XYChart chartCdAlpha = getXYChart().title("Alpha v Cd").xAxisTitle("Cd").yAxisTitle("Alpha").build();
@@ -64,7 +64,7 @@ public class BuilderFiles {
         }
     }
 
-    private void saveBitmap(Airfoil airfoil, XYChart chartClCd) {
+    private void saveBitmap(final Airfoil airfoil, XYChart chartClCd) {
         try {
             BitmapEncoder.saveBitmap(chartClCd, PATH + "/chartTemp/" + airfoil.getId() + chartClCd.getTitle(), BitmapEncoder.BitmapFormat.BMP);
         } catch (IOException e) {
@@ -73,7 +73,7 @@ public class BuilderFiles {
         }
     }
 
-    private void fillXYChart(Airfoil airfoil, XYChart chartClCd, XYChart chartClAlpha, XYChart chartCdAlpha, XYChart chartCmAlpha, XYChart chartClCdAlpha) {
+    private void fillXYChart(final Airfoil airfoil, XYChart chartClCd, XYChart chartClAlpha, XYChart chartCdAlpha, XYChart chartCmAlpha, XYChart chartClCdAlpha) {
         for (Coordinates coordinates : airfoil.getCoordinates()) {
             Map<String, List<Double>> map = parseStrCSVtoMap(coordinates.getCoordinatesJson(), coordinates.getFileName());
             if (map == null) {
@@ -103,11 +103,13 @@ public class BuilderFiles {
             String[] csvLines = coordinateStr.split("\n");
             String[] keys = csvParser.parseLine(csvLines[10]);
             coordinates = generateMapping(keys);
-            for (int j = 11; j < csvLines.length; j++) {
+            for (int j = 0; j < csvLines.length; j++) {
                 String[] strings = csvParser.parseLine(csvLines[j]);
                 csvWriter.writeNext(strings);
-                for (int i = 0; i < strings.length; i++) {
-                    coordinates.get(keys[i]).add(Double.parseDouble(strings[i]));
+                if (j > 10) {
+                    for (int i = 0; i < strings.length; i++) {
+                        coordinates.get(keys[i]).add(Double.parseDouble(strings[i]));
+                    }
                 }
             }
         } catch (NumberFormatException | IOException e) {

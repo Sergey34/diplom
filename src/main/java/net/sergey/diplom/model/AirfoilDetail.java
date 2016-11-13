@@ -10,21 +10,32 @@ public class AirfoilDetail extends AirfoilAbstract {
     private static final AirfoilDetail airfoilDetailError = new AirfoilDetail(true);
     private boolean error;
     private List<String> fileCsvName;
+    private List<String> imgCsvName;
+    private String warnMessage;
 
-    public AirfoilDetail(Airfoil airfoil) {
+    public AirfoilDetail(Airfoil airfoil, String message) {
         super(airfoil);
         fileCsvName = new ArrayList<>();
         for (Coordinates coordinates : airfoil.getCoordinates()) {
-            fileCsvName.add(coordinates.getFileName());
+            fileCsvName.add(coordinates.getFileName() + ".csv");
         }
+        this.warnMessage = message;
     }
 
     private AirfoilDetail(boolean error) {
         this.error = error;
     }
 
-    public static AirfoilDetail getAirfoilDetailError() {
-        return airfoilDetailError;
+    public AirfoilDetail(Airfoil airfoil, List<String> chartNames) {
+        super(airfoil);
+        fileCsvName = new ArrayList<>();
+        for (Coordinates coordinates : airfoil.getCoordinates()) {
+            fileCsvName.add(coordinates.getFileName() + ".csv");
+        }
+        imgCsvName = new ArrayList<>();
+        for (String chartName : chartNames) {
+            imgCsvName.add("/resources/chartTemp/" + airfoil.getId() + chartName + ".bmp");
+        }
     }
 
     public static AirfoilDetail getAirfoilDetailError(String description) {
@@ -46,5 +57,21 @@ public class AirfoilDetail extends AirfoilAbstract {
 
     public void setError(boolean error) {
         this.error = error;
+    }
+
+    public String getWarnMessage() {
+        return warnMessage;
+    }
+
+    public void setWarnMessage(String warnMessage) {
+        this.warnMessage = warnMessage;
+    }
+
+    public List<String> getImgCsvName() {
+        return imgCsvName;
+    }
+
+    public void setImgCsvName(List<String> imgCsvName) {
+        this.imgCsvName = imgCsvName;
     }
 }

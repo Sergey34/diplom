@@ -103,22 +103,22 @@ body {
     width: 240px;
     text-align: left;
     font-size: 0.8em;
-    left: 660px;
+    left: 680px;
     border: 1px solid #000;
 }
 
 .img {
     border: 1px solid #000;
     height: 150px;
-    width: 360px;
+    width: 380px;
 }
 
 .link {
     font-size: 0.8em;
     border: 1px solid #000;
-    height: 180px;
+    height: 150px;
     width: 160px;
-    left: 930px;
+    left: 950px;
 }
 
 #airfoil_item {
@@ -141,6 +141,14 @@ body {
     margin-left: -100%;
     position: relative;
     background: #B5E3FF;
+}
+
+#list, #airfoilDetailInfo {
+    margin: 10px;
+}
+
+#airfoil_item img {
+    width: 380px;
 }
 
 /* Footer
