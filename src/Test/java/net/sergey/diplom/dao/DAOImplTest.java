@@ -37,6 +37,37 @@ public class DAOImplTest {
     }
 
     @Test
+    public void getAllMenu() throws Exception {
+
+    }
+
+    @Test
+    public void addAirfoil() throws Exception {
+
+    }
+
+    @Test
+    public void addAirfoil1() throws Exception {
+
+    }
+
+    @Test
+    public void getAirfoilById() throws Exception {
+        Airfoil airfoilById = dao.getAirfoilById(-320869467);
+        System.out.println(airfoilById);
+    }
+
+    @Test
+    public void getAllAirfoil() throws Exception {
+
+    }
+
+    @Test
+    public void initSimilar() throws Exception {
+
+    }
+
+    @Test
     public void getAirfoilsByPrefix() throws Exception {
         long start = System.currentTimeMillis();
         List<Airfoil> a = dao.getAirfoilsByPrefix('G', 0, 0);//900-700

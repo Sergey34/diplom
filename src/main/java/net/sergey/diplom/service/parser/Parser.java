@@ -10,6 +10,7 @@ import net.sergey.diplom.service.ConstantApi;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -35,6 +36,7 @@ import static net.sergey.diplom.service.ConstantApi.GET_FILE_CSV;
 public class Parser {
     private static final Pattern GET_ID_BY_FULL_NAME_PATTERN = Pattern.compile("\\(([a-zA-Z0-9_-]+)\\) .*");
     private static final Pattern GET_FILE_NAME_BY_URL_PATTERN = Pattern.compile("polar=(.+)$");
+    private static final Pattern GET_AIRFOIL_ID_BY_URL_PATTERN = Pattern.compile("airfoil=(.+)$");
     private static final Pattern GET_COUNT_PAGES_PATTERN = Pattern.compile("Page 1 of ([0-9]+).+");
     private static final Pattern GET_MENU_TITLE_PATTERN = Pattern.compile("^(.+) \\([0-9]*\\)$");
 
@@ -55,6 +57,27 @@ public class Parser {
     public void init() throws IOException {
         parseMenu();
         getAirfoilsByPrefix();
+        initSimilar();
+    }
+
+    private void initSimilar() throws IOException {
+        for (Airfoil airfoil : dao.getAllAirfoil()) {
+            try {
+                String idAirfoil = createStringByPattern(airfoil.getName(), GET_ID_BY_FULL_NAME_PATTERN);
+                Document detail = Jsoup.connect(GET_DETAILS + idAirfoil).timeout(0).userAgent("Mozilla").ignoreHttpErrors(true).get();
+                Elements similar = detail.getElementsByClass("similar").first().getElementsByTag("tr");
+                for (Element similarItem : similar) {
+                    String airfoilId = createStringByPattern(similarItem.getElementsByClass("c3").first().getElementsByTag("a").attr("href"), GET_AIRFOIL_ID_BY_URL_PATTERN);
+                    Airfoil airfoilSimilar = dao.getAirfoilById(airfoilId.hashCode());
+                    airfoil.addSimilar(airfoilSimilar);
+                }
+                LOGGER.info(airfoil.getName());
+                dao.addAirfoil(airfoil);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw e;
+            }
+        }
     }
 
     public void parseMenu() throws IOException {
@@ -121,7 +144,7 @@ public class Parser {
                         first().getElementsByTag("tr");
                 parsePage(prefix1, airfoils, airfoilList);
             }
-            dao.addAirfoils(airfoils);
+            dao.addAirfoil(airfoils);
         }
     }
 
@@ -174,7 +197,8 @@ public class Parser {
 
 
     private Set<Coordinates> downloadDetailInfo(String airfoil) throws IOException {
-        Elements polar1 = Jsoup.connect(GET_DETAILS + airfoil).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get().getElementsByClass("polar");
+        Document detail = Jsoup.connect(GET_DETAILS + airfoil).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get();
+        Elements polar1 = detail.getElementsByClass("polar");
         if (polar1.size() == 0) {
             return Collections.emptySet();
         }

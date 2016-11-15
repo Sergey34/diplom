@@ -84,7 +84,8 @@ CREATE TABLE airfoil (
 
 CREATE TABLE coordinates (
   id              INT NOT NULL PRIMARY KEY,
-  coordinatesJson TEXT
+  coordinatesJson TEXT,
+  fileName        VARCHAR(255)
 );
 
 CREATE TABLE airfoil_coordinates (
@@ -92,6 +93,13 @@ CREATE TABLE airfoil_coordinates (
   id_coordinates INT UNIQUE,
   FOREIGN KEY (id_airfoil) REFERENCES airfoil (id),
   FOREIGN KEY (id_coordinates) REFERENCES coordinates (id)
+);
+
+CREATE TABLE similar (
+  idAirfoil        INT,
+  similarAirfoilId INT,
+  FOREIGN KEY (idAirfoil) REFERENCES airfoil (id),
+  FOREIGN KEY (similarAirfoilId) REFERENCES airfoil (id)
 );
 
 SELECT count(*)

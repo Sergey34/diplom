@@ -107,7 +107,7 @@ public class ServiceImpl implements ServiceInt {
                 airfoilView.getImage(),
                 airfoilView.getId(),
                 new Prefix(airfoilView.getPrefix().charAt(0)));
-        dao.addAirfoils(airfoil);
+        dao.addAirfoil(airfoil);
         return false;
     }
 

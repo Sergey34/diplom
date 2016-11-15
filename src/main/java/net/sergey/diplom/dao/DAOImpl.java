@@ -97,7 +97,7 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public void addAirfoils(List<Airfoil> airfoils) {
+    public void addAirfoil(List<Airfoil> airfoils) {
         Session currentSession = sessionFactory.getCurrentSession();
         for (Airfoil airfoil : airfoils) {
             currentSession.saveOrUpdate(airfoil);
@@ -105,7 +105,7 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public void addAirfoils(Airfoil airfoil) {
+    public void addAirfoil(Airfoil airfoil) {
         save(airfoil);
     }
 
@@ -119,7 +119,21 @@ public class DAOImpl implements DAO {
         Airfoil airfoil = (Airfoil) sessionFactory.getCurrentSession().createCriteria(Airfoil.class).add(Restrictions.eq("id", id)).uniqueResult();
         if (null != airfoil) {
             Hibernate.initialize(airfoil.getCoordinates());
+            Hibernate.initialize(airfoil.getAirfoilsSimilar());
         }
         return airfoil;
     }
+
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Airfoil> getAllAirfoil() {
+        List<Airfoil> list = sessionFactory.getCurrentSession().createCriteria(Airfoil.class).list();
+        for (Airfoil airfoil : list) {
+            airfoil.setAirfoilsSimilar(null);
+        }
+        return list;
+    }
+
+
 }

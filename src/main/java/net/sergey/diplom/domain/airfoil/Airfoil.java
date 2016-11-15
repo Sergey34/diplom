@@ -1,6 +1,7 @@
 package net.sergey.diplom.domain.airfoil;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -22,6 +23,11 @@ public class Airfoil {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "prefix")
     private Prefix prefix;
+
+    @ManyToMany()
+    @JoinTable(name = "similar", joinColumns = {@JoinColumn(name = "idAirfoil")},
+            inverseJoinColumns = {@JoinColumn(name = "similarAirfoilId")})
+    private Set<Airfoil> airfoilsSimilar;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "airfoil_coordinates", joinColumns = {@JoinColumn(name = "id_airfoil")},
@@ -117,5 +123,20 @@ public class Airfoil {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (image != null ? image.hashCode() : 0);
         return result;
+    }
+
+    public void addSimilar(Airfoil airfoilSimilar) {
+        if (airfoilsSimilar == null) {
+            airfoilsSimilar = new HashSet<>();
+        }
+        airfoilsSimilar.add(airfoilSimilar);
+    }
+
+    public Set<Airfoil> getAirfoilsSimilar() {
+        return airfoilsSimilar;
+    }
+
+    public void setAirfoilsSimilar(Set<Airfoil> airfoilsSimilar) {
+        this.airfoilsSimilar = airfoilsSimilar;
     }
 }
