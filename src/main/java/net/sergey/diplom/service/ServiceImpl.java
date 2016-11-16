@@ -116,6 +116,7 @@ public class ServiceImpl implements ServiceInt {
         return new ArrayList<>();
     }
 
+
     @Override
     public AirfoilDetail getDetailInfo(int airfoilId) {
         Airfoil airfoil = dao.getAirfoilById(airfoilId);

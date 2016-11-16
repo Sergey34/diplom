@@ -12,6 +12,7 @@ public class AirfoilDetail extends AirfoilAbstract {
     private List<String> fileCsvName;
     private List<String> imgCsvName;
     private String warnMessage;
+    private List<SimilarAirfoil> similarAirfoilsId;
 
     public AirfoilDetail(Airfoil airfoil, String message) {
         super(airfoil);
@@ -31,6 +32,11 @@ public class AirfoilDetail extends AirfoilAbstract {
         fileCsvName = new ArrayList<>();
         for (Coordinates coordinates : airfoil.getCoordinates()) {
             fileCsvName.add(coordinates.getFileName() + ".csv");
+        }
+        this.similarAirfoilsId = new ArrayList<>();
+        for (Airfoil airfoilSimilar : airfoil.getAirfoilsSimilar()) {
+            this.similarAirfoilsId.add(new SimilarAirfoil(airfoilSimilar.getId(), airfoilSimilar.getName()));
+
         }
         imgCsvName = new ArrayList<>();
         for (String chartName : chartNames) {
@@ -73,5 +79,13 @@ public class AirfoilDetail extends AirfoilAbstract {
 
     public void setImgCsvName(List<String> imgCsvName) {
         this.imgCsvName = imgCsvName;
+    }
+
+    public List<SimilarAirfoil> getSimilarAirfoilsId() {
+        return similarAirfoilsId;
+    }
+
+    public void setSimilarAirfoilsId(List<SimilarAirfoil> similarAirfoilsId) {
+        this.similarAirfoilsId = similarAirfoilsId;
     }
 }

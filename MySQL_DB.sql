@@ -1,10 +1,11 @@
 /* пользователи */
-CREATE  TABLE users (
+CREATE TABLE users (
   id       INT         NOT NULL AUTO_INCREMENT,
   username VARCHAR(45) NOT NULL UNIQUE,
-  password VARCHAR(45) NOT NULL ,
+  password VARCHAR(45) NOT NULL,
   enabled  TINYINT     NOT NULL DEFAULT 1,
-  PRIMARY KEY (id));
+  PRIMARY KEY (id)
+);
 
 CREATE TABLE roles (
   role_id INT         NOT NULL AUTO_INCREMENT,
@@ -19,14 +20,14 @@ CREATE TABLE user_role (
   CONSTRAINT FOREIGN KEY (id_role) REFERENCES roles (role_id)
 );
 
-INSERT INTO users(username,password,enabled)
-VALUES ('mkyong','123456', true);
-INSERT INTO users(username,password,enabled)
-VALUES ('alex','123456', true);
+INSERT INTO users (username, password, enabled)
+VALUES ('mkyong', '123456', TRUE);
+INSERT INTO users (username, password, enabled)
+VALUES ('alex', '123456', TRUE);
 
-INSERT INTO roles ( role)
+INSERT INTO roles (role)
 VALUES ('ROLE_USER');
-INSERT INTO roles ( role)
+INSERT INTO roles (role)
 VALUES ('ROLE_ADMIN');
 
 
@@ -37,11 +38,13 @@ INSERT INTO user_role (id_user, id_role)
 INSERT INTO user_role (id_user, id_role)
   VALUE (2, 2);
 
-SELECT username, role
+SELECT
+  username,
+  role
 FROM user_role, roles, users
 WHERE
-  users.id=2 AND
-  user_role.id_role=roles.role_id AND
+  users.id = 2 AND
+  user_role.id_role = roles.role_id AND
   user_role.id_user = users.id;
 
 /* меню */

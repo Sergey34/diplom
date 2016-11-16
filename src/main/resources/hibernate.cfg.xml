@@ -7,7 +7,7 @@
 
 <hibernate-configuration>
     <session-factory>
-        <property name="format_sql">true</property>
+        <!--<property name="format_sql">true</property>-->
         <mapping class="net.sergey.diplom.domain.airfoil.Prefix"/>
         <mapping class="net.sergey.diplom.domain.menu.MenuItem"/>
         <mapping class="net.sergey.diplom.domain.menu.Menu"/>
