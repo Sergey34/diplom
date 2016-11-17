@@ -1,18 +1,18 @@
 package net.sergey.diplom.service;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.model.AirfoilAbstract;
+import net.sergey.diplom.model.AirfoilDTO;
 import net.sergey.diplom.model.AirfoilId;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Mapper {
-    public static List<AirfoilAbstract> mapAirfoilOnAirfoilId(List<Airfoil> airfoils) {
-        List<AirfoilAbstract> airfoilAbstracts = new ArrayList<>();
+    public static List<AirfoilDTO> mapAirfoilOnAirfoilId(List<Airfoil> airfoils) {
+        List<AirfoilDTO> airfoilDTOs = new ArrayList<>();
         for (Airfoil airfoil : airfoils) {
-            airfoilAbstracts.add(new AirfoilId(airfoil));
+            airfoilDTOs.add(new AirfoilId(airfoil));
         }
-        return airfoilAbstracts;
+        return airfoilDTOs;
     }
 }

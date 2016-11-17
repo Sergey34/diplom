@@ -6,7 +6,7 @@ import net.sergey.diplom.domain.airfoil.Coordinates;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AirfoilDetail extends AirfoilAbstract {
+public class AirfoilDetail extends AirfoilDTO {
     private static final AirfoilDetail airfoilDetailError = new AirfoilDetail(true);
     private boolean error;
     private List<String> fileCsvName;

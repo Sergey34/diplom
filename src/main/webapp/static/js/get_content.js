@@ -29,7 +29,7 @@ function getContent() {
 
                 var image = document.createElement('div');
                 var img = document.createElement('img');
-                img.setAttribute("src", "/resources/airfoil_img" + element.image);
+                img.setAttribute("src", element.image);
                 extracted(image, '', 'img');
                 image.appendChild(img);
 

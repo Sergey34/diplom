@@ -2,7 +2,7 @@ package net.sergey.diplom.model;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 
-public class AirfoilId extends AirfoilAbstract {
+public class AirfoilId extends AirfoilDTO {
     private int id;
 
     public AirfoilId(Airfoil airfoil) {

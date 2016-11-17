@@ -7,7 +7,7 @@ import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
-import net.sergey.diplom.model.AirfoilAbstract;
+import net.sergey.diplom.model.AirfoilDTO;
 import net.sergey.diplom.model.AirfoilDetail;
 import net.sergey.diplom.model.AirfoilView;
 import net.sergey.diplom.model.UserView;
@@ -15,6 +15,11 @@ import net.sergey.diplom.service.parser.Parser;
 import net.sergey.diplom.service.utils.UtilRoles;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.hibernate.exception.ConstraintViolationException;
+import org.knowm.xchart.BitmapEncoder;
+import org.knowm.xchart.XYChart;
+import org.knowm.xchart.style.Styler;
+import org.knowm.xchart.style.XYStyler;
+import org.knowm.xchart.style.markers.SeriesMarkers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,9 +100,45 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public List<AirfoilAbstract> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
-        return Mapper.mapAirfoilOnAirfoilId(dao.getAirfoilsByPrefix(prefix, startNumber, count));
+    public List<AirfoilDTO> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
+        List<Airfoil> airfoilsByPrefix = dao.getAirfoilsByPrefix(prefix, startNumber, count);
+        for (Airfoil airfoil : airfoilsByPrefix) {
+            List<Double> x = new ArrayList<>();
+            List<Double> y = new ArrayList<>();
+            String[] split = airfoil.getCoordView().trim().split("\n");
+            for (String line : split) {
+                try {
+                    String[] strings = line.trim().split(" ");
+                    x.add(Double.parseDouble(strings[0]));
+                    y.add(Double.parseDouble(strings[2]));
+                } catch (Exception e) {
+                    LOGGER.warn("Оштбка чтения файла");
+                    e.printStackTrace();
+                    throw e;
+                }
+            }
 
+            XYChart chartClCd = getXYChart();
+
+            chartClCd.addSeries(" ", x, y).setMarker(SeriesMarkers.NONE).setShowInLegend(false);
+            try {
+                BitmapEncoder.saveBitmap(chartClCd, servletContext.getRealPath("/resources/airfoil_img/") + airfoil.getShortName(), BitmapEncoder.BitmapFormat.PNG);
+            } catch (IOException e) {
+                LOGGER.warn("ошибка при сохранении");
+                e.printStackTrace();
+            }
+
+        }
+        return Mapper.mapAirfoilOnAirfoilId(airfoilsByPrefix);
+    }
+
+    private XYChart getXYChart() {
+        Styler.ChartTheme ggPlot2 = XYStyler.ChartTheme.Matlab;
+        XYChart chart = new XYChart(580, 159, ggPlot2);
+        chart.getStyler().setYAxisMin(-0.2);
+        chart.getStyler().setYAxisMax(0.2);
+        chart.getStyler().setAxisTicksVisible(false).setYAxisTicksVisible(false).setLegendVisible(false);
+        return chart;
     }
 
     @Override

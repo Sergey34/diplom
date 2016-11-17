@@ -18,10 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -155,28 +152,38 @@ public class Parser {
                 j--;//фильтруем реламу
             } else {
                 String name = cell12.text();
-                String image = downloadImage(airfoilList, j);
                 String description = airfoilList.get(j + 1).getElementsByClass("cell2").text();
 
                 String idAirfoil = createStringByPattern(name, GET_ID_BY_FULL_NAME_PATTERN);
-                Airfoil airfoil = new Airfoil(name, description, image, prefix1, idAirfoil);
+                Airfoil airfoil = new Airfoil(name, description, prefix1, idAirfoil);
+                airfoil.setCoordView(parseCoordinateView(idAirfoil));
                 airfoil.setCoordinates(downloadDetailInfo(idAirfoil));
                 airfoils.add(airfoil);
             }
         }
     }
 
-    private String downloadImage(Elements airfoilList, int j) throws IOException {
-        String imgUrl = airfoilList.get(j + 1).getElementsByClass("cell1").first().getElementsByTag("a").attr("href");
-        BufferedImage img = ImageIO.read(new URL(HTTP_AIRFOIL_TOOLS_COM + imgUrl));
-        File file = new File(PATH + "/airfoil_img/" + imgUrl);
-        if (!file.exists()) {
-            if (!file.createNewFile()) {
-                throw new IOException("не создался");
+    private String parseCoordinateView(String shortName) throws IOException {
+        BufferedReader bufferedReader =
+                new BufferedReader(new InputStreamReader(new URL("http://airfoiltools.com/airfoil/seligdatfile?airfoil=" + shortName).openStream()));
+        String line;
+        StringBuilder stringBuilder = new StringBuilder();
+        while ((line = bufferedReader.readLine()) != null) {
+            String[] split = line.trim().split(" ");
+            if (split.length == 3 && isDoubleStr(split[0]) && isDoubleStr(split[2])) {
+                stringBuilder.append(line.trim()).append('\n');
             }
         }
-        ImageIO.write(img, "png", file);
-        return imgUrl;
+        return stringBuilder.toString();
+    }
+
+    private boolean isDoubleStr(String str) {
+        try {
+            Double.parseDouble(str);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 
     private String createStringByPattern(String item, Pattern pattern) {

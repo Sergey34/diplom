@@ -2,20 +2,20 @@ package net.sergey.diplom.model;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 
-public class AirfoilAbstract {
+public class AirfoilDTO {
     private String name;
 
     private String description;
 
     private String image;
 
-    public AirfoilAbstract(Airfoil airfoil) {
+    public AirfoilDTO(Airfoil airfoil) {
         this.name = airfoil.getName();
         this.description = airfoil.getDescription();
         this.image = airfoil.getImage();
     }
 
-    public AirfoilAbstract() {
+    public AirfoilDTO() {
     }
 
     public String getName() {

@@ -4,7 +4,7 @@ import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
-import net.sergey.diplom.model.AirfoilAbstract;
+import net.sergey.diplom.model.AirfoilDTO;
 import net.sergey.diplom.model.AirfoilDetail;
 import net.sergey.diplom.model.AirfoilView;
 import net.sergey.diplom.model.UserView;
@@ -29,7 +29,7 @@ public interface ServiceInt {
 
     void clean();
 
-    List<AirfoilAbstract> getAirfoilsByPrefix(char prefix, int startNumber, int count);
+    List<AirfoilDTO> getAirfoilsByPrefix(char prefix, int startNumber, int count);
 
     boolean updateAirfoil(AirfoilView airfoilView);
 
