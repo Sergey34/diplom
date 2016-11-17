@@ -170,7 +170,7 @@ public class Parser {
         StringBuilder stringBuilder = new StringBuilder();
         while ((line = bufferedReader.readLine()) != null) {
             String[] split = line.trim().split(" ");
-            if (split.length == 3 && isDoubleStr(split[0]) && isDoubleStr(split[2])) {
+            if (isDoubleStr(split[0]) && isDoubleStr(split[split.length - 1])) {
                 stringBuilder.append(line.trim()).append('\n');
             }
         }

@@ -1,13 +1,10 @@
 package net.sergey.diplom.service.parser;
 
 import net.sergey.diplom.service.utils.UtilsLogger;
-import org.jsoup.Jsoup;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.XYChart;
-import org.knowm.xchart.style.Styler;
-import org.knowm.xchart.style.XYStyler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +16,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.servlet.ServletContext;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,6 +24,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("Duplicates")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:/WEB-INF/spring/root-context.xml")
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
@@ -76,42 +75,53 @@ public class ParserTest {
     }
 
     private XYChart getXYChart() {
-        Styler.ChartTheme ggPlot2 = XYStyler.ChartTheme.Matlab;
-        return new XYChart(780, 159, ggPlot2);
+        XYChart xyChart = new XYChart(880, 259);
+        xyChart.getStyler().setAxisTicksVisible(false).setYAxisTicksVisible(false)
+                .setLegendVisible(false);
+        return xyChart;
     }
 
     @Test
     public void initTest4() throws Exception {
-        String file2 = Jsoup.connect("http://airfoiltools.com/airfoil/seligdatfile?airfoil=a18-il").timeout(0).userAgent("Mozilla")
-                .get().body().text();
-
         BufferedReader bufferedReader =
-                new BufferedReader(new InputStreamReader(new URL("http://airfoiltools.com/airfoil/seligdatfile?airfoil=a18-il").openStream()));
+                new BufferedReader(new InputStreamReader(
+                        new URL("http://airfoiltools.com/airfoil/seligdatfile?airfoil=a63a108c-il").openStream()));
         String line;
         StringBuilder stringBuilder = new StringBuilder();
         while ((line = bufferedReader.readLine()) != null) {
-            String[] split = line.trim().split(" ");
-            if (split.length == 3 && isDoubleStr(split[0]) && isDoubleStr(split[2])) {
-                stringBuilder.append(line);
+            String trim = line.trim();
+            String[] split = trim.split(" ");
+            if (isDoubleStr(split[0]) && isDoubleStr(split[split.length - 1])) {
+                stringBuilder.append(line.trim()).append('\n');
             }
         }
-
-        System.out.println(stringBuilder.toString());
-
         List<Double> x = new ArrayList<>();
         List<Double> y = new ArrayList<>();
-        String[] split = file2.split(" ");
-        for (int i = 0; i < split.length; i += 2) {
-            if (isDoubleStr(split[i]) && isDoubleStr(split[i + 1])) {
-                x.add(Double.parseDouble(split[i]));
-                y.add(Double.parseDouble(split[i + 1]));
+        String s = stringBuilder.toString();
+        String[] split = s.trim().split("\n");
+        for (String line2 : split) {
+            try {
+                String[] strings = line2.trim().split(" ");
+                x.add(Double.parseDouble(strings[0]));
+                y.add(Double.parseDouble(strings[strings.length - 1]));
+            } catch (Exception e) {
+                LOGGER.warn("Оштбка чтения файла");
+                e.printStackTrace();
+                throw e;
             }
         }
+
         XYChart chartClCd = getXYChart();
 
-        chartClCd.addSeries("123", x, y).setMarker(SeriesMarkers.NONE).setShowInLegend(false);
-        BitmapEncoder.saveBitmap(chartClCd, servletContext.getRealPath("/resources/") + "/chartTemp/" + "qwe", BitmapEncoder.BitmapFormat.BMP);
-
+        chartClCd.addSeries(" ", x, y).setMarker(SeriesMarkers.NONE).setShowInLegend(false);
+        try {
+            String fileName = servletContext.getRealPath("/resources/airfoil_img/") + "/qweq";
+            BitmapEncoder.saveBitmap(chartClCd, fileName, BitmapEncoder.BitmapFormat.PNG);
+        } catch (IOException e) {
+            LOGGER.warn("ошибка при сохранении");
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     private boolean isDoubleStr(String str) {

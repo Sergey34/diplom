@@ -110,7 +110,7 @@ public class ServiceImpl implements ServiceInt {
                 try {
                     String[] strings = line.trim().split(" ");
                     x.add(Double.parseDouble(strings[0]));
-                    y.add(Double.parseDouble(strings[2]));
+                    y.add(Double.parseDouble(strings[strings.length - 1]));
                 } catch (Exception e) {
                     LOGGER.warn("Оштбка чтения файла");
                     e.printStackTrace();
@@ -134,9 +134,7 @@ public class ServiceImpl implements ServiceInt {
 
     private XYChart getXYChart() {
         Styler.ChartTheme ggPlot2 = XYStyler.ChartTheme.Matlab;
-        XYChart chart = new XYChart(580, 159, ggPlot2);
-        chart.getStyler().setYAxisMin(-0.2);
-        chart.getStyler().setYAxisMax(0.2);
+        XYChart chart = new XYChart(900, 144, ggPlot2);
         chart.getStyler().setAxisTicksVisible(false).setYAxisTicksVisible(false).setLegendVisible(false);
         return chart;
     }
