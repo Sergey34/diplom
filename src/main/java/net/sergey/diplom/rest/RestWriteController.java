@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RequestMapping(value = "/rest/write")
 @RestController(value = "write")
@@ -37,15 +38,14 @@ public class RestWriteController {
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String handleFileUpload(@RequestParam("name") String name,
-                                   @RequestParam("file") MultipartFile file) {
+    public String handleFileUpload(@RequestParam("files") List<MultipartFile> files) {
 
-
-        if (!file.isEmpty()) {
-            return service.fileUpload(name, file);
+        if (!files.isEmpty()) {
+            return service.fileUpload(files.get(0));
         } else {
-            return "Вам не удалось загрузить " + name + " потому что файл пустой.";
+            return "Вам не удалось загрузить " + files.get(0).getOriginalFilename() + " потому что файл пустой.";
         }
+
     }
 
 

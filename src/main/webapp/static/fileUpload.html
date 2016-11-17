@@ -1,10 +1,14 @@
 <html>
 <body>
-<form method="POST" enctype="multipart/form-data" action="/rest/write/upload">
-    File to upload: <input type="file" name="file"><br/>
-    Name: <input type="text" name="name"><br/>
-    <br/> <input type="submit" value="Upload">
-    Press here to upload the file!
+
+<form action="/rest/write/upload" method="post" enctype="multipart/form-data">
+
+    <input class='fileInput' type="file" name="files" multiple="multiple"/>
+
+    <input type="text" value="13asdf12eadsf" name="name"/>
+
+    <input type="submit"/>
+
 </form>
 </body>
 </html>

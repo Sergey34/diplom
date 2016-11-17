@@ -37,7 +37,7 @@ public interface ServiceInt {
 
     AirfoilDetail getDetailInfo(int airfoilId);
 
-    String fileUpload(String name, MultipartFile bytes);
+    String fileUpload(MultipartFile bytes);
 
     void parse() throws IOException;
 

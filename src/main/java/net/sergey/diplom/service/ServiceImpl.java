@@ -136,16 +136,16 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public String fileUpload(String name, MultipartFile file) {
+    public String fileUpload(MultipartFile file) {
         try {
             BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(
-                    new File(PATH + "/airfoil_img/" + name + "-uploaded")));
+                    new File(PATH + "/airfoil_img/" + file.getOriginalFilename())));
             stream.write(file.getBytes());
             stream.close();
-            return "Вы удачно загрузили " + name + " в " + name + "-uploaded !";
+            return "loading ok " + file.getName() + " в " + file.getOriginalFilename() + "-uploaded !";
         } catch (IOException e) {
             LOGGER.warn("Ошибка при загрузке файла {}\n{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
-            return "Вам не удалось загрузить " + name + " => " + e.getMessage();
+            return "Вам не удалось загрузить " + file.getOriginalFilename() + " => " + e.getMessage();
         }
     }
 
