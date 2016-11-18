@@ -40,7 +40,7 @@ public class AirfoilDetail extends AirfoilDTO {
         }
         imgCsvName = new ArrayList<>();
         for (String chartName : chartNames) {
-            imgCsvName.add("/resources/chartTemp/" + airfoil.getId() + chartName + ".bmp");
+            imgCsvName.add("/resources/chartTemp/" + airfoil.getId() + chartName + ".png");
         }
     }
 

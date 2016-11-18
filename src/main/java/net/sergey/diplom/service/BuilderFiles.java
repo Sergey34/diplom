@@ -5,86 +5,64 @@ import au.com.bytecode.opencsv.CSVWriter;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.service.utils.UtilsLogger;
-import org.knowm.xchart.BitmapEncoder;
-import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYChartBuilder;
-import org.knowm.xchart.style.markers.SeriesMarkers;
+import net.sergey.diplom.service.utils.imagehandlers.ImageHandler;
+import net.sergey.diplom.service.utils.imagehandlers.Xy;
+import net.sergey.diplom.service.utils.imagehandlers.createxychartstyle.SimpleStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
+//// TODO: 18.11.16 переименовать как то связанным с графиками
 public class BuilderFiles {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
 
-    private final String PATH;
+    private ImageHandler chartClCd;
+    private ImageHandler chartClAlpha;
+    private ImageHandler chartClCdAlpha;
+    private ImageHandler chartCdAlpha;
+    private ImageHandler chartCmAlpha;
+
+    private String PATH;
 
     public BuilderFiles(String path) {
-        this.PATH = path;
+        ImageHandler.setSavePath(path, "/chartTemp/");
+        PATH = path;
     }
 
     public void draw(final Airfoil airfoil) throws Exception {
-        XYChart chartClCd = getXYChart().title("Cl v Cd").xAxisTitle("Cd").yAxisTitle("Cl").build();
-        XYChart chartClAlpha = getXYChart().title("Cl v Alpha").xAxisTitle("Alpha").yAxisTitle("Cl").build();
-        XYChart chartCdAlpha = getXYChart().title("Alpha v Cd").xAxisTitle("Cd").yAxisTitle("Alpha").build();
-        XYChart chartCmAlpha = getXYChart().title("Alpha v Cm").xAxisTitle("Cm").yAxisTitle("Alpha").build();
-        XYChart chartClCdAlpha = getXYChart().title("Cl|Cd v Alpha").xAxisTitle("Alpha").yAxisTitle("Cl/Cd").build();
-        fillXYChart(airfoil, chartClCd, chartClAlpha, chartCdAlpha, chartCmAlpha, chartClCdAlpha);
+        chartClCd = new ImageHandler("Cl", "Cd", airfoil.getId(), new SimpleStyle());
+        chartClAlpha = new ImageHandler("Cl", "Alpha", airfoil.getId(), new SimpleStyle());
+        chartClCdAlpha = new ImageHandler("Cl|Cd", "Alpha", airfoil.getId(), new SimpleStyle());
+        chartCdAlpha = new ImageHandler("Cd", "Alpha", airfoil.getId(), new SimpleStyle());
+        chartCmAlpha = new ImageHandler("Cm", "Alpha", airfoil.getId(), new SimpleStyle());
+        fillXYChart(airfoil);
         ExecutorService executorService = Executors.newFixedThreadPool(5);
-        List<Future> futures = new ArrayList<>();
-        for (XYChart xyChart : Arrays.asList(chartClCd, chartClAlpha, chartCdAlpha, chartCmAlpha, chartClCdAlpha)) {
-            Future<?> submit = executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    saveBitmap(airfoil, xyChart);
-                }
-            });
-            futures.add(submit);
-        }
-        for (Future future : futures) {
-            futureWait(future);
-        }
+        executorService.invokeAll(Arrays.asList(chartClCd, chartClAlpha, chartClCdAlpha, chartCdAlpha, chartCmAlpha));
     }
 
-    private XYChartBuilder getXYChart() {
-        return new XYChartBuilder().width(700).height(400);
-    }
 
-    private void futureWait(Future future) {
-        try {
-            future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void saveBitmap(final Airfoil airfoil, XYChart chartClCd) {
-        try {
-            BitmapEncoder.saveBitmap(chartClCd, PATH + "/chartTemp/" + airfoil.getId() + chartClCd.getTitle(), BitmapEncoder.BitmapFormat.BMP);
-        } catch (IOException e) {
-            LOGGER.warn("не удалось сохранить график {} для {}\n{}", chartClCd.getTitle(), airfoil.getImage(), Arrays.toString(e.getStackTrace()));
-            e.printStackTrace();
-        }
-    }
-
-    private void fillXYChart(final Airfoil airfoil, XYChart chartClCd, XYChart chartClAlpha, XYChart chartCdAlpha, XYChart chartCmAlpha, XYChart chartClCdAlpha) {
+    private void fillXYChart(final Airfoil airfoil) {
         for (Coordinates coordinates : airfoil.getCoordinates()) {
             Map<String, List<Double>> map = parseStrCSVtoMap(coordinates.getCoordinatesJson(), coordinates.getFileName());
             if (map == null) {
                 return;
             }
-            chartClCd.addSeries(coordinates.getFileName(), map.get("Cd"), map.get("Cl")).setMarker(SeriesMarkers.NONE);
-            chartClAlpha.addSeries(coordinates.getFileName(), map.get("Alpha"), map.get("Cl")).setMarker(SeriesMarkers.NONE);
+            Xy ClCd = new Xy(map.get("Cd"), map.get("Cl"), coordinates.getFileName());
+            chartClCd.add(ClCd);
+            Xy ClAlpha = new Xy(map.get("Alpha"), map.get("Cl"), coordinates.getFileName());
+            chartClAlpha.add(ClAlpha);
             List<Double> clDivCd = divListValue(map.get("Cl"), map.get("Cd"));
-            chartClCdAlpha.addSeries(coordinates.getFileName(), map.get("Alpha"), clDivCd).setMarker(SeriesMarkers.NONE);
-            chartCdAlpha.addSeries(coordinates.getFileName(), map.get("Alpha"), map.get("Cd")).setMarker(SeriesMarkers.NONE);
-            chartCmAlpha.addSeries(coordinates.getFileName(), map.get("Alpha"), map.get("Cm")).setMarker(SeriesMarkers.NONE);
+            Xy ClCdAlpha = new Xy(map.get("Alpha"), clDivCd, coordinates.getFileName());
+            chartClCdAlpha.add(ClCdAlpha);
+            Xy CdAlpha = new Xy(map.get("Alpha"), map.get("Cd"), coordinates.getFileName());
+            chartCdAlpha.add(CdAlpha);
+            Xy CmAlpha = new Xy(map.get("Alpha"), map.get("Cm"), coordinates.getFileName());
+            chartCmAlpha.add(CmAlpha);
         }
     }
 

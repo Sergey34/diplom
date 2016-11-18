@@ -10,7 +10,7 @@ function getContent() {
     currentPrefix = prefix;
     $(document).ready(function () {
         $.ajax({
-            url: "/rest/getContext/" + prefix + "/0/0"
+            url: "/rest/getContext/" + prefix + "/0/20"
         }).then(function (data) {
             console.log(data);
             var airfoil_list = document.createElement('ul');

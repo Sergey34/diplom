@@ -14,15 +14,17 @@ import net.sergey.diplom.model.UserView;
 import net.sergey.diplom.service.parser.Parser;
 import net.sergey.diplom.service.utils.UtilRoles;
 import net.sergey.diplom.service.utils.UtilsLogger;
+import net.sergey.diplom.service.utils.imagehandlers.ImageHandler;
+import net.sergey.diplom.service.utils.imagehandlers.Xy;
+import net.sergey.diplom.service.utils.imagehandlers.createxychartstyle.MinimalStyle;
 import org.hibernate.exception.ConstraintViolationException;
-import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.XYStyler;
-import org.knowm.xchart.style.markers.SeriesMarkers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,12 +37,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 public class ServiceImpl implements ServiceInt {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-    private static final List<String> CHART_NAMES = Arrays.asList("Cl v Cd", "Cl v Alpha", "Alpha v Cd", "Alpha v Cm", "Cl|Cd v Alpha");
+    private static final List<String> CHART_NAMES =
+            Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl|Cd v Alpha");
     private static String PATH;
+    private static ExecutorService executorService = Executors.newFixedThreadPool(10);
     private final DAO dao;
     private final Parser parser;
     private final ServletContext servletContext;
@@ -103,33 +109,23 @@ public class ServiceImpl implements ServiceInt {
     public List<AirfoilDTO> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
         List<Airfoil> airfoilsByPrefix = dao.getAirfoilsByPrefix(prefix, startNumber, count);
         for (Airfoil airfoil : airfoilsByPrefix) {
-            List<Double> x = new ArrayList<>();
-            List<Double> y = new ArrayList<>();
-            String[] split = airfoil.getCoordView().trim().split("\n");
-            for (String line : split) {
-                try {
-                    String[] strings = line.trim().split(" ");
-                    x.add(Double.parseDouble(strings[0]));
-                    y.add(Double.parseDouble(strings[strings.length - 1]));
-                } catch (Exception e) {
-                    LOGGER.warn("Оштбка чтения файла");
-                    e.printStackTrace();
-                    throw e;
-                }
-            }
-
-            XYChart chartClCd = getXYChart();
-
-            chartClCd.addSeries(" ", x, y).setMarker(SeriesMarkers.NONE).setShowInLegend(false);
-            try {
-                BitmapEncoder.saveBitmap(chartClCd, servletContext.getRealPath("/resources/airfoil_img/") + airfoil.getShortName(), BitmapEncoder.BitmapFormat.PNG);
-            } catch (IOException e) {
-                LOGGER.warn("ошибка при сохранении");
-                e.printStackTrace();
-            }
-
+            drawViewAirfoil(airfoil);
         }
         return Mapper.mapAirfoilOnAirfoilId(airfoilsByPrefix);
+    }
+
+    private void fillListXListY(List<Double> x, List<Double> y, String[] split) {
+        for (String line : split) {
+            try {
+                String[] strings = line.trim().split(" ");
+                x.add(Double.parseDouble(strings[0]));
+                y.add(Double.parseDouble(strings[strings.length - 1]));
+            } catch (Exception e) {
+                LOGGER.warn("Оштбка чтения файла");
+                e.printStackTrace();
+                throw e;
+            }
+        }
     }
 
     private XYChart getXYChart() {
@@ -155,7 +151,6 @@ public class ServiceImpl implements ServiceInt {
         return new ArrayList<>();
     }
 
-
     @Override
     public AirfoilDetail getDetailInfo(int airfoilId) {
         Airfoil airfoil = dao.getAirfoilById(airfoilId);
@@ -171,7 +166,27 @@ public class ServiceImpl implements ServiceInt {
                 return new AirfoilDetail(airfoil, e.getMessage());
             }
         }
+
+        drawViewAirfoil(airfoil);
+
         return new AirfoilDetail(airfoil, CHART_NAMES);
+    }
+
+    @Async
+    private void drawViewAirfoil(Airfoil airfoil) {
+        if (new File(PATH + "/airfoil_img/" + airfoil.getShortName() + ".png").exists()) {
+            return;
+        }
+        List<Double> x = new ArrayList<>();
+        List<Double> y = new ArrayList<>();
+        fillListXListY(x, y, airfoil.getCoordView().split("\n"));
+        ImageHandler.setSavePath(PATH, "/airfoil_img/");
+        ImageHandler imageHandler = new ImageHandler(airfoil.getShortName(), new Xy(x, y, " "), new MinimalStyle());
+        try {
+            imageHandler.draw();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

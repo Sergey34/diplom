@@ -32,7 +32,7 @@ function fillContentDetailInfo(data) {
 
     var image = document.createElement('div');
     var img = document.createElement('img');
-    img.setAttribute("src", "/resources/airfoil_img" + data.image);
+    img.setAttribute("src", data.image);
     extracted(image, '', 'img_detail');
     image.appendChild(img);
 
