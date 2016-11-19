@@ -6,7 +6,6 @@ import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.model.AirfoilDTO;
 import net.sergey.diplom.model.AirfoilDetail;
-import net.sergey.diplom.model.AirfoilView;
 import net.sergey.diplom.model.UserView;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,15 +30,13 @@ public interface ServiceInt {
 
     List<AirfoilDTO> getAirfoilsByPrefix(char prefix, int startNumber, int count);
 
-    boolean updateAirfoil(AirfoilView airfoilView);
-
     List<Airfoil> getAllAirfoils(int startNumber, int count);
 
     AirfoilDetail getDetailInfo(int airfoilId);
 
-    String fileUpload(MultipartFile bytes);
-
     void parse() throws IOException;
 
     String getUserInfo();
+
+    boolean createNewAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
 }

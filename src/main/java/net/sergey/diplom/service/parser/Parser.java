@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
@@ -169,9 +170,9 @@ public class Parser {
         String line;
         StringBuilder stringBuilder = new StringBuilder();
         while ((line = bufferedReader.readLine()) != null) {
-            String[] split = line.trim().split(" ");
+            String[] split = line.trim().split(" +");
             if (isDoubleStr(split[0]) && isDoubleStr(split[split.length - 1])) {
-                stringBuilder.append(line.trim()).append('\n');
+                stringBuilder.append(split[0]).append(",").append(split[split.length - 1]).append('\n');
             }
         }
         return stringBuilder.toString();
@@ -186,7 +187,7 @@ public class Parser {
         return true;
     }
 
-    private String createStringByPattern(String item, Pattern pattern) {
+    public String createStringByPattern(String item, Pattern pattern) {
         Matcher matcher = pattern.matcher(item);
         if (matcher.find()) {
             return matcher.group(1);
@@ -217,16 +218,15 @@ public class Parser {
                 String fileName = createStringByPattern(a.attr("href"), GET_FILE_NAME_BY_URL_PATTERN);
                 URL urlFile = new URL(GET_FILE_CSV + fileName);
                 LOGGER.debug("url {}{}", GET_FILE_CSV, fileName);
-                coordinates.add(new Coordinates(csvToString(urlFile), fileName));
+                coordinates.add(new Coordinates(csvToString(urlFile.openStream()), fileName + ".csv"));
             }
         }
         return coordinates;
     }
 
 
-    private String csvToString(URL urlFile) throws IOException {
-
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlFile.openStream()))) {
+    public String csvToString(InputStream urlFile) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlFile))) {
             StringBuilder stringBuilder = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {

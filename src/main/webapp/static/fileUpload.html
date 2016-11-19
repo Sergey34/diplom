@@ -2,11 +2,32 @@
 <body>
 
 <form action="/rest/write/upload" method="post" enctype="multipart/form-data">
+    <label>
+        Название профиля
+        <input type="text" value="" name="name"/>
+    </label>
+    </Br>
+    <label>
+        Короткое название профиля
+        <input type="text" value="" name="ShortName"/>
+    </label>
+    </Br>
+    <label>
+        Детали
+        <input type="text" value="" name="Details"/>
+    </label>
+    </Br>
+    <label>
+        Выберите файл для построения графика профиля
+        <input class='fileInput' type="file" name="fileAirfoil"/>
+    </label>
 
-    <input class='fileInput' type="file" name="files" multiple="multiple"/>
-
-    <input type="text" value="13asdf12eadsf" name="name"/>
-
+    </Br>
+    <label>
+        Выберите файлы построения графиков
+        <input class='fileInput' type="file" name="files" multiple="multiple" value="Выбрать файлы"/>
+    </label>
+    </Br>
     <input type="submit"/>
 
 </form>

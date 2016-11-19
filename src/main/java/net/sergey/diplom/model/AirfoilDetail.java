@@ -18,7 +18,7 @@ public class AirfoilDetail extends AirfoilDTO {
         super(airfoil);
         fileCsvName = new ArrayList<>();
         for (Coordinates coordinates : airfoil.getCoordinates()) {
-            fileCsvName.add(coordinates.getFileName() + ".csv");
+            fileCsvName.add(coordinates.getFileName());
         }
         this.warnMessage = message;
     }
@@ -31,7 +31,7 @@ public class AirfoilDetail extends AirfoilDTO {
         super(airfoil);
         fileCsvName = new ArrayList<>();
         for (Coordinates coordinates : airfoil.getCoordinates()) {
-            fileCsvName.add(coordinates.getFileName() + ".csv");
+            fileCsvName.add(coordinates.getFileName());
         }
         this.similarAirfoilsId = new ArrayList<>();
         for (Airfoil airfoilSimilar : airfoil.getAirfoilsSimilar()) {

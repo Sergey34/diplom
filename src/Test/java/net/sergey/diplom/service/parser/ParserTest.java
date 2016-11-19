@@ -90,9 +90,9 @@ public class ParserTest {
         StringBuilder stringBuilder = new StringBuilder();
         while ((line = bufferedReader.readLine()) != null) {
             String trim = line.trim();
-            String[] split = trim.split(" ");
+            String[] split = trim.split(" +");
             if (isDoubleStr(split[0]) && isDoubleStr(split[split.length - 1])) {
-                stringBuilder.append(line.trim()).append('\n');
+                stringBuilder.append(split[0]).append(",").append(split[split.length - 1]).append('\n');
             }
         }
         List<Double> x = new ArrayList<>();

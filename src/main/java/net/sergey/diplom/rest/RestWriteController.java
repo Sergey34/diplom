@@ -38,12 +38,20 @@ public class RestWriteController {
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String handleFileUpload(@RequestParam("files") List<MultipartFile> files) {
-
-        if (!files.isEmpty()) {
-            return service.fileUpload(files.get(0));
+    public String handleFileUpload(@RequestParam("files") List<MultipartFile> files,
+                                   @RequestParam("name") String name,
+                                   @RequestParam("ShortName") String shortName,
+                                   @RequestParam("Details") String details,
+                                   @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
+        if (name.isEmpty()) {
+            return "ERROR";
         } else {
-            return "Вам не удалось загрузить " + files.get(0).getOriginalFilename() + " потому что файл пустой.";
+            boolean airfoilIsAdd = service.createNewAirfoil(shortName, name, details, fileAirfoil, files);
+            if (airfoilIsAdd) {
+                return "airfoil Is Added";
+            } else {
+                return "Error";
+            }
         }
 
     }

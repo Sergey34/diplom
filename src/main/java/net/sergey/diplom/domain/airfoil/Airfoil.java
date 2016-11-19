@@ -38,13 +38,13 @@ public class Airfoil {
             inverseJoinColumns = {@JoinColumn(name = "id_coordinates", unique = true)})
     private Set<Coordinates> coordinates;
 
-    public Airfoil(String name, String description, Prefix prefix, String idAirfoil) {
+    public Airfoil(String name, String description, Prefix prefix, String shortName) {
         this.name = name;
         this.description = description;
-        this.image = "/resources/airfoil_img/" + idAirfoil + ".png";//// TODO: 17.11.16 убрать в TDO
+        this.image = "/resources/airfoil_img/" + shortName + ".png";//// TODO: 17.11.16 убрать в TDO
         this.prefix = prefix;
-        this.id = idAirfoil.hashCode();
-        this.shortName = idAirfoil;
+        this.id = shortName.hashCode();
+        this.shortName = shortName;
     }
 
     public Airfoil() {
@@ -56,6 +56,14 @@ public class Airfoil {
         this.image = image;
         this.id = id;
         this.prefix = prefix;
+    }
+
+    public Airfoil(String name, String details, String shortName) {
+        this.name = name;
+        this.shortName = shortName;
+        this.description = details;
+        this.image = "/resources/airfoil_img/" + shortName + ".png";//// TODO: 17.11.16 убрать в TDO
+        this.id = shortName.hashCode();
     }
 
     public Set<Coordinates> getCoordinates() {

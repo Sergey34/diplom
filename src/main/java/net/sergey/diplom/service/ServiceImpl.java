@@ -3,13 +3,11 @@ package net.sergey.diplom.service;
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
-import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.model.AirfoilDTO;
 import net.sergey.diplom.model.AirfoilDetail;
-import net.sergey.diplom.model.AirfoilView;
 import net.sergey.diplom.model.UserView;
 import net.sergey.diplom.service.parser.Parser;
 import net.sergey.diplom.service.utils.UtilRoles;
@@ -18,9 +16,6 @@ import net.sergey.diplom.service.utils.imagehandlers.ImageHandler;
 import net.sergey.diplom.service.utils.imagehandlers.Xy;
 import net.sergey.diplom.service.utils.imagehandlers.createxychartstyle.MinimalStyle;
 import org.hibernate.exception.ConstraintViolationException;
-import org.knowm.xchart.XYChart;
-import org.knowm.xchart.style.Styler;
-import org.knowm.xchart.style.XYStyler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,15 +25,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
-import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.io.InputStreamReader;
+import java.util.*;
 
 @Service
 public class ServiceImpl implements ServiceInt {
@@ -46,7 +37,6 @@ public class ServiceImpl implements ServiceInt {
     private static final List<String> CHART_NAMES =
             Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl|Cd v Alpha");
     private static String PATH;
-    private static ExecutorService executorService = Executors.newFixedThreadPool(10);
     private final DAO dao;
     private final Parser parser;
     private final ServletContext servletContext;
@@ -117,7 +107,7 @@ public class ServiceImpl implements ServiceInt {
     private void fillListXListY(List<Double> x, List<Double> y, String[] split) {
         for (String line : split) {
             try {
-                String[] strings = line.trim().split(" ");
+                String[] strings = line.trim().split(",");
                 x.add(Double.parseDouble(strings[0]));
                 y.add(Double.parseDouble(strings[strings.length - 1]));
             } catch (Exception e) {
@@ -126,24 +116,6 @@ public class ServiceImpl implements ServiceInt {
                 throw e;
             }
         }
-    }
-
-    private XYChart getXYChart() {
-        Styler.ChartTheme ggPlot2 = XYStyler.ChartTheme.Matlab;
-        XYChart chart = new XYChart(900, 144, ggPlot2);
-        chart.getStyler().setAxisTicksVisible(false).setYAxisTicksVisible(false).setLegendVisible(false);
-        return chart;
-    }
-
-    @Override
-    public boolean updateAirfoil(AirfoilView airfoilView) {
-        Airfoil airfoil = new Airfoil(airfoilView.getName(),
-                airfoilView.getDescription(),
-                airfoilView.getImage(),
-                airfoilView.getId(),
-                new Prefix(airfoilView.getPrefix().charAt(0)));
-        dao.addAirfoil(airfoil);
-        return false;
     }
 
     @Override
@@ -190,20 +162,6 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public String fileUpload(MultipartFile file) {
-        try {
-            BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(
-                    new File(PATH + "/airfoil_img/" + file.getOriginalFilename())));
-            stream.write(file.getBytes());
-            stream.close();
-            return "loading ok " + file.getName() + " в " + file.getOriginalFilename() + "-uploaded !";
-        } catch (IOException e) {
-            LOGGER.warn("Ошибка при загрузке файла {}\n{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
-            return "Вам не удалось загрузить " + file.getOriginalFilename() + " => " + e.getMessage();
-        }
-    }
-
-    @Override
     public void parse() throws IOException {
         parser.setPath(PATH).init();
     }
@@ -215,6 +173,52 @@ public class ServiceImpl implements ServiceInt {
             return UtilsLogger.getAuthentication().getName();
         }
         return null;
+    }
+
+    @Override
+    public boolean createNewAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
+        Airfoil airfoil = new Airfoil(name, details, shortName);
+        try {
+            airfoil.setCoordView(parseFileAirfoil(fileAirfoil));
+            airfoil.setCoordinates(parseCoordinates(files));
+            dao.addAirfoil(airfoil);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    private Set<Coordinates> parseCoordinates(List<MultipartFile> files) {
+        Set<Coordinates> coordinates = new HashSet<>();
+        for (MultipartFile file : files) {
+            try {
+                coordinates.add(new Coordinates(parser.csvToString(file.getInputStream()), file.getOriginalFilename()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return coordinates;
+    }
+
+    private String parseFileAirfoil(MultipartFile fileAirfoil) throws IOException {
+        if (fileAirfoil.getContentType().equals("text/csv")) {
+            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileAirfoil.getInputStream()))) {
+                String line;
+                StringBuilder stringBuilder = new StringBuilder();
+                while ((line = bufferedReader.readLine()) != null) {
+                    String[] split = line.split(",");
+                    if (split.length == 2 && isDoubleStr(split[0]) && isDoubleStr(split[1])) {
+                        stringBuilder.append(line).append('\n');
+                    } else {
+                        throw new IllegalArgumentException("Невалидный файл для графика профиля");
+                    }
+                }
+                return stringBuilder.toString();
+            }
+        } else {
+            throw new IllegalArgumentException("Невалидный файл для графика профиля");
+        }
     }
 
 
@@ -230,6 +234,15 @@ public class ServiceImpl implements ServiceInt {
             if (!file.exists()) {
                 return false;
             }
+        }
+        return true;
+    }
+
+    private boolean isDoubleStr(String str) {
+        try {
+            Double.parseDouble(str);
+        } catch (NumberFormatException e) {
+            return false;
         }
         return true;
     }
