@@ -1,6 +1,5 @@
 package net.sergey.diplom.rest;
 
-import net.sergey.diplom.model.AirfoilView;
 import net.sergey.diplom.model.UserView;
 import net.sergey.diplom.service.ServiceInt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +29,7 @@ public class RestWriteController {
     }
 
     @RequestMapping(value = "/editAirfoil", method = RequestMethod.POST)
-    public String editAirfoil(@RequestBody AirfoilView airfoilView) {
-        if (service.updateAirfoil(airfoilView)) {
-            return "{\"msg\":\"success\"}";
-        }
+    public String editAirfoil() {
         return "error";
     }
 
@@ -53,7 +49,6 @@ public class RestWriteController {
                 return "Error";
             }
         }
-
     }
 
 

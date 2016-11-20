@@ -88,7 +88,7 @@ public class Parser {
             Elements element = headerMenu.get(i).getElementsByTag("h3");
             if ("Airfoils A to Z".equals(element.text())) {
                 Menu menu1 = new Menu(element.text());
-                Set<MenuItem> menuItems = new LinkedHashSet<>();
+                List<MenuItem> menuItems = new ArrayList<>();
                 Elements links = menuElement.getElementsByTag("li");
 
                 for (Element link : links) {

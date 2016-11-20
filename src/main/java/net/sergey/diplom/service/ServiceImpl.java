@@ -4,6 +4,7 @@ import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.menu.Menu;
+import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.model.AirfoilDTO;
@@ -50,7 +51,16 @@ public class ServiceImpl implements ServiceInt {
 
     @Override
     public List<Menu> getMenu() throws IOException {
-        return dao.getAllMenu();
+        List<Menu> allMenu = dao.getAllMenu();
+        for (Menu menu : allMenu) {
+            menu.getMenuItems().sort(new Comparator<MenuItem>() {
+                @Override
+                public int compare(MenuItem o1, MenuItem o2) {
+                    return o1.getUrlCode().charAt(0) - o2.getUrlCode().charAt(0);
+                }
+            });
+        }
+        return allMenu;
     }
 
     @Override

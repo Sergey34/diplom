@@ -8,7 +8,7 @@
     <meta name="keywords" content=""/>
     <meta name="description" content=""/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="/static/js/get_menu.js"></script>
+
     <script src="/static/js/get_user.js"></script>
     <script src="/static/js/get_content.js"></script>
     <script src="/static/js/get_params_url.js"></script>
@@ -16,15 +16,13 @@
 
     <link rel="stylesheet" href="/static/css/main.css" type="text/css"/>
 
-
+    <link rel="import" href="/static/menu.html">
 </head>
 
 <body>
 
 <div class="wrapper">
     <div id="header">
-        header
-
         <div id="header_user">
             <p class="user_hello">Добро пожаловать, </p>
             <p class="user_action"><a href="login" target="_blank"> </a></p>
@@ -32,7 +30,7 @@
     </div>
 
 
-    <div class="middle">
+    <div class="middle" id="middle">
 
         <div class="container">
             <div class="content" id="contentid">
@@ -44,12 +42,11 @@
             </div>
         </div>
 
-        <div id="menu">
-            <a href="/context?prefix=">about/</a>
-            <ul id="list">
-
-            </ul>
-        </div>
+        <script>
+            var link = document.querySelector('link[rel=import]');
+            var content = link.import.querySelector('#menu');
+            document.getElementById('middle').appendChild(content.cloneNode(true));
+        </script>
 
     </div>
 
