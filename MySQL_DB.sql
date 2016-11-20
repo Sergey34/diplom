@@ -78,10 +78,12 @@ CREATE TABLE prefix (
 
 CREATE TABLE airfoil (
   id          INT PRIMARY KEY AUTO_INCREMENT,
+  shortName   VARCHAR(60),
   name        VARCHAR(255) UNIQUE,
   description VARCHAR(255),
   image       VARCHAR(60),
   prefix      INT,
+  coord       TEXT,
   FOREIGN KEY (prefix) REFERENCES prefix (id_prefix)
 );
 
@@ -113,4 +115,6 @@ SELECT
   sum(data_length + index_length) / 1024 / 1024 "Data Base Size in MB"
 FROM information_schema.TABLES
 GROUP BY table_schema;
+
+
 
