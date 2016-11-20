@@ -10,6 +10,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
 import org.hibernate.criterion.Example;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -30,15 +31,21 @@ public class DAOImpl implements DAO {
 
     @Override
     public List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
+        long start = System.currentTimeMillis();
         Prefix prefixTemplate = new Prefix(prefix);
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Airfoil.class)
+                .addOrder(Order.asc("shortName"))
                 .createCriteria("prefix")
-                .add(Example.create(prefixTemplate)).setFirstResult(startNumber);
+                .add(Example.create(prefixTemplate))
+
+                .setFirstResult(startNumber);
         if (count != 0) {
             criteria.setMaxResults(count);
         }
         @SuppressWarnings("unchecked")
         List<Airfoil> airfoils = criteria.list();
+        long stop = System.currentTimeMillis();
+        System.out.println(stop - start);
         return airfoils;
     }
 
