@@ -33,12 +33,12 @@ public class RestWriteController {
         return "error";
     }
 
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String handleFileUpload(@RequestParam("files") List<MultipartFile> files,
-                                   @RequestParam("name") String name,
-                                   @RequestParam("ShortName") String shortName,
-                                   @RequestParam("Details") String details,
-                                   @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
+    @RequestMapping(value = "/addAirfoil", method = RequestMethod.POST)
+    public String addAirfoil(@RequestParam("files") List<MultipartFile> files,
+                             @RequestParam("name") String name,
+                             @RequestParam("ShortName") String shortName,
+                             @RequestParam("Details") String details,
+                             @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
         if (name.isEmpty()) {
             return "ERROR";
         } else {

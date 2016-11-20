@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Airfoils</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <script src="/static/js/jquery-3.1.1.min.js"></script>
+    <script src="/static/js/get_user.js"></script>
+    <script src="/static/js/get_content.js"></script>
+    <script src="/static/js/get_params_url.js"></script>
+    <script src="/static/js/get_detail_info.js"></script>
+
+    <link rel="stylesheet" href="/static/css/main.css" type="text/css"/>
+
+    <link rel="import" href="/static/menu.html">
+</head>
+
+<body>
+
+<div class="wrapper">
+    <div id="header">
+        <div id="header_user">
+            <p class="user_hello">Добро пожаловать, </p>
+            <p class="user_action"><a href="login" target="_blank"> </a></p>
+        </div>
+    </div>
+
+
+    <div class="middle" id="middle">
+
+        <div class="container">
+            <div class="content" id="contentid">
+                <div id="airfoilDetailInfo">
+                    <form action="/rest/write/addAirfoil" method="post" enctype="multipart/form-data">
+                        <label>
+                            Название профиля
+                            <input type="text" value="" name="name" id="name"/>
+                        </label>
+                        <label>
+                            Короткое название профиля (изменение повлечет создание нового профиля)
+                            <input type="text" value="" name="ShortName" id="ShortName"/>
+                        </label>
+                        </Br>
+                        <label>
+                            Детали
+                            <input type="text" value="" name="Details" id="description"/>
+                        </label>
+                        </Br>
+                        <div class="img_detail" id="img_detail">
+                            <label>
+                                Выберите файл для построения графика профиля
+                                <input class='fileInput' type="file" name="fileAirfoil"/>
+                            </label>
+                            </Br>
+                        </div>
+
+                        <div id="graf">
+                            <label>
+                                Выберите файлы построения графиков
+                                <input class='fileInput' type="file" name="files" multiple="multiple"
+                                       value="Выбрать файлы"/>
+                            </label>
+                            </Br>
+                        </div>
+
+                        <input type="submit"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var link = document.querySelector('link[rel=import]');
+            var content = link.import.querySelector('#menu');
+            document.getElementById('middle').appendChild(content.cloneNode(true));
+        </script>
+
+    </div>
+
+    <div class="footer">
+        footer
+    </div>
+
+</div>
+<script>
+    getDetailInfo(true);
+</script>
+</body>
+</html>

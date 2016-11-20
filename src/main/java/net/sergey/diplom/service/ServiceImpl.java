@@ -199,14 +199,10 @@ public class ServiceImpl implements ServiceInt {
         return true;
     }
 
-    private Set<Coordinates> parseCoordinates(List<MultipartFile> files) {
+    private Set<Coordinates> parseCoordinates(List<MultipartFile> files) throws IOException {
         Set<Coordinates> coordinates = new HashSet<>();
         for (MultipartFile file : files) {
-            try {
-                coordinates.add(new Coordinates(parser.csvToString(file.getInputStream()), file.getOriginalFilename()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            coordinates.add(new Coordinates(parser.csvToString(file.getInputStream()), file.getOriginalFilename()));
         }
         return coordinates;
     }
@@ -230,7 +226,6 @@ public class ServiceImpl implements ServiceInt {
             throw new IllegalArgumentException("Невалидный файл для графика профиля");
         }
     }
-
 
     private boolean filesExist(Airfoil airfoil) {
         for (Coordinates coordinates : airfoil.getCoordinates()) {

@@ -47,4 +47,9 @@ public class MainController {
         return "static/detailInfo.html";
     }
 
+    @RequestMapping(value = "/editAirfoil", method = RequestMethod.GET)
+    public String showEditAirfoil() {
+        return "static/edit_airfoil.html";
+    }
+
 }
