@@ -24,12 +24,12 @@ public class MainController {
 
     @RequestMapping(value = "/context", method = RequestMethod.GET)
     public String showContext() {
-        return "static/context.html";
+        return "static/airfoilList.html";
     }
 
     @RequestMapping(value = "/adduser", method = RequestMethod.GET)
     public String showAddUser() {
-        return "static/registration_user.html";
+        return "static/add_user.html";
     }
 
     @RequestMapping(value = "/adminka", method = RequestMethod.GET)
@@ -39,7 +39,7 @@ public class MainController {
 
     @RequestMapping(value = "/load", method = RequestMethod.GET)
     public String showLoaderFile() {
-        return "static/fileUpload.html";
+        return "static/addAirfoil.html";
     }
 
     @RequestMapping(value = "/getDetailInfo", method = RequestMethod.GET)
