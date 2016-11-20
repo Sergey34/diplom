@@ -36,7 +36,7 @@ import java.util.*;
 public class ServiceImpl implements ServiceInt {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static final List<String> CHART_NAMES =
-            Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl|Cd v Alpha");
+            Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
     private static String PATH;
     private final DAO dao;
     private final Parser parser;

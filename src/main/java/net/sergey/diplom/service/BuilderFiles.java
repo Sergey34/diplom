@@ -37,7 +37,7 @@ public class BuilderFiles {
     public void draw(final Airfoil airfoil) throws Exception {
         chartClCd = new ImageHandler("Cl", "Cd", airfoil.getId(), new SimpleStyle());
         chartClAlpha = new ImageHandler("Cl", "Alpha", airfoil.getId(), new SimpleStyle());
-        chartClCdAlpha = new ImageHandler("Cl|Cd", "Alpha", airfoil.getId(), new SimpleStyle());
+        chartClCdAlpha = new ImageHandler("Cl div Cd", "Alpha", airfoil.getId(), new SimpleStyle());
         chartCdAlpha = new ImageHandler("Cd", "Alpha", airfoil.getId(), new SimpleStyle());
         chartCmAlpha = new ImageHandler("Cm", "Alpha", airfoil.getId(), new SimpleStyle());
         fillXYChart(airfoil);
@@ -76,7 +76,7 @@ public class BuilderFiles {
 
     private Map<String, List<Double>> parseStrCSVtoMap(String coordinateStr, String fileName) {
         Map<String, List<Double>> coordinates;
-        try (CSVWriter csvWriter = new CSVWriter(new FileWriter(PATH + "/tmpCsv/" + fileName + ".csv"))) {
+        try (CSVWriter csvWriter = new CSVWriter(new FileWriter(PATH + "/tmpCsv/" + fileName))) {
             CSVParser csvParser = new CSVParser();
             String[] csvLines = coordinateStr.split("\n");
             String[] keys = csvParser.parseLine(csvLines[10]);
