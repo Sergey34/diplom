@@ -39,4 +39,6 @@ public interface ServiceInt {
     String getUserInfo();
 
     boolean createNewAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
+
+    int getCountAirfoilByPrefix(char prefix);
 }

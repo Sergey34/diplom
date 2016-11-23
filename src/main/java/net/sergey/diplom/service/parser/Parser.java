@@ -67,7 +67,9 @@ public class Parser {
                 for (Element similarItem : similar) {
                     String airfoilId = createStringByPattern(similarItem.getElementsByClass("c3").first().getElementsByTag("a").attr("href"), GET_AIRFOIL_ID_BY_URL_PATTERN);
                     Airfoil airfoilSimilar = dao.getAirfoilById(airfoilId.hashCode());
-                    airfoil.addSimilar(airfoilSimilar);
+                    if (airfoilSimilar != null) {
+                        airfoil.addSimilar(airfoilSimilar);
+                    }
                 }
                 LOGGER.info(airfoil.getName());
                 dao.addAirfoil(airfoil);
@@ -142,7 +144,7 @@ public class Parser {
                         first().getElementsByTag("tr");
                 parsePage(prefix1, airfoils, airfoilList);
             }
-            dao.addAirfoil(airfoils);
+            dao.addAirfoils(airfoils);
         }
     }
 

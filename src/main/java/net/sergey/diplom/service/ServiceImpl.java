@@ -199,6 +199,11 @@ public class ServiceImpl implements ServiceInt {
         return true;
     }
 
+    @Override
+    public int getCountAirfoilByPrefix(char prefix) {
+        return dao.getCountAirfoilByPrefix(prefix);
+    }
+
     private Set<Coordinates> parseCoordinates(List<MultipartFile> files) throws IOException {
         Set<Coordinates> coordinates = new HashSet<>();
         for (MultipartFile file : files) {

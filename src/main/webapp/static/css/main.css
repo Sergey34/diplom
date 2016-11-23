@@ -90,6 +90,10 @@ body {
     padding: 0 0 0 270px;
 }
 
+.currentItem {
+    color: red; /* Красный цвет выделения */
+}
+
 .descr, .img, .link, .div_input {
     position: absolute;
 }

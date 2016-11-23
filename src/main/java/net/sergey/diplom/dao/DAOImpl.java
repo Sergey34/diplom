@@ -104,7 +104,7 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public void addAirfoil(List<Airfoil> airfoils) {
+    public void addAirfoils(List<Airfoil> airfoils) {
         Session currentSession = sessionFactory.getCurrentSession();
         for (Airfoil airfoil : airfoils) {
             currentSession.saveOrUpdate(airfoil);
@@ -116,14 +116,12 @@ public class DAOImpl implements DAO {
         save(airfoil);
     }
 
-    @Override
-    public int getIdLinkByUrl(String link) {
-        return (int) sessionFactory.getCurrentSession().createSQLQuery("SELECT id FROM links WHERE link= :link").setParameter("link", link).uniqueResult();
-    }
+
 
     @Override
     public Airfoil getAirfoilById(int id) {
-        Airfoil airfoil = (Airfoil) sessionFactory.getCurrentSession().createCriteria(Airfoil.class).add(Restrictions.eq("id", id)).uniqueResult();
+        Airfoil airfoil = (Airfoil) sessionFactory.getCurrentSession()
+                .createCriteria(Airfoil.class).add(Restrictions.eq("id", id)).uniqueResult();
         if (null != airfoil) {
             Hibernate.initialize(airfoil.getCoordinates());
             Hibernate.initialize(airfoil.getAirfoilsSimilar());
@@ -140,6 +138,13 @@ public class DAOImpl implements DAO {
             airfoil.setAirfoilsSimilar(null);
         }
         return list;
+    }
+
+    @Override
+    public int getCountAirfoilByPrefix(char prefix) {
+        Prefix prefixTemplate = new Prefix(prefix);
+        return sessionFactory.getCurrentSession().createCriteria(Airfoil.class).createCriteria("prefix")
+                .add(Example.create(prefixTemplate)).list().size();
     }
 
 

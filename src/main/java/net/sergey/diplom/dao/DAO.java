@@ -23,15 +23,14 @@ public interface DAO {
 
     void cleanAllTables();
 
-    void addAirfoil(List<Airfoil> airfoils);
+    void addAirfoils(List<Airfoil> airfoils);
 
     void addAirfoil(Airfoil airfoil);
-
-    int getIdLinkByUrl(String link);
 
     Airfoil getAirfoilById(int id);
 
     List<Airfoil> getAllAirfoil();
 
+    int getCountAirfoilByPrefix(char prefix);
 
 }

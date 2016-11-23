@@ -1,6 +1,9 @@
 var currentPrefix = '';
 function getContent() {
     var prefix = $.getUrlVar('prefix') != undefined ? $.getUrlVar('prefix') : 'A';
+    var no = $.getUrlVar('no') != undefined ? $.getUrlVar('no') - 1 : 0;
+
+    console.log("no=" + no);
 
     console.log(currentPrefix);
     if (currentPrefix != '') {
@@ -10,11 +13,11 @@ function getContent() {
     currentPrefix = prefix;
     $(document).ready(function () {
         $.ajax({
-            url: "/rest/getContext/" + prefix + "/0/20"
+            url: "/rest/getContext/" + prefix + "/" + no * 20 + "/20"
         }).then(function (data) {
+            createCursore(no + 1);
             console.log(data);
-            var airfoil_list = document.createElement('ul');
-            airfoil_list.id = 'airfoil_list';
+            var airfoil_list = document.getElementById('airfoil_list');
             if (data.length == 0) {
                 airfoil_list.innerHTML = "не удалось загрузить airfoil с перфиксом " + prefix
             } else {
@@ -58,3 +61,33 @@ function extracted(element, value, className) {
     element.setAttribute('class', className);
 }
 
+
+function createCursore(no) {
+    console.log("createCursore");
+    var prefix = $.getUrlVar('prefix') != undefined ? $.getUrlVar('prefix') : 'A';
+    $(document).ready(function () {
+        $.ajax({
+            url: "/rest/getCountAirfoil/" + prefix
+        }).then(function (data) {
+            console.log(data);
+            var countItem = Math.ceil(data / 20.0);
+            console.log("countItem" + countItem);
+            var cursor = document.getElementById('cursor');
+            for (var i = 1; i <= countItem; i++) {
+                console.log(i);
+                var item = document.createElement('a');
+                item.setAttribute("href", "/context?prefix=" + prefix + '&no=' + i);
+
+                if (no == i) {
+                    item.innerHTML = '<span class="currentItem"> ' + i + ' </span>';
+                } else {
+                    item.innerHTML = " " + i + " ";
+                }
+                cursor.appendChild(item);
+            }
+            document.getElementById('contentid').appendChild(cursor);
+        })
+    });
+
+
+}
