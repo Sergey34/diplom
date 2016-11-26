@@ -90,7 +90,10 @@ CREATE TABLE airfoil (
 CREATE TABLE coordinates (
   id              INT NOT NULL PRIMARY KEY,
   coordinatesJson TEXT,
-  fileName        VARCHAR(255)
+  fileName        VARCHAR(255),
+  renolgs         VARCHAR(25),
+  nCrit           INT(11),
+  maxClCd         VARCHAR(30)
 );
 
 CREATE TABLE airfoil_coordinates (
