@@ -10,10 +10,7 @@ import net.sergey.diplom.service.utils.UtilsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -90,6 +87,11 @@ public class FullRestController {
     @RequestMapping(value = "/getCountAirfoil/{prefix}", method = RequestMethod.GET)
     public int getCountAirfoil(@PathVariable char prefix) {
         return service.getCountAirfoilByPrefix(prefix);
+    }
+
+    @RequestMapping(value = "/updateGraf/{airfoilId}", method = RequestMethod.POST)
+    public List<String> updateGraf(@PathVariable int airfoilId, @RequestBody List<String> checkeds) {
+        return service.updateGraf(airfoilId, checkeds);
     }
 
 

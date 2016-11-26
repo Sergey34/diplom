@@ -103,6 +103,31 @@ body {
     padding: 10px;
 }
 
+.renolgs, .NCrit, .MaxClCd, .fileName, .csvItemChBox {
+    position: absolute;
+}
+
+.csvItemChBox {
+    left: 290px;
+}
+
+.renolgs {
+    left: 310px;
+}
+
+.NCrit {
+    left: 375px;
+}
+
+.MaxClCd {
+    left: 410px;
+}
+
+.fileName {
+    left: 500px;
+}
+
+
 .descr {
     width: 240px;
     text-align: left;

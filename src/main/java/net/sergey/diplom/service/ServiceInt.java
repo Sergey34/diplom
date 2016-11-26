@@ -41,4 +41,6 @@ public interface ServiceInt {
     boolean createNewAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
 
     int getCountAirfoilByPrefix(char prefix);
+
+    List<String> updateGraf(int airfoilId, List<String> checkeds);
 }

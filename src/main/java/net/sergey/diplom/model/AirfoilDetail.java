@@ -5,21 +5,19 @@ import net.sergey.diplom.domain.airfoil.Coordinates;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class AirfoilDetail extends AirfoilDTO {
     private static final AirfoilDetail airfoilDetailError = new AirfoilDetail(true);
     private boolean error;
-    private List<String> fileCsvName;
+    private Set<Coordinates> fileCsvName;
     private List<String> imgCsvName;
     private String warnMessage;
     private List<SimilarAirfoil> similarAirfoilsId;
 
     public AirfoilDetail(Airfoil airfoil, String message) {
         super(airfoil);
-        fileCsvName = new ArrayList<>();
-        for (Coordinates coordinates : airfoil.getCoordinates()) {
-            fileCsvName.add(coordinates.getFileName());
-        }
+        fileCsvName = airfoil.getCoordinates();
         this.warnMessage = message;
     }
 
@@ -29,10 +27,7 @@ public class AirfoilDetail extends AirfoilDTO {
 
     public AirfoilDetail(Airfoil airfoil, List<String> chartNames) {
         super(airfoil);
-        fileCsvName = new ArrayList<>();
-        for (Coordinates coordinates : airfoil.getCoordinates()) {
-            fileCsvName.add(coordinates.getFileName());
-        }
+        fileCsvName = airfoil.getCoordinates();
         this.similarAirfoilsId = new ArrayList<>();
         for (Airfoil airfoilSimilar : airfoil.getAirfoilsSimilar()) {
             this.similarAirfoilsId.add(new SimilarAirfoil(airfoilSimilar.getId(), airfoilSimilar.getName()));
@@ -49,11 +44,11 @@ public class AirfoilDetail extends AirfoilDTO {
         return airfoilDetailError;
     }
 
-    public List<String> getFileCsvName() {
+    public Set<Coordinates> getFileCsvName() {
         return fileCsvName;
     }
 
-    public void setFileCsvName(List<String> fileCsvName) {
+    public void setFileCsvName(Set<Coordinates> fileCsvName) {
         this.fileCsvName = fileCsvName;
     }
 

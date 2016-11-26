@@ -133,6 +133,7 @@ public class Parser {
     }
 
     private void getAirfoilsByPrefix() throws IOException {
+        //// TODO: 26.11.16 executors
         for (String url : airfoilMenu) {
             String fullUrl = ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX + url;
 

@@ -134,23 +134,38 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
+    public List<String> updateGraf(int airfoilId, List<String> checkeds) {
+        Airfoil airfoil = dao.getAirfoilById(airfoilId);
+        if (airfoil != null) {
+            try {
+                new BuilderFiles(PATH).draw(airfoil, checkeds);
+            } catch (Exception e) {
+                e.printStackTrace();
+                LOGGER.warn("Ошибка при обработке файловк с координатами {}\n{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+            }
+        }
+        List<String> imgCsvName = new ArrayList<>();
+        for (String chartName : CHART_NAMES) {
+            imgCsvName.add("/resources/chartTemp/" + airfoilId + chartName + ".png");
+        }
+        return imgCsvName;
+
+    }
+
+    @Override
     public AirfoilDetail getDetailInfo(int airfoilId) {
         Airfoil airfoil = dao.getAirfoilById(airfoilId);
         if (null == airfoil) {
             return AirfoilDetail.getAirfoilDetailError("airfoil не найден");
         }
-        if (!filesExist(airfoil)) {
-            try {
-                new BuilderFiles(PATH).draw(airfoil);
-            } catch (Exception e) {
-                e.printStackTrace();
-                LOGGER.warn("Ошибка при обработке файловк с координатами {}\n{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
-                return new AirfoilDetail(airfoil, e.getMessage());
-            }
+        try {
+            new BuilderFiles(PATH).draw(airfoil, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.warn("Ошибка при обработке файловк с координатами {}\n{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+            return new AirfoilDetail(airfoil, e.getMessage());
         }
-
         drawViewAirfoil(airfoil);
-
         return new AirfoilDetail(airfoil, CHART_NAMES);
     }
 
@@ -204,6 +219,7 @@ public class ServiceImpl implements ServiceInt {
         return dao.getCountAirfoilByPrefix(prefix);
     }
 
+
     private Set<Coordinates> parseCoordinates(List<MultipartFile> files) throws IOException {
         Set<Coordinates> coordinates = new HashSet<>();
         for (MultipartFile file : files) {
@@ -230,22 +246,6 @@ public class ServiceImpl implements ServiceInt {
         } else {
             throw new IllegalArgumentException("Невалидный файл для графика профиля");
         }
-    }
-
-    private boolean filesExist(Airfoil airfoil) {
-        for (Coordinates coordinates : airfoil.getCoordinates()) {
-            File file = new File(PATH + "/tmpCsv/" + coordinates.getFileName() + ".csv");
-            if (!file.exists()) {
-                return false;
-            }
-        }
-        for (String chartName : CHART_NAMES) {
-            File file = new File(PATH + "/chartTemp/" + airfoil.getId() + chartName + ".bmp");
-            if (!file.exists()) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private boolean isDoubleStr(String str) {

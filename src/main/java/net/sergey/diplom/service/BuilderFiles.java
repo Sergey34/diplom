@@ -34,36 +34,50 @@ public class BuilderFiles {
         PATH = path;
     }
 
-    public void draw(final Airfoil airfoil) throws Exception {
+    public void draw(final Airfoil airfoil, List<String> checkeds) throws Exception {
         chartClCd = new ImageHandler("Cl", "Cd", airfoil.getId(), new SimpleStyle());
         chartClAlpha = new ImageHandler("Cl", "Alpha", airfoil.getId(), new SimpleStyle());
         chartClCdAlpha = new ImageHandler("Cl div Cd", "Alpha", airfoil.getId(), new SimpleStyle());
         chartCdAlpha = new ImageHandler("Cd", "Alpha", airfoil.getId(), new SimpleStyle());
         chartCmAlpha = new ImageHandler("Cm", "Alpha", airfoil.getId(), new SimpleStyle());
-        fillXYChart(airfoil);
+        fillXYChart(airfoil, checkeds);
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         executorService.invokeAll(Arrays.asList(chartClCd, chartClAlpha, chartClCdAlpha, chartCdAlpha, chartCmAlpha));
     }
 
 
-    private void fillXYChart(final Airfoil airfoil) {
+    private void fillXYChart(final Airfoil airfoil, List<String> checkeds) {
         for (Coordinates coordinates : airfoil.getCoordinates()) {
             Map<String, List<Double>> map = parseStrCSVtoMap(coordinates.getCoordinatesJson(), coordinates.getFileName());
             if (map == null) {
                 return;
             }
-            Xy ClCd = new Xy(map.get("Cd"), map.get("Cl"), coordinates.getFileName());
-            chartClCd.add(ClCd);
-            Xy ClAlpha = new Xy(map.get("Alpha"), map.get("Cl"), coordinates.getFileName());
-            chartClAlpha.add(ClAlpha);
-            List<Double> clDivCd = divListValue(map.get("Cl"), map.get("Cd"));
-            Xy ClCdAlpha = new Xy(map.get("Alpha"), clDivCd, coordinates.getFileName());
-            chartClCdAlpha.add(ClCdAlpha);
-            Xy CdAlpha = new Xy(map.get("Alpha"), map.get("Cd"), coordinates.getFileName());
-            chartCdAlpha.add(CdAlpha);
-            Xy CmAlpha = new Xy(map.get("Alpha"), map.get("Cm"), coordinates.getFileName());
-            chartCmAlpha.add(CmAlpha);
+            if (isChecked(checkeds, coordinates)) {
+                Xy ClCd = new Xy(map.get("Cd"), map.get("Cl"), coordinates.getFileName());
+                chartClCd.add(ClCd);
+                Xy ClAlpha = new Xy(map.get("Alpha"), map.get("Cl"), coordinates.getFileName());
+                chartClAlpha.add(ClAlpha);
+                List<Double> clDivCd = divListValue(map.get("Cl"), map.get("Cd"));
+                Xy ClCdAlpha = new Xy(map.get("Alpha"), clDivCd, coordinates.getFileName());
+                chartClCdAlpha.add(ClCdAlpha);
+                Xy CdAlpha = new Xy(map.get("Alpha"), map.get("Cd"), coordinates.getFileName());
+                chartCdAlpha.add(CdAlpha);
+                Xy CmAlpha = new Xy(map.get("Alpha"), map.get("Cm"), coordinates.getFileName());
+                chartCmAlpha.add(CmAlpha);
+            }
         }
+    }
+
+    private boolean isChecked(List<String> checkeds, Coordinates coordinates) {
+        if (checkeds == null) {
+            return true;
+        }
+        for (String checked : checkeds) {
+            if (coordinates.getFileName().equals(checked)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private List<Double> divListValue(List<Double> cl, List<Double> cd) {
