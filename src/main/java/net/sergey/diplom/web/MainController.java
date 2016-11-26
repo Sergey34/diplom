@@ -39,7 +39,7 @@ public class MainController {
 
     @RequestMapping(value = "/load", method = RequestMethod.GET)
     public String showLoaderFile() {
-        return "static/addAirfoils.html";
+        return "static/addAirfoil.html";
     }
 
     @RequestMapping(value = "/getDetailInfo", method = RequestMethod.GET)
