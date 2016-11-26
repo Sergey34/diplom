@@ -1,6 +1,11 @@
 package net.sergey.diplom.service.parser;
 
+import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.service.utils.UtilsLogger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.knowm.xchart.BitmapEncoder;
@@ -20,7 +25,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -133,5 +140,26 @@ public class ParserTest {
         return true;
     }
 
+    @Test
+    public void initTest44() throws Exception {
+        Document detail = Jsoup.connect("http://airfoiltools.com/airfoil/details?airfoil=a18-il").timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get();
+        Elements polar = detail.getElementsByClass("polar");
+
+        polar = polar.first().getElementsByTag("tr");
+        Set<Coordinates> coordinates = new HashSet<>();
+        for (Element element : polar) {
+            Element reynolds = element.getElementsByClass("cell2").first();
+            Element nCrit = element.getElementsByClass("cell3").first();
+            Element maxClCd = element.getElementsByClass("cell4").first();
+            Elements a = element.getElementsByClass("cell7").first().getElementsByTag("a");
+
+            if (a.size() != 0) {
+                //String fileName = createStringByPattern(a.attr("href"), GET_FILE_NAME_BY_URL_PATTERN);
+                // URL urlFile = new URL(GET_FILE_CSV + fileName);
+                // LOGGER.debug("url {}{}", GET_FILE_CSV, fileName);
+                //coordinates.add(new Coordinates(csvToString(urlFile.openStream()), fileName + ".csv"));
+            }
+        }
+    }
 
 }

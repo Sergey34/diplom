@@ -208,19 +208,29 @@ public class Parser {
 
     private Set<Coordinates> downloadDetailInfo(String airfoil) throws IOException {
         Document detail = Jsoup.connect(GET_DETAILS + airfoil).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get();
-        Elements polar1 = detail.getElementsByClass("polar");
-        if (polar1.size() == 0) {
+        Elements polar = detail.getElementsByClass("polar");
+        if (polar.size() == 0) {
             return Collections.emptySet();
         }
-        Elements polar = polar1.first().getElementsByClass("cell7");
+        polar = polar.first().getElementsByTag("tr");
         Set<Coordinates> coordinates = new HashSet<>();
         for (Element element : polar) {
-            Elements a = element.getElementsByTag("a");
-            if (a.size() != 0) {
-                String fileName = createStringByPattern(a.attr("href"), GET_FILE_NAME_BY_URL_PATTERN);
-                URL urlFile = new URL(GET_FILE_CSV + fileName);
-                LOGGER.debug("url {}{}", GET_FILE_CSV, fileName);
-                coordinates.add(new Coordinates(csvToString(urlFile.openStream()), fileName + ".csv"));
+            Element reynolds = element.getElementsByClass("cell2").first();
+            Element nCrit = element.getElementsByClass("cell3").first();
+            Element maxClCd = element.getElementsByClass("cell4").first();
+            Element cell7 = element.getElementsByClass("cell7").first();
+            if (cell7 != null) {
+                Elements a = cell7.getElementsByTag("a");
+                if (a.size() != 0) {
+                    String fileName = createStringByPattern(a.attr("href"), GET_FILE_NAME_BY_URL_PATTERN);
+                    URL urlFile = new URL(GET_FILE_CSV + fileName);
+                    LOGGER.debug("url {}{}", GET_FILE_CSV, fileName);
+                    Coordinates coordinateItem = new Coordinates(csvToString(urlFile.openStream()), fileName + ".csv");
+                    coordinateItem.setRenolgs(reynolds.text());
+                    coordinateItem.setNCrit(nCrit.text());
+                    coordinateItem.setMaxClCd(maxClCd.text());
+                    coordinates.add(coordinateItem);
+                }
             }
         }
         return coordinates;
