@@ -29,10 +29,24 @@ import static net.sergey.diplom.service.ConstantApi.GET_FILE_CSV;
  * Created by seko0716 on 11/30/2016.
  */
 public class ParserAirfoil implements Callable<List<Airfoil>> {
+    private static final Pattern GET_ID_BY_FULL_NAME_PATTERN = Pattern.compile("\\(([a-zA-Z0-9_-]+)\\) .*");
+    private static final Pattern GET_FILE_NAME_BY_URL_PATTERN = Pattern.compile("polar=(.+)$");
+    private static final Pattern GET_COUNT_PAGES_PATTERN = Pattern.compile("Page 1 of ([0-9]+).+");
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private String prefix;
-
     public ParserAirfoil(String prefix) {
         this.prefix = prefix;
+    }
+
+    public static String csvToString(InputStream urlFile) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlFile))) {
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line).append('\n');
+            }
+            return stringBuilder.toString();
+        }
     }
 
     @Override
@@ -40,12 +54,6 @@ public class ParserAirfoil implements Callable<List<Airfoil>> {
        return parseAirfoilByUrl(prefix);
 
     }
-
-    private static final Pattern GET_ID_BY_FULL_NAME_PATTERN = Pattern.compile("\\(([a-zA-Z0-9_-]+)\\) .*");
-    private static final Pattern GET_FILE_NAME_BY_URL_PATTERN = Pattern.compile("polar=(.+)$");
-    private static final Pattern GET_COUNT_PAGES_PATTERN = Pattern.compile("Page 1 of ([0-9]+).+");
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-
 
     private List<Airfoil> parseAirfoilByUrl(String url) throws IOException {
         String fullUrl = ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX + url;
@@ -117,7 +125,6 @@ public class ParserAirfoil implements Callable<List<Airfoil>> {
         return 0;
     }
 
-
     private Set<Coordinates> downloadDetailInfo(String airfoil) throws IOException {
         Document detail = Jsoup.connect(GET_DETAILS + airfoil).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get();
         Elements polar = detail.getElementsByClass("polar");
@@ -146,17 +153,5 @@ public class ParserAirfoil implements Callable<List<Airfoil>> {
             }
         }
         return coordinates;
-    }
-
-
-    private String csvToString(InputStream urlFile) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlFile))) {
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line).append('\n');
-            }
-            return stringBuilder.toString();
-        }
     }
 }

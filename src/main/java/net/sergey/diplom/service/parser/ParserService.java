@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,7 +38,7 @@ public class ParserService {
     private static final Pattern GET_MENU_TITLE_PATTERN = Pattern.compile("^(.+) \\([0-9]*\\)$");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static final String HTTP_AIRFOIL_TOOLS_COM = "http://airfoiltools.com/";
-
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     @Autowired
     private DAO dao;
 
@@ -117,7 +116,6 @@ public class ParserService {
         return airfoilMenu;
     }
 
-
     private String createPrefix(String text) {
         if (!"".equals(text)) {
             return String.valueOf(text.charAt(0));
@@ -125,8 +123,6 @@ public class ParserService {
             return "allAirfoil";
         }
     }
-
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     private void getAirfoilsByMenuList(List<String> prefixList) throws IOException, InterruptedException, ExecutionException {
         Collection<Future<List<Airfoil>>> futureList = new ArrayList<>();
@@ -146,17 +142,6 @@ public class ParserService {
             return matcher.group(1);
         }
         return "";
-    }
-
-    public String csvToString(InputStream urlFile) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlFile))) {
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line).append('\n');
-            }
-            return stringBuilder.toString();
-        }
     }
 
 

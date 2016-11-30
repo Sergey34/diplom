@@ -10,6 +10,7 @@ import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.model.AirfoilDTO;
 import net.sergey.diplom.model.AirfoilDetail;
 import net.sergey.diplom.model.UserView;
+import net.sergey.diplom.service.parser.ParserAirfoil;
 import net.sergey.diplom.service.parser.ParserService;
 import net.sergey.diplom.service.utils.UtilRoles;
 import net.sergey.diplom.service.utils.UtilsLogger;
@@ -185,12 +186,14 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public void parse() {
+    public boolean parse() {
         try {
             parserService.init();
+            return true;
         } catch (Exception e) {
             LOGGER.warn("ошибка инициализации базы {}", Arrays.asList(e.getStackTrace()));
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -226,7 +229,7 @@ public class ServiceImpl implements ServiceInt {
     private Set<Coordinates> createCoordinateSet(List<MultipartFile> files) throws IOException {
         Set<Coordinates> coordinates = new HashSet<>();
         for (MultipartFile file : files) {
-            coordinates.add(new Coordinates(parserService.csvToString(file.getInputStream()), file.getOriginalFilename()));
+            coordinates.add(new Coordinates(ParserAirfoil.csvToString(file.getInputStream()), file.getOriginalFilename()));
         }
         return coordinates;
     }

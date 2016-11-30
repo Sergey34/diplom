@@ -34,7 +34,7 @@ public interface ServiceInt {
 
     AirfoilDetail getDetailInfo(int airfoilId);
 
-    void parse() throws IOException;
+    boolean parse();
 
     String getUserInfo();
 

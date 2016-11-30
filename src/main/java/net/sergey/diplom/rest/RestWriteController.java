@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @RequestMapping(value = "/rest/write")
@@ -54,12 +53,12 @@ public class RestWriteController {
 
     @RequestMapping(value = "/init", method = RequestMethod.GET)
     public String init() {
-        try {
-            service.parse();
+        boolean parse = service.parse();
+        if (parse) {
             return "OK";
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "Error";
+        } else {
+            return "ERROR";
         }
+
     }
 }
