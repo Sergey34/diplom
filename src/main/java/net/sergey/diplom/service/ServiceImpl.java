@@ -10,7 +10,7 @@ import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.model.AirfoilDTO;
 import net.sergey.diplom.model.AirfoilDetail;
 import net.sergey.diplom.model.UserView;
-import net.sergey.diplom.service.parser.Parser;
+import net.sergey.diplom.service.parser.ParserService;
 import net.sergey.diplom.service.utils.UtilRoles;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import net.sergey.diplom.service.utils.imagehandlers.ImageHandler;
@@ -26,10 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
 
 @Service
@@ -39,14 +37,14 @@ public class ServiceImpl implements ServiceInt {
             Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
     private static String PATH;
     private final DAO dao;
-    private final Parser parser;
+    private final ParserService parserService;
     private final ServletContext servletContext;
 
     @Autowired
-    public ServiceImpl(DAO dao, ServletContext servletContext, Parser parser) {
+    public ServiceImpl(DAO dao, ServletContext servletContext, ParserService parserService) {
         this.dao = dao;
         this.servletContext = servletContext;
-        this.parser = parser;
+        this.parserService = parserService;
     }
 
     @Override
@@ -189,7 +187,7 @@ public class ServiceImpl implements ServiceInt {
     @Override
     public void parse() {
         try {
-            parser.init();
+            parserService.init();
         } catch (Exception e) {
             LOGGER.warn("ошибка инициализации базы {}", Arrays.asList(e.getStackTrace()));
             e.printStackTrace();
@@ -209,8 +207,8 @@ public class ServiceImpl implements ServiceInt {
     public boolean createNewAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
         Airfoil airfoil = new Airfoil(name, details, shortName);
         try {
-            airfoil.setCoordView(parseFileAirfoil(fileAirfoil));
-            airfoil.setCoordinates(parseCoordinates(files));
+            airfoil.setCoordView(parserService.parseFileAirfoil(fileAirfoil));
+            airfoil.setCoordinates(createCoordinateSet(files));
             dao.addAirfoil(airfoil);
         } catch (Exception e) {
             e.printStackTrace();
@@ -225,40 +223,11 @@ public class ServiceImpl implements ServiceInt {
     }
 
 
-    private Set<Coordinates> parseCoordinates(List<MultipartFile> files) throws IOException {
+    private Set<Coordinates> createCoordinateSet(List<MultipartFile> files) throws IOException {
         Set<Coordinates> coordinates = new HashSet<>();
         for (MultipartFile file : files) {
-            coordinates.add(new Coordinates(parser.csvToString(file.getInputStream()), file.getOriginalFilename()));
+            coordinates.add(new Coordinates(parserService.csvToString(file.getInputStream()), file.getOriginalFilename()));
         }
         return coordinates;
-    }
-
-    private String parseFileAirfoil(MultipartFile fileAirfoil) throws IOException {
-        if (fileAirfoil.getContentType().equals("text/csv")) {
-            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileAirfoil.getInputStream()))) {
-                String line;
-                StringBuilder stringBuilder = new StringBuilder();
-                while ((line = bufferedReader.readLine()) != null) {
-                    String[] split = line.split(",");
-                    if (split.length == 2 && isDoubleStr(split[0]) && isDoubleStr(split[1])) {
-                        stringBuilder.append(line).append('\n');
-                    } else {
-                        throw new IllegalArgumentException("Невалидный файл для графика профиля");
-                    }
-                }
-                return stringBuilder.toString();
-            }
-        } else {
-            throw new IllegalArgumentException("Невалидный файл для графика профиля");
-        }
-    }
-
-    private boolean isDoubleStr(String str) {
-        try {
-            Double.parseDouble(str);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
     }
 }

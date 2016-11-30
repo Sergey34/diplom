@@ -39,13 +39,13 @@ import java.util.regex.Pattern;
 public class ParserTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     @Autowired
-    Parser parser;
+    ParserService parserService;
     @Autowired
     private ServletContext servletContext;
 
     @Test
     public void initTest() throws Exception {
-        parser.init();
+        parserService.init();
     }
 
     @Test

@@ -35,7 +35,6 @@ public class ParserAirfoil implements Callable<List<Airfoil>> {
         this.prefix = prefix;
     }
 
-
     @Override
     public List<Airfoil> call() throws Exception {
        return parseAirfoilByUrl(prefix);

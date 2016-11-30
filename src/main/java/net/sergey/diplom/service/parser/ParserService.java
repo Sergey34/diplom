@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,7 +33,7 @@ import java.util.regex.Pattern;
 import static net.sergey.diplom.service.ConstantApi.GET_DETAILS;
 
 @Component
-public class Parser {
+public class ParserService {
     private static final Pattern GET_ID_BY_FULL_NAME_PATTERN = Pattern.compile("\\(([a-zA-Z0-9_-]+)\\) .*");
     private static final Pattern GET_AIRFOIL_ID_BY_URL_PATTERN = Pattern.compile("airfoil=(.+)$");
     private static final Pattern GET_MENU_TITLE_PATTERN = Pattern.compile("^(.+) \\([0-9]*\\)$");
@@ -42,7 +43,7 @@ public class Parser {
     @Autowired
     private DAO dao;
 
-    public Parser() {
+    public ParserService() {
     }
 
     public void init() throws Exception {
@@ -156,5 +157,35 @@ public class Parser {
             }
             return stringBuilder.toString();
         }
+    }
+
+
+    public String parseFileAirfoil(MultipartFile fileAirfoil) throws IOException {
+        if (fileAirfoil.getContentType().equals("text/csv")) {
+            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileAirfoil.getInputStream()))) {
+                String line;
+                StringBuilder stringBuilder = new StringBuilder();
+                while ((line = bufferedReader.readLine()) != null) {
+                    String[] split = line.split(",");
+                    if (split.length == 2 && isDoubleStr(split[0]) && isDoubleStr(split[1])) {
+                        stringBuilder.append(line).append('\n');
+                    } else {
+                        throw new IllegalArgumentException("Невалидный файл для графика профиля");
+                    }
+                }
+                return stringBuilder.toString();
+            }
+        } else {
+            throw new IllegalArgumentException("Невалидный файл для графика профиля");
+        }
+    }
+
+    private boolean isDoubleStr(String str) {
+        try {
+            Double.parseDouble(str);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 }
