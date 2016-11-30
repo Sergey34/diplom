@@ -114,7 +114,7 @@ public class BuilderFiles {
     private Map<String, List<Double>> generateMapping(String[] keys) {
         HashMap<String, List<Double>> coordinates = new HashMap<>();
         for (String key : keys) {
-            coordinates.put(key, new ArrayList<>());
+            coordinates.put(key, new ArrayList<Double>());
         }
         return coordinates;
     }

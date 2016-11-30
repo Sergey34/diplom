@@ -53,7 +53,7 @@ public class ServiceImpl implements ServiceInt {
     public List<Menu> getMenu() throws IOException {
         List<Menu> allMenu = dao.getAllMenu();
         for (Menu menu : allMenu) {
-            menu.getMenuItems().sort(new Comparator<MenuItem>() {
+            Collections.sort(menu.getMenuItems(), new Comparator<MenuItem>() {
                 @Override
                 public int compare(MenuItem o1, MenuItem o2) {
                     return o1.getUrlCode().charAt(0) - o2.getUrlCode().charAt(0);
@@ -187,8 +187,13 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public void parse() throws IOException {
-        parser.setPath(PATH).init();
+    public void parse() {
+        try {
+            parser.init();
+        } catch (Exception e) {
+            LOGGER.warn("ошибка инициализации базы {}", Arrays.asList(e.getStackTrace()));
+            e.printStackTrace();
+        }
     }
 
     @Override

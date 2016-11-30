@@ -49,12 +49,6 @@ public class ParserTest {
     }
 
     @Test
-    public void initTest2() throws Exception {
-        parser.parseMenu();
-        System.out.println(Integer.MAX_VALUE);
-    }
-
-    @Test
     public void initTest3() throws Exception {
         String countPages = createDataByPattern("/search/list?page=b&no=0", "page=(.)");
         String countPages2 = createDataByPattern("Page 1 of 10 pages", "Page 1 of ([0-9]+).+");
