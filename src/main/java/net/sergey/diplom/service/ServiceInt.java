@@ -18,13 +18,9 @@ public interface ServiceInt {
 
     List<User> getUser(String alex);
 
-    boolean isValidUser(String name);
-
     boolean addUser(UserView user);
 
     List<UserRole> getAllUserRoles();
-
-    void init();
 
     void clean();
 

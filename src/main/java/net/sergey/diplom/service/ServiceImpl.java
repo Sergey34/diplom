@@ -68,11 +68,6 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public boolean isValidUser(String name) {
-        return getUser(name).size() == 0;
-    }
-
-    @Override
     public boolean addUser(UserView userView) {
         User user = new User();
         user.setEnabled(1);
