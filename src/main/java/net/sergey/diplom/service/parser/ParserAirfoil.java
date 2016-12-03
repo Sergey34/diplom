@@ -1,5 +1,6 @@
 package net.sergey.diplom.service.parser;
 
+import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
@@ -25,17 +26,17 @@ import java.util.regex.Pattern;
 import static net.sergey.diplom.service.ConstantApi.GET_DETAILS;
 import static net.sergey.diplom.service.ConstantApi.GET_FILE_CSV;
 
-/**
- * Created by seko0716 on 11/30/2016.
- */
-public class ParserAirfoil implements Callable<List<Airfoil>> {
+public class ParserAirfoil implements Callable<Void> {
     private static final Pattern GET_ID_BY_FULL_NAME_PATTERN = Pattern.compile("\\(([a-zA-Z0-9_-]+)\\) .*");
     private static final Pattern GET_FILE_NAME_BY_URL_PATTERN = Pattern.compile("polar=(.+)$");
     private static final Pattern GET_COUNT_PAGES_PATTERN = Pattern.compile("Page 1 of ([0-9]+).+");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private String prefix;
-    public ParserAirfoil(String prefix) {
+    private DAO dao;
+
+    public ParserAirfoil(String prefix, DAO dao) {
         this.prefix = prefix;
+        this.dao = dao;
     }
 
     public static String csvToString(InputStream urlFile) throws IOException {
@@ -50,25 +51,26 @@ public class ParserAirfoil implements Callable<List<Airfoil>> {
     }
 
     @Override
-    public List<Airfoil> call() throws Exception {
-       return parseAirfoilByUrl(prefix);
-
+    public Void call() throws Exception {
+        parseAirfoilByUrl(prefix);
+        return null;
     }
 
-    private List<Airfoil> parseAirfoilByUrl(String url) throws IOException {
+    private void parseAirfoilByUrl(String url) throws IOException {
         String fullUrl = ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX + url;
         Prefix prefix1 = new Prefix(url.charAt(0));
-        List<Airfoil> airfoils = new ArrayList<>();
         int countPages = createIntByPattern(Jsoup.connect(fullUrl).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get().html(), GET_COUNT_PAGES_PATTERN);
         for (int i = 0; i < countPages; i++) {
             Elements airfoilList = Jsoup.connect(fullUrl + "&no=" + i).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get().body().getElementsByClass("afSearchResult").
                     first().getElementsByTag("tr");
-            parsePage(prefix1, airfoils, airfoilList);
+            List<Airfoil> airfoils = parsePage(prefix1, airfoilList);
+            dao.addAirfoils(airfoils);
+
         }
-        return airfoils;
     }
 
-    private void parsePage(Prefix prefix1, List<Airfoil> airfoils, Elements airfoilList) throws IOException {
+    private List<Airfoil> parsePage(Prefix prefix1, Elements airfoilList) throws IOException {
+        List<Airfoil> airfoils = new ArrayList<>();
         for (int j = 0; j < airfoilList.size(); j += 2) {
             Elements cell12 = airfoilList.get(j).getElementsByClass("cell12");
             if (cell12.first() == null) {
@@ -84,6 +86,7 @@ public class ParserAirfoil implements Callable<List<Airfoil>> {
                 airfoils.add(airfoil);
             }
         }
+        return airfoils;
     }
 
     private String parseCoordinateView(String shortName) throws IOException {

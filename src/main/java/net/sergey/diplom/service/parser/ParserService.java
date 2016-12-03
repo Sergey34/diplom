@@ -1,7 +1,6 @@
 package net.sergey.diplom.service.parser;
 
 import net.sergey.diplom.dao.DAO;
-import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.service.utils.UtilsLogger;
@@ -21,10 +20,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -97,15 +96,11 @@ public class ParserService {
     }
 
     private void getAirfoilsByMenuList(List<String> prefixList) throws IOException, InterruptedException, ExecutionException {
-        Collection<Future<List<Airfoil>>> futureList = new ArrayList<>();
+        Collection<Callable<Void>> futureList = new ArrayList<>();
         for (String prefix : prefixList) {
-            Future<List<Airfoil>> submit = executorService.submit(new ParserAirfoil(prefix));
-            futureList.add(submit);
+            futureList.add(new ParserAirfoil(prefix, dao));
         }
-        for (Future<List<Airfoil>> listFuture : futureList) {
-            List<Airfoil> airfoils = listFuture.get();
-            dao.addAirfoils(airfoils);
-        }
+        executorService.invokeAll(futureList);
     }
 
     private String createStringByPattern(String item, Pattern pattern) {
