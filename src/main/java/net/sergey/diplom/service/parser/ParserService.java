@@ -7,7 +7,6 @@ import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -29,12 +28,8 @@ import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static net.sergey.diplom.service.ConstantApi.GET_DETAILS;
-
 @Component
 public class ParserService {
-    private static final Pattern GET_ID_BY_FULL_NAME_PATTERN = Pattern.compile("\\(([a-zA-Z0-9_-]+)\\) .*");
-    private static final Pattern GET_AIRFOIL_ID_BY_URL_PATTERN = Pattern.compile("airfoil=(.+)$");
     private static final Pattern GET_MENU_TITLE_PATTERN = Pattern.compile("^(.+) \\([0-9]*\\)$");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static final String HTTP_AIRFOIL_TOOLS_COM = "http://airfoiltools.com/";
@@ -48,29 +43,6 @@ public class ParserService {
     public void init() throws Exception {
         List<String> menu = parseMenu();
         getAirfoilsByMenuList(menu);
-        initSimilar();
-    }
-
-    private void initSimilar() throws IOException {
-        for (Airfoil airfoil : dao.getAllAirfoil()) {
-            try {
-                String idAirfoil = createStringByPattern(airfoil.getName(), GET_ID_BY_FULL_NAME_PATTERN);
-                Document detail = Jsoup.connect(GET_DETAILS + idAirfoil).timeout(0).userAgent("Mozilla").ignoreHttpErrors(true).get();
-                Elements similar = detail.getElementsByClass("similar").first().getElementsByTag("tr");
-                for (Element similarItem : similar) {
-                    String airfoilId = createStringByPattern(similarItem.getElementsByClass("c3").first().getElementsByTag("a").attr("href"), GET_AIRFOIL_ID_BY_URL_PATTERN);
-                    Airfoil airfoilSimilar = dao.getAirfoilById(airfoilId.hashCode());
-                    if (airfoilSimilar != null) {
-                        airfoil.addSimilar(airfoilSimilar);
-                    }
-                }
-                LOGGER.info(airfoil.getName());
-                dao.addAirfoil(airfoil);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw e;
-            }
-        }
     }
 
     private List<String> parseMenu() throws IOException {

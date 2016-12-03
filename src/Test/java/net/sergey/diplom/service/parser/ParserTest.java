@@ -25,9 +25,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -140,7 +138,7 @@ public class ParserTest {
         Elements polar = detail.getElementsByClass("polar");
 
         polar = polar.first().getElementsByTag("tr");
-        Set<Coordinates> coordinates = new HashSet<>();
+        List<Coordinates> coordinates = new ArrayList<>();
         for (Element element : polar) {
             Element reynolds = element.getElementsByClass("cell2").first();
             Element nCrit = element.getElementsByClass("cell3").first();

@@ -103,13 +103,6 @@ CREATE TABLE airfoil_coordinates (
   FOREIGN KEY (id_coordinates) REFERENCES coordinates (id)
 );
 
-CREATE TABLE similar (
-  idAirfoil        INT,
-  similarAirfoilId INT,
-  FOREIGN KEY (idAirfoil) REFERENCES airfoil (id),
-  FOREIGN KEY (similarAirfoilId) REFERENCES airfoil (id)
-);
-
 SELECT count(*)
 FROM airfoil;
 
