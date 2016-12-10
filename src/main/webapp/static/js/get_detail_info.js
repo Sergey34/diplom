@@ -37,6 +37,11 @@ function fillContentDetailInfo(data) {
 
     var name = document.createElement('div');
     extracted(name, data.name, 'name_detail');
+    var stlFilePath = document.createElement('div');
+    var linkItem = document.createElement('a');
+    linkItem.setAttribute("href", data.stlFilePath);
+    linkItem.innerHTML = 'Скачать STL файл';
+    stlFilePath.appendChild(linkItem);
 
     var image = document.createElement('div');
     var img = document.createElement('img');
@@ -115,6 +120,7 @@ function fillContentDetailInfo(data) {
 
 
     adf.appendChild(name);
+    adf.appendChild(stlFilePath);
     adf.appendChild(image);
     adf.appendChild(description);
     adf.appendChild(links);

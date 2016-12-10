@@ -14,6 +14,7 @@ public class AirfoilDetail extends AirfoilDTO {
     private List<String> imgCsvName;
     private String warnMessage;
     private List<SimilarAirfoil> similarAirfoilsId;
+    private String stlFilePath;
 
     public AirfoilDetail(Airfoil airfoil, String message) {
         super(airfoil);
@@ -25,7 +26,7 @@ public class AirfoilDetail extends AirfoilDTO {
         this.error = error;
     }
 
-    public AirfoilDetail(Airfoil airfoil, List<String> chartNames) {
+    public AirfoilDetail(Airfoil airfoil, List<String> chartNames, String stlFilePath) {
         super(airfoil);
         fileCsvName = airfoil.getCoordinates();
         this.similarAirfoilsId = new ArrayList<>();
@@ -37,6 +38,7 @@ public class AirfoilDetail extends AirfoilDTO {
         for (String chartName : chartNames) {
             imgCsvName.add("/resources/chartTemp/" + airfoil.getId() + chartName + ".png");
         }
+        this.stlFilePath = "/resources/" + stlFilePath;
     }
 
     public static AirfoilDetail getAirfoilDetailError(String description) {
@@ -82,5 +84,13 @@ public class AirfoilDetail extends AirfoilDTO {
 
     public void setSimilarAirfoilsId(List<SimilarAirfoil> similarAirfoilsId) {
         this.similarAirfoilsId = similarAirfoilsId;
+    }
+
+    public String getStlFilePath() {
+        return stlFilePath;
+    }
+
+    public void setStlFilePath(String stlFilePath) {
+        this.stlFilePath = stlFilePath;
     }
 }

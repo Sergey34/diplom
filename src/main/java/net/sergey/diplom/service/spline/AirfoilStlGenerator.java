@@ -1,15 +1,19 @@
 package net.sergey.diplom.service.spline;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class AirfoilStlGenerator {
 
-    private static final String REGEX = " +";
+    private static final String REGEX = ",";
+    private static final int b = 100;
     private static final StringBuilder FILE_HEADER = new StringBuilder();
     private static final StringBuilder FILE_FOOTER = new StringBuilder();
+
 
     static {
         FILE_HEADER.append("module airfoil(h) {\n\tlinear_extrude(height = h, convexity = 10, $fn = 200) {\n")
@@ -17,21 +21,20 @@ public class AirfoilStlGenerator {
         FILE_FOOTER.append("\t\t\t],\n\t\tconvexity=10);\n\t}\n}\n\nairfoil(10, 0.2);\n");
     }
 
-    public String generate(double b, String fileName) throws IOException {
+
+    public String generate(String fileName, String coordView, String PATH) throws IOException {
+        String[] split1 = coordView.split("\n");
         List<Double> x = new ArrayList<>();
         List<Double> y = new ArrayList<>();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName + ".dat"))) {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] split = line.trim().split(REGEX);
-                if (isDoubleStr(split[0]) && isDoubleStr(split[split.length - 1])) {
-                    x.add(Double.valueOf(split[0]) * b);
-                    y.add(Double.valueOf(split[split.length - 1]) * b);
-                }
+        for (String line : split1) {
+            try {
+                String[] strings = line.trim().split(REGEX);
+                x.add(Double.parseDouble(strings[0]));
+                y.add(Double.parseDouble(strings[strings.length - 1]));
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw e;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
         }
 
         List<Double> t = new ArrayList<>(Collections.nCopies(x.size(), 0.0));
@@ -46,14 +49,15 @@ public class AirfoilStlGenerator {
         spline.BuildSpline(t, y, x.size());
         List<Double> ySpline = spline(t, spline);
 
-        try (BufferedWriter scadWriter = new BufferedWriter(new FileWriter(fileName + "_" + b + ".scad"))) {
+        String stlFileName = PATH + "/" + fileName + '_' + b + ".scad";
+        try (BufferedWriter scadWriter = new BufferedWriter(new FileWriter(stlFileName))) {
             scadWriter.write(FILE_HEADER.toString());
             for (int i = 0; i < xSpline.size(); i++) {
                 scadWriter.write("\t\t\t\t[" + String.format("%.6e", xSpline.get(i)) + ", " +
                         String.format("%.6e", ySpline.get(i)) + "]\n");
             }
             scadWriter.write(FILE_FOOTER.toString());
-            return fileName + "_" + b + ".scad";
+            return fileName + '_' + b + ".scad";
         } catch (IOException e) {
             e.printStackTrace();
             throw e;
@@ -76,15 +80,5 @@ public class AirfoilStlGenerator {
 
     private Double dist(int j, int k, List<Double> x, List<Double> y) {
         return Math.sqrt(Math.pow((x.get(j) - x.get(k)), 2) + Math.pow((y.get(j) - y.get(k)), 2));
-    }
-
-
-    private boolean isDoubleStr(String str) {
-        try {
-            Double.parseDouble(str);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
     }
 }

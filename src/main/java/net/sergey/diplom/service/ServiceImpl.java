@@ -12,6 +12,7 @@ import net.sergey.diplom.model.AirfoilDetail;
 import net.sergey.diplom.model.UserView;
 import net.sergey.diplom.service.parser.ParserAirfoil;
 import net.sergey.diplom.service.parser.ParserService;
+import net.sergey.diplom.service.spline.AirfoilStlGenerator;
 import net.sergey.diplom.service.utils.UtilRoles;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import net.sergey.diplom.service.utils.imagehandlers.ImageHandler;
@@ -160,7 +161,13 @@ public class ServiceImpl implements ServiceInt {
             return new AirfoilDetail(airfoil, e.getMessage());
         }
         drawViewAirfoil(airfoil);
-        return new AirfoilDetail(airfoil, CHART_NAMES);
+        String stlFilePath = "Error";
+        try {
+            stlFilePath = new AirfoilStlGenerator().generate(airfoil.getShortName(), airfoil.getCoordView(), PATH);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new AirfoilDetail(airfoil, CHART_NAMES, stlFilePath);
     }
 
     @Async
