@@ -31,6 +31,7 @@ public class ParserAirfoil implements Callable<Void> {
     private static final Pattern GET_FILE_NAME_BY_URL_PATTERN = Pattern.compile("polar=(.+)$");
     private static final Pattern GET_COUNT_PAGES_PATTERN = Pattern.compile("Page 1 of ([0-9]+).+");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
+    private static final String REGEX = " +";
     private String prefix;
     private DAO dao;
 
@@ -95,7 +96,7 @@ public class ParserAirfoil implements Callable<Void> {
         String line;
         StringBuilder stringBuilder = new StringBuilder();
         while ((line = bufferedReader.readLine()) != null) {
-            String[] split = line.trim().split(" +");
+            String[] split = line.trim().split(REGEX);
             if (isDoubleStr(split[0]) && isDoubleStr(split[split.length - 1])) {
                 stringBuilder.append(split[0]).append(",").append(split[split.length - 1]).append('\n');
             }
