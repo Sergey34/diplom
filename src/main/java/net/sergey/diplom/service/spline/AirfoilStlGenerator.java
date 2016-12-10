@@ -34,7 +34,6 @@ public class AirfoilStlGenerator {
             throw e;
         }
 
-
         List<Double> t = new ArrayList<>(Collections.nCopies(x.size(), 0.0));
         for (int i = 1; i < x.size(); i++) {
             t.set(i, t.get(i - 1) + dist(i, i - 1, x, y));
