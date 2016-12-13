@@ -4,25 +4,27 @@
     <meta charset="UTF-8">
     <title>Init DB</title>
     <script src="/static/js/jquery-3.1.1.min.js"></script>
+
     <!--<script src="/static/js/init_db.js"></script>-->
 </head>
 <body>
 <script>
-    /*
-     var source = new EventSource("/getRealTimeMessage");
+    var source = new EventSource('/getRealTimeMessage');
+    source.addEventListener('open', function (e) {
+        console.log('connected');
+    });
+    source.addEventListener('message', function (e) {
+        console.log('logg');
+        console.log(e);
+    }, false);
 
-     source.addEventListener('open', function (e) {
-     console.log('connected');
-     });
-     source.addEventListener('message', function (e) {
-     console.log(e.data);
-     }, false);
+    source.addEventListener('error', function (e) {
+        if (e.readyState == EventSource.CLOSED) {
+            console.log('DisConnected');
+        }
+    }, false);
 
-     source.addEventListener('error', function (e) {
-     if (e.readyState == EventSource.CLOSED) {
-     console.log('DisConnected');
-     }
-     }, false);*/
+
 </script>
 </body>
 </html>
