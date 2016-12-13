@@ -23,12 +23,14 @@ import java.util.List;
 public class FullRestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final ServiceInt service;
+    @Autowired
+    RealTime realTime;
+
 
     @Autowired
     public FullRestController(ServiceInt service) {
         this.service = service;
     }
-
 
     @RequestMapping(value = "/greeting", method = RequestMethod.GET)
     public String greeting() throws IOException, InterruptedException {

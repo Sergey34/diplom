@@ -52,4 +52,9 @@ public class MainController {
         return "static/edit_airfoil.html";
     }
 
+    @RequestMapping(value = "/initDB", method = RequestMethod.GET)
+    public String showInitDb() {
+        return "static/initDB.html";
+    }
+
 }
