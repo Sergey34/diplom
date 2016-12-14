@@ -5,17 +5,52 @@
     <title>Init DB</title>
     <script src="/static/js/jquery-3.1.1.min.js"></script>
 
-    <!--<script src="/static/js/init_db.js"></script>-->
+    <script src="/static/js/init_db.js"></script>
 </head>
 <body>
+<input type="button" value="Обновить базу" id="updateDB">
+<div id='content'>
+
+</div>
+
+
 <script>
-    var source = new EventSource('/getRealTimeMessage');
+    document.getElementById("updateDB").onclick = updateDB;
+    let source = new EventSource('/getRealTimeMessage');
     source.addEventListener('open', function (e) {
         console.log('connected');
     });
+    function objToStrMap(obj) {
+        let strMap = new Map();
+        for (let k of Object.keys(obj)) {
+            strMap.set(k, obj[k]);
+        }
+        return strMap;
+    }
+
+    function jsonToStrMap(jsonStr) {
+        return objToStrMap(JSON.parse(jsonStr));
+    }
     source.addEventListener('message', function (e) {
-        console.log('logg');
-        console.log(e);
+        let progressMap = jsonToStrMap(e.data);
+        let keys = progressMap.keys();
+
+
+        let list = document.getElementById("content");
+
+        for (let key of keys) {
+            let item = document.getElementById(key);
+            if (item == null) {
+                item = document.createElement('h2');
+                item.id = key;
+                item.setAttribute("class", "waiting");
+                list.appendChild(item);
+            }
+            item.innerText = key + " : " + progressMap.get(key) + " %";
+        }
+
+        console.log(e.data);
+
     }, false);
 
     source.addEventListener('error', function (e) {

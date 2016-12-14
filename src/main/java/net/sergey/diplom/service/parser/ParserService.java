@@ -39,8 +39,6 @@ public class ParserService {
     @Autowired
     private EventService eventService;
 
-
-
     public ParserService() {
 
     }
@@ -51,13 +49,13 @@ public class ParserService {
     }
 
     private List<String> parseMenu() throws IOException {
-        eventService.updateProgress("menu", 0.0);
+        eventService.updateProgress("menu", 0);
         final List<String> airfoilMenu = new ArrayList<>();
         Element mmenu = Jsoup.connect(HTTP_AIRFOIL_TOOLS_COM).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get().body().getElementsByClass("mmenu").get(0);
         Elements menuList = mmenu.getElementsByTag("ul");
         Elements headerMenu = mmenu.getElementsByTag("h3");
         List<Menu> menus = new ArrayList<>();
-        eventService.updateProgress("menu", 20.0);
+        eventService.updateProgress("menu", 20);
         for (int i = 0; i < menuList.size(); i++) {
             Element menuElement = menuList.get(i);
             Elements element = headerMenu.get(i).getElementsByTag("h3");
@@ -76,7 +74,7 @@ public class ParserService {
                             eventService.addKey(prefix);
                             airfoilMenu.add(prefix);
                             menuItems.add(menuItem);
-                            eventService.updateProgress("menu", eventService.getProgressValueByKey("menu") + 70.0 / links.size());
+                            eventService.updateProgress("menu", eventService.getProgressValueByKey("menu") + 70 / links.size());
                         }
                     }
                 }
@@ -89,7 +87,7 @@ public class ParserService {
 
         try {
             dao.addMenus(menus);
-            eventService.updateProgress("menu", 100.0);
+            eventService.updateProgress("menu", 100);
         } catch (ConstraintViolationException e) {
             LOGGER.warn("Элемент меню: {} \n уже существует в базе {}", menus, e.getStackTrace());
             throw e;
@@ -108,7 +106,7 @@ public class ParserService {
     private void getAirfoilsByMenuList(List<String> prefixList) throws IOException, InterruptedException, ExecutionException {
         Collection<Callable<Void>> futureList = new ArrayList<>();
         for (String prefix : prefixList) {
-            futureList.add(new ParserAirfoil(prefix, dao));
+            futureList.add(new ParserAirfoil(prefix, dao, eventService));
         }
         executorService.invokeAll(futureList);
     }

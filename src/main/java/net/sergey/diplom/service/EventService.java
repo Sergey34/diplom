@@ -2,7 +2,7 @@ package net.sergey.diplom.service;
 
 
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
@@ -11,12 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Service
+@Component
 public class EventService {
+    private static Map<String, Integer> progressMap = new ConcurrentHashMap<>();
     private final List<SseEmitter> emitters = new ArrayList<>();
-    private static Map<String, Double> progressMap = new ConcurrentHashMap<>();
-    ;
-
 
     public List<SseEmitter> getEmitters() {
         return emitters;
@@ -31,7 +29,7 @@ public class EventService {
     }
 
 
-    public void updateProgress(String key, double value) {
+    public void updateProgress(String key, int value) {
         progressMap.put(key, value);
         for (SseEmitter emitter : emitters) {
             try {
@@ -44,11 +42,11 @@ public class EventService {
         }
     }
 
-    public double getProgressValueByKey(String key) {
+    public int getProgressValueByKey(String key) {
         return progressMap.get(key);
     }
 
     public void addKey(String key) {
-        progressMap.put(key, 0.0);
+        progressMap.put(key, 0);
     }
 }

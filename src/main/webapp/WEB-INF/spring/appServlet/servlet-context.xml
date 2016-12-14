@@ -5,16 +5,11 @@
              xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <!-- DispatcherServlet Context: определяет настройки одного сервлета; бины,
-        которые доступны только ему -->
 
     <!--<beans:bean id="initMethodHomeCinema" class="net.sergey.diplom.service.Parsers.homeCinema.Creator"
                 init-method="initIt">
     </beans:bean>
-    --><!--
-    <beans:bean id="initMethodSSU_Table" class="net.sergey.diplom.service.Parsers.SSU_Table.Creator"
-                init-method="initIt">
-    </beans:bean>-->
+    -->
 
 
     <!-- Разрешаем использование аннотаций Spring MVC (то есть @Controller и.т.д) -->
