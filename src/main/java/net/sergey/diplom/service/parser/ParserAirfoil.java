@@ -5,6 +5,7 @@ import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.service.ConstantApi;
+import net.sergey.diplom.service.EventService;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,6 +13,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,6 +36,8 @@ public class ParserAirfoil implements Callable<Void> {
     private static final String REGEX = " +";
     private String prefix;
     private DAO dao;
+    @Autowired
+    private EventService eventService;
 
     public ParserAirfoil(String prefix, DAO dao) {
         this.prefix = prefix;
@@ -64,13 +68,13 @@ public class ParserAirfoil implements Callable<Void> {
         for (int i = 0; i < countPages; i++) {
             Elements airfoilList = Jsoup.connect(fullUrl + "&no=" + i).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get().body().getElementsByClass("afSearchResult").
                     first().getElementsByTag("tr");
-            List<Airfoil> airfoils = parsePage(prefix1, airfoilList);
+            List<Airfoil> airfoils = parsePage(prefix1, airfoilList, countPages);
             dao.addAirfoils(airfoils);
-
         }
+        eventService.updateProgress(url, 100.0);
     }
 
-    private List<Airfoil> parsePage(Prefix prefix1, Elements airfoilList) throws IOException {
+    private List<Airfoil> parsePage(Prefix prefix1, Elements airfoilList, int countPages) throws IOException {
         List<Airfoil> airfoils = new ArrayList<>();
         for (int j = 0; j < airfoilList.size(); j += 2) {
             Elements cell12 = airfoilList.get(j).getElementsByClass("cell12");
@@ -85,6 +89,8 @@ public class ParserAirfoil implements Callable<Void> {
                 airfoil.setCoordView(parseCoordinateView(idAirfoil));
                 airfoil.setCoordinates(downloadDetailInfo(idAirfoil));
                 airfoils.add(airfoil);
+                String key = String.valueOf(prefix1.getPrefix());
+                eventService.updateProgress(key, eventService.getProgressValueByKey(key) + (90.0 / countPages / airfoilList.size()));
             }
         }
         return airfoils;

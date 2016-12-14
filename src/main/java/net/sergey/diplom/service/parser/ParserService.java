@@ -3,6 +3,7 @@ package net.sergey.diplom.service.parser;
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
+import net.sergey.diplom.service.EventService;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jsoup.Jsoup;
@@ -35,8 +36,13 @@ public class ParserService {
     private static final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     @Autowired
     private DAO dao;
+    @Autowired
+    private EventService eventService;
+
+
 
     public ParserService() {
+
     }
 
     public void init() throws Exception {
@@ -45,11 +51,13 @@ public class ParserService {
     }
 
     private List<String> parseMenu() throws IOException {
+        eventService.updateProgress("menu", 0.0);
         final List<String> airfoilMenu = new ArrayList<>();
         Element mmenu = Jsoup.connect(HTTP_AIRFOIL_TOOLS_COM).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get().body().getElementsByClass("mmenu").get(0);
         Elements menuList = mmenu.getElementsByTag("ul");
         Elements headerMenu = mmenu.getElementsByTag("h3");
         List<Menu> menus = new ArrayList<>();
+        eventService.updateProgress("menu", 20.0);
         for (int i = 0; i < menuList.size(); i++) {
             Element menuElement = menuList.get(i);
             Elements element = headerMenu.get(i).getElementsByTag("h3");
@@ -57,7 +65,6 @@ public class ParserService {
                 Menu menu1 = new Menu(element.text());
                 List<MenuItem> menuItems = new ArrayList<>();
                 Elements links = menuElement.getElementsByTag("li");
-
                 for (Element link : links) {
                     Element a = link.getElementsByTag("a").first();
                     if (menu1.getHeader().equals("Airfoils A to Z")) {
@@ -66,20 +73,23 @@ public class ParserService {
                         MenuItem menuItem = new MenuItem(text, prefix);
 
                         if (!prefix.equals("allAirfoil")) {
+                            eventService.addKey(prefix);
                             airfoilMenu.add(prefix);
                             menuItems.add(menuItem);
+                            eventService.updateProgress("menu", eventService.getProgressValueByKey("menu") + 70.0 / links.size());
                         }
-
                     }
                 }
                 menu1.setMenuItems(menuItems);
                 menus.add(menu1);
+
                 break;
             }
         }
 
         try {
             dao.addMenus(menus);
+            eventService.updateProgress("menu", 100.0);
         } catch (ConstraintViolationException e) {
             LOGGER.warn("Элемент меню: {} \n уже существует в базе {}", menus, e.getStackTrace());
             throw e;
