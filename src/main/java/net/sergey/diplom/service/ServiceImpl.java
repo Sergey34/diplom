@@ -41,6 +41,7 @@ public class ServiceImpl implements ServiceInt {
     private final DAO dao;
     private final ParserService parserService;
     private final ServletContext servletContext;
+    private boolean parsingIsStarting = false;
 
     @Autowired
     public ServiceImpl(DAO dao, ServletContext servletContext, ParserService parserService) {
@@ -189,12 +190,19 @@ public class ServiceImpl implements ServiceInt {
 
     @Override
     public boolean parse() {
-        try {
-            parserService.init();
-            return true;
-        } catch (Exception e) {
-            LOGGER.warn("ошибка инициализации базы {}", Arrays.asList(e.getStackTrace()));
-            e.printStackTrace();
+        if (!parsingIsStarting) {
+            parsingIsStarting = true;
+            try {
+                parserService.init();
+                return true;
+            } catch (Exception e) {
+                LOGGER.warn("ошибка инициализации базы {}", Arrays.asList(e.getStackTrace()));
+                e.printStackTrace();
+                return false;
+            } finally {
+                parsingIsStarting = false;
+            }
+        } else {
             return false;
         }
     }
