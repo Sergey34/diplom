@@ -111,7 +111,6 @@ public class DAOImpl implements DAO {
     }
 
 
-
     @Override
     public Airfoil getAirfoilById(int id) {
         Airfoil airfoil = (Airfoil) sessionFactory.getCurrentSession()

@@ -64,7 +64,6 @@ public class RestWriteController {
     }
 
 
-
     @RequestMapping(value = "/init", method = RequestMethod.GET)
     public String init() {
         boolean parse = service.parse();
