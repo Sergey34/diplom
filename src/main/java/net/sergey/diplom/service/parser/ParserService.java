@@ -6,6 +6,7 @@ import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.service.EventService;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.hibernate.exception.ConstraintViolationException;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -31,6 +32,7 @@ import java.util.regex.Pattern;
 
 @Component
 public class ParserService {
+    static final int TIMEOUT = 10_000;
     private static final Pattern GET_MENU_TITLE_PATTERN = Pattern.compile("^(.+) \\([0-9]*\\)$");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static final String HTTP_AIRFOIL_TOOLS_COM = "http://airfoiltools.com/";
@@ -46,6 +48,10 @@ public class ParserService {
         this.eventService = eventService;
     }
 
+    static Connection getJsoupConnect(String url, int timeout) {
+        return Jsoup.connect(url).timeout(timeout).userAgent("Mozilla").ignoreHttpErrors(true);
+    }
+
     public void init() throws Exception {
         List<String> menu = parseMenu();
         getAirfoilsByMenuList(menu);
@@ -55,7 +61,7 @@ public class ParserService {
         eventService.clearProgressMap();
         eventService.updateProgress("menu", 0);
         final List<String> airfoilMenu = new ArrayList<>();
-        Element mmenu = Jsoup.connect(HTTP_AIRFOIL_TOOLS_COM).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get().body().getElementsByClass("mmenu").get(0);
+        Element mmenu = getJsoupConnect(HTTP_AIRFOIL_TOOLS_COM, TIMEOUT).get().body().getElementsByClass("mmenu").first();
         Elements menuList = mmenu.getElementsByTag("ul");
         Elements headerMenu = mmenu.getElementsByTag("h3");
         List<Menu> menus = new ArrayList<>();

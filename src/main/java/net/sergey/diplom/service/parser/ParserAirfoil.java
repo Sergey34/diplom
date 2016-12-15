@@ -7,7 +7,6 @@ import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.service.ConstantApi;
 import net.sergey.diplom.service.EventService;
 import net.sergey.diplom.service.utils.UtilsLogger;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -29,6 +28,8 @@ import java.util.regex.Pattern;
 
 import static net.sergey.diplom.service.ConstantApi.GET_DETAILS;
 import static net.sergey.diplom.service.ConstantApi.GET_FILE_CSV;
+import static net.sergey.diplom.service.parser.ParserService.TIMEOUT;
+import static net.sergey.diplom.service.parser.ParserService.getJsoupConnect;
 
 @Scope("prototype")
 @Component
@@ -65,18 +66,19 @@ public class ParserAirfoil implements Callable<Void> {
         return null;
     }
 
-    private void parseAirfoilByUrl(String url) throws IOException {
-        String fullUrl = ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX + url;
-        Prefix prefix1 = new Prefix(url.charAt(0));
-        int countPages = createIntByPattern(Jsoup.connect(fullUrl).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get().html(), GET_COUNT_PAGES_PATTERN);
+    private void parseAirfoilByUrl(String prefix) throws IOException {
+        String url = ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX + prefix + "&no=";
+        Prefix prefix1 = new Prefix(prefix.charAt(0));
+        int countPages = createIntByPattern(getJsoupConnect(url, TIMEOUT).get().html(), GET_COUNT_PAGES_PATTERN);
         for (int i = 0; i < countPages; i++) {
-            Elements airfoilList = Jsoup.connect(fullUrl + "&no=" + i).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get().body().getElementsByClass("afSearchResult").
+            Elements airfoilList = getJsoupConnect(url + i, TIMEOUT).get().body().getElementsByClass("afSearchResult").
                     first().getElementsByTag("tr");
             List<Airfoil> airfoils = parsePage(prefix1, airfoilList, countPages);
             dao.addAirfoils(airfoils);
         }
-        eventService.updateProgress(url, 100);
+        eventService.updateProgress(prefix, 100);
     }
+
 
     private List<Airfoil> parsePage(Prefix prefix1, Elements airfoilList, int countPages) throws IOException {
         List<Airfoil> airfoils = new ArrayList<>();
@@ -140,7 +142,7 @@ public class ParserAirfoil implements Callable<Void> {
     }
 
     private Set<Coordinates> downloadDetailInfo(String airfoil) throws IOException {
-        Document detail = Jsoup.connect(GET_DETAILS + airfoil).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get();
+        Document detail = getJsoupConnect(GET_DETAILS + airfoil, TIMEOUT).get();
         Elements polar = detail.getElementsByClass("polar");
         if (polar.size() == 0) {
             return Collections.emptySet();
