@@ -12,6 +12,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +35,8 @@ public class ParserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static final String HTTP_AIRFOIL_TOOLS_COM = "http://airfoiltools.com/";
     private static final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    @Autowired
+    ApplicationContext applicationContext;
     @Autowired
     private DAO dao;
     @Autowired
@@ -107,7 +110,9 @@ public class ParserService {
     private void getAirfoilsByMenuList(List<String> prefixList) throws IOException, InterruptedException, ExecutionException {
         Collection<Callable<Void>> futureList = new ArrayList<>();
         for (String prefix : prefixList) {
-            futureList.add(new ParserAirfoil(prefix, dao, eventService));
+            ParserAirfoil parserAirfoil = applicationContext.getBean(ParserAirfoil.class);
+            parserAirfoil.setPrefix(prefix);
+            futureList.add(parserAirfoil);
         }
         executorService.invokeAll(futureList);
     }

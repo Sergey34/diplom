@@ -13,6 +13,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,7 +30,8 @@ import java.util.regex.Pattern;
 import static net.sergey.diplom.service.ConstantApi.GET_DETAILS;
 import static net.sergey.diplom.service.ConstantApi.GET_FILE_CSV;
 
-
+@Scope("prototype")
+@Component
 public class ParserAirfoil implements Callable<Void> {
     private static final Pattern GET_ID_BY_FULL_NAME_PATTERN = Pattern.compile("\\(([a-zA-Z0-9_-]+)\\) .*");
     private static final Pattern GET_FILE_NAME_BY_URL_PATTERN = Pattern.compile("polar=(.+)$");
@@ -35,16 +39,12 @@ public class ParserAirfoil implements Callable<Void> {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static final String REGEX = " +";
     private String prefix;
+    @Autowired
     private DAO dao;
+    @Autowired
     private EventService eventService;
 
     public ParserAirfoil() {
-    }
-
-    public ParserAirfoil(String prefix, DAO dao, EventService eventService) {
-        this.prefix = prefix;
-        this.dao = dao;
-        this.eventService = eventService;
     }
 
     public static String csvToString(InputStream urlFile) throws IOException {
@@ -60,9 +60,6 @@ public class ParserAirfoil implements Callable<Void> {
 
     @Override
     public Void call() throws Exception {
-        if (eventService == null) {
-            LOGGER.debug("EERROORR");
-        }
         parseAirfoilByUrl(prefix);
         return null;
     }
@@ -169,5 +166,9 @@ public class ParserAirfoil implements Callable<Void> {
             }
         }
         return coordinates;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
     }
 }
