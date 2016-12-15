@@ -98,11 +98,6 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public void cleanAllTables() {
-        //// TODO: 30.10.16 список имен таблиц кроме системных (пользователи, настройки парсеров)
-    }
-
-    @Override
     public void addAirfoils(List<Airfoil> airfoils) {
         Session currentSession = sessionFactory.getCurrentSession();
         for (Airfoil airfoil : airfoils) {

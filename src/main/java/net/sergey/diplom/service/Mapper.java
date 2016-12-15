@@ -1,8 +1,8 @@
 package net.sergey.diplom.service;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.model.AirfoilDTO;
-import net.sergey.diplom.model.AirfoilId;
+import net.sergey.diplom.domain.model.AirfoilDTO;
+import net.sergey.diplom.domain.model.AirfoilId;
 
 import java.util.ArrayList;
 import java.util.List;

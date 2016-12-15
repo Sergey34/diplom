@@ -1,4 +1,4 @@
-package net.sergey.diplom.model;
+package net.sergey.diplom.domain.model;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;

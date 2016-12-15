@@ -1,6 +1,6 @@
 package net.sergey.diplom.rest;
 
-import net.sergey.diplom.model.UserView;
+import net.sergey.diplom.domain.model.UserView;
 import net.sergey.diplom.service.ServiceInt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +36,7 @@ public class RestWriteController {
         if (name.isEmpty()) {
             return "ERROR";
         } else {
-            boolean airfoilIsAdd = service.createNewAirfoil(shortName, name, details, fileAirfoil, files);
+            boolean airfoilIsAdd = service.addAirfoil(shortName, name, details, fileAirfoil, files);
             if (airfoilIsAdd) {
                 return "airfoil Is Added";
             } else {
@@ -44,6 +44,25 @@ public class RestWriteController {
             }
         }
     }
+
+    @RequestMapping(value = "/updateAirfoil", method = RequestMethod.POST)
+    public String updateAirfoil(@RequestParam("files") List<MultipartFile> files,
+                                @RequestParam("name") String name,
+                                @RequestParam("ShortName") String shortName,
+                                @RequestParam("Details") String details,
+                                @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
+        if (name.isEmpty()) {
+            return "ERROR";
+        } else {
+            boolean airfoilIsAdd = service.updateAirfoil(shortName, name, details, fileAirfoil, files);
+            if (airfoilIsAdd) {
+                return "airfoil Is Added";
+            } else {
+                return "Error";
+            }
+        }
+    }
+
 
 
     @RequestMapping(value = "/init", method = RequestMethod.GET)

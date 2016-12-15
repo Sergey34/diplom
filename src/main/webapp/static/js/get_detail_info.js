@@ -159,8 +159,8 @@ function fillEditableContentDetailInfo(data) {
     var links = document.getElementById('graf');
     for (var i = 0; i < fileCsvName.length; i++) {
         var linkItem = document.createElement('a');
-        linkItem.setAttribute("href", "/resources/tmpCsv/" + fileCsvName[i]);
-        linkItem.innerHTML = fileCsvName[i];
+        linkItem.setAttribute("href", "/resources/tmpCsv/" + fileCsvName[i].fileName);
+        linkItem.innerHTML = fileCsvName[i].fileName;
         links.appendChild(linkItem);
         links.appendChild(document.createElement('br'))
     }

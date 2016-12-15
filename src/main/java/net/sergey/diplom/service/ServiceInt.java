@@ -2,11 +2,11 @@ package net.sergey.diplom.service;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
+import net.sergey.diplom.domain.model.AirfoilDTO;
+import net.sergey.diplom.domain.model.AirfoilDetail;
+import net.sergey.diplom.domain.model.UserView;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
-import net.sergey.diplom.model.AirfoilDTO;
-import net.sergey.diplom.model.AirfoilDetail;
-import net.sergey.diplom.model.UserView;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -21,8 +21,6 @@ public interface ServiceInt {
 
     List<UserRole> getAllUserRoles();
 
-
-
     List<AirfoilDTO> getAirfoilsByPrefix(char prefix, int startNumber, int count);
 
     List<Airfoil> getAllAirfoils(int startNumber, int count);
@@ -33,9 +31,11 @@ public interface ServiceInt {
 
     String getUserInfo();
 
-    boolean createNewAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
+    boolean addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
 
     int getCountAirfoilByPrefix(char prefix);
 
     List<String> updateGraf(int airfoilId, List<String> checkedList);
+
+    boolean updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
 }

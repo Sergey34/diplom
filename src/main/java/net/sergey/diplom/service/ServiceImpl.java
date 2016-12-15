@@ -5,11 +5,11 @@ import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
+import net.sergey.diplom.domain.model.AirfoilDTO;
+import net.sergey.diplom.domain.model.AirfoilDetail;
+import net.sergey.diplom.domain.model.UserView;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
-import net.sergey.diplom.model.AirfoilDTO;
-import net.sergey.diplom.model.AirfoilDetail;
-import net.sergey.diplom.model.UserView;
 import net.sergey.diplom.service.parser.ParserAirfoil;
 import net.sergey.diplom.service.parser.ParserService;
 import net.sergey.diplom.service.spline.AirfoilStlGenerator;
@@ -143,6 +143,7 @@ public class ServiceImpl implements ServiceInt {
 
     }
 
+
     @Override
     public AirfoilDetail getDetailInfo(int airfoilId) {
         Airfoil airfoil = dao.getAirfoilById(airfoilId);
@@ -212,8 +213,15 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public boolean createNewAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
+    public boolean addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
         Airfoil airfoil = new Airfoil(name, details, shortName);
+        if (dao.getAirfoilById(shortName.hashCode()) != null) {
+            return false;
+        }
+        return addUpdateAirfoil(fileAirfoil, files, airfoil);
+    }
+
+    private boolean addUpdateAirfoil(MultipartFile fileAirfoil, List<MultipartFile> files, Airfoil airfoil) {
         try {
             airfoil.setCoordView(parserService.parseFileAirfoil(fileAirfoil));
             airfoil.setCoordinates(createCoordinateSet(files));
@@ -223,6 +231,12 @@ public class ServiceImpl implements ServiceInt {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public boolean updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
+        Airfoil airfoil = new Airfoil(name, details, shortName);
+        return addUpdateAirfoil(fileAirfoil, files, airfoil);
     }
 
     @Override

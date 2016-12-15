@@ -1,4 +1,4 @@
-package net.sergey.diplom.model;
+package net.sergey.diplom.domain.model;
 
 import java.util.List;
 

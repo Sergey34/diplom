@@ -2,9 +2,9 @@ package net.sergey.diplom.rest;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
+import net.sergey.diplom.domain.model.AirfoilDTO;
+import net.sergey.diplom.domain.model.AirfoilDetail;
 import net.sergey.diplom.domain.user.UserRole;
-import net.sergey.diplom.model.AirfoilDTO;
-import net.sergey.diplom.model.AirfoilDetail;
 import net.sergey.diplom.service.ServiceInt;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.slf4j.Logger;

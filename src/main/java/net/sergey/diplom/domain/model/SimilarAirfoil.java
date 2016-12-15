@@ -1,4 +1,4 @@
-package net.sergey.diplom.model;
+package net.sergey.diplom.domain.model;
 
 public class SimilarAirfoil {
     private int id;

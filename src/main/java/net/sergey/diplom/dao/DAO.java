@@ -21,8 +21,6 @@ public interface DAO {
 
     List<UserRole> getAllUserRoles();
 
-    void cleanAllTables();
-
     void addAirfoils(List<Airfoil> airfoils);
 
     void addAirfoil(Airfoil airfoil);
