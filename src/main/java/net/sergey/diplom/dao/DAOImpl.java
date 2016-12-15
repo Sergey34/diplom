@@ -100,7 +100,6 @@ public class DAOImpl implements DAO {
     @Override
     public void cleanAllTables() {
         //// TODO: 30.10.16 список имен таблиц кроме системных (пользователи, настройки парсеров)
-        sessionFactory.getCurrentSession().createSQLQuery("DELETE FROM links");
     }
 
     @Override
@@ -127,17 +126,6 @@ public class DAOImpl implements DAO {
             Hibernate.initialize(airfoil.getAirfoilsSimilar());
         }
         return airfoil;
-    }
-
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<Airfoil> getAllAirfoil() {
-        List<Airfoil> list = sessionFactory.getCurrentSession().createCriteria(Airfoil.class).list();
-        for (Airfoil airfoil : list) {
-            airfoil.setAirfoilsSimilar(null);
-        }
-        return list;
     }
 
     @Override

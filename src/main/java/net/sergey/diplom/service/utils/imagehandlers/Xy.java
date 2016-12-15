@@ -4,9 +4,9 @@ import java.util.List;
 
 
 public class Xy {
+    private final String legend;
     private List<Double> x;
     private List<Double> y;
-    private String legend;
 
     public Xy(List<Double> x, List<Double> y, String legend) {
         this.legend = legend;

@@ -51,7 +51,7 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public List<Menu> getMenu() throws IOException {
+    public List<Menu> getMenu() {
         List<Menu> allMenu = dao.getAllMenu();
         for (Menu menu : allMenu) {
             Collections.sort(menu.getMenuItems(), new Comparator<MenuItem>() {
@@ -97,11 +97,6 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public void clean() {
-        dao.cleanAllTables();
-    }
-
-    @Override
     public List<AirfoilDTO> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
         List<Airfoil> airfoilsByPrefix = dao.getAirfoilsByPrefix(prefix, startNumber, count);
         for (Airfoil airfoil : airfoilsByPrefix) {
@@ -130,11 +125,11 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public List<String> updateGraf(int airfoilId, List<String> checkeds) {
+    public List<String> updateGraf(int airfoilId, List<String> checkedList) {
         Airfoil airfoil = dao.getAirfoilById(airfoilId);
         if (airfoil != null) {
             try {
-                new BuilderFiles(PATH).draw(airfoil, checkeds);
+                new BuilderFiles(PATH).draw(airfoil, checkedList);
             } catch (Exception e) {
                 e.printStackTrace();
                 LOGGER.warn("Ошибка при обработке файловк с координатами {}\n{}", e.getMessage(), Arrays.toString(e.getStackTrace()));

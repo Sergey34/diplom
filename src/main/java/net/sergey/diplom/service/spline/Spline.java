@@ -69,7 +69,11 @@ public class Spline {
     }
 
     public class SplineTuple {
-        double a, b, c, d, x;
+        final double a;
+        final double x;
+        double b;
+        double c;
+        double d;
 
         SplineTuple(double a, double x) {
             this.a = a;

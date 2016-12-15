@@ -20,39 +20,37 @@ import java.util.concurrent.Executors;
 //// TODO: 18.11.16 переименовать как то связанным с графиками
 public class BuilderFiles {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-
+    private final String PATH;
     private ImageHandler chartClCd;
     private ImageHandler chartClAlpha;
     private ImageHandler chartClCdAlpha;
     private ImageHandler chartCdAlpha;
     private ImageHandler chartCmAlpha;
 
-    private String PATH;
-
     public BuilderFiles(String path) {
         ImageHandler.setSavePath(path, "/chartTemp/");
         PATH = path;
     }
 
-    public void draw(final Airfoil airfoil, List<String> checkeds) throws Exception {
+    public void draw(final Airfoil airfoil, List<String> checkedList) throws Exception {
         chartClCd = new ImageHandler("Cl", "Cd", airfoil.getId(), new SimpleStyle());
         chartClAlpha = new ImageHandler("Cl", "Alpha", airfoil.getId(), new SimpleStyle());
         chartClCdAlpha = new ImageHandler("Cl div Cd", "Alpha", airfoil.getId(), new SimpleStyle());
         chartCdAlpha = new ImageHandler("Cd", "Alpha", airfoil.getId(), new SimpleStyle());
         chartCmAlpha = new ImageHandler("Cm", "Alpha", airfoil.getId(), new SimpleStyle());
-        fillXYChart(airfoil, checkeds);
+        fillXYChart(airfoil, checkedList);
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         executorService.invokeAll(Arrays.asList(chartClCd, chartClAlpha, chartClCdAlpha, chartCdAlpha, chartCmAlpha));
     }
 
 
-    private void fillXYChart(final Airfoil airfoil, List<String> checkeds) {
+    private void fillXYChart(final Airfoil airfoil, List<String> checkedList) {
         for (Coordinates coordinates : airfoil.getCoordinates()) {
             Map<String, List<Double>> map = parseStrCSVtoMap(coordinates.getCoordinatesJson(), coordinates.getFileName());
             if (map == null) {
                 return;
             }
-            if (isChecked(checkeds, coordinates)) {
+            if (isChecked(checkedList, coordinates)) {
                 Xy ClCd = new Xy(map.get("Cd"), map.get("Cl"), coordinates.getFileName());
                 chartClCd.add(ClCd);
                 Xy ClAlpha = new Xy(map.get("Alpha"), map.get("Cl"), coordinates.getFileName());
@@ -68,11 +66,11 @@ public class BuilderFiles {
         }
     }
 
-    private boolean isChecked(List<String> checkeds, Coordinates coordinates) {
-        if (checkeds == null) {
+    private boolean isChecked(List<String> checkedList, Coordinates coordinates) {
+        if (checkedList == null) {
             return true;
         }
-        for (String checked : checkeds) {
+        for (String checked : checkedList) {
             if (coordinates.getFileName().equals(checked)) {
                 return true;
             }

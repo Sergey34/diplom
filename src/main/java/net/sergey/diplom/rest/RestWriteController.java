@@ -27,11 +27,6 @@ public class RestWriteController {
         return "error";
     }
 
-    @RequestMapping(value = "/editAirfoil", method = RequestMethod.POST)
-    public String editAirfoil() {
-        return "error";
-    }
-
     @RequestMapping(value = "/addAirfoil", method = RequestMethod.POST)
     public String addAirfoil(@RequestParam("files") List<MultipartFile> files,
                              @RequestParam("name") String name,

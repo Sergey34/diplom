@@ -29,8 +29,6 @@ public interface DAO {
 
     Airfoil getAirfoilById(int id);
 
-    List<Airfoil> getAllAirfoil();
-
     int getCountAirfoilByPrefix(char prefix);
 
 }

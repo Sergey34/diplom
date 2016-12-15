@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -50,6 +49,24 @@ public class ParserService {
 
     static Connection getJsoupConnect(String url, int timeout) {
         return Jsoup.connect(url).timeout(timeout).userAgent("Mozilla").ignoreHttpErrors(true);
+    }
+
+    static String createStringByPattern(String item, Pattern pattern) {
+        Matcher matcher = pattern.matcher(item);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return "";
+    }
+
+    static boolean isDoubleStr(String str) {
+        try {
+            //noinspection ResultOfMethodCallIgnored
+            Double.parseDouble(str);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 
     public void init() throws Exception {
@@ -112,7 +129,7 @@ public class ParserService {
         }
     }
 
-    private void getAirfoilsByMenuList(List<String> prefixList) throws IOException, InterruptedException, ExecutionException {
+    private void getAirfoilsByMenuList(List<String> prefixList) throws InterruptedException {
         Collection<Callable<Void>> futureList = new ArrayList<>();
         for (String prefix : prefixList) {
             ParserAirfoil parserAirfoil = applicationContext.getBean(ParserAirfoil.class);
@@ -121,15 +138,6 @@ public class ParserService {
         }
         executorService.invokeAll(futureList);
     }
-
-    private String createStringByPattern(String item, Pattern pattern) {
-        Matcher matcher = pattern.matcher(item);
-        if (matcher.find()) {
-            return matcher.group(1);
-        }
-        return "";
-    }
-
 
     public String parseFileAirfoil(MultipartFile fileAirfoil) throws IOException {
         if (fileAirfoil.getContentType().equals("text/csv")) {
@@ -149,14 +157,5 @@ public class ParserService {
         } else {
             throw new IllegalArgumentException("Невалидный файл для графика профиля");
         }
-    }
-
-    private boolean isDoubleStr(String str) {
-        try {
-            Double.parseDouble(str);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
     }
 }

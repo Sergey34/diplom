@@ -26,10 +26,8 @@ import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static net.sergey.diplom.service.ConstantApi.GET_DETAILS;
-import static net.sergey.diplom.service.ConstantApi.GET_FILE_CSV;
-import static net.sergey.diplom.service.parser.ParserService.TIMEOUT;
-import static net.sergey.diplom.service.parser.ParserService.getJsoupConnect;
+import static net.sergey.diplom.service.ConstantApi.*;
+import static net.sergey.diplom.service.parser.ParserService.*;
 
 @Scope("prototype")
 @Component
@@ -104,7 +102,7 @@ public class ParserAirfoil implements Callable<Void> {
 
     private String parseCoordinateView(String shortName) throws IOException {
         BufferedReader bufferedReader =
-                new BufferedReader(new InputStreamReader(new URL("http://airfoiltools.com/airfoil/seligdatfile?airfoil=" + shortName).openStream()));
+                new BufferedReader(new InputStreamReader(new URL(GET_COORDINATE_VIEW + shortName).openStream()));
         String line;
         StringBuilder stringBuilder = new StringBuilder();
         while ((line = bufferedReader.readLine()) != null) {
@@ -114,23 +112,6 @@ public class ParserAirfoil implements Callable<Void> {
             }
         }
         return stringBuilder.toString();
-    }
-
-    private boolean isDoubleStr(String str) {
-        try {
-            Double.parseDouble(str);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
-    }
-
-    private String createStringByPattern(String item, Pattern pattern) {
-        Matcher matcher = pattern.matcher(item);
-        if (matcher.find()) {
-            return matcher.group(1);
-        }
-        return "";
     }
 
     private int createIntByPattern(String item, Pattern pattern) {

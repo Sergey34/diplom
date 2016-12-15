@@ -11,9 +11,12 @@ import java.io.IOException;
 @RestController
 public class RealTime {
 
-    @Autowired
-    private EventService eventService;
+    private final EventService eventService;
 
+    @Autowired
+    public RealTime(EventService eventService) {
+        this.eventService = eventService;
+    }
 
 
     @RequestMapping(value = "/getRealTimeMessage")

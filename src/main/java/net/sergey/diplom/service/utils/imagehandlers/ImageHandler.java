@@ -12,11 +12,11 @@ import java.util.concurrent.Callable;
 public class ImageHandler implements Callable<Object> {
     private static String CATALOG;
     private static String PATH;
-    private List<Xy> xyList;
-    private String title;
-    private String xAlisa;
-    private String yAlisa;
-    private String fileName;
+    private final List<Xy> xyList;
+    private final String title;
+    private final String xAlisa;
+    private final String yAlisa;
+    private final String fileName;
     private StyleXYChart style;
 
     public ImageHandler(String xAlisa, String yAlisa, int id, StyleXYChart style) {
@@ -39,9 +39,9 @@ public class ImageHandler implements Callable<Object> {
         this.style = style;
     }
 
-    public static void setSavePath(String path, String catolog) {
+    public static void setSavePath(String path, String catalog) {
         PATH = path;
-        CATALOG = catolog;
+        CATALOG = catalog;
     }
 
     @Override

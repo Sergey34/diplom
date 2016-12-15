@@ -9,12 +9,11 @@ import net.sergey.diplom.model.AirfoilDetail;
 import net.sergey.diplom.model.UserView;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 public interface ServiceInt {
 
-    List<Menu> getMenu() throws IOException;
+    List<Menu> getMenu();
 
     List<User> getUser(String alex);
 
@@ -22,7 +21,7 @@ public interface ServiceInt {
 
     List<UserRole> getAllUserRoles();
 
-    void clean();
+
 
     List<AirfoilDTO> getAirfoilsByPrefix(char prefix, int startNumber, int count);
 
@@ -38,5 +37,5 @@ public interface ServiceInt {
 
     int getCountAirfoilByPrefix(char prefix);
 
-    List<String> updateGraf(int airfoilId, List<String> checkeds);
+    List<String> updateGraf(int airfoilId, List<String> checkedList);
 }

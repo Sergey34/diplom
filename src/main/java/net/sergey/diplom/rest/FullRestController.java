@@ -12,9 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
@@ -23,37 +20,10 @@ import java.util.List;
 public class FullRestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final ServiceInt service;
-    @Autowired
-    RealTime realTime;
-
 
     @Autowired
     public FullRestController(ServiceInt service) {
         this.service = service;
-    }
-
-    @RequestMapping(value = "/greeting", method = RequestMethod.GET)
-    public String greeting() throws IOException, InterruptedException {
-        LOGGER.info("!!!тестовый метод!!! запуск python скрипта");
-        String args = "aargs";
-        Process p = Runtime.getRuntime().exec("python3 /resources/myscript.py " + args);
-        int i = p.waitFor();
-        LOGGER.info(String.valueOf(i));
-
-        File file = new File("/resources/" + args + ".txt");
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-        String s = bufferedReader.readLine();
-        LOGGER.info(s);
-        return "testMethod";
-    }
-
-    @RequestMapping(value = "/aaa", method = RequestMethod.GET)
-    public List<Menu> getMaa() throws IOException {
-        LOGGER.info("ifoLogger {} ", "wqe");
-        LOGGER.debug("ifoLogger");
-        LOGGER.warn("ifoLogger");
-        LOGGER.error("ifoLogger");
-        return service.getMenu();
     }
 
     @RequestMapping(value = "/menu", method = RequestMethod.GET)
@@ -92,8 +62,8 @@ public class FullRestController {
     }
 
     @RequestMapping(value = "/updateGraf/{airfoilId}", method = RequestMethod.POST)
-    public List<String> updateGraf(@PathVariable int airfoilId, @RequestBody List<String> checkeds) {
-        return service.updateGraf(airfoilId, checkeds);
+    public List<String> updateGraf(@PathVariable int airfoilId, @RequestBody List<String> checkedList) {
+        return service.updateGraf(airfoilId, checkedList);
     }
 
 
