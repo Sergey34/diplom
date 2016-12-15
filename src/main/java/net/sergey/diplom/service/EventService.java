@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class EventService {
-    private static Map<String, Integer> progressMap = new ConcurrentHashMap<>();
+    private final Map<String, Integer> progressMap = new ConcurrentHashMap<>();
     private final List<SseEmitter> emitters = new ArrayList<>();
 
     public List<SseEmitter> getEmitters() {
@@ -28,6 +28,9 @@ public class EventService {
         emitters.remove(emitter);
     }
 
+    public void clearProgressMap() {
+        progressMap.clear();
+    }
 
     public void updateProgress(String key, int value) {
         progressMap.put(key, value);

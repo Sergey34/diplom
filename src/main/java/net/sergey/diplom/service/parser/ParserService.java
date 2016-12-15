@@ -49,6 +49,7 @@ public class ParserService {
     }
 
     private List<String> parseMenu() throws IOException {
+        eventService.clearProgressMap();
         eventService.updateProgress("menu", 0);
         final List<String> airfoilMenu = new ArrayList<>();
         Element mmenu = Jsoup.connect(HTTP_AIRFOIL_TOOLS_COM).timeout(10 * 1000).userAgent("Mozilla").ignoreHttpErrors(true).get().body().getElementsByClass("mmenu").get(0);
