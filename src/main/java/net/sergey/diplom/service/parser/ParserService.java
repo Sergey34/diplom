@@ -35,15 +35,15 @@ public class ParserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static final String HTTP_AIRFOIL_TOOLS_COM = "http://airfoiltools.com/";
     private static final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-    @Autowired
-    ApplicationContext applicationContext;
-    @Autowired
-    private DAO dao;
-    @Autowired
-    private EventService eventService;
+    private final ApplicationContext applicationContext;
+    private final DAO dao;
+    private final EventService eventService;
 
-    public ParserService() {
-
+    @Autowired
+    public ParserService(ApplicationContext applicationContext, DAO dao, EventService eventService) {
+        this.applicationContext = applicationContext;
+        this.dao = dao;
+        this.eventService = eventService;
     }
 
     public void init() throws Exception {
@@ -84,7 +84,6 @@ public class ParserService {
                 }
                 menu1.setMenuItems(menuItems);
                 menus.add(menu1);
-
                 break;
             }
         }

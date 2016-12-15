@@ -38,13 +38,14 @@ public class ParserAirfoil implements Callable<Void> {
     private static final Pattern GET_COUNT_PAGES_PATTERN = Pattern.compile("Page 1 of ([0-9]+).+");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static final String REGEX = " +";
+    private final DAO dao;
+    private final EventService eventService;
     private String prefix;
-    @Autowired
-    private DAO dao;
-    @Autowired
-    private EventService eventService;
 
-    public ParserAirfoil() {
+    @Autowired
+    public ParserAirfoil(DAO dao, EventService eventService) {
+        this.dao = dao;
+        this.eventService = eventService;
     }
 
     public static String csvToString(InputStream urlFile) throws IOException {
