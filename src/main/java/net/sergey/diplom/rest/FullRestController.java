@@ -33,7 +33,7 @@ public class FullRestController {
 
     @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
     public String getUserInfo() {
-        return service.getUserInfo();
+        return service.getCurrentUserInfo();
     }
 
     @RequestMapping(value = "/userRoles", method = RequestMethod.GET)
@@ -65,6 +65,4 @@ public class FullRestController {
     public List<String> updateGraf(@PathVariable int airfoilId, @RequestBody List<String> checkedList) {
         return service.updateGraf(airfoilId, checkedList);
     }
-
-
 }

@@ -1,8 +1,13 @@
-package net.sergey.diplom.service.messages;
+package net.sergey.diplom.domain.model.messages;
 
-public abstract class Message {
+public class Message {
     private String message;
     private int code;
+
+    public Message(String message, int code) {
+        this.message = message;
+        this.code = code;
+    }
 
     public Message() {
     }

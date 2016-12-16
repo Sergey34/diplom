@@ -8,6 +8,8 @@ import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.domain.model.AirfoilDTO;
 import net.sergey.diplom.domain.model.AirfoilDetail;
 import net.sergey.diplom.domain.model.UserView;
+import net.sergey.diplom.domain.model.messages.Message;
+import net.sergey.diplom.domain.model.messages.MessageError;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.service.parser.ParserAirfoil;
@@ -18,6 +20,7 @@ import net.sergey.diplom.service.utils.UtilsLogger;
 import net.sergey.diplom.service.utils.imagehandlers.ImageHandler;
 import net.sergey.diplom.service.utils.imagehandlers.Xy;
 import net.sergey.diplom.service.utils.imagehandlers.createxychartstyle.MinimalStyle;
+import org.apache.catalina.connector.Response;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,12 +67,7 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public List<User> getUser(String name) {
-        return dao.getUserByName(name);
-    }
-
-    @Override
-    public boolean addUser(UserView userView) {
+    public Message addUser(UserView userView) {
         User user = new User();
         user.setEnabled(1);
         user.setPassword(userView.getPassword());
@@ -77,10 +75,10 @@ public class ServiceImpl implements ServiceInt {
         user.setUserRoles(UtilRoles.findUserRoleByName(userView.getRole()));
         try {
             dao.addUser(user);
-            return true;
+            return new Message("Пользователь успешно создан", Response.SC_OK);
         } catch (ConstraintViolationException e) {
             LOGGER.warn("пользователь с именем {} уже существует в базе. {}", user.getUserName(), e.getStackTrace());
-            return false;
+            return new Message("Пользователь с таким именем уже существует, Выберите другое имя", Response.SC_CONFLICT);
         }
     }
 
@@ -177,26 +175,26 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public boolean parse() {
+    public Message parse() {
         if (!parsingIsStarting) {
             parsingIsStarting = true;
             try {
                 parserService.init();
-                return true;
+                return new Message("Данные успешно загружены", Response.SC_OK);
             } catch (Exception e) {
                 LOGGER.warn("ошибка инициализации базы {}", Arrays.asList(e.getStackTrace()));
                 e.printStackTrace();
-                return false;
+                return new MessageError("Произошла ошибка при загрузке данных", Response.SC_NOT_IMPLEMENTED, e.getStackTrace());
             } finally {
                 parsingIsStarting = false;
             }
         } else {
-            return false;
+            return new Message("В данный момент данные уже кем-то обновляются. Необходимо дождаться завершения обновления", Response.SC_FORBIDDEN);
         }
     }
 
     @Override
-    public String getUserInfo() {
+    public String getCurrentUserInfo() {
         Boolean isLogin = UtilsLogger.getAuthentication().isAuthenticated();
         if (!"guest".equals(UtilsLogger.getAuthentication().getName()) && isLogin) {
             return UtilsLogger.getAuthentication().getName();
@@ -205,28 +203,34 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public boolean addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
+    public Message addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
+        if (name.isEmpty()) {
+            return new Message("Имя не должно быть пустым", Response.SC_NOT_ACCEPTABLE);
+        }
         Airfoil airfoil = new Airfoil(name, details, shortName);
         if (dao.getAirfoilById(shortName.hashCode()) != null) {
-            return false;
+            return new Message("Airfoil с таким именем уже существует, Выберите другое имя", Response.SC_CONFLICT);
         }
         return addUpdateAirfoil(fileAirfoil, files, airfoil);
     }
 
-    private boolean addUpdateAirfoil(MultipartFile fileAirfoil, List<MultipartFile> files, Airfoil airfoil) {
+    private Message addUpdateAirfoil(MultipartFile fileAirfoil, List<MultipartFile> files, Airfoil airfoil) {
         try {
             airfoil.setCoordView(parserService.parseFileAirfoil(fileAirfoil));
             airfoil.setCoordinates(createCoordinateSet(files));
             dao.addAirfoil(airfoil);
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return new Message("Один из файлов имеет не верный формат", Response.SC_NOT_ACCEPTABLE);
         }
-        return true;
+        return new Message("Airfoil успешно добален / обновлен", Response.SC_OK);
     }
 
     @Override
-    public boolean updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
+    public Message updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
+        if (name.isEmpty()) {
+            return new Message("Имя не должно быть пустым", Response.SC_NOT_ACCEPTABLE);
+        }
         Airfoil airfoil = new Airfoil(name, details, shortName);
         return addUpdateAirfoil(fileAirfoil, files, airfoil);
     }
@@ -235,7 +239,6 @@ public class ServiceImpl implements ServiceInt {
     public int getCountAirfoilByPrefix(char prefix) {
         return dao.getCountAirfoilByPrefix(prefix);
     }
-
 
     private Set<Coordinates> createCoordinateSet(List<MultipartFile> files) throws IOException {
         Set<Coordinates> coordinates = new HashSet<>();

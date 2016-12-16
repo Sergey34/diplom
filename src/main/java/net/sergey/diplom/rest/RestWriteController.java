@@ -1,6 +1,7 @@
 package net.sergey.diplom.rest;
 
 import net.sergey.diplom.domain.model.UserView;
+import net.sergey.diplom.domain.model.messages.Message;
 import net.sergey.diplom.service.ServiceInt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,61 +20,30 @@ public class RestWriteController {
     }
 
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)
-    public String addUser(@RequestBody UserView userView) {
-
-        if (service.addUser(userView)) {
-            return "{\"msg\":\"success\"}";
-        }
-        return "error";
+    public Message addUser(@RequestBody UserView userView) {
+        return service.addUser(userView);
     }
 
     @RequestMapping(value = "/addAirfoil", method = RequestMethod.POST)
-    public String addAirfoil(@RequestParam("files") List<MultipartFile> files,
-                             @RequestParam("name") String name,
-                             @RequestParam("ShortName") String shortName,
-                             @RequestParam("Details") String details,
-                             @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
-        if (name.isEmpty()) {
-            return "ERROR";
-        } else {
-            boolean airfoilIsAdd = service.addAirfoil(shortName, name, details, fileAirfoil, files);
-            if (airfoilIsAdd) {
-                return "airfoil Is Added";
-            } else {
-                return "Error";
-            }
-        }
+    public Message addAirfoil(@RequestParam("files") List<MultipartFile> files,
+                              @RequestParam("name") String name,
+                              @RequestParam("ShortName") String shortName,
+                              @RequestParam("Details") String details,
+                              @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
+        return service.addAirfoil(shortName, name, details, fileAirfoil, files);
     }
 
     @RequestMapping(value = "/updateAirfoil", method = RequestMethod.POST)
-    public String updateAirfoil(@RequestParam("files") List<MultipartFile> files,
-                                @RequestParam("name") String name,
-                                @RequestParam("ShortName") String shortName,
-                                @RequestParam("Details") String details,
-                                @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
-        if (name.isEmpty()) {
-            return "ERROR";
-        } else {
-            boolean airfoilIsAdd = service.updateAirfoil(shortName, name, details, fileAirfoil, files);
-            if (airfoilIsAdd) {
-                return "airfoil Is Added";
-            } else {
-                return "Error";
-            }
-        }
+    public Message updateAirfoil(@RequestParam("files") List<MultipartFile> files,
+                                 @RequestParam("name") String name,
+                                 @RequestParam("ShortName") String shortName,
+                                 @RequestParam("Details") String details,
+                                 @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
+        return service.updateAirfoil(shortName, name, details, fileAirfoil, files);
     }
-
 
     @RequestMapping(value = "/init", method = RequestMethod.GET)
-    public String init() {
-        boolean parse = service.parse();
-        if (parse) {
-            return "OK";
-        } else {
-            return "ERROR";
-        }
-
+    public Message init() {
+        return service.parse();
     }
-
-
 }
