@@ -9,18 +9,20 @@
 
     <http auto-config="true">
         <intercept-url pattern="/rest/*" access="ROLE_ANONYMOUS, ROLE_USER, ROLE_ADMIN"/>
-        <intercept-url pattern="/rest/admin/*" access="ROLE_ADMIN"/>
         <intercept-url pattern="/rest/write/*" access="ROLE_USER, ROLE_ADMIN"/>
 
-        <intercept-url pattern="/adduser" access="ROLE_ADMIN"/>
-        <intercept-url pattern="/adminka" access="ROLE_ADMIN"/>
+        <intercept-url pattern="/adminka" access="ROLE_USER, ROLE_ADMIN"/>
+        <intercept-url pattern="/adduser" access="ROLE_USER, ROLE_ADMIN"/>
+        <intercept-url pattern="/addAirfoil" access="ROLE_USER, ROLE_ADMIN"/>
+        <intercept-url pattern="/editAirfoil" access="ROLE_USER, ROLE_ADMIN"/>
+        <intercept-url pattern="/initDB" access="ROLE_USER, ROLE_ADMIN"/>
+
 
         <form-login login-page="/login"
                     default-target-url="/context"
                     authentication-failure-url="/loginError"/>
 
         <logout logout-url="/logout" logout-success-url="/login"/>
-        <logout/>
         <anonymous username="guest" granted-authority="ROLE_ANONYMOUS"/>
         <remember-me/>
     </http>

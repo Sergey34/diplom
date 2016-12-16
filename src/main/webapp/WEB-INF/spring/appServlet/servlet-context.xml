@@ -23,11 +23,11 @@
 
     <!--class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
     <!-- Отображение видов на jsp-файлы, лежащие в папке /WEB-INF/views -->
-    <!--<beans:bean id="viewResolver"
-                class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <beans:property name="prefix" value="/WEB-INF/views/" />
-        <beans:property name="suffix" value=".html" />
-    </beans:bean>-->
+    <!-- <beans:bean id="viewResolver"
+                 class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+         <beans:property name="prefix" value="/webapp/static/**" />
+         <beans:property name="suffix" value=".html" />
+     </beans:bean>-->
 
 
     <!-- Файл с настройками контроллеров -->
