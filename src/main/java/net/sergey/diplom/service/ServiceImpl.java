@@ -15,6 +15,7 @@ import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.service.parser.ParserAirfoil;
 import net.sergey.diplom.service.parser.ParserService;
 import net.sergey.diplom.service.spline.AirfoilStlGenerator;
+import net.sergey.diplom.service.utils.BuilderGraphs;
 import net.sergey.diplom.service.utils.UtilRoles;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import net.sergey.diplom.service.utils.imagehandlers.ImageHandler;
@@ -99,7 +100,7 @@ public class ServiceImpl implements ServiceInt {
         for (Airfoil airfoil : airfoilsByPrefix) {
             drawViewAirfoil(airfoil);
         }
-        return Mapper.mapAirfoilOnAirfoilId(airfoilsByPrefix);
+        return AirfoilDTO.mapAirfoilOnAirfoilId(airfoilsByPrefix);
     }
 
     private void fillListXListY(List<Double> x, List<Double> y, String[] split) {
@@ -126,7 +127,7 @@ public class ServiceImpl implements ServiceInt {
         Airfoil airfoil = dao.getAirfoilById(airfoilId);
         if (airfoil != null) {
             try {
-                new BuilderFiles(PATH).draw(airfoil, checkedList);
+                new BuilderGraphs(PATH).draw(airfoil, checkedList);
             } catch (Exception e) {
                 e.printStackTrace();
                 LOGGER.warn("Ошибка при обработке файловк с координатами {}\n{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
@@ -147,7 +148,7 @@ public class ServiceImpl implements ServiceInt {
         }
         String stlFilePath = null;
         try {
-            new BuilderFiles(PATH).draw(airfoil, null);
+            new BuilderGraphs(PATH).draw(airfoil, null);
             stlFilePath = new AirfoilStlGenerator().generate(airfoil.getShortName(), airfoil.getCoordView(), PATH);
         } catch (Exception e) {
             e.printStackTrace();

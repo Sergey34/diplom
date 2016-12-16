@@ -1,10 +1,9 @@
-package net.sergey.diplom.service;
+package net.sergey.diplom.service.utils;
 
 import au.com.bytecode.opencsv.CSVParser;
 import au.com.bytecode.opencsv.CSVWriter;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
-import net.sergey.diplom.service.utils.UtilsLogger;
 import net.sergey.diplom.service.utils.imagehandlers.ImageHandler;
 import net.sergey.diplom.service.utils.imagehandlers.Xy;
 import net.sergey.diplom.service.utils.imagehandlers.createxychartstyle.SimpleStyle;
@@ -17,8 +16,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-//// TODO: 18.11.16 переименовать как то связанным с графиками
-public class BuilderFiles {
+public class BuilderGraphs {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final String PATH;
     private final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
@@ -28,7 +26,7 @@ public class BuilderFiles {
     private ImageHandler chartCdAlpha;
     private ImageHandler chartCmAlpha;
 
-    public BuilderFiles(String path) {
+    public BuilderGraphs(String path) {
         ImageHandler.setSavePath(path, "/chartTemp/");
         PATH = path;
     }

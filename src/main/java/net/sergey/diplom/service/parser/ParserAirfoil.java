@@ -4,7 +4,6 @@ import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
-import net.sergey.diplom.service.ConstantApi;
 import net.sergey.diplom.service.EventService;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.jsoup.nodes.Document;
@@ -26,7 +25,7 @@ import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static net.sergey.diplom.service.ConstantApi.*;
+import static net.sergey.diplom.service.parser.ConstantApi.*;
 import static net.sergey.diplom.service.parser.ParserService.*;
 
 @Scope("prototype")

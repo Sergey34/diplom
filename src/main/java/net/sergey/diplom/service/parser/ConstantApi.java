@@ -1,4 +1,4 @@
-package net.sergey.diplom.service;
+package net.sergey.diplom.service.parser;
 
 public class ConstantApi {
     public static final String GET_FILE_CSV = "http://airfoiltools.com/polar/csv?polar=";//xf-a18-il-50000

@@ -2,6 +2,9 @@ package net.sergey.diplom.domain.model;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AirfoilDTO {
     private String name;
     private String description;
@@ -16,6 +19,14 @@ public class AirfoilDTO {
     }
 
     public AirfoilDTO() {
+    }
+
+    public static List<AirfoilDTO> mapAirfoilOnAirfoilId(List<Airfoil> airfoils) {
+        List<AirfoilDTO> airfoilDTOs = new ArrayList<>();
+        for (Airfoil airfoil : airfoils) {
+            airfoilDTOs.add(new AirfoilId(airfoil));
+        }
+        return airfoilDTOs;
     }
 
     public String getName() {
