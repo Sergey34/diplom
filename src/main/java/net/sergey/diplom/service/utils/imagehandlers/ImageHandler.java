@@ -1,15 +1,18 @@
 package net.sergey.diplom.service.utils.imagehandlers;
 
+import net.sergey.diplom.service.utils.UtilsLogger;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.style.markers.SeriesMarkers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class ImageHandler implements Callable<Object> {
+public class ImageHandler implements Callable<Void> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static String CATALOG;
     private static String PATH;
     private final List<Xy> xyList;
@@ -26,7 +29,6 @@ public class ImageHandler implements Callable<Object> {
         this.title = xAlisa + " v " + yAlisa;
         this.fileName = id + title;
         this.style = style;
-
     }
 
     public ImageHandler(String shortName, Xy xy, StyleXYChart style) {
@@ -45,40 +47,31 @@ public class ImageHandler implements Callable<Object> {
     }
 
     @Override
-    public Object call() throws Exception {
-        XYChart chartClCd = style.getXYChart();
-        chartClCd.setTitle(title);
-        chartClCd.setXAxisTitle(xAlisa);
-        chartClCd.setYAxisTitle(yAlisa);
+    public Void call() {
+        XYChart chart = style.getXYChart();
+        chart.setTitle(title);
+        chart.setXAxisTitle(xAlisa);
+        chart.setYAxisTitle(yAlisa);
         for (Xy xy : xyList) {
             List<Double> x = xy.getX();
             List<Double> y = xy.getY();
-            chartClCd.addSeries(xy.getLegend(), x, y).setMarker(SeriesMarkers.NONE);
+            chart.addSeries(xy.getLegend(), x, y).setMarker(SeriesMarkers.NONE);
         }
         try {
-            BitmapEncoder.saveBitmapWithDPI(chartClCd, PATH + CATALOG + fileName,
+            BitmapEncoder.saveBitmapWithDPI(chart, PATH + CATALOG + fileName,
                     BitmapEncoder.BitmapFormat.PNG, 80);
         } catch (Exception e) {
-            //LOGGER.warn("не удалось сохранить график {} для {}\n{}", chartClCd.getTitle(), airfoil.getImage(), Arrays.toString(e.getStackTrace()));
+            LOGGER.warn("не удалось сохранить график {}", chart.getTitle());
             e.printStackTrace();
-            throw e;
         }
         return null;
-    }
-
-    private XYChartBuilder getXYChart() {
-        return new XYChartBuilder().width(700).height(400);
     }
 
     public void add(Xy xy) {
         this.xyList.add(xy);
     }
 
-    public void setStyle(StyleXYChart style) {
-        this.style = style;
-    }
-
-    public void draw() throws Exception {
+    public void draw() {
         call();
     }
 }

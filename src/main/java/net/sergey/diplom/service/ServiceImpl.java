@@ -22,7 +22,6 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -140,34 +139,26 @@ public class ServiceImpl implements ServiceInt {
             imgCsvName.add("/resources/chartTemp/" + airfoilId + chartName + ".png");
         }
         return imgCsvName;
-
     }
-
 
     @Override
     public AirfoilDetail getDetailInfo(int airfoilId) {
         Airfoil airfoil = dao.getAirfoilById(airfoilId);
         if (null == airfoil) {
-            return AirfoilDetail.getAirfoilDetailError("airfoil не найден");
+            return null;
         }
+        String stlFilePath = null;
         try {
             new BuilderFiles(PATH).draw(airfoil, null);
+            stlFilePath = new AirfoilStlGenerator().generate(airfoil.getShortName(), airfoil.getCoordView(), PATH);
         } catch (Exception e) {
             e.printStackTrace();
-            LOGGER.warn("Ошибка при обработке файловк с координатами {}\n{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
-            return new AirfoilDetail(airfoil, e.getMessage());
+            LOGGER.warn("Ошибка при обработке файлов с координатами {}\n{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
         }
         drawViewAirfoil(airfoil);
-        String stlFilePath = "Error";
-        try {
-            stlFilePath = new AirfoilStlGenerator().generate(airfoil.getShortName(), airfoil.getCoordView(), PATH);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return new AirfoilDetail(airfoil, CHART_NAMES, stlFilePath);
     }
 
-    @Async
     private void drawViewAirfoil(Airfoil airfoil) {
         if (new File(PATH + "/airfoil_img/" + airfoil.getShortName() + ".png").exists()) {
             return;
@@ -182,6 +173,7 @@ public class ServiceImpl implements ServiceInt {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     @Override

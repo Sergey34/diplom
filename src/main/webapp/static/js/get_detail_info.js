@@ -10,7 +10,9 @@ function getDetailInfo(forEdit) {
                 url: "/rest/getDetailInfo/" + id
             }).then(function (data) {
                 console.log(data);
-                if (data.error != true) {
+                if (data == '') {
+                    document.getElementById('airfoilDetailInfo').innerText = "Airfoil не найден";
+                } else {
                     if (forEdit) {
                         fillEditableContentDetailInfo(data);
                     } else {
@@ -23,10 +25,6 @@ function getDetailInfo(forEdit) {
 }
 
 function fillContentDetailInfo(data) {
-    let adf = document.getElementById('airfoilDetailInfo');
-    if (data.warnMessage = undefined) {
-        adf.innerHTML = warnMessage;
-    }
 
     let edit = document.getElementById('edit_link');
     edit.setAttribute("href", "/editAirfoil?airfoilId=" + id);
@@ -39,7 +37,6 @@ function fillContentDetailInfo(data) {
 
     let image = document.getElementById('imgDetail');
     image.setAttribute("src", data.image);
-
 
     let description = document.getElementById('descr_detail');
     description.innerText = data.description;
@@ -77,10 +74,7 @@ function fillContentDetailInfo(data) {
 }
 
 function fillEditableContentDetailInfo(data) {
-    let adf = document.getElementById("airfoilDetailInfo");
-    if (data.warnMessage = undefined) {
-        adf.innerHTML = warnMessage;
-    }
+
     document.getElementById("name").setAttribute("value", data.name);
     document.getElementById("ShortName").setAttribute("value", data.shortName);
     document.getElementById("description").setAttribute("value", data.description);
@@ -88,7 +82,6 @@ function fillEditableContentDetailInfo(data) {
     let img = document.createElement('img');
     img.setAttribute("src", data.image);
     img_detail.appendChild(img);
-
 
     let fileCsvName = data.fileCsvName;
     let links = document.getElementById('graf');
@@ -99,8 +92,6 @@ function fillEditableContentDetailInfo(data) {
         links.appendChild(linkItem);
         links.appendChild(document.createElement('br'))
     }
-
-
 }
 
 function refreshiframe() {

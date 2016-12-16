@@ -21,6 +21,7 @@ import java.util.concurrent.Executors;
 public class BuilderFiles {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final String PATH;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private ImageHandler chartClCd;
     private ImageHandler chartClAlpha;
     private ImageHandler chartClCdAlpha;
@@ -39,7 +40,6 @@ public class BuilderFiles {
         chartCdAlpha = new ImageHandler("Cd", "Alpha", airfoil.getId(), new SimpleStyle());
         chartCmAlpha = new ImageHandler("Cm", "Alpha", airfoil.getId(), new SimpleStyle());
         fillXYChart(airfoil, checkedList);
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
         executorService.invokeAll(Arrays.asList(chartClCd, chartClAlpha, chartClCdAlpha, chartCdAlpha, chartCmAlpha));
     }
 
