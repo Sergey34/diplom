@@ -6,10 +6,12 @@ import net.sergey.diplom.domain.model.AirfoilDTO;
 import net.sergey.diplom.domain.model.AirfoilDetail;
 import net.sergey.diplom.domain.model.UserView;
 import net.sergey.diplom.domain.model.messages.Message;
+import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 public interface ServiceInt {
 
@@ -36,4 +38,6 @@ public interface ServiceInt {
     List<String> updateGraf(int airfoilId, List<String> checkedList);
 
     Message updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
+
+    Future<User> findUser(int n);
 }

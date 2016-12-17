@@ -26,6 +26,8 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +36,7 @@ import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Future;
 
 @Service
 public class ServiceImpl implements ServiceInt {
@@ -248,4 +251,24 @@ public class ServiceImpl implements ServiceInt {
         }
         return coordinates;
     }
+
+
+    @Override
+    @Async("executor")
+    public Future<User> findUser(int n) {
+        LOGGER.info("Looking up " + n);
+        User results = new User();
+        results.setUserName("qweqw");
+        results.setId(42);
+        results.setPassword("342342");
+        try {
+            Thread.sleep(n);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return new AsyncResult<>(results);
+    }
+
+
+
 }
