@@ -23,9 +23,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -129,14 +127,16 @@ public class ParserService {
         }
     }
 
-    private void getAirfoilsByMenuList(List<String> prefixList) throws InterruptedException {
+    private void getAirfoilsByMenuList(List<String> prefixList) throws InterruptedException, ExecutionException {
         Collection<Callable<Void>> futureList = new ArrayList<>();
         for (String prefix : prefixList) {
             ParserAirfoil parserAirfoil = applicationContext.getBean(ParserAirfoil.class);
             parserAirfoil.setPrefix(prefix);
             futureList.add(parserAirfoil);
         }
-        executorService.invokeAll(futureList);
+        for (Future<Void> voidFuture : executorService.invokeAll(futureList)) {
+            voidFuture.get();
+        }
     }
 
     public String parseFileAirfoil(MultipartFile fileAirfoil) throws IOException {
