@@ -21,7 +21,6 @@ import net.sergey.diplom.service.utils.UtilsLogger;
 import net.sergey.diplom.service.utils.imagehandlers.ImageHandler;
 import net.sergey.diplom.service.utils.imagehandlers.Xy;
 import net.sergey.diplom.service.utils.imagehandlers.createxychartstyle.MinimalStyle;
-import org.apache.catalina.connector.Response;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +36,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Future;
+
+import static net.sergey.diplom.domain.model.messages.Message.*;
 
 @Service
 public class ServiceImpl implements ServiceInt {
@@ -79,10 +80,10 @@ public class ServiceImpl implements ServiceInt {
         user.setUserRoles(UtilRoles.findUserRoleByName(userView.getRole()));
         try {
             dao.addUser(user);
-            return new Message("Пользователь успешно создан", Response.SC_OK);
+            return new Message("Пользователь успешно создан", SC_OK);
         } catch (ConstraintViolationException e) {
             LOGGER.warn("пользователь с именем {} уже существует в базе. {}", user.getUserName(), e.getStackTrace());
-            return new Message("Пользователь с таким именем уже существует, Выберите другое имя", Response.SC_CONFLICT);
+            return new Message("Пользователь с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
         }
     }
 
@@ -178,24 +179,26 @@ public class ServiceImpl implements ServiceInt {
 
     }
 
+
     @Override
     public Message parse() {
         if (!parsingIsStarting) {
             parsingIsStarting = true;
             try {
                 parserService.init();
-                return new Message("Данные успешно загружены", Response.SC_OK);
+                return new Message("Данные успешно загружены", SC_OK);
             } catch (Exception e) {
                 LOGGER.warn("ошибка инициализации базы {}", Arrays.asList(e.getStackTrace()));
                 e.printStackTrace();
-                return new MessageError("Произошла ошибка при загрузке данных", Response.SC_NOT_IMPLEMENTED, e.getStackTrace());
+                return new MessageError("Произошла ошибка при загрузке данных", SC_NOT_IMPLEMENTED, e.getStackTrace());
             } finally {
                 parsingIsStarting = false;
             }
         } else {
-            return new Message("В данный момент данные уже кем-то обновляются. Необходимо дождаться завершения обновления", Response.SC_FORBIDDEN);
+            return new Message("В данный момент данные уже кем-то обновляются. Необходимо дождаться завершения обновления", SC_FORBIDDEN);
         }
     }
+
 
     @Override
     public String getCurrentUserInfo() {
@@ -209,11 +212,11 @@ public class ServiceImpl implements ServiceInt {
     @Override
     public Message addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
         if (name.isEmpty()) {
-            return new Message("Имя не должно быть пустым", Response.SC_NOT_ACCEPTABLE);
+            return new Message("Имя не должно быть пустым", SC_NOT_ACCEPTABLE);
         }
         Airfoil airfoil = new Airfoil(name, details, shortName);
         if (dao.getAirfoilById(shortName.hashCode()) != null) {
-            return new Message("Airfoil с таким именем уже существует, Выберите другое имя", Response.SC_CONFLICT);
+            return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
         }
         return addUpdateAirfoil(fileAirfoil, files, airfoil);
     }
@@ -225,15 +228,16 @@ public class ServiceImpl implements ServiceInt {
             dao.addAirfoil(airfoil);
         } catch (Exception e) {
             e.printStackTrace();
-            return new Message("Один из файлов имеет не верный формат", Response.SC_NOT_ACCEPTABLE);
+            return new Message("Один из файлов имеет не верный формат", SC_NOT_ACCEPTABLE);
         }
-        return new Message("Airfoil успешно добален / обновлен", Response.SC_OK);
+        return new Message("Airfoil успешно добален / обновлен", SC_OK);
     }
+
 
     @Override
     public Message updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
         if (name.isEmpty()) {
-            return new Message("Имя не должно быть пустым", Response.SC_NOT_ACCEPTABLE);
+            return new Message("Имя не должно быть пустым", SC_NOT_ACCEPTABLE);
         }
         Airfoil airfoil = new Airfoil(name, details, shortName);
         return addUpdateAirfoil(fileAirfoil, files, airfoil);
@@ -268,7 +272,6 @@ public class ServiceImpl implements ServiceInt {
         }
         return new AsyncResult<>(results);
     }
-
 
 
 }
