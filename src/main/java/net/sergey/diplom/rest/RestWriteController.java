@@ -4,10 +4,13 @@ import net.sergey.diplom.domain.model.UserView;
 import net.sergey.diplom.domain.model.messages.Message;
 import net.sergey.diplom.service.ServiceInt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 @RequestMapping(value = "/rest/write")
 @RestController(value = "write")
@@ -24,12 +27,21 @@ public class RestWriteController {
         return service.addUser(userView);
     }
 
-    @RequestMapping(value = "/addAirfoil", method = RequestMethod.POST)
-    public Message addAirfoil(@RequestParam("files") List<MultipartFile> files,
-                              @RequestParam("name") String name,
-                              @RequestParam("ShortName") String shortName,
-                              @RequestParam("Details") String details,
-                              @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
+    @RequestMapping(value = "/addAirfoilForFileCsv", method = RequestMethod.POST)
+    public Message addAirfoilForFileCsv(@RequestParam("files") List<MultipartFile> files,
+                                        @RequestParam("name") String name,
+                                        @RequestParam("ShortName") String shortName,
+                                        @RequestParam("Details") String details,
+                                        @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
+        return service.addAirfoil(shortName, name, details, fileAirfoil, files);
+    }
+
+    @RequestMapping(value = "/addAirfoilForStringCsv", method = RequestMethod.POST)
+    public Message addAirfoilForStringCsv(@RequestParam("files") List<String> files,
+                                          @RequestParam("name") String name,
+                                          @RequestParam("ShortName") String shortName,
+                                          @RequestParam("Details") String details,
+                                          @RequestParam("fileAirfoil") String fileAirfoil) {
         return service.addAirfoil(shortName, name, details, fileAirfoil, files);
     }
 
@@ -42,8 +54,9 @@ public class RestWriteController {
         return service.updateAirfoil(shortName, name, details, fileAirfoil, files);
     }
 
+
     @RequestMapping(value = "/init", method = RequestMethod.GET)
-    public Message init() {
+    public Future<Message> init() {
         return service.parse();
     }
 }

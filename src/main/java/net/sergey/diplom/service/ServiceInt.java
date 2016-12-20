@@ -27,7 +27,7 @@ public interface ServiceInt {
 
     AirfoilDetail getDetailInfo(int airfoilId);
 
-    Message parse();
+    Future<Message> parse();
 
     String getCurrentUserInfo();
 
@@ -40,4 +40,6 @@ public interface ServiceInt {
     Message updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
 
     Future<User> findUser(int n);
+
+    Message addAirfoil(String shortName, String name, String details, String fileAirfoil, List<String> files);
 }

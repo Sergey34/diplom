@@ -197,21 +197,22 @@ public class ServiceImpl implements ServiceInt {
 
 
     @Override
-    public Message parse() {
+    @Async("executor")
+    public Future<Message> parse() {
         if (!parsingIsStarting) {
             parsingIsStarting = true;
             try {
                 parserService.init();
-                return new Message("Данные успешно загружены", SC_OK);
+                return new AsyncResult<Message>(new Message("Данные успешно загружены", SC_OK));
             } catch (Exception e) {
                 LOGGER.warn("ошибка инициализации базы {}", Arrays.asList(e.getStackTrace()));
                 e.printStackTrace();
-                return new MessageError("Произошла ошибка при загрузке данных", SC_NOT_IMPLEMENTED, e.getStackTrace());
+                return new AsyncResult<Message>(new MessageError("Произошла ошибка при загрузке данных", SC_NOT_IMPLEMENTED, e.getStackTrace()));
             } finally {
                 parsingIsStarting = false;
             }
         } else {
-            return new Message("В данный момент данные уже кем-то обновляются. Необходимо дождаться завершения обновления", SC_FORBIDDEN);
+            return new AsyncResult<Message>(new Message("В данный момент данные уже кем-то обновляются. Необходимо дождаться завершения обновления", SC_FORBIDDEN));
         }
     }
 
@@ -287,6 +288,11 @@ public class ServiceImpl implements ServiceInt {
             e.printStackTrace();
         }
         return new AsyncResult<>(results);
+    }
+
+    @Override
+    public Message addAirfoil(String shortName, String name, String details, String fileAirfoil, List<String> files) {
+        return null;
     }
 
 
