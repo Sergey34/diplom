@@ -16,7 +16,6 @@ import net.sergey.diplom.service.parser.ParserAirfoil;
 import net.sergey.diplom.service.parser.ParserService;
 import net.sergey.diplom.service.spline.AirfoilStlGenerator;
 import net.sergey.diplom.service.utils.BuilderGraphs;
-import net.sergey.diplom.service.utils.UtilRoles;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import net.sergey.diplom.service.utils.imagehandlers.ImageHandler;
 import net.sergey.diplom.service.utils.imagehandlers.Xy;
@@ -77,7 +76,7 @@ public class ServiceImpl implements ServiceInt {
         user.setEnabled(1);
         user.setPassword(userView.getPassword());
         user.setUserName(userView.getName());
-        user.setUserRoles(UtilRoles.findUserRoleByName(userView.getRole()));
+        user.setUserRoles(findUserRoleByName(userView.getRole()));
         try {
             dao.addUser(user);
             return new Message("Пользователь успешно создан", SC_OK);
@@ -94,8 +93,24 @@ public class ServiceImpl implements ServiceInt {
 
     @PostConstruct
     public void init() {
-        UtilRoles.init(dao.getAllUserRoles());
         PATH = servletContext.getRealPath("/resources/");
+    }
+
+    private   Set<UserRole> findUserRoleByName(List<String> roleNames) {
+        final Map<String, UserRole> userRoleMap = initRoleMap();
+        Set<UserRole> userRoles = new HashSet<>();
+        for (String roleName : roleNames) {
+            userRoles.add(userRoleMap.get(roleName));
+        }
+        return userRoles;
+    }
+
+    private Map<String, UserRole> initRoleMap() {
+        Map<String, UserRole> userRoleMap = new HashMap<>();
+        for (UserRole userRole : dao.getAllUserRoles()) {
+            userRoleMap.put(userRole.getRole(), userRole);
+        }
+        return userRoleMap;
     }
 
     @Override
