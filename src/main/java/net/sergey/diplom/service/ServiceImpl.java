@@ -273,23 +273,6 @@ public class ServiceImpl implements ServiceInt {
         return coordinates;
     }
 
-
-    @Override
-    @Async("executor")
-    public Future<User> findUser(int n) {
-        LOGGER.info("Looking up " + n);
-        User results = new User();
-        results.setUserName("qweqw");
-        results.setId(42);
-        results.setPassword("342342");
-        try {
-            Thread.sleep(n);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return new AsyncResult<>(results);
-    }
-
     @Override
     public Message addAirfoil(String shortName, String name, String details, String fileAirfoil, List<String> files) {
         return null;
