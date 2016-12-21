@@ -96,8 +96,9 @@ public class ServiceImpl implements ServiceInt {
         PATH = servletContext.getRealPath("/resources/");
     }
 
-    private   Set<UserRole> findUserRoleByName(List<String> roleNames) {
-        final Map<String, UserRole> userRoleMap = initRoleMap();
+
+    private Set<UserRole> findUserRoleByName(List<String> roleNames) {
+        Map<String, UserRole> userRoleMap = initUserRoleMap();
         Set<UserRole> userRoles = new HashSet<>();
         for (String roleName : roleNames) {
             userRoles.add(userRoleMap.get(roleName));
@@ -105,7 +106,7 @@ public class ServiceImpl implements ServiceInt {
         return userRoles;
     }
 
-    private Map<String, UserRole> initRoleMap() {
+    private Map<String,UserRole> initUserRoleMap() {
         Map<String, UserRole> userRoleMap = new HashMap<>();
         for (UserRole userRole : dao.getAllUserRoles()) {
             userRoleMap.put(userRole.getRole(), userRole);
@@ -196,21 +197,22 @@ public class ServiceImpl implements ServiceInt {
 
 
     @Override
-    public Message parse() {
+    @Async("executor")
+    public Future<Message> parse() {
         if (!parsingIsStarting) {
             parsingIsStarting = true;
             try {
                 parserService.init();
-                return new Message("Данные успешно загружены", SC_OK);
+                return new AsyncResult<Message>(new Message("Данные успешно загружены", SC_OK));
             } catch (Exception e) {
                 LOGGER.warn("ошибка инициализации базы {}", Arrays.asList(e.getStackTrace()));
                 e.printStackTrace();
-                return new MessageError("Произошла ошибка при загрузке данных", SC_NOT_IMPLEMENTED, e.getStackTrace());
+                return new AsyncResult<Message>(new MessageError("Произошла ошибка при загрузке данных", SC_NOT_IMPLEMENTED, e.getStackTrace()));
             } finally {
                 parsingIsStarting = false;
             }
         } else {
-            return new Message("В данный момент данные уже кем-то обновляются. Необходимо дождаться завершения обновления", SC_FORBIDDEN);
+            return new AsyncResult<Message>(new Message("В данный момент данные уже кем-то обновляются. Необходимо дождаться завершения обновления", SC_FORBIDDEN));
         }
     }
 
@@ -271,21 +273,9 @@ public class ServiceImpl implements ServiceInt {
         return coordinates;
     }
 
-
     @Override
-    @Async("executor")
-    public Future<User> findUser(int n) {
-        LOGGER.info("Looking up " + n);
-        User results = new User();
-        results.setUserName("qweqw");
-        results.setId(42);
-        results.setPassword("342342");
-        try {
-            Thread.sleep(n);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return new AsyncResult<>(results);
+    public Message addAirfoil(String shortName, String name, String details, String fileAirfoil, List<String> files) {
+        return null;
     }
 
 
