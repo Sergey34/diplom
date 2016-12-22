@@ -1,5 +1,6 @@
 package net.sergey.diplom.rest;
 
+import net.sergey.diplom.domain.model.AirfoilEdit;
 import net.sergey.diplom.domain.model.UserView;
 import net.sergey.diplom.domain.model.messages.Message;
 import net.sergey.diplom.service.ServiceInt;
@@ -35,14 +36,8 @@ public class RestWriteController {
     }
 
     @RequestMapping(value = "/addAirfoilForStringCsv", method = RequestMethod.POST)
-    public Message addAirfoilForStringCsv(@RequestParam("airfoilName") String name,
-                                          @RequestParam("ShortName") String shortName,
-                                          @RequestParam("Details") String details,
-                                          @RequestParam("data") Object data) {
-        System.out.println(name);
-        System.out.println(shortName);
-        System.out.println(details);
-        System.out.println(data);
+    public Message addAirfoilForStringCsv(@RequestBody AirfoilEdit airfoilEdit) {
+        System.out.println(airfoilEdit);
         return null;/*service.addAirfoil(shortName, name, details, fileAirfoil, files);*/
     }
 

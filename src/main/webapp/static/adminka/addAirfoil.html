@@ -167,7 +167,7 @@
                 return document.getElementById('tabular' + i).getElementsByTagName('tbody')[0].childElementCount
             }
             function saveWab() {
-                let resultCSVList = {};
+                let resultCSVList = [];
                 for (let i = 0; i < number; i++) {
                     let resultCSV = "Xfoil polar. Reynolds number fixed. Mach  number fixed\n";
                     let airfoilName = document.getElementById('ShortName').value;
@@ -194,10 +194,9 @@
                         }
                         resultCSV += '\n';
                     }
-                    let resultCsvObj = {
-                        fileName: fileName,
-                        data: resultCSV
-                    };
+                    let resultCsvObj = {};
+                    resultCsvObj["fileName"] = fileName;
+                    resultCsvObj["data"] = resultCSV;
 
                     console.log(resultCSV);
                     resultCSVList[i] = resultCsvObj;
@@ -205,8 +204,8 @@
 
                 let data = {};
                 data["airfoilName"] = $("#airfoilName").val();
-                data["ShortName"] = $("#ShortName").val();
-                data["Details"] = $("#Details").val();
+                data["shortName"] = $("#ShortName").val();
+                data["details"] = $("#Details").val();
                 data["data"] = resultCSVList;
                 console.log(data);
                 $(document).ready(function () {
@@ -219,7 +218,6 @@
                         timeout: 600000
                     });
                 });
-                //todo отправить в контроллер
             }
         </script>
 
