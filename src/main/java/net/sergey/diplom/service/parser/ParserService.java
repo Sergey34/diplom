@@ -74,13 +74,13 @@ public class ParserService {
 
     private List<String> parseMenu() throws IOException {
         eventService.clearProgressMap();
-        eventService.updateProgress("menu", 0);
+        eventService.updateProgress("menu", 0.0);
         final List<String> airfoilMenu = new ArrayList<>();
         Element mmenu = getJsoupConnect(HTTP_AIRFOIL_TOOLS_COM, TIMEOUT).get().body().getElementsByClass("mmenu").first();
         Elements menuList = mmenu.getElementsByTag("ul");
         Elements headerMenu = mmenu.getElementsByTag("h3");
         List<Menu> menus = new ArrayList<>();
-        eventService.updateProgress("menu", 20);
+        eventService.updateProgress("menu", 20.0);
         for (int i = 0; i < menuList.size(); i++) {
             Element menuElement = menuList.get(i);
             Elements element = headerMenu.get(i).getElementsByTag("h3");
@@ -99,7 +99,7 @@ public class ParserService {
                             eventService.addKey(prefix);
                             airfoilMenu.add(prefix);
                             menuItems.add(menuItem);
-                            eventService.updateProgress("menu", eventService.getProgressValueByKey("menu") + 70 / links.size());
+                            eventService.updateProgress("menu", eventService.getProgressValueByKey("menu") + 70.0 / links.size());
                         }
                     }
                 }
@@ -111,7 +111,7 @@ public class ParserService {
 
         try {
             dao.addMenus(menus);
-            eventService.updateProgress("menu", 100);
+            eventService.updateProgress("menu", 100.0);
         } catch (ConstraintViolationException e) {
             LOGGER.warn("Элемент меню: {} \n уже существует в базе {}", menus, e.getStackTrace());
             throw e;

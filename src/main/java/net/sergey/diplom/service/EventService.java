@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class EventService {
-    private final Map<String, Integer> progressMap = new ConcurrentHashMap<>();
+    private final Map<String, String> progressMap = new ConcurrentHashMap<>();
     private final List<SseEmitter> emitters = new ArrayList<>();
 
     public List<SseEmitter> getEmitters() {
@@ -32,8 +32,9 @@ public class EventService {
         progressMap.clear();
     }
 
-    public void updateProgress(String key, int value) {
-        progressMap.put(key, value);
+    public void updateProgress(String key, Double value) {
+        String valueStr = String.format("%.2f", value);
+        progressMap.put(key, valueStr);
         for (SseEmitter emitter : emitters) {
             try {
                 emitter.send(progressMap, MediaType.APPLICATION_JSON);
@@ -45,11 +46,11 @@ public class EventService {
         }
     }
 
-    public int getProgressValueByKey(String key) {
-        return progressMap.get(key);
+    public double getProgressValueByKey(String key) {
+        return Double.parseDouble(progressMap.get(key));
     }
 
     public void addKey(String key) {
-        progressMap.put(key, 0);
+        progressMap.put(key, "0.0");
     }
 }

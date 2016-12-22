@@ -73,7 +73,7 @@ public class ParserAirfoil implements Callable<Void> {
             List<Airfoil> airfoils = parsePage(prefix1, airfoilList, countPages);
             dao.addAirfoils(airfoils);
         }
-        eventService.updateProgress(prefix, 100);
+        eventService.updateProgress(prefix, 100.0);
     }
 
 
@@ -93,7 +93,8 @@ public class ParserAirfoil implements Callable<Void> {
                 airfoil.setCoordinates(downloadDetailInfo(idAirfoil));
                 airfoils.add(airfoil);
                 String key = String.valueOf(prefix1.getPrefix());
-                eventService.updateProgress(key, eventService.getProgressValueByKey(key) + (90 / countPages / airfoilList.size()));
+                double value = eventService.getProgressValueByKey(key) + (90.0 / countPages / airfoilList.size());
+                eventService.updateProgress(key, value);
             }
         }
         return airfoils;
