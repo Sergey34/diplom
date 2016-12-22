@@ -3,6 +3,7 @@ package net.sergey.diplom.service;
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
+import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.domain.model.AirfoilDTO;
@@ -275,6 +276,7 @@ public class ServiceImpl implements ServiceInt {
 
     @Override
     public Message addAirfoil(String shortName, String name, String details, String fileAirfoil, List<String> files) {
+        Airfoil airfoil = new Airfoil(name, details, new Prefix(shortName.charAt(0)), shortName);
         return null;
     }
 
