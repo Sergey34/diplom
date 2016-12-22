@@ -4,8 +4,6 @@ import net.sergey.diplom.domain.model.UserView;
 import net.sergey.diplom.domain.model.messages.Message;
 import net.sergey.diplom.service.ServiceInt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,12 +35,15 @@ public class RestWriteController {
     }
 
     @RequestMapping(value = "/addAirfoilForStringCsv", method = RequestMethod.POST)
-    public Message addAirfoilForStringCsv(@RequestParam("files") List<String> files,
-                                          @RequestParam("name") String name,
+    public Message addAirfoilForStringCsv(@RequestParam("airfoilName") String name,
                                           @RequestParam("ShortName") String shortName,
                                           @RequestParam("Details") String details,
-                                          @RequestParam("fileAirfoil") String fileAirfoil) {
-        return service.addAirfoil(shortName, name, details, fileAirfoil, files);
+                                          @RequestParam("data") Object data) {
+        System.out.println(name);
+        System.out.println(shortName);
+        System.out.println(details);
+        System.out.println(data);
+        return null;/*service.addAirfoil(shortName, name, details, fileAirfoil, files);*/
     }
 
     @RequestMapping(value = "/updateAirfoil", method = RequestMethod.POST)

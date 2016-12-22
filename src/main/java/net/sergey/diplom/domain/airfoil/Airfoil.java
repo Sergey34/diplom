@@ -28,11 +28,6 @@ public class Airfoil {
     @JoinColumn(name = "prefix")
     private Prefix prefix;
 
-    @ManyToMany()
-    @JoinTable(name = "similar", joinColumns = {@JoinColumn(name = "idAirfoil")},
-            inverseJoinColumns = {@JoinColumn(name = "similarAirfoilId")})
-    private Set<Airfoil> airfoilsSimilar;
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "airfoil_coordinates", joinColumns = {@JoinColumn(name = "id_airfoil")},
             inverseJoinColumns = {@JoinColumn(name = "id_coordinates", unique = true)})
@@ -138,20 +133,6 @@ public class Airfoil {
         return result;
     }
 
-    public void addSimilar(Airfoil airfoilSimilar) {
-        if (airfoilsSimilar == null) {
-            airfoilsSimilar = new HashSet<>();
-        }
-        airfoilsSimilar.add(airfoilSimilar);
-    }
-
-    public Set<Airfoil> getAirfoilsSimilar() {
-        return airfoilsSimilar;
-    }
-
-    public void setAirfoilsSimilar(Set<Airfoil> airfoilsSimilar) {
-        this.airfoilsSimilar = airfoilsSimilar;
-    }
 
     public String getShortName() {
         return shortName;

@@ -117,7 +117,6 @@ public class DAOImpl implements DAO {
                 .createCriteria(Airfoil.class).add(Restrictions.eq("id", id)).uniqueResult();
         if (null != airfoil) {
             Hibernate.initialize(airfoil.getCoordinates());
-            Hibernate.initialize(airfoil.getAirfoilsSimilar());
         }
         return airfoil;
     }

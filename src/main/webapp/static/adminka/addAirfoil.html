@@ -71,7 +71,7 @@
                 <div id="addAirfoilWeb">
                     <label>
                         Название профиля
-                        <input type="text" value="" name="name" id="airfoilName"/>
+                        <input type="text" value="" name="airfoilName" id="airfoilName"/>
                     </label>
                     </Br>
                     <label>
@@ -81,7 +81,7 @@
                     </Br>
                     <label>
                         Детали
-                        <input type="text" value="" name="Details"/>
+                        <input type="text" value="" name="Details" id="Details"/>
                     </label>
                     </Br>
                     <input type="button" id="addTable" value="add table">
@@ -102,7 +102,7 @@
 
 
             function createLabel(id, value) {
-                var label = document.createElement('label');
+                let label = document.createElement('label');
                 label.id = id + number;
                 label.innerText = value;
                 var input = document.createElement('input');
@@ -172,7 +172,8 @@
                     let resultCSV = "Xfoil polar. Reynolds number fixed. Mach  number fixed\n";
                     let airfoilName = document.getElementById('ShortName').value;
                     let Reynolds_number = document.getElementById('input_Reynolds_number' + i).value;
-                    resultCSV += "Polar key,xf-" + airfoilName + "-" + Reynolds_number + "\n";
+                    let fileName = "xf-" + airfoilName + "-" + Reynolds_number;
+                    resultCSV += "Polar key," + fileName + "\n";
                     resultCSV += "Airfoil," + airfoilName + "\n";
                     resultCSV += "Reynolds number," + Reynolds_number + "\n";
                     resultCSV += "Ncrit," + document.getElementById('input_Ncrit' + i).value + "\n";
@@ -193,10 +194,31 @@
                         }
                         resultCSV += '\n';
                     }
+                    let resultCsvObj = {
+                        fileName: fileName,
+                        data: resultCSV
+                    };
 
                     console.log(resultCSV);
-                    resultCSVList[i] = resultCSV
+                    resultCSVList[i] = resultCsvObj;
                 }
+
+                let data = {};
+                data["airfoilName"] = $("#airfoilName").val();
+                data["ShortName"] = $("#ShortName").val();
+                data["Details"] = $("#Details").val();
+                data["data"] = resultCSVList;
+                console.log(data);
+                $(document).ready(function () {
+                    $.ajax({
+                        type: "POST",
+                        contentType: "application/json",
+                        url: "/rest/write/addAirfoilForStringCsv",
+                        data: JSON.stringify(data),
+                        dataType: 'json',
+                        timeout: 600000
+                    });
+                });
                 //todo отправить в контроллер
             }
         </script>
