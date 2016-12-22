@@ -47,8 +47,8 @@ public class AirfoilStlGenerator {
 
         Spline splineY = new Spline();
         splineY.BuildSpline(t, y, x.size());
-        List<Double> ySpline = null;
-        List<Double> xSpline = null;
+        List<Double> ySpline = new ArrayList<>();
+        List<Double> xSpline = new ArrayList<>();
         spline(t, splineY, splineX, ySpline,xSpline);
 
         String stlFileName = PATH + "/" + fileName + '_' + b + ".scad";
