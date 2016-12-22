@@ -1,5 +1,5 @@
-var LOG_IN = '<a href="login" target="_blank"> Авторизоваться</a>';
-var LOG_OUT = '<a href="logout">Выйти</a>';
+var LOG_IN = '<a href="login.html" target="_blank"> Авторизоваться</a>';
+var LOG_OUT = '<a href="/logout">Выйти</a>';
 $(document).ready(function () {
     $.ajax({
         url: "/rest/userInfo"

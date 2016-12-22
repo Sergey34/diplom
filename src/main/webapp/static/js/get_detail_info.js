@@ -27,7 +27,7 @@ function getDetailInfo(forEdit) {
 function fillContentDetailInfo(data) {
 
     let edit = document.getElementById('edit_link');
-    edit.setAttribute("href", "/editAirfoil?airfoilId=" + id);
+    edit.setAttribute("href", "adminka/edit_airfoil.html?airfoilId=" + id);
 
     let name = document.getElementById('name_detail');
     name.innerText = data.name;

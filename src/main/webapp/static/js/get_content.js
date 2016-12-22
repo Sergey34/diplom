@@ -41,7 +41,7 @@ function getContent() {
 
                 var links = document.createElement('div');
                 links.setAttribute('class', 'link');
-                links.innerHTML = '<a href="/getDetailInfo?airfoilId=' + element.id + '">Airfoil details</a>';
+                links.innerHTML = '<a href="detailInfo.html?airfoilId=' + element.id + '">Airfoil details</a>';
 
 
                 div.appendChild(name);
@@ -76,7 +76,7 @@ function createCursore(no) {
             for (var i = 1; i <= countItem; i++) {
                 console.log(i);
                 var item = document.createElement('a');
-                item.setAttribute("href", "/context?prefix=" + prefix + '&no=' + i);
+                item.setAttribute("href", "airfoilList.html?prefix=" + prefix + '&no=' + i);
 
                 if (no == i) {
                     item.innerHTML = '<span class="currentItem"> ' + i + ' </span>';

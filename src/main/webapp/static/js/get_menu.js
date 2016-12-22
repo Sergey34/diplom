@@ -24,7 +24,7 @@ $(document).ready(function () {
             // новый элемент
             var li = document.createElement('LI');
             // <a href="/plotter/index">Airfoil plotter</a>
-            li.innerHTML = '<a href="/context?prefix=' + element.urlCode + '\">' + element.name + '</a>';
+            li.innerHTML = '<a href="/static/airfoilList.html?prefix=' + element.urlCode + '\">' + element.name + '</a>';
             // добавление в конец
             list.appendChild(li)
         }
