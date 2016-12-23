@@ -84,6 +84,15 @@
                         <input type="text" value="" name="Details" id="Details"/>
                     </label>
                     </Br>
+                    <div id="view">
+                        <input type="button" value="Add New Row"
+                               onclick='javascript:$("#viewTab").tabularInput("addRow")'>
+                        <input type="button" value="Delete Last Row"
+                               onclick="javascript:$('#viewTab').tabularInput('deleteRow')">
+                        <div id="viewTab">
+                        </div>
+                    </div>
+                    </Br>
                     <input type="button" id="addTable" value="add table">
                 </div>
                 <input type="button" id="saveWab" value="add airfoil">
@@ -92,6 +101,16 @@
         </div>
 
         <script>
+            jQuery('#viewTab').tabularInput({
+                'rows': 10,
+                'columns': 2,
+                'minRows': 10,
+                'newRowOnTab': true,
+                'columnHeads': ['x', 'y'],
+                'name': '',
+                'animate': true
+            });
+
             var number = 0;
             var link = document.querySelector('link[rel=import]');
             var content = link.import.querySelector('#menu');
@@ -164,7 +183,7 @@
                 return table['[' + i + '][' + j + ']'].value;
             }
             function tableLength(i) {
-                return document.getElementById('tabular' + i).getElementsByTagName('tbody')[0].childElementCount
+                return document.getElementById(i).getElementsByTagName('tbody')[0].childElementCount
             }
             function saveWab() {
                 let resultCSVList = [];
@@ -184,8 +203,9 @@
                     resultCSV += "\n";
                     resultCSV += 'alpha,CL,CD,CDp,CM,Top_Xtr,Bot_Xtr\n';
 
+
                     let table = document.getElementById('tabular' + i).getElementsByTagName('*');
-                    for (let j = 1; j <= tableLength(i); j++) {
+                    for (let j = 1; j <= tableLength('tabular' + i); j++) {
                         for (let k = 0; k < 7; k++) {
                             resultCSV += getTableItem(k, j, table);
                             if (k != 6) {
@@ -201,12 +221,25 @@
                     console.log(resultCSV);
                     resultCSVList[i] = resultCsvObj;
                 }
+                let tableView = document.getElementById('viewTab').getElementsByTagName('*');
+                let viewCsv = "";
+                for (let j = 1; j <= tableLength('viewTab'); j++) {
+                    for (let k = 0; k < 2; k++) {
+                        viewCsv += getTableItem(k, j, tableView);
+                        if (k != 1) {
+                            viewCsv += ',';
+                        }
+                    }
+                    viewCsv += '\n';
+                }
+
 
                 let data = {};
                 data["airfoilName"] = $("#airfoilName").val();
                 data["shortName"] = $("#ShortName").val();
                 data["details"] = $("#Details").val();
                 data["data"] = resultCSVList;
+                data["viewCsv"] = viewCsv;
                 console.log(data);
                 $(document).ready(function () {
                     $.ajax({

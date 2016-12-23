@@ -6,7 +6,16 @@ public class AirfoilEdit {
     private String airfoilName;
     private String shortName;
     private String details;
+    private String viewCsv;
     private List<Data> data;
+
+    public String getViewCsv() {
+        return viewCsv;
+    }
+
+    public void setViewCsv(String viewCsv) {
+        this.viewCsv = viewCsv;
+    }
 
     public String getAirfoilName() {
         return airfoilName;
