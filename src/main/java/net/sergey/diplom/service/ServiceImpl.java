@@ -55,6 +55,11 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
+    public boolean parsingIsStarting() {
+        return parsingIsStarting;
+    }
+
+    @Override
     public List<Menu> getMenu() {
         List<Menu> allMenu = dao.getAllMenu();
         for (Menu menu : allMenu) {
@@ -197,20 +202,16 @@ public class ServiceImpl implements ServiceInt {
     @Override
     @Async("executor")
     public Future<Message> parse() {
-        if (!parsingIsStarting) {
-            parsingIsStarting = true;
-            try {
-                parserService.init();
-                return new AsyncResult<Message>(new Message("Данные успешно загружены", SC_OK));
-            } catch (Exception e) {
-                LOGGER.warn("ошибка инициализации базы {}", Arrays.asList(e.getStackTrace()));
-                e.printStackTrace();
-                return new AsyncResult<Message>(new MessageError("Произошла ошибка при загрузке данных", SC_NOT_IMPLEMENTED, e.getStackTrace()));
-            } finally {
-                parsingIsStarting = false;
-            }
-        } else {
-            return new AsyncResult<Message>(new Message("В данный момент данные уже кем-то обновляются. Необходимо дождаться завершения обновления", SC_FORBIDDEN));
+        parsingIsStarting = true;
+        try {
+            parserService.init();
+            return new AsyncResult<Message>(new Message("Данные успешно загружены", SC_OK));
+        } catch (Exception e) {
+            LOGGER.warn("ошибка инициализации базы {}", Arrays.asList(e.getStackTrace()));
+            e.printStackTrace();
+            return new AsyncResult<Message>(new MessageError("Произошла ошибка при загрузке данных", SC_NOT_IMPLEMENTED, e.getStackTrace()));
+        } finally {
+            parsingIsStarting = false;
         }
     }
 

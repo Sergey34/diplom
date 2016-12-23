@@ -5,11 +5,14 @@ import net.sergey.diplom.domain.model.UserView;
 import net.sergey.diplom.domain.model.messages.Message;
 import net.sergey.diplom.service.ServiceInt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.concurrent.Future;
+
+import static net.sergey.diplom.domain.model.messages.Message.SC_FORBIDDEN;
 
 @RequestMapping(value = "/rest/write")
 @RestController(value = "write")
@@ -52,6 +55,9 @@ public class RestWriteController {
 
     @RequestMapping(value = "/init", method = RequestMethod.GET)
     public Future<Message> init() {
+        if (service.parsingIsStarting()) {
+            return new AsyncResult<Message>(new Message("В данный момент данные уже кем-то обновляются. Необходимо дождаться завершения обновления", SC_FORBIDDEN));
+        }
         return service.parse();
     }
 

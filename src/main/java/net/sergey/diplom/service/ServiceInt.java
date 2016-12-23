@@ -42,4 +42,7 @@ public interface ServiceInt {
     Message addAirfoil(AirfoilEdit airfoilEdit);
 
     Message stop();
+
+    boolean parsingIsStarting();
+
 }
