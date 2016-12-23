@@ -4,9 +4,9 @@ import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.model.AirfoilDTO;
 import net.sergey.diplom.domain.model.AirfoilDetail;
+import net.sergey.diplom.domain.model.AirfoilEdit;
 import net.sergey.diplom.domain.model.UserView;
 import net.sergey.diplom.domain.model.messages.Message;
-import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,5 +39,5 @@ public interface ServiceInt {
 
     Message updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
 
-    Message addAirfoil(String shortName, String name, String details, String fileAirfoil, List<String> files);
+    Message addAirfoil(AirfoilEdit airfoilEdit);
 }

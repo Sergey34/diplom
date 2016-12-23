@@ -3,12 +3,9 @@ package net.sergey.diplom.service;
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
-import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
-import net.sergey.diplom.domain.model.AirfoilDTO;
-import net.sergey.diplom.domain.model.AirfoilDetail;
-import net.sergey.diplom.domain.model.UserView;
+import net.sergey.diplom.domain.model.*;
 import net.sergey.diplom.domain.model.messages.Message;
 import net.sergey.diplom.domain.model.messages.MessageError;
 import net.sergey.diplom.domain.user.User;
@@ -262,6 +259,29 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
+    public Message addAirfoil(AirfoilEdit airfoilEdit) {
+        Airfoil airfoil = new Airfoil();
+        airfoil.setName(airfoilEdit.getAirfoilName());
+        airfoil.setShortName(airfoilEdit.getShortName());
+        airfoil.setCoordView(airfoilEdit.getViewCsv());
+        airfoil.setDescription(airfoilEdit.getDetails());
+        Set<Coordinates> coordinates = new HashSet<>();
+        for (Data data : airfoilEdit.getData()) {
+            Coordinates coordinateItem = new Coordinates(data.getData(), data.getFileName());
+            coordinateItem.setRenolgs(data.getReynolds());
+            coordinateItem.setNCrit(data.getnCrit());
+            coordinateItem.setMaxClCd(data.getMaxClCd());
+            coordinates.add(coordinateItem);
+            coordinates.add(coordinateItem);
+        }
+        airfoil.setCoordinates(coordinates);
+        //// TODO: 23.12.16 сделать проверку на возможность положить такой аирфоил
+        dao.addAirfoil(airfoil);
+        return new MessageError("сделай уже проверку, ленивая задница!", 111, null);
+
+    }
+
+    @Override
     public int getCountAirfoilByPrefix(char prefix) {
         return dao.getCountAirfoilByPrefix(prefix);
     }
@@ -273,12 +293,4 @@ public class ServiceImpl implements ServiceInt {
         }
         return coordinates;
     }
-
-    @Override
-    public Message addAirfoil(String shortName, String name, String details, String fileAirfoil, List<String> files) {
-        Airfoil airfoil = new Airfoil(name, details, new Prefix(shortName.charAt(0)), shortName);
-        return null;
-    }
-
-
 }

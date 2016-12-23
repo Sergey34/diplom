@@ -217,6 +217,11 @@
                     let resultCsvObj = {};
                     resultCsvObj["fileName"] = fileName;
                     resultCsvObj["data"] = resultCSV;
+                    resultCsvObj["reynolds"] = Reynolds_number;
+                    resultCsvObj["nCrit"] = document.getElementById('input_Ncrit' + i).value;
+                    resultCsvObj["maxClCd"] = document.getElementById('input_MaxClCd' + i).value;
+
+
 
                     console.log(resultCSV);
                     resultCSVList[i] = resultCsvObj;
