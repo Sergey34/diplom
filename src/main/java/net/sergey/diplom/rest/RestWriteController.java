@@ -1,9 +1,6 @@
 package net.sergey.diplom.rest;
 
-import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.model.AirfoilEdit;
-import net.sergey.diplom.domain.model.Data;
 import net.sergey.diplom.domain.model.UserView;
 import net.sergey.diplom.domain.model.messages.Message;
 import net.sergey.diplom.service.ServiceInt;
@@ -11,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Future;
 
 @RequestMapping(value = "/rest/write")
@@ -42,8 +37,6 @@ public class RestWriteController {
 
     @RequestMapping(value = "/addAirfoilForStringCsv", method = RequestMethod.POST)
     public Message addAirfoilForStringCsv(@RequestBody AirfoilEdit airfoilEdit) {
-        System.out.println(airfoilEdit);
-
         return service.addAirfoil(airfoilEdit);
     }
 
