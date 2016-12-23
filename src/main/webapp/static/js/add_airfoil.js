@@ -84,7 +84,7 @@ function createLabel(id, value) {
     let label = document.createElement('label');
     label.id = id + number;
     label.innerText = value;
-    var input = document.createElement('input');
+    let input = document.createElement('input');
     input.id = 'input_' + id + number;
     input.setAttribute('type', 'text');
     label.appendChild(input);
@@ -93,25 +93,25 @@ function createLabel(id, value) {
 }
 function addTable() {
 
-    var Reynolds_number = createLabel('Reynolds_number', "Reynolds number");
-    var Ncrit = createLabel('Ncrit', "Ncrit");
-    var Mach = createLabel('Mach', "Mach");
-    var MaxClCd = createLabel('MaxClCd', "Max Cl/Cd");
-    var MaxClCdalpha = createLabel('MaxClCdalpha', "Max Cl/Cd alpha");
+    let Reynolds_number = createLabel('Reynolds_number', "Reynolds number");
+    let Ncrit = createLabel('Ncrit', "Ncrit");
+    let Mach = createLabel('Mach', "Mach");
+    let MaxClCd = createLabel('MaxClCd', "Max Cl/Cd");
+    let MaxClCdalpha = createLabel('MaxClCdalpha', "Max Cl/Cd alpha");
 
 
-    var tableDiv = document.createElement('div');
+    let tableDiv = document.createElement('div');
     tableDiv.setAttribute("class", 'example');
-    var btn = document.createElement('input');
+    let btn = document.createElement('input');
     btn.setAttribute("type", 'button');
     btn.setAttribute("value", 'Add New Row');
     btn.setAttribute("onClick", 'javascript:$("#tabular' + number + '").tabularInput("addRow")');
-    var btn2 = document.createElement('input');
+    let btn2 = document.createElement('input');
     btn2.setAttribute("type", 'button');
     btn2.setAttribute("value", 'Delete Last Row');
     btn2.setAttribute("onClick", 'javascript:$("#tabular' + number + '").tabularInput("deleteRow")');
 
-    var table = document.createElement('div');
+    let table = document.createElement('div');
     table.id = 'tabular' + number;
 
     tableDiv.appendChild(Reynolds_number);
@@ -124,7 +124,7 @@ function addTable() {
     tableDiv.appendChild(document.createElement('Br'));
     tableDiv.appendChild(table);
 
-    var addAirfoilWeb = document.getElementById('addAirfoilWeb');
+    let addAirfoilWeb = document.getElementById('addAirfoilWeb');
     addAirfoilWeb.appendChild(tableDiv);
     jQuery('#tabular' + number).tabularInput({
         'rows': 10,

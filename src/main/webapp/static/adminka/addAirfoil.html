@@ -109,8 +109,8 @@
             });
 
 
-            var link = document.querySelector('link[rel=import]');
-            var content = link.import.querySelector('#menu');
+            let link = document.querySelector('link[rel=import]');
+            let content = link.import.querySelector('#menu');
             document.getElementById('middle').appendChild(content.cloneNode(true));
 
             document.getElementById("addTable").onclick = addTable;
