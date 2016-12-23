@@ -104,7 +104,7 @@ public class ServiceImpl implements ServiceInt {
         return userRoles;
     }
 
-    private Map<String,UserRole> initUserRoleMap() {
+    private Map<String, UserRole> initUserRoleMap() {
         Map<String, UserRole> userRoleMap = new HashMap<>();
         for (UserRole userRole : dao.getAllUserRoles()) {
             userRoleMap.put(userRole.getRole(), userRole);
@@ -238,8 +238,16 @@ public class ServiceImpl implements ServiceInt {
 
     private Message addUpdateAirfoil(MultipartFile fileAirfoil, List<MultipartFile> files, Airfoil airfoil) {
         try {
-            airfoil.setCoordView(parserService.parseFileAirfoil(fileAirfoil));
-            airfoil.setCoordinates(createCoordinateSet(files));
+            if (fileAirfoil == null || fileAirfoil.isEmpty()) {
+                airfoil.setCoordView(dao.getAirfoilById(airfoil.getId()).getCoordView());
+            } else {
+                airfoil.setCoordView(parserService.parseFileAirfoil(fileAirfoil));
+            }
+            if (files == null || files.size() == 1 && files.get(0).isEmpty()) {
+                airfoil.setCoordinates(dao.getAirfoilById(airfoil.getId()).getCoordinates());
+            } else {
+                airfoil.setCoordinates(createCoordinateSet(files));
+            }
             dao.addAirfoil(airfoil);
         } catch (Exception e) {
             e.printStackTrace();

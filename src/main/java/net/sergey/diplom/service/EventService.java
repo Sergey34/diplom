@@ -8,6 +8,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -32,8 +33,8 @@ public class EventService {
         progressMap.clear();
     }
 
-    public void updateProgress(String key, Double value) {
-        String valueStr = String.format("%.2f", value);
+    public synchronized void updateProgress(String key, Double value) {
+        String valueStr = String.format(Locale.ENGLISH, "%.2f", value);
         progressMap.put(key, valueStr);
         for (SseEmitter emitter : emitters) {
             try {
