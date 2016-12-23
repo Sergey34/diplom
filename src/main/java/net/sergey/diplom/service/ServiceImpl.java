@@ -290,6 +290,13 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
+    public Message stop() {
+        parserService.stop();
+        parsingIsStarting = false;
+        return null;
+    }
+
+    @Override
     public int getCountAirfoilByPrefix(char prefix) {
         return dao.getCountAirfoilByPrefix(prefix);
     }

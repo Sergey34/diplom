@@ -54,4 +54,9 @@ public class RestWriteController {
     public Future<Message> init() {
         return service.parse();
     }
+
+    @RequestMapping(value = "/stop", method = RequestMethod.GET)
+    public Message stop() {
+        return service.stop();
+    }
 }

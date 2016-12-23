@@ -33,7 +33,7 @@ public class ParserService {
     private static final Pattern GET_MENU_TITLE_PATTERN = Pattern.compile("^(.+) \\([0-9]*\\)$");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static final String HTTP_AIRFOIL_TOOLS_COM = "http://airfoiltools.com/";
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private final ApplicationContext applicationContext;
     private final DAO dao;
     private final EventService eventService;
@@ -157,5 +157,16 @@ public class ParserService {
         } else {
             throw new IllegalArgumentException("Невалидный файл для графика профиля");
         }
+    }
+
+    public void stop() {
+        executorService.shutdownNow();
+        try {
+            executorService.awaitTermination(60, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            LOGGER.warn(" {}", e);
+        }
+        executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
 }

@@ -40,4 +40,6 @@ public interface ServiceInt {
     Message updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
 
     Message addAirfoil(AirfoilEdit airfoilEdit);
+
+    Message stop();
 }
