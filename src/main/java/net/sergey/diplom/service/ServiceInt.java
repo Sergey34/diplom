@@ -45,4 +45,5 @@ public interface ServiceInt {
 
     boolean parsingIsStarting();
 
+    Message updateAirfoil(AirfoilEdit airfoilEdit);
 }

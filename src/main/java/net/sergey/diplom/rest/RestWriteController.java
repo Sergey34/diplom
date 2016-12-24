@@ -52,6 +52,11 @@ public class RestWriteController {
         return service.updateAirfoil(shortName, name, details, fileAirfoil, files);
     }
 
+    @RequestMapping(value = "/updateAirfoilStringCsv", method = RequestMethod.POST)
+    public Message updateAirfoilStringCsv(@RequestBody AirfoilEdit airfoilEdit) {
+        return service.updateAirfoil(airfoilEdit);
+    }
+
 
     @RequestMapping(value = "/init", method = RequestMethod.GET)
     public Future<Message> init() {

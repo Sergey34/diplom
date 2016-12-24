@@ -61,6 +61,11 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
+    public Message updateAirfoil(AirfoilEdit airfoilEdit) {
+        return null;
+    }
+
+    @Override
     public List<Menu> getMenu() {
         List<Menu> allMenu = dao.getAllMenu();
         for (Menu menu : allMenu) {
@@ -270,6 +275,9 @@ public class ServiceImpl implements ServiceInt {
 
     @Override
     public Message addAirfoil(AirfoilEdit airfoilEdit) {
+        if (dao.getAirfoilById(airfoilEdit.getShortName().hashCode()) != null) {
+            return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
+        }
         Airfoil airfoil = new Airfoil();
         airfoil.setName(airfoilEdit.getAirfoilName());
         airfoil.setShortName(airfoilEdit.getShortName());
@@ -286,7 +294,6 @@ public class ServiceImpl implements ServiceInt {
             coordinates.add(coordinateItem);
         }
         airfoil.setCoordinates(coordinates);
-        //// TODO: 23.12.16 сделать проверку на возможность положить такой аирфоил
         dao.addAirfoil(airfoil);
         return new MessageError("сделай уже проверку, ленивая задница!", 111, null);
 
