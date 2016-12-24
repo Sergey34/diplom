@@ -3,6 +3,7 @@ package net.sergey.diplom.service;
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
+import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.domain.model.*;
@@ -274,6 +275,7 @@ public class ServiceImpl implements ServiceInt {
         airfoil.setShortName(airfoilEdit.getShortName());
         airfoil.setCoordView(airfoilEdit.getViewCsv());
         airfoil.setDescription(airfoilEdit.getDetails());
+        airfoil.setPrefix(new Prefix(airfoilEdit.getShortName().charAt(0)));
         Set<Coordinates> coordinates = new HashSet<>();
         for (Data data : airfoilEdit.getData()) {
             Coordinates coordinateItem = new Coordinates(data.getData(), data.getFileName());
