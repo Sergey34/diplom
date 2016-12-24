@@ -62,7 +62,34 @@ public class ServiceImpl implements ServiceInt {
 
     @Override
     public Message updateAirfoil(AirfoilEdit airfoilEdit) {
-        return null;
+        Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
+        try {
+            dao.addAirfoil(airfoil);
+        } catch (Exception e) {
+            LOGGER.warn("ошибка при обновлении airfoil {}", Arrays.toString(e.getStackTrace()));
+            return new Message("Ошибка при добавлении в базу нового airfoil", SC_CONFLICT);
+        }
+        return new Message("Airfoil успешно обновлен", SC_OK);
+    }
+
+    private Airfoil getAirfoilByAirfoilEdit(AirfoilEdit airfoilEdit) {
+        Airfoil airfoil = new Airfoil();
+        airfoil.setName(airfoilEdit.getAirfoilName());
+        airfoil.setShortName(airfoilEdit.getShortName());
+        airfoil.setCoordView(airfoilEdit.getViewCsv());
+        airfoil.setDescription(airfoilEdit.getDetails());
+        airfoil.setPrefix(new Prefix(airfoilEdit.getShortName().charAt(0)));
+        Set<Coordinates> coordinates = new HashSet<>();
+        for (Data data : airfoilEdit.getData()) {
+            Coordinates coordinateItem = new Coordinates(data.getData(), data.getFileName());
+            coordinateItem.setRenolgs(data.getReynolds());
+            coordinateItem.setNCrit(data.getnCrit());
+            coordinateItem.setMaxClCd(data.getMaxClCd());
+            coordinates.add(coordinateItem);
+            coordinates.add(coordinateItem);
+        }
+        airfoil.setCoordinates(coordinates);
+        return airfoil;
     }
 
     @Override
@@ -282,22 +309,7 @@ public class ServiceImpl implements ServiceInt {
         if (dao.getAirfoilById(airfoilEdit.getShortName().hashCode()) != null) {
             return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
         }
-        Airfoil airfoil = new Airfoil();
-        airfoil.setName(airfoilEdit.getAirfoilName());
-        airfoil.setShortName(airfoilEdit.getShortName());
-        airfoil.setCoordView(airfoilEdit.getViewCsv());
-        airfoil.setDescription(airfoilEdit.getDetails());
-        airfoil.setPrefix(new Prefix(airfoilEdit.getShortName().charAt(0)));
-        Set<Coordinates> coordinates = new HashSet<>();
-        for (Data data : airfoilEdit.getData()) {
-            Coordinates coordinateItem = new Coordinates(data.getData(), data.getFileName());
-            coordinateItem.setRenolgs(data.getReynolds());
-            coordinateItem.setNCrit(data.getnCrit());
-            coordinateItem.setMaxClCd(data.getMaxClCd());
-            coordinates.add(coordinateItem);
-            coordinates.add(coordinateItem);
-        }
-        airfoil.setCoordinates(coordinates);
+        Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
         try {
             dao.addAirfoil(airfoil);
         } catch (Exception e) {

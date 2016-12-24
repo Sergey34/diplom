@@ -56,6 +56,7 @@ public class Airfoil {
     public Airfoil(String name, String details, String shortName) {
         this.name = name;
         this.shortName = shortName;
+        this.prefix = new Prefix(shortName.toUpperCase().charAt(0));
         this.description = details;
         this.image = "/resources/airfoil_img/" + shortName + ".png";//// TODO: 17.11.16 убрать в TDO
         this.id = shortName.hashCode();
