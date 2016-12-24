@@ -161,60 +161,65 @@ function fillEditableContentDetailInfoEditableTable(data) {
     let coordinates = data.coordinates;
     number = coordinates.length;
     for (let i = 0; i < number; i++) {
-        let tabular = document.createElement('div');
-        tabular.id = 'tabular' + i;
-        let tableDiv = document.createElement('div');
-        tableDiv.setAttribute("class", 'example');
-        let btn = document.createElement('input');
-        btn.setAttribute("type", 'button');
-        btn.setAttribute("value", 'Add New Row');
-        btn.setAttribute("onClick", 'javascript:$("#tabular' + i + '").tabularInput("addRow")');
-        let btn2 = document.createElement('input');
-        btn2.setAttribute("type", 'button');
-        btn2.setAttribute("value", 'Delete Last Row');
-        btn2.setAttribute("onClick", 'javascript:$("#tabular' + i + '").tabularInput("deleteRow")');
-        document.getElementById('editableTables').appendChild(btn);
-        document.getElementById('editableTables').appendChild(btn2);
-        let coordinatesItem = coordinates[i];
+        (function (i) {
+            setTimeout(function () {
+                let tabular = document.createElement('div');
+                tabular.id = 'tabular' + i;
+                let tableDiv = document.createElement('div');
+                tableDiv.setAttribute("class", 'example');
+                let btn = document.createElement('input');
+                btn.setAttribute("type", 'button');
+                btn.setAttribute("value", 'Add New Row');
+                btn.setAttribute("onClick", 'javascript:$("#tabular' + i + '").tabularInput("addRow")');
+                let btn2 = document.createElement('input');
+                btn2.setAttribute("type", 'button');
+                btn2.setAttribute("value", 'Delete Last Row');
+                btn2.setAttribute("onClick", 'javascript:$("#tabular' + i + '").tabularInput("deleteRow")');
+                document.getElementById('editableTables').appendChild(btn);
+                document.getElementById('editableTables').appendChild(btn2);
+                let coordinatesItem = coordinates[i];
 
 
-        let tableCsv = document.createElement('div');
-        tableCsv.id = 'tableCsv' + i;
+                let tableCsv = document.createElement('div');
+                tableCsv.id = 'tableCsv' + i;
 
 
-        let Reynolds_number = createLabel('Reynolds_number', "Reynolds number", i, coordinatesItem.renolgs);
-        let Ncrit = createLabel('Ncrit', "Ncrit", i, coordinatesItem.nCrit);
-        let Mach = createLabel('Mach', "Mach", i, "Mach");//todo получить MaxClCdalpha
-        let MaxClCd = createLabel('MaxClCd', "Max Cl/Cd", i, coordinatesItem.maxClCd);
-        let MaxClCdalpha = createLabel('MaxClCdalpha', "Max Cl/Cd alpha", i, "MaxClCdalpha");//todo получить MaxClCdalpha
+                let Reynolds_number = createLabel('Reynolds_number', "Reynolds number", i, coordinatesItem.renolgs);
+                let Ncrit = createLabel('Ncrit', "Ncrit", i, coordinatesItem.nCrit);
+                let Mach = createLabel('Mach', "Mach", i, "Mach");//todo получить MaxClCdalpha
+                let MaxClCd = createLabel('MaxClCd', "Max Cl/Cd", i, coordinatesItem.maxClCd);
+                let MaxClCdalpha = createLabel('MaxClCdalpha', "Max Cl/Cd alpha", i, "MaxClCdalpha");//todo получить MaxClCdalpha
 
-        document.getElementById('editableTables').appendChild(Reynolds_number);
-        document.getElementById('editableTables').appendChild(Ncrit);
-        document.getElementById('editableTables').appendChild(Mach);
-        document.getElementById('editableTables').appendChild(MaxClCd);
-        document.getElementById('editableTables').appendChild(MaxClCdalpha);
+                document.getElementById('editableTables').appendChild(Reynolds_number);
+                document.getElementById('editableTables').appendChild(Ncrit);
+                document.getElementById('editableTables').appendChild(Mach);
+                document.getElementById('editableTables').appendChild(MaxClCd);
+                document.getElementById('editableTables').appendChild(MaxClCdalpha);
 
-        let coordinatesJson = coordinatesItem.coordinatesJson.split('\n');
+                let coordinatesJson = coordinatesItem.coordinatesJson.split('\n');
 
 
-        document.getElementById('editableTables').appendChild(tabular);
-        jQuery('#tabular' + i).tabularInput({
-            'rows': coordinatesJson.length - 12,
-            'columns': 7,
-            'minRows': 10,
-            'newRowOnTab': true,
-            'columnHeads': ['alpha', 'CL', 'CD', 'CDp', 'CM', 'Top_Xtr', 'Bot_Xtr'],
-            'name': 'tabular' + i,
-            'animate': true
-        });
+                document.getElementById('editableTables').appendChild(tabular);
+                jQuery('#tabular' + i).tabularInput({
+                    'rows': coordinatesJson.length - 12,
+                    'columns': 7,
+                    'minRows': 10,
+                    'newRowOnTab': true,
+                    'columnHeads': ['alpha', 'CL', 'CD', 'CDp', 'CM', 'Top_Xtr', 'Bot_Xtr'],
+                    'name': 'tabular' + i,
+                    'animate': true
+                });
 
-        for (let j = 11, l = 1; j < coordinatesJson.length - 1; j++, l++) {
-            let items = coordinatesJson[j].split(',');
-            for (let k = 0; k < items.length; k++) {
-                document.getElementsByName('tabular' + i + '[' + k + '][' + l + ']')[0].setAttribute('value', items[k]);
-            }
-        }
+                for (let j = 11, l = 1; j < coordinatesJson.length - 1; j++, l++) {
+                    let items = coordinatesJson[j].split(',');
+                    for (let k = 0; k < items.length; k++) {
+                        document.getElementsByName('tabular' + i + '[' + k + '][' + l + ']')[0].setAttribute('value', items[k]);
+                    }
+                }
 
+
+            }, 0);
+        })(i);
 
     }
 }
