@@ -294,8 +294,13 @@ public class ServiceImpl implements ServiceInt {
             coordinates.add(coordinateItem);
         }
         airfoil.setCoordinates(coordinates);
-        dao.addAirfoil(airfoil);
-        return new MessageError("сделай уже проверку, ленивая задница!", 111, null);
+        try {
+            dao.addAirfoil(airfoil);
+        } catch (Exception e) {
+            LOGGER.warn("ошибка при добавлении в базу нового airfoil {}", Arrays.toString(e.getStackTrace()));
+            return new Message("Ошибка при добавлении в базу нового airfoil", SC_CONFLICT);
+        }
+        return new Message("Airfoil успешно добавлен", SC_OK);
 
     }
 
