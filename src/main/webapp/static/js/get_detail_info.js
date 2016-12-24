@@ -83,6 +83,8 @@ function fillEditableContentDetailInfo(data) {
     img.setAttribute("src", data.image);
     img_detail.appendChild(img);
 
+    fillEditableContentDetailInfoEditableTable(data);
+
     let fileCsvName = data.fileCsvName;
     let links = document.getElementById('graf');
     for (let i = 0; i < fileCsvName.length; i++) {
@@ -133,3 +135,92 @@ function refreshiframe() {
         });
     });
 }
+
+function fillEditableContentDetailInfoEditableTable(data) {
+    let tablesView = document.createElement("div");
+    tablesView.id = 'tablesView';
+    let viewCsv = data.coordView;
+    let rows = viewCsv.split('\n');
+
+
+    jQuery('#viewTab').tabularInput({
+        'rows': rows.length - 1,
+        'columns': 2,
+        'minRows': 10,
+        'newRowOnTab': true,
+        'columnHeads': ['x', 'y'],
+        'name': 'view',
+        'animate': true
+    });
+    for (let i = 0; i < rows.length - 1; i++) {
+        let item = rows[i].split(',');
+        document.getElementsByName('view[0][' + (i + 1) + ']')[0].setAttribute('value', item[0]);
+        document.getElementsByName('view[1][' + (i + 1) + ']')[0].setAttribute('value', item[1]);
+    }
+    let coordinates = data.coordinates;
+    for (let i = 0; i < coordinates.length; i++) {
+        let tabular = document.createElement('div');
+        tabular.id = 'tabular' + i;
+        let tableDiv = document.createElement('div');
+        tableDiv.setAttribute("class", 'example');
+        let btn = document.createElement('input');
+        btn.setAttribute("type", 'button');
+        btn.setAttribute("value", 'Add New Row');
+        btn.setAttribute("onClick", 'javascript:$("#tabular' + i + '").tabularInput("addRow")');
+        let btn2 = document.createElement('input');
+        btn2.setAttribute("type", 'button');
+        btn2.setAttribute("value", 'Delete Last Row');
+        btn2.setAttribute("onClick", 'javascript:$("#tabular' + i + '").tabularInput("deleteRow")');
+        document.getElementById('airfoilDetailInfo').appendChild(btn);
+        document.getElementById('airfoilDetailInfo').appendChild(btn2);
+        document.getElementById('airfoilDetailInfo').appendChild(tabular);
+
+
+        let coordinatesItem = coordinates[i];
+        let tableCsv = document.createElement('div');
+        tableCsv.id = 'tableCsv' + i;
+
+        let Reynolds_number = createLabel('Reynolds_number', "Reynolds number", i, coordinatesItem.renolgs);
+        let Ncrit = createLabel('Ncrit', "Ncrit", i, coordinatesItem.nCrit);
+        // let Mach = createLabel('Mach', "Mach", i,Mach);
+        let MaxClCd = createLabel('MaxClCd', "Max Cl/Cd", i, coordinatesItem.maxClCd);
+        // let MaxClCdalpha = createLabel('MaxClCdalpha', "Max Cl/Cd alpha", i,MaxClCdalpha);
+
+        console.log(coordinatesItem);
+        let coordinatesJson = coordinatesItem.coordinatesJson.split('\n');
+
+        jQuery('#tabular' + i).tabularInput({
+            'rows': coordinatesJson.length - 12,
+            'columns': 7,
+            'minRows': 10,
+            'newRowOnTab': true,
+            'columnHeads': ['alpha', 'CL', 'CD', 'CDp', 'CM', 'Top_Xtr', 'Bot_Xtr'],
+            'name': 'tabular' + i,
+            'animate': true
+        });
+
+        for (let j = 11, l = 1; j < coordinatesJson.length - 1; j++, l++) {
+            let items = coordinatesJson[j].split(',');
+            for (let k = 0; k < items.length; k++) {
+                document.getElementsByName('tabular' + i + '[' + k + '][' + l + ']')[0].setAttribute('value', items[k]);
+            }
+        }
+
+
+    }
+}
+
+
+function createLabel(id, value, number, valueInput) {
+    let label = document.createElement('label');
+    label.id = id + number;
+    label.innerText = value;
+    let input = document.createElement('input');
+    input.id = 'input_' + id + number;
+    input.setAttribute('type', 'text');
+    label.appendChild(input);
+    label.appendChild(document.createElement('Br'));
+    return label;
+}
+
+

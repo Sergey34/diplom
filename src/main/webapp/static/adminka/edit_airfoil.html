@@ -12,6 +12,9 @@
     <script src="/static/js/get_params_url.js"></script>
     <script src="/static/js/get_detail_info.js"></script>
 
+    <script src='/static/js/tabular-input.min.js'></script>
+
+    <link type='text/css' rel='stylesheet' href='/static/css/tabular-input.css'/>
     <link rel="stylesheet" href="/static/css/main.css" type="text/css"/>
 
     <link rel="import" href="/static/menu.html">
@@ -67,6 +70,11 @@
 
                         <input type="submit"/>
                     </form>
+                    <input type="button" value="Add New Row"
+                           onclick='javascript:$("#viewTab").tabularInput("addRow")'>
+                    <input type="button" value="Delete Last Row"
+                           onclick="javascript:$('#viewTab').tabularInput('deleteRow')">
+                    <div id="viewTab"></div>
                 </div>
             </div>
         </div>

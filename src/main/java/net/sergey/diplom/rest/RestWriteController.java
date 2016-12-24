@@ -61,7 +61,7 @@ public class RestWriteController {
     @RequestMapping(value = "/init", method = RequestMethod.GET)
     public Future<Message> init() {
         if (service.parsingIsStarting()) {
-            return new AsyncResult<Message>(new Message("В данный момент данные уже кем-то обновляются. Необходимо дождаться завершения обновления", SC_FORBIDDEN));
+            return new AsyncResult<>(new Message("В данный момент данные уже кем-то обновляются. Необходимо дождаться завершения обновления", SC_FORBIDDEN));
         }
         return service.parse();
     }
