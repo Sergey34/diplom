@@ -70,11 +70,14 @@
 
                         <input type="submit"/>
                     </form>
-                    <input type="button" value="Add New Row"
-                           onclick='javascript:$("#viewTab").tabularInput("addRow")'>
-                    <input type="button" value="Delete Last Row"
-                           onclick="javascript:$('#viewTab').tabularInput('deleteRow')">
-                    <div id="viewTab"></div>
+                    <div id="editableTables">
+                        <input type="button" value="Add New Row"
+                               onclick='javascript:$("#viewTab").tabularInput("addRow")'>
+                        <input type="button" value="Delete Last Row"
+                               onclick="javascript:$('#viewTab').tabularInput('deleteRow')">
+                        <div id="viewTab"></div>
+                    </div>
+                    <input type="button" id="saveWab" value="add airfoil">
                 </div>
             </div>
         </div>
@@ -83,6 +86,7 @@
             var link = document.querySelector('link[rel=import]');
             var content = link.import.querySelector('#menu');
             document.getElementById('middle').appendChild(content.cloneNode(true));
+            document.getElementById("saveWab").onclick = saveWab;
         </script>
 
     </div>

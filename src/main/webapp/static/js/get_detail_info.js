@@ -75,8 +75,8 @@ function fillContentDetailInfo(data) {
 
 function fillEditableContentDetailInfo(data) {
 
-    document.getElementById("name").setAttribute("value", data.name);
-    document.getElementById("ShortName").setAttribute("value", data.shortName);
+    document.getElementById("airfoilName").setAttribute("value", data.name);
+    document.getElementById("shortName").setAttribute("value", data.shortName);
     document.getElementById("description").setAttribute("value", data.description);
     let img_detail = document.getElementById("img_detail");
     let img = document.createElement('img');
@@ -173,8 +173,8 @@ function fillEditableContentDetailInfoEditableTable(data) {
         btn2.setAttribute("type", 'button');
         btn2.setAttribute("value", 'Delete Last Row');
         btn2.setAttribute("onClick", 'javascript:$("#tabular' + i + '").tabularInput("deleteRow")');
-        document.getElementById('airfoilDetailInfo').appendChild(btn);
-        document.getElementById('airfoilDetailInfo').appendChild(btn2);
+        document.getElementById('editableTables').appendChild(btn);
+        document.getElementById('editableTables').appendChild(btn2);
         let coordinatesItem = coordinates[i];
 
 
@@ -184,20 +184,20 @@ function fillEditableContentDetailInfoEditableTable(data) {
 
         let Reynolds_number = createLabel('Reynolds_number', "Reynolds number", i, coordinatesItem.renolgs);
         let Ncrit = createLabel('Ncrit', "Ncrit", i, coordinatesItem.nCrit);
-        let Mach = createLabel('Mach', "Mach", i, "Mach");
+        let Mach = createLabel('Mach', "Mach", i, "Mach");//todo получить MaxClCdalpha
         let MaxClCd = createLabel('MaxClCd', "Max Cl/Cd", i, coordinatesItem.maxClCd);
-        let MaxClCdalpha = createLabel('MaxClCdalpha', "Max Cl/Cd alpha", i, "MaxClCdalpha");
+        let MaxClCdalpha = createLabel('MaxClCdalpha', "Max Cl/Cd alpha", i, "MaxClCdalpha");//todo получить MaxClCdalpha
 
-        document.getElementById('airfoilDetailInfo').appendChild(Reynolds_number);
-        document.getElementById('airfoilDetailInfo').appendChild(Ncrit);
-        // document.getElementById('airfoilDetailInfo').appendChild(Mach);
-        document.getElementById('airfoilDetailInfo').appendChild(MaxClCd);
-        // document.getElementById('airfoilDetailInfo').appendChild(MaxClCdalpha);
+        document.getElementById('editableTables').appendChild(Reynolds_number);
+        document.getElementById('editableTables').appendChild(Ncrit);
+        document.getElementById('editableTables').appendChild(Mach);
+        document.getElementById('editableTables').appendChild(MaxClCd);
+        document.getElementById('editableTables').appendChild(MaxClCdalpha);
 
         let coordinatesJson = coordinatesItem.coordinatesJson.split('\n');
 
 
-        document.getElementById('airfoilDetailInfo').appendChild(tabular);
+        document.getElementById('editableTables').appendChild(tabular);
         jQuery('#tabular' + i).tabularInput({
             'rows': coordinatesJson.length - 12,
             'columns': 7,
@@ -238,7 +238,7 @@ function saveWab() {
     let resultCSVList = [];
     for (let i = 0; i < number; i++) {
         let resultCSV = "Xfoil polar. Reynolds number fixed. Mach  number fixed\n";
-        let airfoilName = document.getElementById('ShortName').value;
+        let airfoilName = document.getElementById('shortName').value;
         let Reynolds_number = document.getElementById('input_Reynolds_number' + i).value;
         let fileName = "xf-" + airfoilName + "-" + Reynolds_number;
         resultCSV += "Polar key," + fileName + "\n";
@@ -253,10 +253,17 @@ function saveWab() {
         resultCSV += 'alpha,CL,CD,CDp,CM,Top_Xtr,Bot_Xtr\n';
 
 
-        let table = document.getElementById('tabular' + i).getElementsByTagName('*');
+        function tableLength(i) {
+            return document.getElementById(i).getElementsByTagName('tbody')[0].childElementCount
+        }
+
+        function getTableItem(i, j, number, name) {
+            return document.getElementsByName(name + number + "[" + i + "][" + j + "]").value;
+        }
+
         for (let j = 1; j <= tableLength('tabular' + i); j++) {
             for (let k = 0; k < 7; k++) {
-                resultCSV += getTableItem(k, j, table);
+                resultCSV += getTableItem(k, j, i, "tabular");
                 if (k != 6) {
                     resultCSV += ',';
                 }
@@ -274,11 +281,11 @@ function saveWab() {
         console.log(resultCSV);
         resultCSVList[i] = resultCsvObj;
     }
-    let tableView = document.getElementById('viewTab').getElementsByTagName('*');
+
     let viewCsv = "";
     for (let j = 1; j <= tableLength('viewTab'); j++) {
         for (let k = 0; k < 2; k++) {
-            viewCsv += getTableItem(k, j, tableView);
+            viewCsv += getTableItem(k, j, '', "view");
             if (k != 1) {
                 viewCsv += ',';
             }
