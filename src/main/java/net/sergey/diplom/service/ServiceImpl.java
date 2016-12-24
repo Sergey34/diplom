@@ -183,7 +183,7 @@ public class ServiceImpl implements ServiceInt {
         Airfoil airfoil = dao.getAirfoilById(airfoilId);
         if (airfoil != null) {
             try {
-                new BuilderGraphs(PATH).draw(airfoil, checkedList);
+                new BuilderGraphs(PATH).draw(airfoil, checkedList, true);
             } catch (Exception e) {
                 e.printStackTrace();
                 LOGGER.warn("Ошибка при обработке файловк с координатами {}\n{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
@@ -198,23 +198,19 @@ public class ServiceImpl implements ServiceInt {
 
     @Override
     public AirfoilDetail getDetailInfo(int airfoilId) {
-        //// TODO: 24.12.16 оптимизировать
-        long start = System.currentTimeMillis();
         Airfoil airfoil = dao.getAirfoilById(airfoilId);
         if (null == airfoil) {
             return null;
         }
         String stlFilePath = null;
         try {
-            new BuilderGraphs(PATH).draw(airfoil, null);
+            new BuilderGraphs(PATH).draw(airfoil, null, false);
             stlFilePath = new AirfoilStlGenerator().generate(airfoil.getShortName(), airfoil.getCoordView(), PATH);
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.warn("Ошибка при обработке файлов с координатами {}\n{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
         }
         drawViewAirfoil(airfoil);
-        long stop = System.currentTimeMillis();
-        System.out.println(stop - start);
         return new AirfoilDetail(airfoil, CHART_NAMES, stlFilePath);
     }
 

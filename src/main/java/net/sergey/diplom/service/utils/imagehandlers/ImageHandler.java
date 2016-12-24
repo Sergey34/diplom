@@ -31,6 +31,7 @@ public class ImageHandler implements Callable<Void> {
         this.style = style;
     }
 
+
     public ImageHandler(String shortName, Xy xy, StyleXYChart style) {
         this.xyList = new ArrayList<>();
         this.xAlisa = " ";
@@ -44,6 +45,10 @@ public class ImageHandler implements Callable<Void> {
     public static void setSavePath(String path, String catalog) {
         PATH = path;
         CATALOG = catalog;
+    }
+
+    public String getFileName() {
+        return fileName;
     }
 
     @Override
