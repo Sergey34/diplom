@@ -171,6 +171,8 @@ public class ServiceImpl implements ServiceInt {
 
     @Override
     public AirfoilDetail getDetailInfo(int airfoilId) {
+        //// TODO: 24.12.16 оптимизировать
+        long start = System.currentTimeMillis();
         Airfoil airfoil = dao.getAirfoilById(airfoilId);
         if (null == airfoil) {
             return null;
@@ -184,6 +186,8 @@ public class ServiceImpl implements ServiceInt {
             LOGGER.warn("Ошибка при обработке файлов с координатами {}\n{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
         }
         drawViewAirfoil(airfoil);
+        long stop = System.currentTimeMillis();
+        System.out.println(stop - start);
         return new AirfoilDetail(airfoil, CHART_NAMES, stlFilePath);
     }
 
@@ -211,7 +215,7 @@ public class ServiceImpl implements ServiceInt {
         parsingIsStarting = true;
         try {
             parserService.init();
-            return new AsyncResult<Message>(new Message("Данные успешно загружены", SC_OK));
+            return new AsyncResult<>(new Message("Данные успешно загружены", SC_OK));
         } catch (Exception e) {
             LOGGER.warn("ошибка инициализации базы {}", Arrays.asList(e.getStackTrace()));
             e.printStackTrace();
