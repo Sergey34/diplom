@@ -237,7 +237,7 @@ public class ServiceImpl implements ServiceInt {
     public Future<Message> parse() {
         parsingIsStarting = true;
         try {
-            parserService.init();
+            parserService.parse();
             return new AsyncResult<>(new Message("Данные успешно загружены", SC_OK));
         } catch (Exception e) {
             LOGGER.warn("ошибка инициализации базы {}", Arrays.asList(e.getStackTrace()));
@@ -325,6 +325,7 @@ public class ServiceImpl implements ServiceInt {
 
     @Override
     public int getCountAirfoilByPrefix(char prefix) {
+        System.out.println(servletContext.getRealPath("/WEB-INF/"));
         return dao.getCountAirfoilByPrefix(prefix);
     }
 

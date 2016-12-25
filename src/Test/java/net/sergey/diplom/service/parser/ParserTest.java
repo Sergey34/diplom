@@ -43,7 +43,7 @@ public class ParserTest {
 
     @Test
     public void initTest() throws Exception {
-        parserService.init();
+        parserService.parse();
     }
 
     @Test

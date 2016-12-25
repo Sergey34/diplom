@@ -4,6 +4,7 @@ import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.service.EventService;
+import net.sergey.diplom.service.properties.PropertiesHandler;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jsoup.Connection;
@@ -17,32 +18,34 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.servlet.ServletContext;
+import java.io.*;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 @Component
 public class ParserService {
-    static final int TIMEOUT = 10_000;
-    private static final Pattern GET_MENU_TITLE_PATTERN = Pattern.compile("^(.+) \\([0-9]*\\)$");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-    private static final String HTTP_AIRFOIL_TOOLS_COM = "http://airfoiltools.com/";
+    static int TIMEOUT = 10_000;
+    private static Pattern GET_MENU_TITLE_PATTERN = Pattern.compile("^(.+) \\([0-9]*\\)$");
+    private static String HTTP_AIRFOIL_TOOLS_COM = "http://airfoiltools.com/";
     private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private static Properties propertiesHandler;
     private final ApplicationContext applicationContext;
     private final DAO dao;
     private final EventService eventService;
+    private final ServletContext servletContext;
 
     @Autowired
-    public ParserService(ApplicationContext applicationContext, DAO dao, EventService eventService) {
+    public ParserService(ApplicationContext applicationContext, DAO dao, EventService eventService, ServletContext servletContext) {
         this.applicationContext = applicationContext;
         this.dao = dao;
         this.eventService = eventService;
+        this.servletContext = servletContext;
     }
 
     static Connection getJsoupConnect(String url, int timeout) {
@@ -67,35 +70,54 @@ public class ParserService {
         return true;
     }
 
-    public void init() throws Exception {
+    @PostConstruct
+    public void init() {
+        String propertiesPath = servletContext.getRealPath("/WEB-INF/");
+        try (InputStream reader = new FileInputStream(propertiesPath + "/config.properties")) {
+            propertiesHandler = new PropertiesHandler();
+            propertiesHandler.load(reader);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Set<String> strings = propertiesHandler.stringPropertyNames();
+        System.out.println(strings);
+        GET_MENU_TITLE_PATTERN = Pattern.compile(propertiesHandler.getProperty("GET_MENU_TITLE_PATTERN"));
+        HTTP_AIRFOIL_TOOLS_COM = propertiesHandler.getProperty("HTTP_AIRFOIL_TOOLS_COM");
+        TIMEOUT = Integer.parseInt(propertiesHandler.getProperty("TIMEOUT"));
+
+
+    }
+
+    public void parse() throws Exception {
         List<String> menu = parseMenu();
         getAirfoilsByMenuList(menu);
     }
 
+    //      propertiesHandler.getProperty("")
     private List<String> parseMenu() throws IOException {
         eventService.clearProgressMap();
         eventService.updateProgress("menu", 0.0);
         final List<String> airfoilMenu = new ArrayList<>();
-        Element mmenu = getJsoupConnect(HTTP_AIRFOIL_TOOLS_COM, TIMEOUT).get().body().getElementsByClass("mmenu").first();
-        Elements menuList = mmenu.getElementsByTag("ul");
-        Elements headerMenu = mmenu.getElementsByTag("h3");
+        Element mmenu = getJsoupConnect(HTTP_AIRFOIL_TOOLS_COM, TIMEOUT).get().body().getElementsByClass(propertiesHandler.getProperty("menu_class_name")).first();
+        Elements menuList = mmenu.getElementsByTag(propertiesHandler.getProperty("menuList"));
+        Elements headerMenu = mmenu.getElementsByTag(propertiesHandler.getProperty("headerMenu"));
         List<Menu> menus = new ArrayList<>();
         eventService.updateProgress("menu", 20.0);
         for (int i = 0; i < menuList.size(); i++) {
             Element menuElement = menuList.get(i);
-            Elements element = headerMenu.get(i).getElementsByTag("h3");
-            if ("Airfoils A to Z".equals(element.text())) {
+            Element element = headerMenu.get(i);
+            if (propertiesHandler.getProperty("menu_Header").equals(element.text())) {
                 Menu menu1 = new Menu(element.text());
                 List<MenuItem> menuItems = new ArrayList<>();
-                Elements links = menuElement.getElementsByTag("li");
+                Elements links = menuElement.getElementsByTag(propertiesHandler.getProperty("links"));
                 for (Element link : links) {
-                    Element a = link.getElementsByTag("a").first();
-                    if (menu1.getHeader().equals("Airfoils A to Z")) {
+                    Element a = link.getElementsByTag(propertiesHandler.getProperty("tegA")).first();
+                    if (menu1.getHeader().equals(propertiesHandler.getProperty("menu_Header"))) {
                         String text = createStringByPattern(a.text(), GET_MENU_TITLE_PATTERN);
                         String prefix = createPrefix(text);
                         MenuItem menuItem = new MenuItem(text, prefix);
 
-                        if (!prefix.equals("allAirfoil")) {
+                        if (!prefix.equals(propertiesHandler.getProperty("filterItem"))) {
                             eventService.addKey(prefix);
                             airfoilMenu.add(prefix);
                             menuItems.add(menuItem);
