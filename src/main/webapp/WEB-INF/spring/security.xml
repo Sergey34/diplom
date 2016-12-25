@@ -10,14 +10,14 @@
     <http auto-config="true">
         <intercept-url pattern="/rest/*" access="ROLE_ANONYMOUS, ROLE_USER, ROLE_ADMIN"/>
         <intercept-url pattern="/rest/write/*" access="ROLE_USER, ROLE_ADMIN"/>
-        <intercept-url pattern="/static/adminka/*" access="ROLE_USER, ROLE_ADMIN"/>
+        <intercept-url pattern="/adminka/*" access="ROLE_USER, ROLE_ADMIN"/>
 
 
-        <form-login login-page="/static/login.html"
-                    default-target-url="/static/airfoilList.html"
-                    authentication-failure-url="/static/loginError.html"/>
+        <form-login login-page="/login.html"
+                    default-target-url="/airfoilList.html"
+                    authentication-failure-url="/loginError.html"/>
 
-        <logout logout-url="/logout" logout-success-url="/static/login.html"/>
+        <logout logout-url="/logout" logout-success-url="/login.html"/>
         <anonymous username="guest" granted-authority="ROLE_ANONYMOUS"/>
         <remember-me/>
     </http>

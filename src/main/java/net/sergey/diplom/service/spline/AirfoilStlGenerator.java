@@ -49,7 +49,7 @@ public class AirfoilStlGenerator {
         splineY.BuildSpline(t, y, x.size());
         List<Double> ySpline = new ArrayList<>();
         List<Double> xSpline = new ArrayList<>();
-        spline(t, splineY, splineX, ySpline,xSpline);
+        spline(t, splineY, splineX, ySpline, xSpline);
 
         String stlFileName = PATH + "/" + fileName + '_' + b + ".scad";
         try (BufferedWriter scadWriter = new BufferedWriter(new FileWriter(stlFileName))) {

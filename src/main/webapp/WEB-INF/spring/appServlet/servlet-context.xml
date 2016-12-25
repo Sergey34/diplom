@@ -18,7 +18,7 @@
     <!-- Всю статику (изображения, css-файлы, javascript) положим в папку webapp/resources
         и замаппим их на урл вида /resources/** -->
     <resources mapping="/resources/**" location="/resources/"/>
-    <resources mapping="/static/**" location="/static/"/>
+    <resources mapping="/**" location="/static/"/>
 
 
     <!--class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
