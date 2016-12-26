@@ -18,7 +18,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import java.io.*;
 import java.util.*;
@@ -31,10 +30,9 @@ import java.util.regex.Pattern;
 public class ParserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     static int TIMEOUT = 10_000;
-    private static Pattern GET_MENU_TITLE_PATTERN = Pattern.compile("^(.+) \\([0-9]*\\)$");
-    private static String HTTP_AIRFOIL_TOOLS_COM = "http://airfoiltools.com/";
+    private static Pattern GET_MENU_TITLE_PATTERN;
     private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-    private static Properties propertiesHandler;
+    private static PropertiesHandler propertiesHandler;
     private final ApplicationContext applicationContext;
     private final DAO dao;
     private final EventService eventService;
@@ -70,35 +68,27 @@ public class ParserService {
         return true;
     }
 
-    @PostConstruct
-    public void init() {
-        String propertiesPath = servletContext.getRealPath("/WEB-INF/");
-        try (InputStream reader = new FileInputStream(propertiesPath + "/config.properties")) {
-            propertiesHandler = new PropertiesHandler();
-            propertiesHandler.load(reader);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Set<String> strings = propertiesHandler.stringPropertyNames();
-        System.out.println(strings);
-        GET_MENU_TITLE_PATTERN = Pattern.compile(propertiesHandler.getProperty("GET_MENU_TITLE_PATTERN"));
-        HTTP_AIRFOIL_TOOLS_COM = propertiesHandler.getProperty("HTTP_AIRFOIL_TOOLS_COM");
-        TIMEOUT = Integer.parseInt(propertiesHandler.getProperty("TIMEOUT"));
-
-
-    }
 
     public void parse() throws Exception {
+        String propertiesPath = servletContext.getRealPath("/WEB-INF/");
+        try {
+            propertiesHandler = new PropertiesHandler();
+            propertiesHandler.load(propertiesPath + "/config.properties");
+        } catch (IOException e) {
+            LOGGER.warn("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties {}", Arrays.toString(e.getStackTrace()));
+            throw new IllegalStateException("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties", e);
+        }
+        GET_MENU_TITLE_PATTERN = Pattern.compile(propertiesHandler.getProperty("GET_MENU_TITLE_PATTERN"));
+        TIMEOUT = Integer.parseInt(propertiesHandler.getProperty("TIMEOUT"));
         List<String> menu = parseMenu();
         getAirfoilsByMenuList(menu);
     }
 
-    //      propertiesHandler.getProperty("")
     private List<String> parseMenu() throws IOException {
         eventService.clearProgressMap();
         eventService.updateProgress("menu", 0.0);
         final List<String> airfoilMenu = new ArrayList<>();
-        Element mmenu = getJsoupConnect(HTTP_AIRFOIL_TOOLS_COM, TIMEOUT).get().body().getElementsByClass(propertiesHandler.getProperty("menu_class_name")).first();
+        Element mmenu = getJsoupConnect(propertiesHandler.getProperty("HTTP_AIRFOIL_TOOLS_COM"), TIMEOUT).get().body().getElementsByClass(propertiesHandler.getProperty("menu_class_name")).first();
         Elements menuList = mmenu.getElementsByTag(propertiesHandler.getProperty("menuList"));
         Elements headerMenu = mmenu.getElementsByTag(propertiesHandler.getProperty("headerMenu"));
         List<Menu> menus = new ArrayList<>();

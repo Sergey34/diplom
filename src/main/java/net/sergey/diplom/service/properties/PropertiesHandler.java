@@ -8,21 +8,32 @@ import java.io.IOException;
 import java.util.Properties;
 
 @Component
-public class PropertiesHandler extends Properties {
+public class PropertiesHandler {
     private String md5Hex;
+    private Properties properties;
 
     public PropertiesHandler() {
-        super();
+        properties = new Properties();
     }
 
     public synchronized void load(String inStream) throws IOException {
-        FileInputStream fileInputStream = new FileInputStream(inStream);
-        String md5Hex = DigestUtils.md5Hex(fileInputStream);
+        String md5Hex;
+        try (FileInputStream fileInputStream = new FileInputStream(inStream)) {
+            md5Hex = DigestUtils.md5Hex(fileInputStream);
+        }
         if (!md5Hex.equals(this.md5Hex)) {
             this.md5Hex = md5Hex;
-            super.load(new FileInputStream(inStream));
+            try (FileInputStream fileInputStream1 = new FileInputStream(inStream)) {
+                properties.load(fileInputStream1);
+            }
         }
     }
 
+    public int size() {
+        return properties.size();
+    }
 
+    public String getProperty(String key) {
+        return properties.getProperty(key);
+    }
 }
