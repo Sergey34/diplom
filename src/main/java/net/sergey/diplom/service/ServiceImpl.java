@@ -45,6 +45,7 @@ public class ServiceImpl implements ServiceInt {
     private static final List<String> CHART_NAMES =
             Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
     private static String PATH;
+    private static String rootUrl;
     private final DAO dao;
     private final ParserService parserService;
     private final ServletContext servletContext;
@@ -55,6 +56,10 @@ public class ServiceImpl implements ServiceInt {
         this.dao = dao;
         this.servletContext = servletContext;
         this.parserService = parserService;
+    }
+
+    public static String getRootUrl() {
+        return rootUrl;
     }
 
     @Override
@@ -68,7 +73,7 @@ public class ServiceImpl implements ServiceInt {
         try {
             dao.addAirfoil(airfoil);
         } catch (Exception e) {
-            LOGGER.warn("ошибка при обновлении airfoil {}", Arrays.toString(e.getStackTrace()));
+            LOGGER.warn("ошибка при обновлении airfoil {} \n {}", e.getMessage(), Arrays.toString(e.getStackTrace()));
             return new Message("Ошибка при добавлении в базу нового airfoil", SC_CONFLICT);
         }
         return new Message("Airfoil успешно обновлен", SC_OK);
@@ -80,7 +85,7 @@ public class ServiceImpl implements ServiceInt {
         airfoil.setShortName(airfoilEdit.getShortName());
         airfoil.setCoordView(airfoilEdit.getViewCsv());
         airfoil.setDescription(airfoilEdit.getDetails());
-        airfoil.setPrefix(new Prefix(airfoilEdit.getShortName().charAt(0)));
+        airfoil.setPrefix(new Prefix(airfoilEdit.getShortName().toUpperCase().charAt(0)));
         Set<Coordinates> coordinates = new HashSet<>();
         for (Data data : airfoilEdit.getData()) {
             Coordinates coordinateItem = new Coordinates(data.getData(), data.getFileName());
@@ -132,7 +137,7 @@ public class ServiceImpl implements ServiceInt {
     @PostConstruct
     public void init() {
         PATH = servletContext.getRealPath("/resources/");
-        String rootUrl = servletContext.getContextPath();
+        rootUrl = servletContext.getContextPath();
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(servletContext.getRealPath("/static/js/getContextPath.js")))) {
             bufferedWriter.write("let rootUrl = '" + rootUrl + "';");
         } catch (IOException e) {

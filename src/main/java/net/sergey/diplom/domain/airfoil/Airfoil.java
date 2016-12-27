@@ -140,6 +140,7 @@ public class Airfoil {
 
     public void setShortName(String shortName) {
         this.shortName = shortName;
+        this.id = shortName.hashCode();
         this.image = "/resources/airfoil_img/" + shortName + ".png";//// TODO: 17.11.16 убрать в TDO
     }
 

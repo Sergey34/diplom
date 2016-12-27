@@ -277,7 +277,7 @@ function updateWab() {
             resultCSV += '\n';
         }
         let resultCsvObj = {};
-        resultCsvObj["fileName"] = fileName;
+        resultCsvObj["fileName"] = fileName + document.getElementById('input_Ncrit' + i).value;
         resultCsvObj["data"] = resultCSV;
         resultCsvObj["reynolds"] = Reynolds_number;
         resultCsvObj["nCrit"] = document.getElementById('input_Ncrit' + i).value;

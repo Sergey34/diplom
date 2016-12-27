@@ -2,6 +2,7 @@ package net.sergey.diplom.domain.model;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
+import net.sergey.diplom.service.ServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +23,9 @@ public class AirfoilDetail extends AirfoilDTO {
         coordinates = airfoil.getCoordinates();
         imgCsvName = new ArrayList<>();
         for (String chartName : chartNames) {
-            imgCsvName.add("/resources/chartTemp/" + airfoil.getId() + chartName + ".png");
+            imgCsvName.add(ServiceImpl.getRootUrl() + "/resources/chartTemp/" + airfoil.getId() + chartName + ".png");
         }
-        this.stlFilePath = "/resources/" + stlFilePath;
+        this.stlFilePath = ServiceImpl.getRootUrl() + "/resources/" + stlFilePath;
     }
 
     public Set<Coordinates> getFileCsvName() {

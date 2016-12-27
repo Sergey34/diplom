@@ -38,16 +38,12 @@ public class Coordinates {
 
         Coordinates that = (Coordinates) o;
 
-        if (id != that.id) return false;
-        return coordinatesJson != null ? coordinatesJson.equals(that.coordinatesJson) : that.coordinatesJson == null;
-
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (coordinatesJson != null ? coordinatesJson.hashCode() : 0);
-        return result;
+        return id;
     }
 
     public int getId() {
