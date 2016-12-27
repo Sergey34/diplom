@@ -1,50 +1,65 @@
 package net.sergey.diplom.service.parser;
 
 import net.sergey.diplom.service.properties.PropertiesHandler;
+import net.sergey.diplom.service.utils.UtilsLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.ServletContext;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 @Component
 public class Constant {
-
-
-    public final Pattern GET_ID_BY_FULL_NAME_PATTERN;
-    public final Pattern GET_FILE_NAME_BY_URL_PATTERN;
-    public final Pattern GET_COUNT_PAGES_PATTERN;
-    public final String REGEX;
-    public final Pattern GET_MENU_TITLE_PATTERN;
-    public final int TIMEOUT;
-    public final String NO;
-    public final String HTTP_AIRFOIL_TOOLS_COM;
-    public final String MENU_CLASS_NAME;
-    public final String MENU_LIST;
-    public final String HEADER_MENU;
-    public final String MENU_HEADER;
-    public final String LINKS;
-    public final String TEGA;
-    public final String FILTER_ITEM;
-    public final String AFSEARCHRESULT;
-    public final String TR;
-    public final String CELL12;
-    public final String FILE_TYPE;
-    public final String HREF;
-    public final String CELL7;
-    public final String MAX_CL_CD;
-    public final String N_CRIT;
-    public final String POLAR;
-    public final String CELL2;
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
+    public Pattern GET_ID_BY_FULL_NAME_PATTERN;
+    public Pattern GET_FILE_NAME_BY_URL_PATTERN;
+    public Pattern GET_COUNT_PAGES_PATTERN;
+    public String REGEX;
+    public Pattern GET_MENU_TITLE_PATTERN;
+    public int TIMEOUT;
+    public String NO;
+    public String HTTP_AIRFOIL_TOOLS_COM;
+    public String MENU_CLASS_NAME;
+    public String MENU_LIST;
+    public String HEADER_MENU;
+    public String MENU_HEADER;
+    public String LINKS;
+    public String TEGA;
+    public String FILTER_ITEM;
+    public String AFSEARCHRESULT;
+    public String TR;
+    public String CELL12;
+    public String FILE_TYPE;
+    public String HREF;
+    public String CELL7;
+    public String MAX_CL_CD;
+    public String N_CRIT;
+    public String POLAR;
+    public String REYNOLDS;
     @Autowired
-    public Constant(PropertiesHandler propertiesHandler) {
+    ServletContext servletContext;
+    @Autowired
+    private PropertiesHandler propertiesHandler;
+
+    public void initConst() {
+        String propertiesPath = servletContext.getRealPath("/WEB-INF/");
+        try {
+            propertiesHandler.load(propertiesPath + "/config.properties");
+        } catch (IOException e) {
+            LOGGER.warn("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties {}", Arrays.toString(e.getStackTrace()));
+            throw new IllegalStateException("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties", e);
+        }
         GET_ID_BY_FULL_NAME_PATTERN = Pattern.compile(propertiesHandler.getProperty("GET_ID_BY_FULL_NAME_PATTERN"));
         GET_FILE_NAME_BY_URL_PATTERN = Pattern.compile(propertiesHandler.getProperty("GET_FILE_NAME_BY_URL_PATTERN"));
         GET_COUNT_PAGES_PATTERN = Pattern.compile(propertiesHandler.getProperty("GET_COUNT_PAGES_PATTERN"));
         GET_MENU_TITLE_PATTERN = Pattern.compile(propertiesHandler.getProperty("GET_MENU_TITLE_PATTERN"));
         TIMEOUT = Integer.parseInt(propertiesHandler.getProperty("TIMEOUT"));
         REGEX = propertiesHandler.getProperty("REGEX");
-        NO = propertiesHandler.getProperty("&no=");
+        NO = propertiesHandler.getProperty("no");
         HTTP_AIRFOIL_TOOLS_COM = propertiesHandler.getProperty("HTTP_AIRFOIL_TOOLS_COM");
         MENU_CLASS_NAME = propertiesHandler.getProperty("menu_class_name");
         MENU_LIST = propertiesHandler.getProperty("menuList");
@@ -59,10 +74,9 @@ public class Constant {
         FILE_TYPE = propertiesHandler.getProperty(".csv");
         HREF = propertiesHandler.getProperty("href");
         CELL7 = propertiesHandler.getProperty("cell7");
-        MAX_CL_CD = propertiesHandler.getProperty("cell4");
-        N_CRIT = propertiesHandler.getProperty("cell3");
+        MAX_CL_CD = propertiesHandler.getProperty("maxClCd");
+        N_CRIT = propertiesHandler.getProperty("nCrit");
         POLAR = propertiesHandler.getProperty("polar");
-        CELL2= propertiesHandler.getProperty("cell2");
-
+        REYNOLDS = propertiesHandler.getProperty("reynolds");
     }
 }

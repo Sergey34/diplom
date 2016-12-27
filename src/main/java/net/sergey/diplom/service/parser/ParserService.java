@@ -4,7 +4,6 @@ import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.service.EventService;
-import net.sergey.diplom.service.properties.PropertiesHandler;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jsoup.Connection;
@@ -18,12 +17,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.*;
@@ -36,19 +33,16 @@ public class ParserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private final Constant constants;
-    private PropertiesHandler propertiesHandler;
     private final ApplicationContext applicationContext;
     private final DAO dao;
     private final EventService eventService;
-    private final ServletContext servletContext;
+
 
     @Autowired
-    public ParserService(ApplicationContext applicationContext, DAO dao, EventService eventService, ServletContext servletContext, PropertiesHandler propertiesHandler,Constant constants) {
+    public ParserService(ApplicationContext applicationContext, DAO dao, EventService eventService, Constant constants) {
         this.applicationContext = applicationContext;
         this.dao = dao;
         this.eventService = eventService;
-        this.servletContext = servletContext;
-        this.propertiesHandler = propertiesHandler;
         this.constants=constants;
     }
 
@@ -76,13 +70,7 @@ public class ParserService {
 
 
     public void parse() throws Exception {
-        String propertiesPath = servletContext.getRealPath("/WEB-INF/");
-        try {
-            propertiesHandler.load(propertiesPath + "/config.properties");
-        } catch (IOException e) {
-            LOGGER.warn("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties {}", Arrays.toString(e.getStackTrace()));
-            throw new IllegalStateException("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties", e);
-        }
+        constants.initConst();
         List<String> menu = parseMenu();
         getAirfoilsByMenuList(menu);
     }
@@ -99,7 +87,7 @@ public class ParserService {
         for (int i = 0; i < menuList.size(); i++) {
             Element menuElement = menuList.get(i);
             Element element = headerMenu.get(i);
-            if (propertiesHandler.getProperty("menu_Header").equals(element.text())) {
+            if (constants.MENU_HEADER.equals(element.text())) {
                 Menu menu1 = new Menu(element.text());
                 List<MenuItem> menuItems = new ArrayList<>();
                 Elements links = menuElement.getElementsByTag(constants.LINKS);

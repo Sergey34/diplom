@@ -87,7 +87,7 @@ public class ParserAirfoil implements Callable<Void> {
                 j--;//фильтруем реламу
             } else {
                 String name = cell12.text();
-                String description = airfoilList.get(j + 1).getElementsByClass(constants.CELL2).text();
+                String description = airfoilList.get(j + 1).getElementsByClass(constants.REYNOLDS).text();
 
                 String idAirfoil = createStringByPattern(name, constants.GET_ID_BY_FULL_NAME_PATTERN);
                 Airfoil airfoil = new Airfoil(name, description, prefix1, idAirfoil);
@@ -108,7 +108,7 @@ public class ParserAirfoil implements Callable<Void> {
         String line;
         StringBuilder stringBuilder = new StringBuilder();
         while ((line = bufferedReader.readLine()) != null) {
-            String[] split = line.trim().split(constants.REGEX);
+            String[] split = line.trim().split(" +");
             if (isDoubleStr(split[0]) && isDoubleStr(split[split.length - 1])) {
                 stringBuilder.append(split[0]).append(",").append(split[split.length - 1]).append('\n');
             }
@@ -133,7 +133,7 @@ public class ParserAirfoil implements Callable<Void> {
         polar = polar.first().getElementsByTag(constants.TR);
         Set<Coordinates> coordinates = new HashSet<>();
         for (Element element : polar) {
-            Element reynolds = element.getElementsByClass(constants.CELL12).first();
+            Element reynolds = element.getElementsByClass(constants.REYNOLDS).first();
             Element nCrit = element.getElementsByClass(constants.N_CRIT).first();
             Element maxClCd = element.getElementsByClass(constants.MAX_CL_CD).first();
             Element cell7 = element.getElementsByClass(constants.CELL7).first();
