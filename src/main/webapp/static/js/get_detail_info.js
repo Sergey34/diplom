@@ -7,7 +7,7 @@ function getDetailInfo(forEdit) {
         console.log('id = ' + id);
         $(document).ready(function () {
             $.ajax({
-                url: "/rest/getDetailInfo/" + id
+                url: rootUrl + "/rest/getDetailInfo/" + id
             }).then(function (data) {
                 console.log(data);
                 if (data == '') {
@@ -111,7 +111,7 @@ function refreshiframe() {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "/rest/updateGraf/" + id,
+            url: rootUrl + "/rest/updateGraf/" + id,
             data: JSON.stringify(checkeds),
             dataType: 'json',
             timeout: 600000,
@@ -239,7 +239,7 @@ function createLabel(id, value, number, valueInput) {
 }
 
 
-function saveWab() {
+function updateWab() {
     let resultCSVList = [];
     for (let i = 0; i < number; i++) {
         let resultCSV = "Xfoil polar. Reynolds number fixed. Mach  number fixed\n";
@@ -263,7 +263,8 @@ function saveWab() {
         }
 
         function getTableItem(i, j, number, name) {
-            return document.getElementsByName(name + number + "[" + i + "][" + j + "]").value;
+            console.log(name + number + "[" + i + "][" + j + "]");
+            return document.getElementsByName(name + number + "[" + i + "][" + j + "]")[0].value;
         }
 
         for (let j = 1; j <= tableLength('tabular' + i); j++) {
@@ -310,7 +311,7 @@ function saveWab() {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "/rest/write/updateAirfoilStringCsv",
+            url: rootUrl + "/rest/write/updateAirfoilStringCsv",
             data: JSON.stringify(data),
             dataType: 'json',
             timeout: 600000

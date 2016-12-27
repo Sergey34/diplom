@@ -11,7 +11,7 @@
     <script src="../js/get_content.js"></script>
     <script src="../js/get_params_url.js"></script>
     <script src="../js/get_detail_info.js"></script>
-
+    <script src="../js/getContextPath.js"></script>
     <script src='../js/tabular-input.min.js'></script>
 
     <link type='text/css' rel='stylesheet' href='../css/tabular-input.css'/>
@@ -36,7 +36,8 @@
         <div class="container">
             <div class="content" id="contentid">
                 <div id="airfoilDetailInfo">
-                    <form action="/rest/write/updateAirfoil" method="post" enctype="multipart/form-data">
+                    <form action="/rest/write/updateAirfoil" method="post" enctype="multipart/form-data"
+                          id="updateAirfoil">
                         <label>
                             Название профиля
                             <input type="text" value="" name="name" id="airfoilName"/>
@@ -83,10 +84,11 @@
         </div>
 
         <script>
+            document.getElementById('updateAirfoil').setAttribute('action', rootUrl + "/rest/write/updateAirfoil");
             var link = document.querySelector('link[rel=import]');
             var content = link.import.querySelector('#menu');
             document.getElementById('middle').appendChild(content.cloneNode(true));
-            document.getElementById("saveWab").onclick = saveWab;
+            document.getElementById("saveWab").onclick = updateWab;
         </script>
 
     </div>

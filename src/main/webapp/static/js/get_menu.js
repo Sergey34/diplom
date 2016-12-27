@@ -1,7 +1,9 @@
 $(document).ready(function () {
     $.ajax({
-        url: "/rest/menu"
+        url: rootUrl + "/rest/menu"
     }).then(function (data) {
+        document.getElementById('addAirf').setAttribute('href', rootUrl + "/adminka/addAirfoil.html");
+        document.getElementById('adm').setAttribute('href', rootUrl + "/adminka/adminka.html");
         data.forEach(logArrayElements);
         function logArrayElements(element, index, array) {
             console.log(element.header);
@@ -24,7 +26,7 @@ $(document).ready(function () {
             // новый элемент
             var li = document.createElement('LI');
             // <a href="/plotter/index">Airfoil plotter</a>
-            li.innerHTML = '<a href="/airfoilList.html?prefix=' + element.urlCode + '\">' + element.name + '</a>';
+            li.innerHTML = '<a href="' + rootUrl + '/airfoilList.html?prefix=' + element.urlCode + '\">' + element.name + '</a>';
             // добавление в конец
             list.appendChild(li)
         }

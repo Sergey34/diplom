@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -15,6 +14,7 @@ import java.util.regex.Pattern;
 @Component
 public class Constant {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
+    private final PropertiesHandler propertiesHandler;
     public Pattern GET_ID_BY_FULL_NAME_PATTERN;
     public Pattern GET_FILE_NAME_BY_URL_PATTERN;
     public Pattern GET_COUNT_PAGES_PATTERN;
@@ -40,15 +40,15 @@ public class Constant {
     public String N_CRIT;
     public String POLAR;
     public String REYNOLDS;
-    @Autowired
-    ServletContext servletContext;
-    @Autowired
-    private PropertiesHandler propertiesHandler;
 
-    public void initConst() {
-        String propertiesPath = servletContext.getRealPath("/WEB-INF/");
+    @Autowired
+    public Constant(PropertiesHandler propertiesHandler) {
+        this.propertiesHandler = propertiesHandler;
+    }
+
+    public void initConst(String propertiesPath) {
         try {
-            propertiesHandler.load(propertiesPath + "/config.properties");
+            propertiesHandler.load(propertiesPath);
         } catch (IOException e) {
             LOGGER.warn("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties {}", Arrays.toString(e.getStackTrace()));
             throw new IllegalStateException("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties", e);

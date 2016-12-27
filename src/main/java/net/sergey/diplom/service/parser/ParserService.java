@@ -17,6 +17,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -36,14 +37,15 @@ public class ParserService {
     private final ApplicationContext applicationContext;
     private final DAO dao;
     private final EventService eventService;
-
+    private final ServletContext servletContext;
 
     @Autowired
-    public ParserService(ApplicationContext applicationContext, DAO dao, EventService eventService, Constant constants) {
+    public ParserService(ApplicationContext applicationContext, DAO dao, EventService eventService, Constant constants, ServletContext servletContext) {
         this.applicationContext = applicationContext;
         this.dao = dao;
         this.eventService = eventService;
         this.constants=constants;
+        this.servletContext = servletContext;
     }
 
     static Connection getJsoupConnect(String url, int timeout) {
@@ -70,7 +72,7 @@ public class ParserService {
 
 
     public void parse() throws Exception {
-        constants.initConst();
+        constants.initConst(servletContext.getRealPath("/WEB-INF/") + "/config.properties");
         List<String> menu = parseMenu();
         getAirfoilsByMenuList(menu);
     }

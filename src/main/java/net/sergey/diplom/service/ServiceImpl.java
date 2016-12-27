@@ -30,7 +30,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Future;
@@ -130,6 +132,12 @@ public class ServiceImpl implements ServiceInt {
     @PostConstruct
     public void init() {
         PATH = servletContext.getRealPath("/resources/");
+        String rootUrl = servletContext.getContextPath();
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(servletContext.getRealPath("/static/js/getContextPath.js")))) {
+            bufferedWriter.write("let rootUrl = '" + rootUrl + "';");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

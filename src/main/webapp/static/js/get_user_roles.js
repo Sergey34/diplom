@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $.ajax({
-        url: "/rest/userRoles"
+        url: rootUrl + "/rest/userRoles"
     }).then(function (data) {
         console.log(data);
         select = document.getElementById('role');

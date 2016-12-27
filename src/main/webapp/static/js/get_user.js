@@ -2,7 +2,7 @@ var LOG_IN = '<a href="login.html" target="_blank"> Авторизоваться
 var LOG_OUT = '<a href="/logout">Выйти</a>';
 $(document).ready(function () {
     $.ajax({
-        url: "/rest/userInfo"
+        url: rootUrl + "/rest/userInfo"
     }).then(function (data) {
         console.log(data);
         if (data == '') {
