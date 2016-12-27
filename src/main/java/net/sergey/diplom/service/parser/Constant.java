@@ -78,5 +78,9 @@ public class Constant {
         N_CRIT = propertiesHandler.getProperty("nCrit");
         POLAR = propertiesHandler.getProperty("polar");
         REYNOLDS = propertiesHandler.getProperty("reynolds");
+        ConstantApi.GET_FILE_CSV = propertiesHandler.getProperty("GET_FILE_CSV");
+        ConstantApi.GET_DETAILS = propertiesHandler.getProperty("GET_DETAILS");
+        ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX = propertiesHandler.getProperty("GET_LIST_AIRFOIL_BY_PREFIX");
+        ConstantApi.GET_COORDINATE_VIEW = propertiesHandler.getProperty("GET_COORDINATE_VIEW");
     }
 }
