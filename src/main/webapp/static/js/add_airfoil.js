@@ -15,7 +15,7 @@ function saveWab() {
         resultCSV += "Max Cl/Cd alpha," + document.getElementById('input_MaxClCdalpha' + i).value + "\n";
         resultCSV += "Url,url" + "\n";
         resultCSV += "\n";
-        resultCSV += 'alpha,CL,CD,CDp,CM,Top_Xtr,Bot_Xtr\n';
+        resultCSV += 'Alpha,Cl,Cd,CDp,Cm,Top_Xtr,Bot_Xtr\n';
 
 
         let table = document.getElementById('tabular' + i).getElementsByTagName('*');

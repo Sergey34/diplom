@@ -324,7 +324,7 @@ public class ServiceImpl implements ServiceInt {
         try {
             dao.addAirfoil(airfoil);
         } catch (Exception e) {
-            LOGGER.warn("ошибка при добавлении в базу нового airfoil {}", Arrays.toString(e.getStackTrace()));
+            LOGGER.warn("ошибка при добавлении в базу нового airfoil {}\n{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
             return new Message("Ошибка при добавлении в базу нового airfoil", SC_CONFLICT);
         }
         return new Message("Airfoil успешно добавлен", SC_OK);
