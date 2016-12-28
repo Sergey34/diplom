@@ -112,9 +112,9 @@ public class DAOImpl implements DAO {
 
 
     @Override
-    public Airfoil getAirfoilById(int id) {
+    public Airfoil getAirfoilById(String id) {
         Airfoil airfoil = (Airfoil) sessionFactory.getCurrentSession()
-                .createCriteria(Airfoil.class).add(Restrictions.eq("id", id)).uniqueResult();
+                .createCriteria(Airfoil.class).add(Restrictions.eq("shortName", id)).uniqueResult();
         if (null != airfoil) {
             Hibernate.initialize(airfoil.getCoordinates());
         }

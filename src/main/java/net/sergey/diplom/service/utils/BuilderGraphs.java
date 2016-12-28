@@ -34,11 +34,11 @@ public class BuilderGraphs {
     }
 
     public void draw(final Airfoil airfoil, List<String> checkedList, boolean updateFiles) throws Exception {
-        imageHandler.put("chartClCd", new ImageHandler("Cl", "Cd", airfoil.getId(), new SimpleStyle()));
-        imageHandler.put("chartClAlpha", new ImageHandler("Cl", "Alpha", airfoil.getId(), new SimpleStyle()));
-        imageHandler.put("chartClCdAlpha", new ImageHandler("Cl div Cd", "Alpha", airfoil.getId(), new SimpleStyle()));
-        imageHandler.put("chartCdAlpha", new ImageHandler("Cd", "Alpha", airfoil.getId(), new SimpleStyle()));
-        imageHandler.put("chartCmAlpha", new ImageHandler("Cm", "Alpha", airfoil.getId(), new SimpleStyle()));
+        imageHandler.put("chartClCd", new ImageHandler("Cl", "Cd", airfoil.getShortName(), new SimpleStyle()));
+        imageHandler.put("chartClAlpha", new ImageHandler("Cl", "Alpha", airfoil.getShortName(), new SimpleStyle()));
+        imageHandler.put("chartClCdAlpha", new ImageHandler("Cl div Cd", "Alpha", airfoil.getShortName(), new SimpleStyle()));
+        imageHandler.put("chartCdAlpha", new ImageHandler("Cd", "Alpha", airfoil.getShortName(), new SimpleStyle()));
+        imageHandler.put("chartCmAlpha", new ImageHandler("Cm", "Alpha", airfoil.getShortName(), new SimpleStyle()));
         if (!updateFiles) {
             filterHandler(imageHandler);
         }

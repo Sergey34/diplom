@@ -41,7 +41,7 @@ function getContent() {
 
                 var links = document.createElement('div');
                 links.setAttribute('class', 'link');
-                links.innerHTML = '<a href="detailInfo.html?airfoilId=' + element.id + '">Airfoil details</a>';
+                links.innerHTML = '<a href="detailInfo.html?airfoilId=' + element.shortName + '">Airfoil details</a>';
 
 
                 div.appendChild(name);

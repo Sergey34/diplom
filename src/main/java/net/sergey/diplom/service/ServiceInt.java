@@ -25,7 +25,7 @@ public interface ServiceInt {
 
     List<Airfoil> getAllAirfoils(int startNumber, int count);
 
-    AirfoilDetail getDetailInfo(int airfoilId);
+    AirfoilDetail getDetailInfo(String airfoilId);
 
     Future<Message> parse();
 
@@ -35,7 +35,7 @@ public interface ServiceInt {
 
     int getCountAirfoilByPrefix(char prefix);
 
-    List<String> updateGraf(int airfoilId, List<String> checkedList);
+    List<String> updateGraf(String airfoilId, List<String> checkedList);
 
     Message updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
 

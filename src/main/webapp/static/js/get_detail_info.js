@@ -255,7 +255,7 @@ function updateWab() {
         resultCSV += "Max Cl/Cd alpha," + document.getElementById('input_MaxClCdalpha' + i).value + "\n";
         resultCSV += "Url,url" + "\n";
         resultCSV += "\n";
-        resultCSV += 'alpha,CL,CD,CDp,CM,Top_Xtr,Bot_Xtr\n';
+        resultCSV += 'Alpha,Cl,Cd,CDp,Cm,Top_Xtr,Bot_Xtr\n';
 
 
         function tableLength(i) {
@@ -283,7 +283,7 @@ function updateWab() {
         resultCsvObj["maxClCd"] = document.getElementById('input_MaxClCd' + i).value;
 
 
-        console.log(resultCSV);
+        //console.log(resultCSV);
         resultCSVList[i] = resultCsvObj;
     }
 

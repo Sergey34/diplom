@@ -25,7 +25,7 @@ public class AirfoilDTO {
     public static List<AirfoilDTO> mapAirfoilOnAirfoilId(List<Airfoil> airfoils) {
         List<AirfoilDTO> airfoilDTOs = new ArrayList<>();
         for (Airfoil airfoil : airfoils) {
-            airfoilDTOs.add(new AirfoilId(airfoil));
+            airfoilDTOs.add(new AirfoilDTO(airfoil));
         }
         return airfoilDTOs;
     }

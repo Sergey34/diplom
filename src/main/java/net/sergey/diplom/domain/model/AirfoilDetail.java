@@ -23,7 +23,7 @@ public class AirfoilDetail extends AirfoilDTO {
         coordinates = airfoil.getCoordinates();
         imgCsvName = new ArrayList<>();
         for (String chartName : chartNames) {
-            imgCsvName.add(ServiceImpl.getRootUrl() + "/resources/chartTemp/" + airfoil.getId() + chartName + ".png");
+            imgCsvName.add(ServiceImpl.getRootUrl() + "/resources/chartTemp/" + airfoil.getShortName() + chartName + ".png");
         }
         this.stlFilePath = ServiceImpl.getRootUrl() + "/resources/" + stlFilePath;
     }

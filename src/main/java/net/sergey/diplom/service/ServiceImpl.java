@@ -76,6 +76,8 @@ public class ServiceImpl implements ServiceInt {
             LOGGER.warn("ошибка при обновлении airfoil {} \n {}", e.getMessage(), Arrays.toString(e.getStackTrace()));
             return new Message("Ошибка при добавлении в базу нового airfoil", SC_CONFLICT);
         }
+        LOGGER.debug("Airfoil успешно обновлен {}", SC_OK);
+
         return new Message("Airfoil успешно обновлен", SC_OK);
     }
 
@@ -192,7 +194,7 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public List<String> updateGraf(int airfoilId, List<String> checkedList) {
+    public List<String> updateGraf(String airfoilId, List<String> checkedList) {
         Airfoil airfoil = dao.getAirfoilById(airfoilId);
         if (airfoil != null) {
             try {
@@ -210,7 +212,7 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public AirfoilDetail getDetailInfo(int airfoilId) {
+    public AirfoilDetail getDetailInfo(String airfoilId) {
         Airfoil airfoil = dao.getAirfoilById(airfoilId);
         if (null == airfoil) {
             return null;
@@ -277,7 +279,7 @@ public class ServiceImpl implements ServiceInt {
             return new Message("Имя не должно быть пустым", SC_NOT_ACCEPTABLE);
         }
         Airfoil airfoil = new Airfoil(name, details, shortName);
-        if (dao.getAirfoilById(shortName.hashCode()) != null) {
+        if (dao.getAirfoilById(shortName) != null) {
             return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
         }
         return addUpdateAirfoil(fileAirfoil, files, airfoil);
@@ -286,12 +288,12 @@ public class ServiceImpl implements ServiceInt {
     private Message addUpdateAirfoil(MultipartFile fileAirfoil, List<MultipartFile> files, Airfoil airfoil) {
         try {
             if (fileAirfoil == null || fileAirfoil.isEmpty()) {
-                airfoil.setCoordView(dao.getAirfoilById(airfoil.getId()).getCoordView());
+                airfoil.setCoordView(dao.getAirfoilById(airfoil.getShortName()).getCoordView());
             } else {
                 airfoil.setCoordView(parserService.parseFileAirfoil(fileAirfoil));
             }
             if (files == null || files.size() == 1 && files.get(0).isEmpty()) {
-                airfoil.setCoordinates(dao.getAirfoilById(airfoil.getId()).getCoordinates());
+                airfoil.setCoordinates(dao.getAirfoilById(airfoil.getShortName()).getCoordinates());
             } else {
                 airfoil.setCoordinates(createCoordinateSet(files));
             }
@@ -315,7 +317,7 @@ public class ServiceImpl implements ServiceInt {
 
     @Override
     public Message addAirfoil(AirfoilEdit airfoilEdit) {
-        if (dao.getAirfoilById(airfoilEdit.getShortName().hashCode()) != null) {
+        if (dao.getAirfoilById(airfoilEdit.getShortName()) != null) {
             return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
         }
         Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);

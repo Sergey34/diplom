@@ -25,7 +25,7 @@ public interface DAO {
 
     void addAirfoil(Airfoil airfoil);
 
-    Airfoil getAirfoilById(int id);
+    Airfoil getAirfoilById(String id);
 
     int getCountAirfoilByPrefix(char prefix);
 

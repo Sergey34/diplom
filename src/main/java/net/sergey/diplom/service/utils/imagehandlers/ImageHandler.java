@@ -22,7 +22,7 @@ public class ImageHandler implements Callable<Void> {
     private final String fileName;
     private StyleXYChart style;
 
-    public ImageHandler(String xAlisa, String yAlisa, int id, StyleXYChart style) {
+    public ImageHandler(String xAlisa, String yAlisa, String id, StyleXYChart style) {
         xyList = new ArrayList<>();
         this.xAlisa = xAlisa;
         this.yAlisa = yAlisa;

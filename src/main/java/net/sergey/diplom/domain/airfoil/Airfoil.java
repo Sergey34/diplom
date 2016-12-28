@@ -6,12 +6,10 @@ import java.util.Set;
 @Entity
 @Table(name = "airfoil")
 public class Airfoil {
-    @Id
-    @Column(name = "id")
-    private int id;
     @Basic
     @Column(name = "name")
     private String name;
+    @Id
     @Column(name = "shortName")
     private String shortName;
     @Column(name = "coord")
@@ -32,9 +30,7 @@ public class Airfoil {
     public Airfoil(String name, String description, Prefix prefix, String shortName) {
         this.name = name;
         this.description = description;
-
         this.prefix = prefix;
-        this.id = shortName.hashCode();
         this.shortName = shortName;
     }
 
@@ -44,7 +40,6 @@ public class Airfoil {
     public Airfoil(String name, String description, String image, int id, Prefix prefix) {
         this.name = name;
         this.description = description;
-        this.id = id;
         this.prefix = prefix;
     }
 
@@ -53,7 +48,6 @@ public class Airfoil {
         this.shortName = shortName;
         this.prefix = new Prefix(shortName.toUpperCase().charAt(0));
         this.description = details;
-        this.id = shortName.hashCode();
     }
 
     public Set<Coordinates> getCoordinates() {
@@ -70,14 +64,6 @@ public class Airfoil {
 
     public void setPrefix(Prefix prefix) {
         this.prefix = prefix;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -103,21 +89,13 @@ public class Airfoil {
 
         Airfoil airfoil = (Airfoil) o;
 
-        if (id != airfoil.id) return false;
-        if (name != null ? !name.equals(airfoil.name) : airfoil.name != null) return false;
-        if (description != null ? !description.equals(airfoil.description) : airfoil.description != null) return false;
-
-        return true;
+        return shortName != null ? shortName.equals(airfoil.shortName) : airfoil.shortName == null;
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        return result;
+        return shortName != null ? shortName.hashCode() : 0;
     }
-
 
     public String getShortName() {
         return shortName;
@@ -125,7 +103,6 @@ public class Airfoil {
 
     public void setShortName(String shortName) {
         this.shortName = shortName;
-        this.id = shortName.hashCode();
     }
 
     public String getCoordView() {

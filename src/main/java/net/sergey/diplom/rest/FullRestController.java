@@ -52,7 +52,7 @@ public class FullRestController {
     }
 
     @RequestMapping(value = "/getDetailInfo/{airfoilId}", method = RequestMethod.GET)
-    public AirfoilDetail getDetailInfo(@PathVariable int airfoilId) {
+    public AirfoilDetail getDetailInfo(@PathVariable String airfoilId) {
         return service.getDetailInfo(airfoilId);
     }
 
@@ -62,7 +62,7 @@ public class FullRestController {
     }
 
     @RequestMapping(value = "/updateGraf/{airfoilId}", method = RequestMethod.POST)
-    public List<String> updateGraf(@PathVariable int airfoilId, @RequestBody List<String> checkedList) {
+    public List<String> updateGraf(@PathVariable String airfoilId, @RequestBody List<String> checkedList) {
         return service.updateGraf(airfoilId, checkedList);
     }
 }
