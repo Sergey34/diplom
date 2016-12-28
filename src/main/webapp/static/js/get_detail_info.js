@@ -263,7 +263,6 @@ function updateWab() {
         }
 
         function getTableItem(i, j, number, name) {
-            console.log(name + number + "[" + i + "][" + j + "]");
             return document.getElementsByName(name + number + "[" + i + "][" + j + "]")[0].value;
         }
 
