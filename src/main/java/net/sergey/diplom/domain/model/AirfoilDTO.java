@@ -1,6 +1,7 @@
 package net.sergey.diplom.domain.model;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
+import net.sergey.diplom.service.ServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,8 @@ public class AirfoilDTO {
     public AirfoilDTO(Airfoil airfoil) {
         this.name = airfoil.getName();
         this.description = airfoil.getDescription();
-        this.image = airfoil.getImage();
         this.shortName = airfoil.getShortName();
+        this.image = ServiceImpl.getRootUrl() + "/resources/airfoil_img/" + shortName + ".png";
     }
 
     public AirfoilDTO() {

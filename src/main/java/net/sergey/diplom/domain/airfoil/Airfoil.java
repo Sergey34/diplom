@@ -19,9 +19,6 @@ public class Airfoil {
     @Basic
     @Column(name = "description")
     private String description;
-    @Basic
-    @Column(name = "image")
-    private String image;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "prefix")
@@ -35,7 +32,7 @@ public class Airfoil {
     public Airfoil(String name, String description, Prefix prefix, String shortName) {
         this.name = name;
         this.description = description;
-        this.image = "/resources/airfoil_img/" + shortName + ".png";//// TODO: 17.11.16 убрать в TDO
+
         this.prefix = prefix;
         this.id = shortName.hashCode();
         this.shortName = shortName;
@@ -47,7 +44,6 @@ public class Airfoil {
     public Airfoil(String name, String description, String image, int id, Prefix prefix) {
         this.name = name;
         this.description = description;
-        this.image = image;
         this.id = id;
         this.prefix = prefix;
     }
@@ -57,7 +53,6 @@ public class Airfoil {
         this.shortName = shortName;
         this.prefix = new Prefix(shortName.toUpperCase().charAt(0));
         this.description = details;
-        this.image = "/resources/airfoil_img/" + shortName + ".png";//// TODO: 17.11.16 убрать в TDO
         this.id = shortName.hashCode();
     }
 
@@ -101,14 +96,6 @@ public class Airfoil {
         this.description = description;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -119,7 +106,6 @@ public class Airfoil {
         if (id != airfoil.id) return false;
         if (name != null ? !name.equals(airfoil.name) : airfoil.name != null) return false;
         if (description != null ? !description.equals(airfoil.description) : airfoil.description != null) return false;
-        if (image != null ? !image.equals(airfoil.image) : airfoil.image != null) return false;
 
         return true;
     }
@@ -129,7 +115,6 @@ public class Airfoil {
         int result = id;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (image != null ? image.hashCode() : 0);
         return result;
     }
 
@@ -141,7 +126,6 @@ public class Airfoil {
     public void setShortName(String shortName) {
         this.shortName = shortName;
         this.id = shortName.hashCode();
-        this.image = "/resources/airfoil_img/" + shortName + ".png";//// TODO: 17.11.16 убрать в TDO
     }
 
     public String getCoordView() {
