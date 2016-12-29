@@ -69,6 +69,9 @@ public class ServiceImpl implements ServiceInt {
 
     @Override
     public Message updateAirfoil(AirfoilEdit airfoilEdit) {
+        if (airfoilEdit.getShortName() == null || airfoilEdit.getShortName().isEmpty()) {
+            return new Message("Ошибка при добавлении в базу нового airfoil. Короткое имя профиля не должно быть пустым", SC_NOT_ACCEPTABLE);
+        }
         Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
         try {
             dao.addAirfoil(airfoil);
@@ -77,7 +80,6 @@ public class ServiceImpl implements ServiceInt {
             return new Message("Ошибка при добавлении в базу нового airfoil", SC_CONFLICT);
         }
         LOGGER.debug("Airfoil успешно обновлен {}", SC_OK);
-
         return new Message("Airfoil успешно обновлен", SC_OK);
     }
 
@@ -317,6 +319,9 @@ public class ServiceImpl implements ServiceInt {
 
     @Override
     public Message addAirfoil(AirfoilEdit airfoilEdit) {
+        if (airfoilEdit.getShortName() == null || airfoilEdit.getShortName().isEmpty()) {
+            return new Message("Ошибка при добавлении в базу нового airfoil. Короткое имя профиля не должно быть пустым", SC_NOT_ACCEPTABLE);
+        }
         if (dao.getAirfoilById(airfoilEdit.getShortName()) != null) {
             return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
         }

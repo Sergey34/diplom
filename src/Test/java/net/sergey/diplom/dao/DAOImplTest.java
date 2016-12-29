@@ -41,12 +41,6 @@ public class DAOImplTest {
         }
     }
 
-
-    @Test
-    public void getAirfoilById() throws Exception {
-        Airfoil airfoilById = dao.getAirfoilById(-69467);
-    }
-
     @Test
     public void getAirfoilsByPrefix() throws Exception {
         long start = System.currentTimeMillis();

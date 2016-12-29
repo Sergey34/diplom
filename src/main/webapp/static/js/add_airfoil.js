@@ -67,6 +67,8 @@ function saveWab() {
             data: JSON.stringify(data),
             dataType: 'json',
             timeout: 600000
+        }).then(function (data) {
+            console.log(data);
         });
     });
 }
