@@ -67,7 +67,6 @@ public class ImageHandler implements Callable<Void> {
                     BitmapEncoder.BitmapFormat.PNG, 80);
         } catch (Exception e) {
             LOGGER.warn("не удалось сохранить график {}", chart.getTitle());
-            e.printStackTrace();
         }
         return null;
     }

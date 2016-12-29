@@ -76,7 +76,7 @@ public class ServiceImpl implements ServiceInt {
         try {
             dao.addAirfoil(airfoil);
         } catch (Exception e) {
-            LOGGER.warn("ошибка при обновлении airfoil {} \n {}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+            LOGGER.warn("Ошибка при обновлении airfoil {}", e);
             return new Message("Ошибка при добавлении в базу нового airfoil", SC_CONFLICT);
         }
         LOGGER.debug("Airfoil успешно обновлен {}", SC_OK);
@@ -126,10 +126,14 @@ public class ServiceImpl implements ServiceInt {
         user.setUserRoles(findUserRoleByName(userView.getRole()));
         try {
             dao.addUser(user);
+            LOGGER.trace("Пользователь успешно создан");
             return new Message("Пользователь успешно создан", SC_OK);
         } catch (ConstraintViolationException e) {
-            LOGGER.warn("пользователь с именем {} уже существует в базе. {}", user.getUserName(), e.getStackTrace());
+            LOGGER.trace("пользователь с именем {} уже существует в базе.", user.getUserName());
             return new Message("Пользователь с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
+        } catch (Exception e) {
+            LOGGER.trace("Ошибка при добавлении пользователя {}, {}", user.getUserName(), e);
+            return new Message("Ошибка при добавлении пользователя", SC_CONFLICT);
         }
     }
 
@@ -145,7 +149,7 @@ public class ServiceImpl implements ServiceInt {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(servletContext.getRealPath("/static/js/getContextPath.js")))) {
             bufferedWriter.write("let rootUrl = '" + rootUrl + "';");
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn("Ошибка при инициализации rootUrl {}", e);
         }
     }
 
@@ -183,9 +187,8 @@ public class ServiceImpl implements ServiceInt {
                 x.add(Double.parseDouble(strings[0]));
                 y.add(Double.parseDouble(strings[strings.length - 1]));
             } catch (Exception e) {
-                LOGGER.warn("Оштбка чтения файла");
-                e.printStackTrace();
-                throw e;
+                LOGGER.warn("Оштбка чтения файла {}", e);
+                break;
             }
         }
     }
@@ -202,8 +205,7 @@ public class ServiceImpl implements ServiceInt {
             try {
                 new BuilderGraphs(PATH).draw(airfoil, checkedList, true);
             } catch (Exception e) {
-                e.printStackTrace();
-                LOGGER.warn("Ошибка при обработке файловк с координатами {}\n{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+                LOGGER.warn("Ошибка при обработке файловк с координатами {}", e);
             }
         }
         List<String> imgCsvName = new ArrayList<>();
@@ -224,8 +226,7 @@ public class ServiceImpl implements ServiceInt {
             new BuilderGraphs(PATH).draw(airfoil, null, false);
             stlFilePath = new AirfoilStlGenerator().generate(airfoil.getShortName(), airfoil.getCoordView(), PATH);
         } catch (Exception e) {
-            e.printStackTrace();
-            LOGGER.warn("Ошибка при обработке файлов с координатами {}\n{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+            LOGGER.warn("Ошибка при обработке файлов с координатами {}", e);
         }
         drawViewAirfoil(airfoil);
         return new AirfoilDetail(airfoil, CHART_NAMES, stlFilePath);
@@ -243,7 +244,7 @@ public class ServiceImpl implements ServiceInt {
         try {
             imageHandler.draw();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.warn("Ошибка при рисовании графиков {}", e);
         }
 
     }
@@ -257,8 +258,7 @@ public class ServiceImpl implements ServiceInt {
             parserService.parse();
             return new AsyncResult<>(new Message("Данные успешно загружены", SC_OK));
         } catch (Exception e) {
-            LOGGER.warn("ошибка инициализации базы {}", Arrays.asList(e.getStackTrace()));
-            e.printStackTrace();
+            LOGGER.warn("ошибка инициализации базы {}", e);
             return new AsyncResult<Message>(new MessageError("Произошла ошибка при загрузке данных", SC_NOT_IMPLEMENTED, e.getStackTrace()));
         } finally {
             parsingIsStarting = false;
@@ -278,10 +278,12 @@ public class ServiceImpl implements ServiceInt {
     @Override
     public Message addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
         if (name.isEmpty()) {
+            LOGGER.debug("Имя не должно быть пустым");
             return new Message("Имя не должно быть пустым", SC_NOT_ACCEPTABLE);
         }
         Airfoil airfoil = new Airfoil(name, details, shortName);
         if (dao.getAirfoilById(shortName) != null) {
+            LOGGER.debug("Airfoil с таким именем уже существует, Выберите другое имя");
             return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
         }
         return addUpdateAirfoil(fileAirfoil, files, airfoil);
@@ -301,10 +303,12 @@ public class ServiceImpl implements ServiceInt {
             }
             dao.addAirfoil(airfoil);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.warn("Один из файлов имеет не верный формат {}", e);
             return new Message("Один из файлов имеет не верный формат", SC_NOT_ACCEPTABLE);
         }
+        LOGGER.debug("Airfoil успешно добален / обновлен");
         return new Message("Airfoil успешно добален / обновлен", SC_OK);
+
     }
 
 
@@ -320,20 +324,21 @@ public class ServiceImpl implements ServiceInt {
     @Override
     public Message addAirfoil(AirfoilEdit airfoilEdit) {
         if (airfoilEdit.getShortName() == null || airfoilEdit.getShortName().isEmpty()) {
+            LOGGER.debug("airfoil не добавлен - Короткое имя профиля не должно быть пустым");
             return new Message("Ошибка при добавлении в базу нового airfoil. Короткое имя профиля не должно быть пустым", SC_NOT_ACCEPTABLE);
         }
         if (dao.getAirfoilById(airfoilEdit.getShortName()) != null) {
+            LOGGER.debug("Airfoil с таким именем уже существует, Выберите другое имя");
             return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
         }
         Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
         try {
             dao.addAirfoil(airfoil);
         } catch (Exception e) {
-            LOGGER.warn("ошибка при добавлении в базу нового airfoil {}\n{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+            LOGGER.warn("ошибка при добавлении в базу нового airfoil {}", e);
             return new Message("Ошибка при добавлении в базу нового airfoil", SC_CONFLICT);
         }
         return new Message("Airfoil успешно добавлен", SC_OK);
-
     }
 
     @Override
@@ -345,7 +350,6 @@ public class ServiceImpl implements ServiceInt {
 
     @Override
     public int getCountAirfoilByPrefix(char prefix) {
-        System.out.println(servletContext.getRealPath("/WEB-INF/"));
         return dao.getCountAirfoilByPrefix(prefix);
     }
 

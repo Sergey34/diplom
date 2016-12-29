@@ -44,7 +44,7 @@ public class ParserService {
         this.applicationContext = applicationContext;
         this.dao = dao;
         this.eventService = eventService;
-        this.constants=constants;
+        this.constants = constants;
         this.servletContext = servletContext;
     }
 
@@ -169,7 +169,6 @@ public class ParserService {
         try {
             executorService.awaitTermination(60, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            e.printStackTrace();
             LOGGER.warn(" {}", e);
         }
         executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());

@@ -31,13 +31,10 @@ import static net.sergey.diplom.service.parser.ParserService.*;
 @Scope("prototype")
 @Component
 public class ParserAirfoil implements Callable<Void> {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-
     private final DAO dao;
     private final EventService eventService;
     private final Constant constants;
-
     private String prefix;
 
     @Autowired
@@ -45,7 +42,6 @@ public class ParserAirfoil implements Callable<Void> {
         this.dao = dao;
         this.eventService = eventService;
         this.constants = constants;
-
     }
 
     public static String csvToString(InputStream urlFile) throws IOException {

@@ -1,5 +1,9 @@
 package net.sergey.diplom.service.spline;
 
+import net.sergey.diplom.service.utils.UtilsLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,12 +12,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class AirfoilStlGenerator {
-
     private static final String REGEX = ",";
     private static final int b = 100;
     private static final StringBuilder FILE_HEADER = new StringBuilder();
     private static final StringBuilder FILE_FOOTER = new StringBuilder();
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
 
     static {
         FILE_HEADER.append("module airfoil(h) {\n\tlinear_extrude(height = h, convexity = 10, $fn = 200) {\n")
@@ -32,7 +35,7 @@ public class AirfoilStlGenerator {
                 x.add(Double.parseDouble(strings[0]));
                 y.add(Double.parseDouble(strings[strings.length - 1]));
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.warn("Ошибка генерации STL файлв {}", e);
                 throw e;
             }
         }
@@ -61,7 +64,7 @@ public class AirfoilStlGenerator {
             scadWriter.write(FILE_FOOTER.toString());
             return fileName + '_' + b + ".scad";
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn("Ошибка генерации STL файлв {}", e);
             throw e;
         }
     }

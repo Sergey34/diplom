@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 @Aspect
 public class AspectLogger {
     private static final Logger LOGGER =
-            LoggerFactory.getLogger(UtilsLogger.getStaticClassName() + "MethodLoggerServiceImpl");
+            LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
 
     @After("execution(* net.sergey.diplom.service.ServiceInt.*(..))")
     public void log(JoinPoint joinPoint) {

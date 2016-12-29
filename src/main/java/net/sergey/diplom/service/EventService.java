@@ -1,6 +1,9 @@
 package net.sergey.diplom.service;
 
 
+import net.sergey.diplom.service.utils.UtilsLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -14,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class EventService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final Map<String, String> progressMap = new ConcurrentHashMap<>();
     private final List<SseEmitter> emitters = new ArrayList<>();
 
@@ -42,7 +46,7 @@ public class EventService {
             } catch (IOException e) {
                 emitter.complete();
                 emitters.remove(emitter);
-                e.printStackTrace();
+                LOGGER.warn("Ошибка отправки увеомления о работе парсера {}", e);
             }
         }
     }
