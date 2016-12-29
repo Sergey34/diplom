@@ -77,11 +77,9 @@ CREATE TABLE prefix (
 );
 
 CREATE TABLE airfoil (
-  id          INT PRIMARY KEY AUTO_INCREMENT,
-  shortName   VARCHAR(60),
+  shortName   VARCHAR(60) PRIMARY KEY,
   name        VARCHAR(255) UNIQUE,
   description VARCHAR(255),
-  image       VARCHAR(60),
   prefix      INT,
   coord       TEXT,
   FOREIGN KEY (prefix) REFERENCES prefix (id_prefix)
@@ -97,9 +95,9 @@ CREATE TABLE coordinates (
 );
 
 CREATE TABLE airfoil_coordinates (
-  id_airfoil     INT,
+  id_airfoil     VARCHAR(60),
   id_coordinates INT UNIQUE,
-  FOREIGN KEY (id_airfoil) REFERENCES airfoil (id),
+  FOREIGN KEY (id_airfoil) REFERENCES airfoil (shortName),
   FOREIGN KEY (id_coordinates) REFERENCES coordinates (id)
 );
 
@@ -111,6 +109,5 @@ SELECT
   sum(data_length + index_length) / 1024 / 1024 "Data Base Size in MB"
 FROM information_schema.TABLES
 GROUP BY table_schema;
-
 
 
