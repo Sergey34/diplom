@@ -69,6 +69,7 @@ function saveWab() {
             timeout: 600000
         }).then(function (data) {
             console.log(data);
+            alert(data.message);
         });
     });
 }
