@@ -186,9 +186,9 @@ function fillEditableContentDetailInfoEditableTable(data) {
 
                 let Reynolds_number = createLabel('Reynolds_number', "Reynolds number", i, coordinatesItem.renolgs);
                 let Ncrit = createLabel('Ncrit', "Ncrit", i, coordinatesItem.nCrit);
-                let Mach = createLabel('Mach', "Mach", i, "Mach");//todo получить MaxClCdalpha
+                let Mach = createLabel('Mach', "Mach", i, "Mach");
                 let MaxClCd = createLabel('MaxClCd', "Max Cl/Cd", i, coordinatesItem.maxClCd);
-                let MaxClCdalpha = createLabel('MaxClCdalpha', "Max Cl/Cd alpha", i, "MaxClCdalpha");//todo получить MaxClCdalpha
+                let MaxClCdalpha = createLabel('MaxClCdalpha', "Max Cl/Cd alpha", i, "MaxClCdalpha");
 
                 document.getElementById('editableTables').appendChild(Reynolds_number);
                 document.getElementById('editableTables').appendChild(Ncrit);
@@ -209,6 +209,8 @@ function fillEditableContentDetailInfoEditableTable(data) {
                     'name': 'tabular' + i,
                     'animate': true
                 });
+                document.getElementById('input_Mach' + i).setAttribute('value', coordinatesJson[5].split(',')[1]);
+                document.getElementById('input_MaxClCdalpha' + i).setAttribute('value', coordinatesJson[7].split(',')[1]);
 
                 for (let j = 11, l = 1; j < coordinatesJson.length - 1; j++, l++) {
                     let items = coordinatesJson[j].split(',');
