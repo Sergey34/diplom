@@ -13,6 +13,7 @@ import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.service.parser.ParserAirfoil;
 import net.sergey.diplom.service.parser.ParserService;
+import net.sergey.diplom.service.properties.PropertiesHandler;
 import net.sergey.diplom.service.spline.AirfoilStlGenerator;
 import net.sergey.diplom.service.utils.BuilderGraphs;
 import net.sergey.diplom.service.utils.UtilsLogger;
@@ -49,13 +50,15 @@ public class ServiceImpl implements ServiceInt {
     private final DAO dao;
     private final ParserService parserService;
     private final ServletContext servletContext;
+    private final PropertiesHandler propertiesHandler;
     private boolean parsingIsStarting = false;
 
     @Autowired
-    public ServiceImpl(DAO dao, ServletContext servletContext, ParserService parserService) {
+    public ServiceImpl(DAO dao, ServletContext servletContext, ParserService parserService, PropertiesHandler propertiesHandler) {
         this.dao = dao;
         this.servletContext = servletContext;
         this.parserService = parserService;
+        this.propertiesHandler = propertiesHandler;
     }
 
     public static String getRootUrl() {
@@ -88,7 +91,8 @@ public class ServiceImpl implements ServiceInt {
         if (dao.getMenuItemByUrl(airfoil.getPrefix().getPrefix()) == null) {
             List<Menu> allMenu = dao.getAllMenu();
             for (Menu menu : allMenu) {
-                if ("Airfoils A to Z".equals(menu.getHeader())) {
+                ;
+                if (menu.getHeader().equals(propertiesHandler.getProperty("menu_Header"))) {
                     MenuItem menuItem = MenuItem.createMenuItemByNewPrefix(airfoil.getPrefix());
                     menu.getMenuItems().add(menuItem);
                     break;
@@ -161,6 +165,11 @@ public class ServiceImpl implements ServiceInt {
     public void init() {
         PATH = servletContext.getRealPath("/resources/");
         rootUrl = servletContext.getContextPath();
+        try {
+            propertiesHandler.load(servletContext.getRealPath("/WEB-INF/") + "/config.properties");
+        } catch (IOException e) {
+            LOGGER.warn("Ошибка при попытке инициализировать настройки парсера");
+        }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(servletContext.getRealPath("/static/js/getContextPath.js")))) {
             bufferedWriter.write("let rootUrl = '" + rootUrl + "';");
         } catch (IOException e) {
