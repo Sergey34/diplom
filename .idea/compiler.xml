@@ -2,7 +2,6 @@
 <project version="4">
   <component name="AjcSettings">
     <option name="ajcPath" value="$MAVEN_REPOSITORY$/org/aspectj/aspectjtools/1.8.9/aspectjtools-1.8.9.jar" />
-    <option name="cmdLineParams" value="-Xlint:warning" />
     <option name="delegateToJavac" value="true" />
   </component>
   <component name="CompilerConfiguration">
@@ -13,27 +12,18 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="base" />
-        <module name="BuilderGraphs" />
+        <module name="diplom" />
         <module name="event" />
         <module name="graph" />
         <module name="parser" />
-      </profile>
-      <profile name="Annotation profile for diplom" enabled="true">
-        <sourceOutputDir name="../parser/target/generated-sources/annotations" />
-        <sourceTestOutputDir name="../parser/target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
         <module name="spline" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="base" target="1.8" />
-      <module name="builder_graphs" target="1.7" />
-      <module name="BuilderGraphs" target="1.7" />
       <module name="diplom" target="1.8" />
-      <module name="Event" target="1.7" />
       <module name="event" target="1.8" />
       <module name="graph" target="1.8" />
-      <module name="graphs" target="1.8" />
       <module name="parser" target="1.8" />
       <module name="spline" target="1.8" />
     </bytecodeTargetLevel>

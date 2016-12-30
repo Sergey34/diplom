@@ -1,11 +1,0 @@
-
-Psquid:S2696"6Make the enclosing method "static" or remove this set.(ÍÑÑäüÿÿÿÿ
-dsquid:S3008"ORename this field "PATH" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(²×—¬
-Ysquid:CallToDeprecatedMethod"3Remove this use of "AirfoilView"; it is deprecated.(ã‹÷à
-Osquid:S1161":Add the "@Override" annotation above this method signature( Üó
-:squid:S1166"%Either log or rethrow this exception.(”ý¾
-8squid:S2095"Close this "FileOutputStream".(òàÈùÿÿÿÿ
-?squid:S1166"%Either log or rethrow this exception.(Ñ†¿áûÿÿÿÿ
-:squid:S1166"%Either log or rethrow this exception.(ï­£Ä
-=squid:S1148"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
-Xsquid:S1155">Use isEmpty() to check whether the collection is empty or not.(§ì¼±ÿÿÿÿÿ
