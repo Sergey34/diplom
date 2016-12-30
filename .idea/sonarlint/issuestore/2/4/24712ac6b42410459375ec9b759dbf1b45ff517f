@@ -1,0 +1,12 @@
+
+?squid:S1166"%Either log or rethrow this exception.(ò‘¯Äýÿÿÿÿ
+:squid:S1166"%Either log or rethrow this exception.(ï­£Ä
+`squid:S1192"FDefine a constant instead of duplicating this literal "Alpha" 8 times.(»ƒèÅýÿÿÿÿ
+dsquid:S00116"ORename this field "PATH" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¡‘òJ
+=squid:S1148"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+b
+squid:S134"NRefactor this code to not nest more than 3 if/for/while/switch/try statements.(ï¹Ò‘
+=squid:S1148"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ
+:squid:S1166"%Either log or rethrow this exception.(üŸ´Â
+=squid:S1604"(Make this anonymous inner class a lambda(’Òåá
+asquid:S00112"FDefine and throw a dedicated exception instead of using a generic one.(Þ”ôÜÿÿÿÿÿ
