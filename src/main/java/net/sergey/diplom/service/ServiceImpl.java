@@ -73,6 +73,7 @@ public class ServiceImpl implements ServiceInt {
             return new Message("Ошибка при добавлении в базу нового airfoil. Короткое имя профиля не должно быть пустым", SC_NOT_ACCEPTABLE);
         }
         Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
+        addMenuItemForNewAirfoil(airfoil);
         try {
             dao.addAirfoil(airfoil);
         } catch (Exception e) {
@@ -81,6 +82,20 @@ public class ServiceImpl implements ServiceInt {
         }
         LOGGER.debug("Airfoil успешно обновлен {}", SC_OK);
         return new Message("Airfoil успешно обновлен", SC_OK);
+    }
+
+    private void addMenuItemForNewAirfoil(Airfoil airfoil) {
+        if (dao.getMenuItemByUrl(airfoil.getPrefix().getPrefix()) == null) {
+            List<Menu> allMenu = dao.getAllMenu();
+            for (Menu menu : allMenu) {
+                if ("Airfoils A to Z".equals(menu.getHeader())) {
+                    MenuItem menuItem = MenuItem.createMenuItemByNewPrefix(airfoil.getPrefix());
+                    menu.getMenuItems().add(menuItem);
+                    break;
+                }
+            }
+            dao.addMenus(allMenu);
+        }
     }
 
     private Airfoil getAirfoilByAirfoilEdit(AirfoilEdit airfoilEdit) {
@@ -301,6 +316,7 @@ public class ServiceImpl implements ServiceInt {
             } else {
                 airfoil.setCoordinates(createCoordinateSet(files));
             }
+            addMenuItemForNewAirfoil(airfoil);
             dao.addAirfoil(airfoil);
         } catch (Exception e) {
             LOGGER.warn("Один из файлов имеет не верный формат {}", e);
@@ -332,6 +348,7 @@ public class ServiceImpl implements ServiceInt {
             return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
         }
         Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
+        addMenuItemForNewAirfoil(airfoil);
         try {
             dao.addAirfoil(airfoil);
         } catch (Exception e) {

@@ -2,6 +2,7 @@ package net.sergey.diplom.dao;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
+import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
 
@@ -29,4 +30,5 @@ public interface DAO {
 
     int getCountAirfoilByPrefix(char prefix);
 
+    MenuItem getMenuItemByUrl(char prefix);
 }

@@ -3,6 +3,7 @@ package net.sergey.diplom.dao;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
+import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
 import org.hibernate.Criteria;
@@ -122,6 +123,12 @@ public class DAOImpl implements DAO {
         Prefix prefixTemplate = new Prefix(prefix);
         return sessionFactory.getCurrentSession().createCriteria(Airfoil.class).createCriteria("prefix")
                 .add(Example.create(prefixTemplate)).list().size();
+    }
+
+    @Override
+    public MenuItem getMenuItemByUrl(char prefix) {
+        return (MenuItem) sessionFactory.getCurrentSession().createCriteria(MenuItem.class).
+                add(Restrictions.eq("urlCode", String.valueOf(prefix))).uniqueResult();
     }
 
 

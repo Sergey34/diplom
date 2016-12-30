@@ -1,5 +1,7 @@
 package net.sergey.diplom.domain.menu;
 
+import net.sergey.diplom.domain.airfoil.Prefix;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -23,6 +25,10 @@ public class MenuItem {
     }
 
     public MenuItem() {
+    }
+
+    public static MenuItem createMenuItemByNewPrefix(Prefix prefix) {
+        return new MenuItem(String.valueOf(prefix.getPrefix()), String.valueOf(prefix.getPrefix()));
     }
 
     public int getId() {
