@@ -65,17 +65,16 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public List<User> getUserByName(String name) {
+    public User getUserByName(String name) {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(User.class)
                 .add(Restrictions.eq("userName", name));
         @SuppressWarnings("unchecked")
-        List<User> users = criteria.list();
-        for (User user : users) {
-            if (user != null) {
-                Hibernate.initialize(user.getUserRoles());
-            }
+        User user = (User) criteria.uniqueResult();
+        if (user == null) {
+            return null;
         }
-        return users;
+        Hibernate.initialize(user.getUserRoles());
+        return user;
     }
 
     private <T> void save(T object) {
@@ -127,9 +126,9 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public MenuItem getMenuItemByUrl(char prefix) {
+    public MenuItem getMenuItemByUrl(String prefix) {
         return (MenuItem) sessionFactory.getCurrentSession().createCriteria(MenuItem.class).
-                add(Restrictions.eq("urlCode", String.valueOf(prefix))).uniqueResult();
+                add(Restrictions.eq("urlCode", prefix)).uniqueResult();
     }
 
 

@@ -65,7 +65,6 @@ public class MenuItem {
         if (id != menuItem.id) return false;
         if (name != null ? !name.equals(menuItem.name) : menuItem.name != null) return false;
         return urlCode != null ? urlCode.equals(menuItem.urlCode) : menuItem.urlCode == null;
-
     }
 
     @Override

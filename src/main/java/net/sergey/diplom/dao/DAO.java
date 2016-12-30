@@ -16,7 +16,7 @@ public interface DAO {
 
     void addUser(User user);
 
-    List<User> getUserByName(String name);
+    User getUserByName(String name);
 
     void addMenus(List<Menu> menus);
 
@@ -30,5 +30,5 @@ public interface DAO {
 
     int getCountAirfoilByPrefix(char prefix);
 
-    MenuItem getMenuItemByUrl(char prefix);
+    MenuItem getMenuItemByUrl(String prefix);
 }
