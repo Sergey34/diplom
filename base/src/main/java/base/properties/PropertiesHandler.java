@@ -1,5 +1,6 @@
 package base.properties;
 
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Component;
 
