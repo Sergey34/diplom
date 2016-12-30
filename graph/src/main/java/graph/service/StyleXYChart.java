@@ -1,4 +1,4 @@
-package graph.imagehandlers;
+package graph.service;
 
 import org.knowm.xchart.XYChart;
 

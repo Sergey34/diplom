@@ -1,13 +1,11 @@
-package graph;
+package graph.service;
 
 import au.com.bytecode.opencsv.CSVParser;
 import au.com.bytecode.opencsv.CSVWriter;
 import base.UtilsLogger;
 import base.domain.airfoil.Airfoil;
 import base.domain.airfoil.Coordinates;
-import graph.imagehandlers.ImageHandler;
-import graph.imagehandlers.Xy;
-import graph.imagehandlers.createxychartstyle.SimpleStyle;
+import graph.service.createxychartstyle.SimpleStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

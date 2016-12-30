@@ -1,4 +1,4 @@
-package eventservice;
+package event.service;
 
 
 import base.UtilsLogger;

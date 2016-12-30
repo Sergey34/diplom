@@ -1,4 +1,4 @@
-package graph.imagehandlers;
+package graph.service;
 
 import java.util.List;
 

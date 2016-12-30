@@ -1,7 +1,7 @@
-package graph.imagehandlers.createxychartstyle;
+package graph.service.createxychartstyle;
 
 
-import graph.imagehandlers.StyleXYChart;
+import graph.service.StyleXYChart;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.style.XYStyler;
 

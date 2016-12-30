@@ -1,4 +1,4 @@
-package spline;
+package spline.service;
 
 
 import base.UtilsLogger;

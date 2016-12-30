@@ -1,4 +1,4 @@
-package spline;
+package spline.service;
 
 import java.util.ArrayList;
 import java.util.List;

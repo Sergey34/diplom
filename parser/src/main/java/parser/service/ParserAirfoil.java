@@ -1,4 +1,4 @@
-package parser;
+package parser.service;
 
 
 import base.UtilsLogger;
@@ -23,9 +23,6 @@ import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static parser.ConstantApi.*;
-import static parser.ParserService.*;
 
 
 @Scope("prototype")
@@ -61,9 +58,9 @@ public class ParserAirfoil implements Callable<Void> {
     private void parseAirfoilByUrl(String prefix) throws IOException {
         String url = ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX + prefix + constants.NO;
         Prefix prefix1 = new Prefix(prefix.charAt(0));
-        int countPages = createIntByPattern(getJsoupConnect(url, constants.TIMEOUT).get().html(), constants.GET_COUNT_PAGES_PATTERN);
+        int countPages = createIntByPattern(ParserService.getJsoupConnect(url, constants.TIMEOUT).get().html(), constants.GET_COUNT_PAGES_PATTERN);
         for (int i = 0; i < countPages; i++) {
-            Elements airfoilList = getJsoupConnect(url + i, constants.TIMEOUT).get().body().getElementsByClass(constants.AFSEARCHRESULT).
+            Elements airfoilList = ParserService.getJsoupConnect(url + i, constants.TIMEOUT).get().body().getElementsByClass(constants.AFSEARCHRESULT).
                     first().getElementsByTag(constants.TR);
             List<Airfoil> airfoils = parsePage(prefix1, airfoilList, countPages);
             //dao.addAirfoils(airfoils);
@@ -82,7 +79,7 @@ public class ParserAirfoil implements Callable<Void> {
                 String name = cell12.text();
                 String description = airfoilList.get(j + 1).getElementsByClass(constants.REYNOLDS).text();
 
-                String idAirfoil = createStringByPattern(name, constants.GET_ID_BY_FULL_NAME_PATTERN);
+                String idAirfoil = ParserService.createStringByPattern(name, constants.GET_ID_BY_FULL_NAME_PATTERN);
                 Airfoil airfoil = new Airfoil(name, description, prefix1, idAirfoil);
                 airfoil.setCoordView(parseCoordinateView(idAirfoil));
                 airfoil.setCoordinates(downloadDetailInfo(idAirfoil));
@@ -97,12 +94,12 @@ public class ParserAirfoil implements Callable<Void> {
 
     private String parseCoordinateView(String shortName) throws IOException {
         BufferedReader bufferedReader =
-                new BufferedReader(new InputStreamReader(new URL(GET_COORDINATE_VIEW + shortName).openStream()));
+                new BufferedReader(new InputStreamReader(new URL(ConstantApi.GET_COORDINATE_VIEW + shortName).openStream()));
         String line;
         StringBuilder stringBuilder = new StringBuilder();
         while ((line = bufferedReader.readLine()) != null) {
             String[] split = line.trim().split(" +");
-            if (isDoubleStr(split[0]) && isDoubleStr(split[split.length - 1])) {
+            if (ParserService.isDoubleStr(split[0]) && ParserService.isDoubleStr(split[split.length - 1])) {
                 stringBuilder.append(split[0]).append(",").append(split[split.length - 1]).append('\n');
             }
         }
@@ -118,7 +115,7 @@ public class ParserAirfoil implements Callable<Void> {
     }
 
     private Set<Coordinates> downloadDetailInfo(String airfoil) throws IOException {
-        Document detail = getJsoupConnect(GET_DETAILS + airfoil, constants.TIMEOUT).get();
+        Document detail = ParserService.getJsoupConnect(ConstantApi.GET_DETAILS + airfoil, constants.TIMEOUT).get();
         Elements polar = detail.getElementsByClass(constants.POLAR);
         if (polar.size() == 0) {
             return Collections.emptySet();
@@ -133,9 +130,9 @@ public class ParserAirfoil implements Callable<Void> {
             if (cell7 != null) {
                 Elements a = cell7.getElementsByTag(constants.TEGA);
                 if (a.size() != 0) {
-                    String fileName = createStringByPattern(a.attr(constants.HREF), constants.GET_FILE_NAME_BY_URL_PATTERN);
-                    URL urlFile = new URL(GET_FILE_CSV + fileName);
-                    LOGGER.debug("url {}{}", GET_FILE_CSV, fileName);
+                    String fileName = ParserService.createStringByPattern(a.attr(constants.HREF), constants.GET_FILE_NAME_BY_URL_PATTERN);
+                    URL urlFile = new URL(ConstantApi.GET_FILE_CSV + fileName);
+                    LOGGER.debug("url {}{}", ConstantApi.GET_FILE_CSV, fileName);
                     Coordinates coordinateItem = new Coordinates(csvToString(urlFile.openStream()), fileName + constants.FILE_TYPE);
                     coordinateItem.setRenolgs(reynolds.text());
                     coordinateItem.setNCrit(nCrit.text());
