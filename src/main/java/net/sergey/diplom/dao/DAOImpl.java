@@ -39,7 +39,7 @@ public class DAOImpl implements DAO {
                 .createCriteria("prefix")
                 .add(Example.create(prefixTemplate))
                 .setFirstResult(startNumber);
-        if (count != 0) {
+        if (count > 0) {
             criteria.setMaxResults(count);
         }
         @SuppressWarnings("unchecked")

@@ -6,8 +6,12 @@ import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
+import net.sergey.diplom.domain.model.AirfoilDTO;
+import net.sergey.diplom.domain.model.UserView;
+import net.sergey.diplom.domain.model.messages.Message;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,10 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:/root-context.xml")
@@ -74,34 +75,40 @@ public class ServiceImplTest {
     }
 
     @Test
-    public void updateAirfoil() throws Exception {
-
-    }
-
-    @Test
     public void addUser() throws Exception {
-
+        UserView user = new UserView();
+        user.setName("11wwww2");
+        user.setPassword("qweqwe");
+        user.setRole(new ArrayList<String>());
+        Message message = service.addUser(user);
+        Assert.assertTrue(message.getMessage().equals("Пользователь с таким именем уже существует, Выберите другое имя"));
+        user.setName("231231");
+        message = service.addUser(user);
+        Assert.assertTrue(message.getMessage().equals("Пользователь успешно создан"));
     }
 
     @Test
     public void getAirfoilsByPrefix() throws Exception {
+        List<AirfoilDTO> airfoilsByPrefix = service.getAirfoilsByPrefix('A', 0, -1);
+        Assert.assertNotNull(airfoilsByPrefix);
+        Assert.assertTrue(airfoilsByPrefix.size() == 5);
 
+        airfoilsByPrefix = service.getAirfoilsByPrefix('A', 0, 100);
+        Assert.assertNotNull(airfoilsByPrefix);
+        Assert.assertTrue(airfoilsByPrefix.size() == 5);
+
+        airfoilsByPrefix = service.getAirfoilsByPrefix('A', 10, 100);
+        Assert.assertNotNull(airfoilsByPrefix);
+        Assert.assertTrue(airfoilsByPrefix.size() == 0);
 
     }
 
-    @Test
-    public void updateGraf() throws Exception {
-
-    }
 
     @Test
     public void getDetailInfo() throws Exception {
-
-    }
-
-    @Test
-    public void addAirfoil() throws Exception {
-
+        service.getDetailInfo("eqb");
+        service.getDetailInfo(null);
+        service.getDetailInfo("");
     }
 
 

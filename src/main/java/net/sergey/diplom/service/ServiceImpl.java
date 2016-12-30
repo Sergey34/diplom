@@ -260,6 +260,10 @@ public class ServiceImpl implements ServiceInt {
         if (new File(PATH + "/airfoil_img/" + airfoil.getShortName() + ".png").exists()) {
             return;
         }
+        if (airfoil.getCoordView() == null || airfoil.getCoordView().isEmpty()) {
+            LOGGER.warn("отсутствубт координаты для airfoil {}", airfoil.getShortName());
+            return;
+        }
         List<Double> x = new ArrayList<>();
         List<Double> y = new ArrayList<>();
         fillListXListY(x, y, airfoil.getCoordView().split("\n"));
