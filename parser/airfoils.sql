@@ -6,7 +6,7 @@ CREATE TABLE prefix (
 );
 
 CREATE TABLE airfoil (
-  shortName   VARCHAR(60) PRIMARY KEY,
+  short_name   VARCHAR(60) PRIMARY KEY,
   name        VARCHAR(255) UNIQUE,
   description VARCHAR(255),
   prefix      INT,

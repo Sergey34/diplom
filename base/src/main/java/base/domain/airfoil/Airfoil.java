@@ -6,7 +6,6 @@ import java.util.Set;
 @Entity
 @Table(name = "airfoil")
 public class Airfoil {
-    @Basic
     @Column(name = "name")
     private String name;
     @Id
@@ -14,7 +13,6 @@ public class Airfoil {
     private String shortName;
     @Column(name = "coord")
     private String coordView;
-    @Basic
     @Column(name = "description")
     private String description;
 

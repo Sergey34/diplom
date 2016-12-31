@@ -5,7 +5,6 @@
     <groupId>net.schastny</groupId>
     <artifactId>diplom</artifactId>
     <name>diplom</name>
-    <packaging>pom</packaging>
     <modules>
         <module>base</module>
         <module>graph</module>
@@ -14,10 +13,6 @@
         <module>parser</module>
     </modules>
 
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
     <version>1.0.0-BUILD-SNAPSHOT</version>
     <parent>
         <groupId>org.springframework.boot</groupId>

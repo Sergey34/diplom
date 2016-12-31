@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import parser.dao.AirfoilDao;
 
+import java.util.HashSet;
+
 @RestController
 public class Controller {
     @Autowired
@@ -16,10 +18,9 @@ public class Controller {
     public String create(String description, String name) {
         Airfoil airfoil = null;
         try {
-            if (1 == 1) {
-                throw new IllegalAccessError("asd");
-            }
             airfoil = new Airfoil(name, description, new Prefix('A'), "asdfgh");
+            airfoil.setCoordView("");
+            airfoil.setCoordinates(new HashSet<>());
             airfoilDao.save(airfoil);
         } catch (Exception ex) {
             System.out.println(ex.toString());
