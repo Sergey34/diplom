@@ -1,7 +1,7 @@
 package base.domain.menu;
 
 
-import org.apache.commons.collections.CollectionUtils;
+
 
 import javax.persistence.*;
 import java.util.List;
@@ -64,7 +64,7 @@ public class Menu {
 
         if (id != menu.id) return false;
         if (header != null ? !header.equals(menu.header) : menu.header != null) return false;
-        return menuItems != null ? CollectionUtils.isEqualCollection(menuItems, menu.menuItems) : menu.menuItems == null;
+        return menuItems != null ? menuItems.equals(menu.menuItems) : menu.menuItems == null;
     }
 
     @Override

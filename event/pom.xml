@@ -12,18 +12,6 @@
     <artifactId>event</artifactId>
 
     <dependencies>
-        <!--spring boot-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>1.4.1.RELEASE</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>1.4.1.RELEASE</version>
-        </dependency>
         <dependency>
             <groupId>net.schastny</groupId>
             <artifactId>base</artifactId>

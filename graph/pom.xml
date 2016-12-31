@@ -16,13 +16,6 @@
             <artifactId>base</artifactId>
             <version>1.0.0-BUILD-SNAPSHOT</version>
         </dependency>
-        <!--spring boot-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>1.4.1.RELEASE</version>
-            <scope>compile</scope>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/net.sf.opencsv/opencsv -->
         <!--чтение запись CSV файлов-->
         <dependency>
