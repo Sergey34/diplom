@@ -1,4 +1,4 @@
-package parser.service.properties;
+package base.properties;
 
 
 import org.apache.commons.codec.digest.DigestUtils;
