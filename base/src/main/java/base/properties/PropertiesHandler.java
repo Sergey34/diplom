@@ -1,6 +1,7 @@
 package base.properties;
 
 
+import lombok.NonNull;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,7 @@ public class PropertiesHandler {
         properties = new Properties();
     }
 
-    public synchronized void load(String inStream) throws IOException {
+    public synchronized void load(@NonNull String inStream) throws IOException {
         String md5Hex;
         try (FileInputStream fileInputStream = new FileInputStream(inStream)) {
             md5Hex = DigestUtils.md5Hex(fileInputStream);

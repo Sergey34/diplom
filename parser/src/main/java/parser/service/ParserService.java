@@ -4,6 +4,7 @@ package parser.service;
 import base.UtilsLogger;
 import base.domain.menu.Menu;
 import base.domain.menu.MenuItem;
+import lombok.NonNull;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import parser.dao.MenuDao;
 
 import javax.servlet.ServletContext;
 import java.io.BufferedReader;
@@ -34,21 +36,24 @@ public class ParserService {
     private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private final Constant constants;
     private final ApplicationContext applicationContext;
+    private final MenuDao menuDao;
 
     private final ServletContext servletContext;
 
     @Autowired
-    public ParserService(ApplicationContext applicationContext, Constant constants, ServletContext servletContext) {
+    public ParserService(@NonNull ApplicationContext applicationContext,
+                         @NonNull Constant constants, @NonNull ServletContext servletContext, @NonNull MenuDao menuDao) {
         this.applicationContext = applicationContext;
         this.constants = constants;
         this.servletContext = servletContext;
+        this.menuDao = menuDao;
     }
 
-    static Connection getJsoupConnect(String url, int timeout) {
+    static Connection getJsoupConnect(@NonNull String url, int timeout) {
         return Jsoup.connect(url).timeout(timeout).userAgent("Mozilla").ignoreHttpErrors(true);
     }
 
-    static String createStringByPattern(String item, Pattern pattern) {
+    static String createStringByPattern(@NonNull String item, @NonNull Pattern pattern) {
         Matcher matcher = pattern.matcher(item);
         if (matcher.find()) {
             return matcher.group(1);
@@ -56,7 +61,7 @@ public class ParserService {
         return "";
     }
 
-    static boolean isDoubleStr(String str) {
+    static boolean isDoubleStr(@NonNull String str) {
         try {
             //noinspection ResultOfMethodCallIgnored
             Double.parseDouble(str);
@@ -111,7 +116,7 @@ public class ParserService {
         }
 
         try {
-//            dao.addMenus(menus);
+            menuDao.save(menus);
 //            eventService.updateProgress("menu", 100.0);
         } catch (ConstraintViolationException e) {
             LOGGER.warn("Элемент меню: {} \n уже существует в базе {}", menus, e.getStackTrace());
@@ -120,7 +125,7 @@ public class ParserService {
         return airfoilMenu;
     }
 
-    private String createPrefix(String text) {
+    private String createPrefix(@NonNull String text) {
         if (!"".equals(text)) {
             return String.valueOf(text.charAt(0));
         } else {
@@ -128,7 +133,7 @@ public class ParserService {
         }
     }
 
-    private void getAirfoilsByMenuList(List<String> prefixList) throws InterruptedException, ExecutionException {
+    private void getAirfoilsByMenuList(@NonNull List<String> prefixList) throws InterruptedException, ExecutionException {
         Collection<Callable<Void>> futureList = new ArrayList<>();
         for (String prefix : prefixList) {
             ParserAirfoil parserAirfoil = applicationContext.getBean(ParserAirfoil.class);
@@ -140,7 +145,7 @@ public class ParserService {
         }
     }
 
-    public String parseFileAirfoil(MultipartFile fileAirfoil) throws IOException {
+    public String parseFileAirfoil(@NonNull MultipartFile fileAirfoil) throws IOException {
         if (fileAirfoil.getContentType().equals("text/csv")) {
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileAirfoil.getInputStream()))) {
                 String line;

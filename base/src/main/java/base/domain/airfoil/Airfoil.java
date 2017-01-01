@@ -1,10 +1,15 @@
 package base.domain.airfoil;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "airfoil")
+@NoArgsConstructor
 public class Airfoil {
     @Column(name = "name")
     private String name;
@@ -25,89 +30,11 @@ public class Airfoil {
             inverseJoinColumns = {@JoinColumn(name = "id_coordinates", unique = true)})
     private Set<Coordinates> coordinates;
 
-    public Airfoil(String name, String description, Prefix prefix, String shortName) {
+
+    public Airfoil(String name, String description, Prefix prefix, String shotName) {
         this.name = name;
+        this.shortName = shotName;
         this.description = description;
         this.prefix = prefix;
-        this.shortName = shortName;
-    }
-
-    public Airfoil() {
-    }
-
-    public Airfoil(String name, String description, String image, int id, Prefix prefix) {
-        this.name = name;
-        this.description = description;
-        this.prefix = prefix;
-    }
-
-    public Airfoil(String name, String details, String shortName) {
-        this.name = name;
-        this.shortName = shortName;
-        this.prefix = new Prefix(shortName.toUpperCase().charAt(0));
-        this.description = details;
-    }
-
-    public Set<Coordinates> getCoordinates() {
-        return coordinates;
-    }
-
-    public void setCoordinates(Set<Coordinates> coordinates) {
-        this.coordinates = coordinates;
-    }
-
-    public Prefix getPrefix() {
-        return prefix;
-    }
-
-    public void setPrefix(Prefix prefix) {
-        this.prefix = prefix;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Airfoil airfoil = (Airfoil) o;
-
-        return shortName != null ? shortName.equals(airfoil.shortName) : airfoil.shortName == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return shortName != null ? shortName.hashCode() : 0;
-    }
-
-    public String getShortName() {
-        return shortName;
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
-
-    public String getCoordView() {
-        return coordView;
-    }
-
-    public void setCoordView(String coordView) {
-        this.coordView = coordView;
     }
 }

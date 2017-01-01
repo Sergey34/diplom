@@ -2,6 +2,7 @@ package parser.service;
 
 import base.UtilsLogger;
 import base.properties.PropertiesHandler;
+import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class Constant {
         this.propertiesHandler = propertiesHandler;
     }
 
-    public void initConst(String propertiesPath) {
+    public void initConst(@NonNull String propertiesPath) {
         try {
             propertiesHandler.load(propertiesPath);
         } catch (IOException e) {

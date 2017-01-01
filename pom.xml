@@ -4,6 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.schastny</groupId>
     <artifactId>diplom</artifactId>
+    <packaging>pom</packaging>
     <name>diplom</name>
     <modules>
         <module>base</module>
@@ -33,6 +34,12 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.12</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

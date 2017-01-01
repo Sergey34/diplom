@@ -1,6 +1,7 @@
 package parser.dao;
 
 import base.domain.airfoil.Airfoil;
+import lombok.NonNull;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,11 +14,11 @@ public interface AirfoilDao extends CrudRepository<Airfoil, String> {
     Iterable<Airfoil> findAll();
 
     @Override
-    <S extends Airfoil> Iterable<S> save(Iterable<S> airfoils);
+    <S extends Airfoil> Iterable<S> save(@NonNull Iterable<S> airfoils);
 
     @Override
-    <S extends Airfoil> S save(S airfoil);
+    <S extends Airfoil> S save(@NonNull S airfoil);
 
     @Override
-    void delete(String id);
+    void delete(@NonNull String id);
 }

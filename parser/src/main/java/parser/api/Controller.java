@@ -6,17 +6,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import parser.dao.AirfoilDao;
+import parser.service.ParserService;
 
 import java.util.HashSet;
 
 @RestController
 public class Controller {
     @Autowired
-    AirfoilDao airfoilDao;
+    private AirfoilDao airfoilDao;
+    @Autowired
+    private ParserService parserService;
 
     @RequestMapping("/create")
     public String create(String description, String name) {
-        Airfoil airfoil = null;
+        /*try {
+            parserService.parse();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "{NOT_OK }"+e.toString();
+        }*/
+        Airfoil airfoil;
         try {
             airfoil = new Airfoil(name, description, new Prefix('A'), "asdfgh");
             airfoil.setCoordView("");
@@ -27,5 +36,6 @@ public class Controller {
             return "Error creating the user: " + ex.toString();
         }
         return "User succesfully created! (id = " + airfoil.getShortName() + ")";
+        //return "{OK}";
     }
 }
