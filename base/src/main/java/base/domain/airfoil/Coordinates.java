@@ -16,7 +16,7 @@ public class Coordinates {
     @Id
     @Column(name = "id")
     private int id;
-    @Column(name = "coordinatesJson")
+    @Column(name = "coordinatesJson", columnDefinition = "Text")
     private String coordinatesJson;
     @Column(name = "fileName")
     private String fileName;

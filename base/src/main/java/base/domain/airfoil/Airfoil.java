@@ -16,7 +16,7 @@ public class Airfoil {
     @Id
     @Column(name = "shortName")
     private String shortName;
-    @Column(name = "coord")
+    @Column(name = "coord", columnDefinition = "Text")
     private String coordView;
     @Column(name = "description")
     private String description;

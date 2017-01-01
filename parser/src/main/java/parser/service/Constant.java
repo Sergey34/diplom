@@ -42,7 +42,7 @@ public class Constant {
     public String POLAR;
     public String REYNOLDS;
 
-    @Autowired
+    @Autowired(required = false)
     public Constant(PropertiesHandler propertiesHandler) {
         this.propertiesHandler = propertiesHandler;
     }

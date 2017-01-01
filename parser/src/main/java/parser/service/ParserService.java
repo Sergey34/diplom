@@ -73,7 +73,7 @@ public class ParserService {
 
 
     public void parse() throws Exception {
-        constants.initConst(servletContext.getRealPath("/WEB-INF/") + "/config.properties");
+        constants.initConst("parser/src/main/resources/WEB-INF/config.properties");
         List<String> menu = parseMenu();
         getAirfoilsByMenuList(menu);
     }

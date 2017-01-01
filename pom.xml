@@ -6,6 +6,8 @@
     <artifactId>diplom</artifactId>
     <packaging>pom</packaging>
     <name>diplom</name>
+    <version>1.0.0-BUILD-SNAPSHOT</version>
+
     <modules>
         <module>base</module>
         <module>graph</module>
@@ -14,7 +16,6 @@
         <module>parser</module>
     </modules>
 
-    <version>1.0.0-BUILD-SNAPSHOT</version>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -45,7 +46,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <start-class>netgloo.Application</start-class>
         <java.version>1.8</java.version>
     </properties>
 
