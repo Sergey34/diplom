@@ -40,6 +40,7 @@ public class ParserService {
 
     private final ServletContext servletContext;
 
+
     @Autowired
     public ParserService(@NonNull ApplicationContext applicationContext,
                          @NonNull Constant constants, @NonNull ServletContext servletContext, @NonNull MenuDao menuDao) {
@@ -174,4 +175,5 @@ public class ParserService {
         }
         executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
+
 }
