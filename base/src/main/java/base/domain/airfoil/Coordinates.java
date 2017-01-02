@@ -20,8 +20,8 @@ public class Coordinates {
     private String coordinatesJson;
     @Column(name = "fileName")
     private String fileName;
-    @Column(name = "renolgs")
-    private String renolgs;
+    @Column(name = "renolds")
+    private String renolds;
     @Column(name = "nCrit")
     private String nCrit;
     @Column(name = "maxClCd")

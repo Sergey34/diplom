@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import parser.dao.MenuDao;
 import parser.service.constants.Constant;
 
-import javax.servlet.ServletContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,16 +34,14 @@ public class ParserService implements ParserServiceInt {
     private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private final ApplicationContext applicationContext;
     private final MenuDao menuDao;
-    private final ServletContext servletContext;
     private final Constant constants;
 
 
     @Autowired
     public ParserService(@NonNull ApplicationContext applicationContext,
-                         @NonNull Constant constants, @NonNull ServletContext servletContext, @NonNull MenuDao menuDao) {
+                         @NonNull Constant constants, @NonNull MenuDao menuDao) {
         this.applicationContext = applicationContext;
         this.constants = constants;
-        this.servletContext = servletContext;
         this.menuDao = menuDao;
     }
 
@@ -108,6 +105,7 @@ public class ParserService implements ParserServiceInt {
                         if (!prefix.equals(constants.FILTER_ITEM)) {
                             //   eventService.addKey(prefix);
                             airfoilMenu.add(prefix);
+                            menuItem.setMenu(menu1);
                             menuItems.add(menuItem);
                             //  eventService.updateProgress("menu", eventService.getProgressValueByKey("menu") + 70.0 / links.size());
                         }
@@ -131,7 +129,7 @@ public class ParserService implements ParserServiceInt {
 
     private String createPrefix(@NonNull String text) {
         if (!"".equals(text)) {
-            return String.valueOf(text.charAt(0));
+            return String.valueOf(text.charAt(0)).toLowerCase();
         } else {
             return "allAirfoil";
         }

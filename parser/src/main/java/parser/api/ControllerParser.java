@@ -10,8 +10,12 @@ import parser.service.ParserServiceInt;
 @RestController
 @Slf4j
 public class ControllerParser {
+    private final ParserServiceInt parserService;
+
     @Autowired
-    private ParserServiceInt parserService;
+    public ControllerParser(ParserServiceInt parserService) {
+        this.parserService = parserService;
+    }
 
     @RequestMapping("/initDB")
     public String create() {

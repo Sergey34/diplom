@@ -25,4 +25,5 @@ public interface AirfoilDao extends CrudRepository<Airfoil, String> {
     void delete(@NonNull String id);
 
     List<Airfoil> findAllByPrefix(Prefix prefix);
+
 }

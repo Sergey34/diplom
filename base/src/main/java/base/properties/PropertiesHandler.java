@@ -11,8 +11,8 @@ import java.util.Properties;
 
 @Component
 public class PropertiesHandler {
+    private final Properties properties;
     private String md5Hex;
-    private Properties properties;
 
     public PropertiesHandler() {
         properties = new Properties();

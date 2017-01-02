@@ -1,14 +1,10 @@
 package base.domain.menu;
 
 
-import base.domain.airfoil.Prefix;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "menuItem")
@@ -23,13 +19,14 @@ public class MenuItem {
     @Column(name = "url")
     private String urlCode;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_menu", nullable = false)
+    private Menu menu;
+
     public MenuItem(String name, String urlCode) {
         this.name = name;
         this.urlCode = urlCode;
         this.id = name.hashCode();
-    }
-
-    public static MenuItem createMenuItemByNewPrefix(Prefix prefix) {
-        return new MenuItem(String.valueOf(prefix.getPrefix()), String.valueOf(prefix.getPrefix()));
     }
 }

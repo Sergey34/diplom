@@ -13,20 +13,17 @@ import java.util.List;
 @NoArgsConstructor
 public class Menu {
     @Id
-    @Column(name = "id")
-    private int id;
+    @Column(name = "id_menu")
+    private int id_menu;
     @Column(name = "header")
     private String header;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "menuHeader_menuItem",
-            joinColumns = {@JoinColumn(name = "headerId")},
-            inverseJoinColumns = {@JoinColumn(name = "ItemId")})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "menu", cascade = CascadeType.ALL)
     private List<MenuItem> menuItems;
 
     public Menu(String header) {
         this.header = header;
-        this.id = header.hashCode();
+        this.id_menu = header.hashCode();
     }
 
 }

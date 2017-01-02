@@ -19,7 +19,6 @@ public class Constant {
     public Pattern GET_ID_BY_FULL_NAME_PATTERN;
     public Pattern GET_FILE_NAME_BY_URL_PATTERN;
     public Pattern GET_COUNT_PAGES_PATTERN;
-    public String REGEX;
     public Pattern GET_MENU_TITLE_PATTERN;
     public int TIMEOUT;
     public String NO;
@@ -59,7 +58,6 @@ public class Constant {
         GET_COUNT_PAGES_PATTERN = Pattern.compile(propertiesHandler.getProperty("GET_COUNT_PAGES_PATTERN"));
         GET_MENU_TITLE_PATTERN = Pattern.compile(propertiesHandler.getProperty("GET_MENU_TITLE_PATTERN"));
         TIMEOUT = Integer.parseInt(propertiesHandler.getProperty("TIMEOUT"));
-        REGEX = propertiesHandler.getProperty("REGEX");
         NO = propertiesHandler.getProperty("no");
         HTTP_AIRFOIL_TOOLS_COM = propertiesHandler.getProperty("HTTP_AIRFOIL_TOOLS_COM");
         MENU_CLASS_NAME = propertiesHandler.getProperty("menu_class_name");

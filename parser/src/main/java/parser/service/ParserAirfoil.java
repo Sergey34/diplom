@@ -42,7 +42,7 @@ public class ParserAirfoil implements Callable<Void> {
         this.constants = constants;
     }
 
-    public static String csvToString(@NonNull InputStream urlFile) throws IOException {
+    private static String csvToString(@NonNull InputStream urlFile) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlFile))) {
             StringBuilder stringBuilder = new StringBuilder();
             String line;
@@ -133,7 +133,7 @@ public class ParserAirfoil implements Callable<Void> {
                     URL urlFile = new URL(ConstantApi.GET_FILE_CSV + fileName);
                     LOGGER.debug("url {}{}", ConstantApi.GET_FILE_CSV, fileName);
                     Coordinates coordinateItem = new Coordinates(csvToString(urlFile.openStream()), fileName + constants.FILE_TYPE);
-                    coordinateItem.setRenolgs(reynolds.text());
+                    coordinateItem.setRenolds(reynolds.text());
                     coordinateItem.setNCrit(nCrit.text());
                     coordinateItem.setMaxClCd(maxClCd.text());
                     coordinates.add(coordinateItem);

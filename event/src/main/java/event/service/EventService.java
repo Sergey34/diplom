@@ -1,9 +1,7 @@
 package event.service;
 
 
-import base.UtilsLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -15,9 +13,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Component
 public class EventService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final Map<String, String> progressMap = new ConcurrentHashMap<>();
     private final List<SseEmitter> emitters = new ArrayList<>();
 
@@ -46,7 +44,7 @@ public class EventService {
             } catch (IOException e) {
                 emitter.complete();
                 emitters.remove(emitter);
-                LOGGER.warn("Ошибка отправки увеомления о работе парсера {}", e);
+                log.warn("Ошибка отправки увеомления о работе парсера {}", e);
             }
         }
     }

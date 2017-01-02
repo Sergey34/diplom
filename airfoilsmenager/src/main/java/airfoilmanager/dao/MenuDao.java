@@ -5,6 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Transactional
 @Repository
@@ -20,5 +21,5 @@ public interface MenuDao extends CrudRepository<Menu, Long> {
     Menu findOne(Long aLong);
 
     @Override
-    Iterable<Menu> findAll();
+    List<Menu> findAll();
 }

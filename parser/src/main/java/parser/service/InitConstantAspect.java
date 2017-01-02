@@ -12,8 +12,12 @@ import parser.service.constants.Constant;
 @Aspect
 @Slf4j
 public class InitConstantAspect {
+    private final Constant constants;
+
     @Autowired
-    private Constant constants;
+    public InitConstantAspect(Constant constants) {
+        this.constants = constants;
+    }
 
     @Before("execution(* parser.service.ParserServiceInt.*(..))")
     public void initConsts(JoinPoint joinPoint) {
