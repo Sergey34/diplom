@@ -1,22 +1,21 @@
 package parser.service;
 
 
-import base.UtilsLogger;
 import base.domain.menu.Menu;
 import base.domain.menu.MenuItem;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import parser.dao.MenuDao;
+import parser.service.constants.Constant;
 
 import javax.servlet.ServletContext;
 import java.io.BufferedReader;
@@ -30,15 +29,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
+@Slf4j
 @Component
-public class ParserService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
+public class ParserService implements ParserServiceInt {
     private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-    private final Constant constants;
     private final ApplicationContext applicationContext;
     private final MenuDao menuDao;
-
     private final ServletContext servletContext;
+    private final Constant constants;
 
 
     @Autowired
@@ -73,10 +71,15 @@ public class ParserService {
     }
 
 
-    public void parse() throws Exception {
-        constants.initConst("parser/src/main/resources/WEB-INF/config.properties");
-        List<String> menu = parseMenu();
-        getAirfoilsByMenuList(menu);
+    public String parse() {
+        try {
+            List<String> menu = parseMenu();
+            getAirfoilsByMenuList(menu);
+        } catch (Exception e) {
+            log.warn("Ошибка", e);
+            return "{NOT_OK }" + e.toString();
+        }
+        return "{OK}";
     }
 
     private List<String> parseMenu() throws IOException {
@@ -120,7 +123,7 @@ public class ParserService {
             menuDao.save(menus);
 //            eventService.updateProgress("menu", 100.0);
         } catch (ConstraintViolationException e) {
-            LOGGER.warn("Элемент меню: {} \n уже существует в базе {}", menus, e.getStackTrace());
+            log.warn("Элемент меню: {} \n уже существует в базе", menus, e);
             throw e;
         }
         return airfoilMenu;
@@ -171,9 +174,31 @@ public class ParserService {
         try {
             executorService.awaitTermination(60, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            LOGGER.warn(" {}", e);
+            log.warn("Ошибка", e);
         }
         executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
 
+    public String parsePrefix(@NonNull String prefix) {
+        ParserAirfoil parserAirfoil = applicationContext.getBean(ParserAirfoil.class);
+        parserAirfoil.setPrefix(prefix);
+        try {
+            executorService.submit(parserAirfoil).get();
+        } catch (InterruptedException | ExecutionException e) {
+            log.warn("Ошибка при парсинге префикса {}", prefix, e);
+            return "Not_OK";
+        }
+        return "OK";
+    }
+
+    public String parseAirfoil(@NonNull String airfoilId) {
+        ParserAirfoil parserAirfoil = applicationContext.getBean(ParserAirfoil.class);
+        try {
+            parserAirfoil.addAirfoilById(airfoilId);
+        } catch (Exception e) {
+            log.warn("Ошибка при парсинге airfoilId {}", airfoilId, e);
+            return "NOT_OK";
+        }
+        return "OK";
+    }
 }

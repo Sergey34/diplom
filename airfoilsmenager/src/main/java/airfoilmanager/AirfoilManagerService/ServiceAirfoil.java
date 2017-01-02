@@ -1,11 +1,11 @@
-package parser.service;
+package airfoilmanager.AirfoilManagerService;
 
+import airfoilmanager.dao.AirfoilDao;
+import airfoilmanager.dao.MenuDao;
 import base.domain.airfoil.Airfoil;
 import base.domain.airfoil.Prefix;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import parser.dao.AirfoilDao;
-import parser.dao.MenuDao;
 
 import java.util.List;
 

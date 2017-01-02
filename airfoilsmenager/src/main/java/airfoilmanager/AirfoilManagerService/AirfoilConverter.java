@@ -1,4 +1,4 @@
-package parser.service;
+package airfoilmanager.AirfoilManagerService;
 
 import base.domain.airfoil.Airfoil;
 import base.dto.AirfoilDto;

@@ -1,4 +1,4 @@
-package parser.service;
+package parser.service.constants;
 
 import base.UtilsLogger;
 import base.properties.PropertiesHandler;

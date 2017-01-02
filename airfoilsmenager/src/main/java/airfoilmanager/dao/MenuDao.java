@@ -1,4 +1,4 @@
-package parser.dao;
+package airfoilmanager.dao;
 
 import base.domain.menu.Menu;
 import org.springframework.data.repository.CrudRepository;
@@ -16,4 +16,9 @@ public interface MenuDao extends CrudRepository<Menu, Long> {
     @Override
     <S extends Menu> Iterable<S> save(Iterable<S> iterable);
 
+    @Override
+    Menu findOne(Long aLong);
+
+    @Override
+    Iterable<Menu> findAll();
 }

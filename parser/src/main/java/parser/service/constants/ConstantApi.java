@@ -1,4 +1,4 @@
-package parser.service;
+package parser.service.constants;
 
 public class ConstantApi {
     public static String GET_FILE_CSV = "http://airfoiltools.com/polar/csv?polar=";//xf-a18-il-50000

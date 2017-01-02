@@ -6,7 +6,6 @@ import base.domain.airfoil.Airfoil;
 import base.domain.airfoil.Coordinates;
 import base.domain.airfoil.Prefix;
 import lombok.NonNull;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -15,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import parser.dao.AirfoilDao;
+import parser.service.constants.Constant;
+import parser.service.constants.ConstantApi;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,11 +55,11 @@ public class ParserAirfoil implements Callable<Void> {
 
     @Override
     public Void call() throws Exception {
-        parseAirfoilByUrl(prefix);
+        parseAirfoilsByPrefix(prefix);
         return null;
     }
 
-    private void parseAirfoilByUrl(@NonNull String prefix) throws IOException {
+    private void parseAirfoilsByPrefix(@NonNull String prefix) throws IOException {
         String url = ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX + prefix + constants.NO;
         Prefix prefix1 = new Prefix(prefix.charAt(0));
         int countPages = createIntByPattern(ParserService.getJsoupConnect(url, constants.TIMEOUT).get().html(), constants.GET_COUNT_PAGES_PATTERN);
@@ -80,12 +81,8 @@ public class ParserAirfoil implements Callable<Void> {
                 j--;//фильтруем реламу
             } else {
                 String name = cell12.text();
-                String description = airfoilList.get(j + 1).getElementsByClass(constants.REYNOLDS).text();
-
                 String idAirfoil = ParserService.createStringByPattern(name, constants.GET_ID_BY_FULL_NAME_PATTERN);
-                Airfoil airfoil = new Airfoil(name, description, prefix1, idAirfoil);
-                airfoil.setCoordView(parseCoordinateView(idAirfoil));
-                airfoil.setCoordinates(downloadDetailInfo(idAirfoil));
+                Airfoil airfoil = parseAirfoilById(idAirfoil);
                 airfoils.add(airfoil);
                 String key = String.valueOf(prefix1.getPrefix());
                 //double value = eventService.getProgressValueByKey(key) + (90.0 / countPages / airfoilList.size());
@@ -117,8 +114,7 @@ public class ParserAirfoil implements Callable<Void> {
         return 0;
     }
 
-    private Set<Coordinates> downloadDetailInfo(@NonNull String airfoil) throws IOException {
-        Document detail = ParserService.getJsoupConnect(ConstantApi.GET_DETAILS + airfoil, constants.TIMEOUT).get();
+    private Set<Coordinates> downloadDetailInfo(@NonNull Element detail) throws IOException {
         Elements polar = detail.getElementsByClass(constants.POLAR);
         if (polar.size() == 0) {
             return Collections.emptySet();
@@ -149,5 +145,22 @@ public class ParserAirfoil implements Callable<Void> {
 
     public void setPrefix(@NonNull String prefix) {
         this.prefix = prefix;
+    }
+
+    private Airfoil parseAirfoilById(@NonNull String airfoilId) throws IOException {
+        Element detail = ParserService.getJsoupConnect(ConstantApi.GET_DETAILS + airfoilId, constants.TIMEOUT).get().getElementById("content");
+        String name = detail.getElementsByTag("h1").get(0).text();
+        String description = detail.getElementsByClass("cell1").get(0).html();
+        String coordinateView = parseCoordinateView(airfoilId);
+        Airfoil airfoil = new Airfoil(name, description, new Prefix(airfoilId.charAt(0)), airfoilId);
+        airfoil.setCoordView(coordinateView);
+        Set<Coordinates> coordinates = downloadDetailInfo(detail);
+        airfoil.setCoordinates(coordinates);
+        return airfoil;
+    }
+
+    public void addAirfoilById(@NonNull String airfoilId) throws IOException {
+        Airfoil airfoil = parseAirfoilById(airfoilId);
+        airfoilDao.save(airfoil);
     }
 }

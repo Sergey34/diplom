@@ -18,7 +18,7 @@ public class Airfoil {
     private String shortName;
     @Column(name = "coord", columnDefinition = "Text")
     private String coordView;
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "Text")
     private String description;
 
     @ManyToOne(cascade = CascadeType.ALL)
