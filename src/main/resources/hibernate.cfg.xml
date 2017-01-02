@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+
+<hibernate-configuration>
+    <session-factory>
+        <!--<property name="format_sql">true</property>-->
+        <mapping class="net.sergey.diplom.domain.airfoil.Prefix"/>
+        <mapping class="net.sergey.diplom.domain.menu.MenuItem"/>
+        <mapping class="net.sergey.diplom.domain.menu.Menu"/>
+        <mapping class="net.sergey.diplom.domain.user.User"/>
+        <mapping class="net.sergey.diplom.domain.user.UserRole"/>
+        <mapping class="net.sergey.diplom.domain.airfoil.Airfoil"/>
+        <mapping class="net.sergey.diplom.domain.airfoil.Coordinates"/>
+    </session-factory>
+</hibernate-configuration>

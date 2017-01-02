@@ -1,0 +1,151 @@
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/get_user.js"></script>
+    <script src="js/get_detail_info.js"></script>
+    <script src="js/get_params_url.js"></script>
+    <script src="js/getContextPath.js"></script>
+
+    <link rel="stylesheet" href="css/main.css" type="text/css"/>
+
+    <link rel="import" href="menu.html">
+</head>
+
+<body>
+
+<div class="wrapper">
+    <div id="header">
+        <div id="header_user">
+            <p class="user_hello">Добро пожаловать, </p>
+            <p class="user_action"><a href="login" target="_blank"> </a></p>
+        </div>
+    </div>
+
+
+    <div class="middle" id="middle">
+
+        <div class="container">
+            <div class="content" id="contentid">
+                <div id="airfoilDetailInfo"><a id="edit_link">Редактировать</a>
+                    <div class="name_detail" id="name_detail"></div>
+                    <div><a id="downloadStl">Скачать STL файл</a></div>
+                    <div class="img_detail"><img id="imgDetail"></div>
+                    <div class="descr_detail" id="descr_detail"></div>
+
+                    <div id="table">
+                        <table id="table1" border="1">
+                            <tr id="0">
+                                <td id="checkbox0">checkbox</td>
+                                <td id="Renolds0">Renolds</td>
+                                <td id="NCrit0">NCrit</td>
+                                <td id="MaxClCd0">MaxClCd</td>
+                            <tr id="1">
+                                <td><input type="checkbox" id="checkbox1" class="csvItemChBox" name="activ"
+                                           checked="checked"></td>
+                                <td id="Renolds1"></td>
+                                <td id="NCrit1"></td>
+                                <td id="MaxClCd1"></td>
+                                <td id="fileName1"><a id="link_file1"></a></td>
+                            <tr id="2">
+                                <td><input type="checkbox" id="checkbox2" class="csvItemChBox" name="activ"
+                                           checked="checked"></td>
+                                <td id="Renolds2"></td>
+                                <td id="NCrit2"></td>
+                                <td id="MaxClCd2"></td>
+                                <td id="fileName2"><a id="link_file2"></a></td>
+                            <tr id="3">
+                                <td><input type="checkbox" id="checkbox3" class="csvItemChBox" name="activ"
+                                           checked="checked"></td>
+                                <td id="Renolds3"></td>
+                                <td id="NCrit3"></td>
+                                <td id="MaxClCd3"></td>
+                                <td id="fileName3"><a id="link_file3"></a></td>
+                            <tr id="4">
+                                <td><input type="checkbox" id="checkbox4" class="csvItemChBox" name="activ"
+                                           checked="checked"></td>
+                                <td id="Renolds4"></td>
+                                <td id="NCrit4"></td>
+                                <td id="MaxClCd4"></td>
+                                <td id="fileName4"><a id="link_file4"></a></td>
+                            <tr id="5">
+                                <td><input type="checkbox" id="checkbox5" class="csvItemChBox" name="activ"
+                                           checked="checked"></td>
+                                <td id="Renolds5"></td>
+                                <td id="NCrit5"></td>
+                                <td id="MaxClCd5"></td>
+                                <td id="fileName5"><a id="link_file5"></a></td>
+                            <tr id="6">
+                                <td><input type="checkbox" id="checkbox6" class="csvItemChBox" name="activ"
+                                           checked="checked"></td>
+                                <td id="Renolds6"></td>
+                                <td id="NCrit6"></td>
+                                <td id="MaxClCd6"></td>
+                                <td id="fileName6"><a id="link_file6"></a></td>
+                            <tr id="7">
+                                <td><input type="checkbox" id="checkbox7" class="csvItemChBox" name="activ"
+                                           checked="checked"></td>
+                                <td id="Renolds7"></td>
+                                <td id="NCrit7"></td>
+                                <td id="MaxClCd7"></td>
+                                <td id="fileName7"><a id="link_file7"></a></td>
+                            <tr id="8">
+                                <td><input type="checkbox" id="checkbox8" class="csvItemChBox" name="activ"
+                                           checked="checked"></td>
+                                <td id="Renolds8"></td>
+                                <td id="NCrit8"></td>
+                                <td id="MaxClCd8"></td>
+                                <td id="fileName8"><a id="link_file8"></a></td>
+                            <tr id="9">
+                                <td><input type="checkbox" id="checkbox9" class="csvItemChBox" name="activ"
+                                           checked="checked"></td>
+                                <td id="Renolds9"></td>
+                                <td id="NCrit9"></td>
+                                <td id="MaxClCd9"></td>
+                                <td id="fileName9"><a id="link_file9"></a></td>
+                            <tr id="10">
+                                <td><input type="checkbox" id="checkbox10" class="csvItemChBox" name="activ"
+                                           checked="checked"></td>
+                                <td id="Renolds10"></td>
+                                <td id="NCrit10"></td>
+                                <td id="MaxClCd10"></td>
+                                <td id="fileName10"><a id="link_file10"></a></td>
+
+
+                        </table>
+
+
+                        <br><input type="button" value="Обновить" onclick="refreshiframe();">
+                    </div>
+                    <div id="imgCsvBox">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+            var link = document.querySelector('link[rel=import]');
+            var content = link.import.querySelector('#menu');
+            document.getElementById('middle').appendChild(content.cloneNode(true));
+        </script>
+    </div>
+
+    <div class="footer">
+        footer
+    </div>
+
+</div>
+
+<script>
+    getDetailInfo(false);
+</script>
+</body>
+</html>

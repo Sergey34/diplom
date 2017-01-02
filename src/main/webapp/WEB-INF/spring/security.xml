@@ -1,0 +1,42 @@
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.springframework.org/schema/security"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security.xsd">
+
+
+    <http auto-config="true">
+        <intercept-url pattern="/rest/*" access="ROLE_ANONYMOUS, ROLE_USER, ROLE_ADMIN"/>
+        <intercept-url pattern="/rest/write/*" access="ROLE_USER, ROLE_ADMIN"/>
+        <intercept-url pattern="/adminka/*" access="ROLE_USER, ROLE_ADMIN"/>
+
+
+        <form-login login-page="/login.html"
+                    default-target-url="/airfoilList.html"
+                    authentication-failure-url="/loginError.html"/>
+
+        <logout logout-url="/logout" logout-success-url="/login.html"/>
+        <anonymous username="guest" granted-authority="ROLE_ANONYMOUS"/>
+        <remember-me/>
+    </http>
+
+
+    <authentication-manager>
+        <authentication-provider>
+            <jdbc-user-service data-source-ref="dataSource"
+                               users-by-username-query=
+                                       "SELECT username, password, enabled FROM users WHERE username=?"
+                               authorities-by-username-query=
+                                       "SELECT username, role
+                                       FROM user_role, roles, users
+                                       WHERE
+                                        users.username=? AND
+                                        user_role.id_role=roles.role_id AND
+                                        user_role.id_user=users.id  "/>
+        </authentication-provider>
+    </authentication-manager>
+
+
+</beans:beans>

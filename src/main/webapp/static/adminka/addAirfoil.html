@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Airfoil</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <script src="../js/jquery-3.1.1.min.js"></script>
+    <script src="../js/get_user.js"></script>
+    <script src="../js/add_airfoil.js"></script>
+    <script src='../js/tabular-input.min.js'></script>
+    <script src="../js/getContextPath.js"></script>
+    <link rel="stylesheet" href="../css/main.css" type="text/css"/>
+
+    <link rel="import" href="../menu.html">
+    <link type='text/css' rel='stylesheet' href='../css/tabular-input.css'/>
+</head>
+
+<body>
+
+<div class="wrapper">
+    <div id="header">
+        <div id="header_user">
+            <p class="user_hello">Добро пожаловать, </p>
+            <p class="user_action"><a href="login.html" target="_blank"> </a></p>
+        </div>
+    </div>
+
+
+    <div class="middle" id="middle">
+
+        <div class="container">
+            <div class="content" id="contentid">
+                <div id="airfoilDetailInfo">
+                    <form action="/rest/write/addAirfoilForFileCsv" method="post" enctype="multipart/form-data"
+                          id="addAirfoil">
+                        <label>
+                            Название профиля
+                            <input type="text" value="" name="name"/>
+                        </label>
+                        </Br>
+                        <label>
+                            Короткое название профиля
+                            <input type="text" value="" name="ShortName"/>
+                        </label>
+                        </Br>
+                        <label>
+                            Детали
+                            <input type="text" value="" name="Details"/>
+                        </label>
+                        </Br>
+                        <label>
+                            Выберите файл для построения графика профиля
+                            <input class='fileInput' type="file" name="fileAirfoil"/>
+                        </label>
+
+                        </Br>
+                        <label>
+                            Выберите файлы построения графиков
+                            <input class='fileInput' type="file" name="files" multiple="multiple"
+                                   value="Выбрать файлы"/>
+                        </label>
+                        </Br>
+                        <input type="submit"/>
+
+                    </form>
+                </div>
+
+                <div id="addAirfoilWeb">
+                    <label>
+                        Название профиля
+                        <input type="text" value="" name="airfoilName" id="airfoilName"/>
+                    </label>
+                    </Br>
+                    <label>
+                        Короткое название профиля
+                        <input type="text" value="" name="ShortName" id="ShortName"/>
+                    </label>
+                    </Br>
+                    <label>
+                        Детали
+                        <input type="text" value="" name="Details" id="Details"/>
+                    </label>
+                    </Br>
+                    <div id="view">
+                        <input type="button" value="Add New Row"
+                               onclick='javascript:$("#viewTab").tabularInput("addRow")'>
+                        <input type="button" value="Delete Last Row"
+                               onclick="javascript:$('#viewTab').tabularInput('deleteRow')">
+                        <div id="viewTab">
+                        </div>
+                    </div>
+                    </Br>
+                    <input type="button" id="addTable" value="add table">
+                </div>
+                <input type="button" id="saveWab" value="add airfoil">
+
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('addAirfoil').setAttribute('action', rootUrl + "/rest/write/addAirfoilForFileCsv");
+            jQuery('#viewTab').tabularInput({
+                'rows': 10,
+                'columns': 2,
+                'minRows': 10,
+                'newRowOnTab': true,
+                'columnHeads': ['x', 'y'],
+                'name': '',
+                'animate': true
+            });
+
+
+            let link = document.querySelector('link[rel=import]');
+            let content = link.import.querySelector('#menu');
+            document.getElementById('middle').appendChild(content.cloneNode(true));
+
+            document.getElementById("addTable").onclick = addTable;
+            document.getElementById("saveWab").onclick = saveWab;
+
+
+        </script>
+
+    </div>
+
+    <div class="footer">
+        footer
+    </div>
+
+</div>
+</body>
+</html>

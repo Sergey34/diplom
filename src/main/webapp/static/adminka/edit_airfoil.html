@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Airfoils</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <script src="../js/jquery-3.1.1.min.js"></script>
+    <script src="../js/get_user.js"></script>
+    <script src="../js/get_content.js"></script>
+    <script src="../js/get_params_url.js"></script>
+    <script src="../js/get_detail_info.js"></script>
+    <script src="../js/getContextPath.js"></script>
+    <script src='../js/tabular-input.min.js'></script>
+
+    <link type='text/css' rel='stylesheet' href='../css/tabular-input.css'/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css"/>
+
+    <link rel="import" href="../menu.html">
+</head>
+
+<body>
+
+<div class="wrapper">
+    <div id="header">
+        <div id="header_user">
+            <p class="user_hello">Добро пожаловать, </p>
+            <p class="user_action"><a href="login" target="_blank"> </a></p>
+        </div>
+    </div>
+
+
+    <div class="middle" id="middle">
+
+        <div class="container">
+            <div class="content" id="contentid">
+                <div id="airfoilDetailInfo">
+                    <form action="/rest/write/updateAirfoil" method="post" enctype="multipart/form-data"
+                          id="updateAirfoil">
+                        <label>
+                            Название профиля
+                            <input type="text" value="" name="name" id="airfoilName"/>
+                        </label>
+                        <label>
+                            Короткое название профиля (изменение повлечет создание нового профиля)
+                            <input type="text" value="" name="ShortName" id="shortName"/>
+                        </label>
+                        </Br>
+                        <label>
+                            Детали
+                            <input type="text" value="" name="Details" id="description"/>
+                        </label>
+                        </Br>
+                        <div class="img_detail" id="img_detail">
+                            <label>
+                                Выберите файл для построения графика профиля
+                                <input class='fileInput' type="file" name="fileAirfoil"/>
+                            </label>
+                            </Br>
+                        </div>
+
+                        <div id="graf">
+                            <label>
+                                Выберите файлы построения графиков
+                                <input class='fileInput' type="file" name="files" multiple="multiple"
+                                       value="Выбрать файлы"/>
+                            </label>
+                            </Br>
+                        </div>
+
+                        <input type="submit"/>
+                    </form>
+                    <div id="editableTables">
+                        <input type="button" value="Add New Row"
+                               onclick='javascript:$("#viewTab").tabularInput("addRow")'>
+                        <input type="button" value="Delete Last Row"
+                               onclick="javascript:$('#viewTab').tabularInput('deleteRow')">
+                        <div id="viewTab"></div>
+                    </div>
+                    <input type="button" id="saveWab" value="add airfoil">
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('updateAirfoil').setAttribute('action', rootUrl + "/rest/write/updateAirfoil");
+            var link = document.querySelector('link[rel=import]');
+            var content = link.import.querySelector('#menu');
+            document.getElementById('middle').appendChild(content.cloneNode(true));
+            document.getElementById("saveWab").onclick = updateWab;
+        </script>
+
+    </div>
+
+    <div class="footer">
+        footer
+    </div>
+
+</div>
+<script>
+    getDetailInfo(true);
+</script>
+</body>
+</html>
