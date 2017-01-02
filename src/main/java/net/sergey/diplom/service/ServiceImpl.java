@@ -91,7 +91,6 @@ public class ServiceImpl implements ServiceInt {
         if (dao.getMenuItemByUrl(String.valueOf(airfoil.getPrefix().getPrefix())) == null) {
             List<Menu> allMenu = dao.getAllMenu();
             for (Menu menu : allMenu) {
-                ;
                 if (menu.getHeader().equals(propertiesHandler.getProperty("menu_Header"))) {
                     MenuItem menuItem = MenuItem.createMenuItemByNewPrefix(airfoil.getPrefix());
                     menu.getMenuItems().add(menuItem);
