@@ -1,4 +1,11 @@
-.idea
-/.idea/
+
 Будет удалено diplom.iml
 Будет удалено target/
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
