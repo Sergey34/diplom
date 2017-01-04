@@ -6,7 +6,6 @@ import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.service.EventService;
 import net.sergey.diplom.service.utils.UtilsLogger;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -25,8 +24,9 @@ import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static net.sergey.diplom.service.parser.ConstantApi.*;
-import static net.sergey.diplom.service.parser.ParserService.*;
+import static net.sergey.diplom.service.parser.ConstantApi.GET_COORDINATE_VIEW;
+import static net.sergey.diplom.service.parser.ParserService.getJsoupConnect;
+import static net.sergey.diplom.service.parser.ParserService.isDoubleStr;
 
 @Scope("prototype")
 @Component
@@ -83,12 +83,8 @@ public class ParserAirfoil implements Callable<Void> {
                 j--;//фильтруем реламу
             } else {
                 String name = cell12.text();
-                String description = airfoilList.get(j + 1).getElementsByClass(constants.REYNOLDS).text();
-
-                String idAirfoil = createStringByPattern(name, constants.GET_ID_BY_FULL_NAME_PATTERN);
-                Airfoil airfoil = new Airfoil(name, description, prefix1, idAirfoil);
-                airfoil.setCoordView(parseCoordinateView(idAirfoil));
-                airfoil.setCoordinates(downloadDetailInfo(idAirfoil));
+                String idAirfoil = ParserService.createStringByPattern(name, constants.GET_ID_BY_FULL_NAME_PATTERN);
+                Airfoil airfoil = parseAirfoilById(idAirfoil);
                 airfoils.add(airfoil);
                 String key = String.valueOf(prefix1.getPrefix());
                 double value = eventService.getProgressValueByKey(key) + (90.0 / countPages / airfoilList.size());
@@ -120,8 +116,7 @@ public class ParserAirfoil implements Callable<Void> {
         return 0;
     }
 
-    private Set<Coordinates> downloadDetailInfo(String airfoil) throws IOException {
-        Document detail = getJsoupConnect(GET_DETAILS + airfoil, constants.TIMEOUT).get();
+    private Set<Coordinates> downloadDetailInfo(Element detail) throws IOException {
         Elements polar = detail.getElementsByClass(constants.POLAR);
         if (polar.size() == 0) {
             return Collections.emptySet();
@@ -136,9 +131,9 @@ public class ParserAirfoil implements Callable<Void> {
             if (cell7 != null) {
                 Elements a = cell7.getElementsByTag(constants.TEGA);
                 if (a.size() != 0) {
-                    String fileName = createStringByPattern(a.attr(constants.HREF), constants.GET_FILE_NAME_BY_URL_PATTERN);
-                    URL urlFile = new URL(GET_FILE_CSV + fileName);
-                    LOGGER.debug("url {}{}", GET_FILE_CSV, fileName);
+                    String fileName = ParserService.createStringByPattern(a.attr(constants.HREF), constants.GET_FILE_NAME_BY_URL_PATTERN);
+                    URL urlFile = new URL(ConstantApi.GET_FILE_CSV + fileName);
+                    LOGGER.debug("url {}{}", ConstantApi.GET_FILE_CSV, fileName);
                     Coordinates coordinateItem = new Coordinates(csvToString(urlFile.openStream()), fileName + constants.FILE_TYPE);
                     coordinateItem.setRenolgs(reynolds.text());
                     coordinateItem.setNCrit(nCrit.text());
@@ -148,6 +143,18 @@ public class ParserAirfoil implements Callable<Void> {
             }
         }
         return coordinates;
+    }
+
+    private Airfoil parseAirfoilById(String airfoilId) throws IOException {
+        Element detail = ParserService.getJsoupConnect(ConstantApi.GET_DETAILS + airfoilId, constants.TIMEOUT).get().getElementById("content");
+        String name = detail.getElementsByTag("h1").get(0).text();
+        String description = detail.getElementsByClass("cell1").get(0).html();
+        String coordinateView = parseCoordinateView(airfoilId);
+        Airfoil airfoil = new Airfoil(name, description, new Prefix(airfoilId.charAt(0)), airfoilId);
+        airfoil.setCoordView(coordinateView);
+        Set<Coordinates> coordinates = downloadDetailInfo(detail);
+        airfoil.setCoordinates(coordinates);
+        return airfoil;
     }
 
     public void setPrefix(String prefix) {
