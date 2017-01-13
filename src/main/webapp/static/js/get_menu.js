@@ -8,27 +8,36 @@ $(document).ready(function () {
         function logArrayElements(element, index, array) {
             console.log(element.header);
             // элемент-список UL
-            var list = document.getElementById('list');
+            var list = document.getElementById('list_menu');
             // новый элемент
-            var li = document.createElement('H3');
-            li.innerHTML = element.header;
+            var header = document.createElement('p');
+            header.innerText = element.header;
+            header.setAttribute('class', 'lead');
             // добавление в конец
-            list.appendChild(li);
+            list.appendChild(header);
 
 
+            var list_group = document.createElement('div');
+            list_group.setAttribute('class', 'list-group');
             element.menuItems.forEach(logMenuElements)
+
+
+            function logMenuElements(element, index, array) {
+            // console.log(element.name + '   ' + element.url);
+
+                // новый элемент
+                var menu_item = document.createElement('a');
+                menu_item.setAttribute('class', 'list-group-item');
+                menu_item.innerText = element.name;
+                menu_item.setAttribute('href', rootUrl + '/airfoilList.html?prefix=' + element.urlCode);
+
+                list_group.appendChild(menu_item);
+            }
+
+            list.appendChild(list_group);
+            
         }
 
-        function logMenuElements(element, index, array) {
-            // console.log(element.name + '   ' + element.url);
-            // элемент-список UL
-            var list = document.getElementById('list');
-            // новый элемент
-            var li = document.createElement('LI');
-            // <a href="/plotter/index">Airfoil plotter</a>
-            li.innerHTML = '<a href="' + rootUrl + '/airfoilList.html?prefix=' + element.urlCode + '\">' + element.name + '</a>';
-            // добавление в конец
-            list.appendChild(li)
-        }
+
     });
 });

@@ -1,66 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Init DB</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Shop Homepage - Start Bootstrap Template</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/shop-homepage.css" rel="stylesheet">
     <script src="../js/jquery-3.1.1.min.js"></script>
     <script src="../js/init_db.js"></script>
     <script src="../js/getContextPath.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/css_login.css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 <body>
-<input type="button" value="Обновить базу" id="updateDB">
-<div id='content'>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Airfoil Tools</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="#">About</a>
+                </li>
+                <li>
+                    <a href="#">Services</a>
+                </li>
+                <li>
+                    <a href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<!-- Page Content -->
+<script src="../js/get_menu.js"></script>
 
+<div class="container">
+    <div class="row">
+        <div class="col-md-3" id="list_menu">
+            <p class="lead">Навигация</p>
+            <div class="list-group">
+                <a class="list-group-item" id="addAirf" href="/adminka/addAirfoil.html">Добавить новый профиль</a>
+                <a class="list-group-item" id="adm" href="/adminka/adminka.html">Админка</a>
+            </div>
+
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-sm-12 col-lg-12 col-md-12">
+                    <div class="thumbnail">
+                        <div class="caption">
+                            <input type="button" value="Обновить базу" id="updateDB">
+                            <div id='content'>
+
+                            </div>
+
+
+                            <script>
+                                document.getElementById("updateDB").onclick = updateDB;
+                                let source = new EventSource('/getRealTimeMessage');
+                                source.addEventListener('open', function (e) {
+                                    console.log('connected');
+                                });
+                                function objToStrMap(obj) {
+                                    let strMap = new Map();
+                                    for (let k of Object.keys(obj)) {
+                                        strMap.set(k, obj[k]);
+                                    }
+                                    return strMap;
+                                }
+
+                                function jsonToStrMap(jsonStr) {
+                                    return objToStrMap(JSON.parse(jsonStr));
+                                }
+                                source.addEventListener('message', function (e) {
+                                    let progressMap = jsonToStrMap(e.data);
+                                    let keys = progressMap.keys();
+
+
+                                    let list = document.getElementById("content");
+
+                                    for (let key of keys) {
+                                        let item = document.getElementById(key);
+                                        if (item == null) {
+                                            item = document.createElement('h2');
+                                            item.id = key;
+                                            item.setAttribute("class", "waiting");
+                                            list.appendChild(item);
+                                        }
+                                        item.innerText = key + " : " + progressMap.get(key) + " %";
+                                    }
+
+                                    console.log(e.data);
+
+                                }, false);
+
+                                source.addEventListener('error', function (e) {
+                                    if (e.readyState == EventSource.CLOSED) {
+                                        console.log('DisConnected');
+                                    }
+                                }, false);
+
+
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-
-<script>
-    document.getElementById("updateDB").onclick = updateDB;
-    let source = new EventSource('/getRealTimeMessage');
-    source.addEventListener('open', function (e) {
-        console.log('connected');
-    });
-    function objToStrMap(obj) {
-        let strMap = new Map();
-        for (let k of Object.keys(obj)) {
-            strMap.set(k, obj[k]);
-        }
-        return strMap;
-    }
-
-    function jsonToStrMap(jsonStr) {
-        return objToStrMap(JSON.parse(jsonStr));
-    }
-    source.addEventListener('message', function (e) {
-        let progressMap = jsonToStrMap(e.data);
-        let keys = progressMap.keys();
-
-
-        let list = document.getElementById("content");
-
-        for (let key of keys) {
-            let item = document.getElementById(key);
-            if (item == null) {
-                item = document.createElement('h2');
-                item.id = key;
-                item.setAttribute("class", "waiting");
-                list.appendChild(item);
-            }
-            item.innerText = key + " : " + progressMap.get(key) + " %";
-        }
-
-        console.log(e.data);
-
-    }, false);
-
-    source.addEventListener('error', function (e) {
-        if (e.readyState == EventSource.CLOSED) {
-            console.log('DisConnected');
-        }
-    }, false);
-
-
-</script>
+</div>
+<!-- /.container -->
+<div class="container">
+    <hr>
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Copyright &copy; Your Website 2014</p>
+            </div>
+        </div>
+    </footer>
+</div>
+<!-- /.container -->
+<!-- jQuery -->
+<script src="../js/jquery.js"></script>
+<!-- Bootstrap Core JavaScript -->
+<script src="../js/bootstrap.min.js"></script>
 </body>
 </html>

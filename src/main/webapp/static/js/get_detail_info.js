@@ -29,7 +29,7 @@ function fillContentDetailInfo(data) {
     let edit = document.getElementById('edit_link');
     edit.setAttribute("href", "adminka/edit_airfoil.html?airfoilId=" + id);
 
-    let name = document.getElementById('name_detail');
+    let name = document.getElementById('airfoil_name');
     name.innerText = data.name;
 
     let downloadStl = document.getElementById('downloadStl');
@@ -41,35 +41,90 @@ function fillContentDetailInfo(data) {
     let description = document.getElementById('descr_detail');
     description.innerText = data.description;
 
+    let Polars_for = document.getElementById('Polars_for');
+    Polars_for.innerText = Polars_for.textContent + data.name;
+
     let fileCsvName = data.fileCsvName;
 
+
+    let table = document.getElementById('table1');
     for (let i = 0, j = 1; i < fileCsvName.length; i++, j++) {
 
-        let csvItemChBox = document.getElementById('checkbox' + j);
-        csvItemChBox.setAttribute("fileName", fileCsvName[i].fileName);
+        let tr = document.createElement('tr');
+        tr.id = j;
+        /*
+         <td><input type="checkbox" id="checkbox1" class="csvItemChBox" name="activ"
+         checked="checked" filename="xf-a18-il-50000-n5.csv"></td>
+         <td id="Renolds1">50,000</td>
+         <td id="NCrit1">5</td>
+         <td id="MaxClCd1">44.6 at α=4.75°</td>
+         <td id="fileName1"><a id="link_file1"
+         href="http://localhost:8080/resources/tmpCsv/xf-a18-il-50000-n5.csv">xf-a18-il-50000-n5.csv</a>
+         </td>*/
+        let td = document.createElement('td');
+        let checkbox = document.createElement('input');
+        checkbox.setAttribute('type', 'checkbox');
+        checkbox.setAttribute('name', 'activ');
+        checkbox.setAttribute('checked', 'checked');
+        checkbox.setAttribute('filename', fileCsvName[i].fileName);
+        checkbox.id = 'checkbox' + j;
+        td.appendChild(checkbox);
+        tr.appendChild(td);
 
-        let csvRenolds = document.getElementById('Renolds' + j);
-        csvRenolds.innerHTML = fileCsvName[i].renolgs;
+        td = document.createElement('td');
+        td.id = "Renolds" + j;
+        td.innerHTML = fileCsvName[i].renolgs;
+        tr.appendChild(td);
 
-        let csvNCrit = document.getElementById('NCrit' + j);
-        csvNCrit.innerHTML = fileCsvName[i].nCrit;
+        td = document.createElement('td');
+        td.id = "NCrit" + j;
+        td.innerHTML = fileCsvName[i].nCrit;
+        tr.appendChild(td);
 
-        let csvMaxClCd = document.getElementById('MaxClCd' + j);
-        csvMaxClCd.innerHTML = fileCsvName[i].maxClCd;
+        td = document.createElement('td');
+        td.id = "MaxClCd" + j;
+        td.innerHTML = fileCsvName[i].maxClCd;
+        tr.appendChild(td);
 
-        let linkItem = document.getElementById('link_file' + j);
-        linkItem.setAttribute("href", "/resources/tmpCsv/" + fileCsvName[i].fileName);
-        linkItem.innerText = fileCsvName[i].fileName;
+        td = document.createElement('td');
+        let link_file = document.createElement('a');
+        link_file.id = "link_file" + j;
+        link_file.innerText = fileCsvName[i].fileName;
+        link_file.setAttribute('href', fileCsvName[i].fileName);
+        td.appendChild(link_file);
+        tr.appendChild(td);
+
+        table.appendChild(tr);
     }
 
     let imgCsvName = data.imgCsvName;
-    let imgCsvBox = document.getElementById('imgCsvBox');
+    let carousel_indicators = document.getElementById('carousel-indicators');
+    let carousel_inner = document.getElementById('carousel-inner');
     for (let i = 0; i < imgCsvName.length; i++) {
-        let imgCsv = document.createElement('div');
+        // <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+
+        let li = document.createElement('li');
+        li.setAttribute('data-target', "#carousel-example-generic");
+        li.setAttribute('data-slide-to', i + '');
+        if (i == 0) {
+            li.setAttribute('class', 'active');
+        }
+        carousel_indicators.appendChild(li);
+
+        let item = document.createElement('div');
+        if (i == 0) {
+            item.setAttribute('class', "item active")
+        } else {
+            item.setAttribute('class', "item");
+        }
+
         let img = document.createElement('img');
         img.setAttribute('src', imgCsvName[i]);
-        imgCsv.appendChild(img);
-        imgCsvBox.appendChild(imgCsv);
+        img.setAttribute('class', "slide-image");
+        img.setAttribute('alt', "");
+        item.appendChild(img);
+        // console.log(item);
+        carousel_inner.appendChild(item);
     }
 }
 

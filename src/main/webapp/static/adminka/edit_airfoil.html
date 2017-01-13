@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Edit Airfoils</title>
-    <meta name="keywords" content=""/>
-    <meta name="description" content=""/>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Shop Homepage - Start Bootstrap Template</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/shop-homepage.css" rel="stylesheet">
     <script src="../js/jquery-3.1.1.min.js"></script>
     <script src="../js/get_user.js"></script>
     <script src="../js/get_content.js"></script>
@@ -13,93 +19,145 @@
     <script src="../js/get_detail_info.js"></script>
     <script src="../js/getContextPath.js"></script>
     <script src='../js/tabular-input.min.js'></script>
-
     <link type='text/css' rel='stylesheet' href='../css/tabular-input.css'/>
-    <link rel="stylesheet" href="../css/main.css" type="text/css"/>
-
-    <link rel="import" href="../menu.html">
+    <link rel="stylesheet" type="text/css" href="../css/css_login.css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
-
 <body>
-
-<div class="wrapper">
-    <div id="header">
-        <div id="header_user">
-            <p class="user_hello">Добро пожаловать, </p>
-            <p class="user_action"><a href="login" target="_blank"> </a></p>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Airfoil Tools</a>
         </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="#">About</a>
+                </li>
+                <li>
+                    <a href="#">Services</a>
+                </li>
+                <li>
+                    <a href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
     </div>
+    <!-- /.container -->
+</nav>
+<!-- Page Content -->
+<script src="../js/get_menu.js"></script>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3" id="list_menu">
+            <p class="lead">Навигация</p>
+            <div class="list-group">
+                <a class="list-group-item" id="addAirf" href="/adminka/addAirfoil.html">Добавить новый профиль</a>
+                <a class="list-group-item" id="adm" href="/adminka/adminka.html">Админка</a>
+            </div>
+
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-sm-12 col-lg-12 col-md-12">
+                    <div class="thumbnail">
+                        <div class="caption">
+                            <div class="content" id="contentid">
+                                <div id="airfoilDetailInfo">
+                                    <form action="/rest/write/updateAirfoil" method="post" enctype="multipart/form-data"
+                                          id="updateAirfoil">
+                                        <label>
+                                            Название профиля
+                                            <input type="text" value="" name="name" id="airfoilName"/>
+                                        </label>
+                                        <label>
+                                            Короткое название профиля (изменение повлечет создание нового профиля)
+                                            <input type="text" value="" name="ShortName" id="shortName"/>
+                                        </label>
+                                        </Br>
+                                        <label>
+                                            Детали
+                                            <input type="text" value="" name="Details" id="description"/>
+                                        </label>
+                                        </Br>
+                                        <div class="img_detail" id="img_detail">
+                                            <label>
+                                                Выберите файл для построения графика профиля
+                                                <input class='fileInput' type="file" name="fileAirfoil"/>
+                                            </label>
+                                            </Br>
+                                        </div>
+
+                                        <div id="graf">
+                                            <label>
+                                                Выберите файлы построения графиков
+                                                <input class='fileInput' type="file" name="files" multiple="multiple"
+                                                       value="Выбрать файлы"/>
+                                            </label>
+                                            </Br>
+                                        </div>
+
+                                        <input type="submit"/>
+                                    </form>
+                                    <div id="editableTables">
+                                        <input type="button" value="Add New Row"
+                                               onclick='javascript:$("#viewTab").tabularInput("addRow")'>
+                                        <input type="button" value="Delete Last Row"
+                                               onclick="javascript:$('#viewTab').tabularInput('deleteRow')">
+                                        <div id="viewTab"></div>
+                                    </div>
+                                    <input type="button" id="saveWab" value="add airfoil">
+                                </div>
+                            </div>
 
 
-    <div class="middle" id="middle">
+                            <script>
+                                document.getElementById('updateAirfoil').setAttribute('action', rootUrl + "/rest/write/updateAirfoil");
+                                document.getElementById("saveWab").onclick = updateWab;
+                                getDetailInfo(true);
+                            </script>
 
-        <div class="container">
-            <div class="content" id="contentid">
-                <div id="airfoilDetailInfo">
-                    <form action="/rest/write/updateAirfoil" method="post" enctype="multipart/form-data"
-                          id="updateAirfoil">
-                        <label>
-                            Название профиля
-                            <input type="text" value="" name="name" id="airfoilName"/>
-                        </label>
-                        <label>
-                            Короткое название профиля (изменение повлечет создание нового профиля)
-                            <input type="text" value="" name="ShortName" id="shortName"/>
-                        </label>
-                        </Br>
-                        <label>
-                            Детали
-                            <input type="text" value="" name="Details" id="description"/>
-                        </label>
-                        </Br>
-                        <div class="img_detail" id="img_detail">
-                            <label>
-                                Выберите файл для построения графика профиля
-                                <input class='fileInput' type="file" name="fileAirfoil"/>
-                            </label>
-                            </Br>
                         </div>
-
-                        <div id="graf">
-                            <label>
-                                Выберите файлы построения графиков
-                                <input class='fileInput' type="file" name="files" multiple="multiple"
-                                       value="Выбрать файлы"/>
-                            </label>
-                            </Br>
-                        </div>
-
-                        <input type="submit"/>
-                    </form>
-                    <div id="editableTables">
-                        <input type="button" value="Add New Row"
-                               onclick='javascript:$("#viewTab").tabularInput("addRow")'>
-                        <input type="button" value="Delete Last Row"
-                               onclick="javascript:$('#viewTab').tabularInput('deleteRow')">
-                        <div id="viewTab"></div>
                     </div>
-                    <input type="button" id="saveWab" value="add airfoil">
                 </div>
             </div>
         </div>
-
-        <script>
-            document.getElementById('updateAirfoil').setAttribute('action', rootUrl + "/rest/write/updateAirfoil");
-            var link = document.querySelector('link[rel=import]');
-            var content = link.import.querySelector('#menu');
-            document.getElementById('middle').appendChild(content.cloneNode(true));
-            document.getElementById("saveWab").onclick = updateWab;
-        </script>
-
     </div>
-
-    <div class="footer">
-        footer
-    </div>
-
 </div>
-<script>
-    getDetailInfo(true);
-</script>
+</div>
+<!-- /.container -->
+<div class="container">
+    <hr>
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Copyright &copy; Your Website 2014</p>
+            </div>
+        </div>
+    </footer>
+</div>
+<!-- /.container -->
+<!-- jQuery -->
+<script src="../js/jquery.js"></script>
+<!-- Bootstrap Core JavaScript -->
+<script src="../js/bootstrap.min.js"></script>
 </body>
 </html>
