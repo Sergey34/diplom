@@ -39,20 +39,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Airfoil Tools</a>
+            <a class="navbar-brand" href="#">Airfoils</a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li>
-                    <a href="#">About</a>
-                </li>
-                <li>
-                    <a href="#">Services</a>
-                </li>
-                <li>
-                    <a href="#">Contact</a>
-                </li>
+            <ul class="nav navbar-nav" id="navbar-nav">
+                <!--<li>
+                    <a href="#">Airfoils</a>
+                </li>-->
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -99,17 +93,17 @@
                                         </Br>
                                         <label>
                                             Выберите файл для построения графика профиля
-                                            <input class='fileInput' type="file" name="fileAirfoil"/>
+                                            <input class="fileInput btn btn-default" type="file" name="fileAirfoil"/>
                                         </label>
 
                                         </Br>
                                         <label>
                                             Выберите файлы построения графиков
-                                            <input class='fileInput' type="file" name="files" multiple="multiple"
+                                            <input class="fileInput btn btn-default" name="files" multiple="multiple"
                                                    value="Выбрать файлы"/>
                                         </label>
                                         </Br>
-                                        <input type="submit"/>
+                                        <input class="btn btn-default" type="submit"/>
 
                                     </form>
                                 </div>
@@ -131,17 +125,17 @@
                                     </label>
                                     </Br>
                                     <div id="view">
-                                        <input type="button" value="Add New Row"
+                                        <input type="button" class="btn btn-default" value="Add New Row"
                                                onclick='javascript:$("#viewTab").tabularInput("addRow")'>
-                                        <input type="button" value="Delete Last Row"
+                                        <input type="button" class="btn btn-default" value="Delete Last Row"
                                                onclick="javascript:$('#viewTab').tabularInput('deleteRow')">
                                         <div id="viewTab">
                                         </div>
                                     </div>
                                     </Br>
-                                    <input type="button" id="addTable" value="add table">
+                                    <input type="button" id="addTable" class="btn btn-default" value="add table">
                                 </div>
-                                <input type="button" id="saveWab" value="add airfoil">
+                                <input type="button" id="saveWab" class="btn btn-default" value="add airfoil">
 
                             </div>
                             <script>

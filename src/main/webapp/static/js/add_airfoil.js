@@ -107,10 +107,12 @@ function addTable() {
     tableDiv.setAttribute("class", 'example');
     let btn = document.createElement('input');
     btn.setAttribute("type", 'button');
+    btn.setAttribute("class", 'btn btn-default');
     btn.setAttribute("value", 'Add New Row');
     btn.setAttribute("onClick", 'javascript:$("#tabular' + number + '").tabularInput("addRow")');
     let btn2 = document.createElement('input');
     btn2.setAttribute("type", 'button');
+    btn2.setAttribute("class", 'btn btn-default');
     btn2.setAttribute("value", 'Delete Last Row');
     btn2.setAttribute("onClick", 'javascript:$("#tabular' + number + '").tabularInput("deleteRow")');
 
