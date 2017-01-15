@@ -162,6 +162,22 @@ function refreshiframe() {
     }
     console.log(checkeds);
 
+    function cleanImgFrame() {
+        let carousel_example_generic = document.getElementById("carousel-example-generic");
+        carousel_example_generic.removeChild(document.getElementById("carousel-indicators"));
+        carousel_example_generic.removeChild(document.getElementById("carousel-inner"));
+
+        let ol = document.createElement('ol');
+        ol.id = 'carousel-indicators';
+        ol.setAttribute('class', 'carousel-indicators');
+        carousel_example_generic.appendChild(ol);
+
+        let div = document.createElement('div');
+        div.id = "carousel-inner";
+        div.setAttribute('class', 'carousel-inner');
+        carousel_example_generic.appendChild(div);
+    }
+
     $(document).ready(function () {
         $.ajax({
             type: "POST",
@@ -175,17 +191,37 @@ function refreshiframe() {
             },
             success: function (data) {
                 console.log("SUCCESS: ", data);
-                document.getElementById("airfoilDetailInfo").removeChild(document.getElementById("imgCsvBox"));
-                let imgCsvBox = document.createElement('div');
-                imgCsvBox.id = "imgCsvBox";
+                cleanImgFrame();
+
+
+                let carousel_indicators = document.getElementById('carousel-indicators');
+                let carousel_inner = document.getElementById('carousel-inner');
                 for (let i = 0; i < data.length; i++) {
-                    let imgCsv = document.createElement('div');
+                    // <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+
+                    let li = document.createElement('li');
+                    li.setAttribute('data-target', "#carousel-example-generic");
+                    li.setAttribute('data-slide-to', i + '');
+                    if (i == 0) {
+                        li.setAttribute('class', 'active');
+                    }
+                    carousel_indicators.appendChild(li);
+
+                    let item = document.createElement('div');
+                    if (i == 0) {
+                        item.setAttribute('class', "item active")
+                    } else {
+                        item.setAttribute('class', "item");
+                    }
+
                     let img = document.createElement('img');
                     img.setAttribute('src', data[i] + "?" + Math.random());
-                    imgCsv.appendChild(img);
-                    imgCsvBox.appendChild(imgCsv);
+                    img.setAttribute('class', "slide-image");
+                    img.setAttribute('alt', "");
+                    item.appendChild(img);
+                    // console.log(item);
+                    carousel_inner.appendChild(item);
                 }
-                document.getElementById("airfoilDetailInfo").appendChild(imgCsvBox);
             }
         });
     });
