@@ -6,7 +6,6 @@ import java.util.Set;
 @Entity
 @Table(name = "airfoil")
 public class Airfoil {
-    @Basic
     @Column(name = "name")
     private String name;
     @Id
@@ -14,14 +13,11 @@ public class Airfoil {
     private String shortName;
     @Column(name = "coord")
     private String coordView;
-    @Basic
     @Column(name = "description")
     private String description;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "prefix")
     private Prefix prefix;
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "airfoil_coordinates", joinColumns = {@JoinColumn(name = "id_airfoil")},
             inverseJoinColumns = {@JoinColumn(name = "id_coordinates", unique = true)})
@@ -35,12 +31,6 @@ public class Airfoil {
     }
 
     public Airfoil() {
-    }
-
-    public Airfoil(String name, String description, String image, int id, Prefix prefix) {
-        this.name = name;
-        this.description = description;
-        this.prefix = prefix;
     }
 
     public Airfoil(String name, String details, String shortName) {
@@ -89,12 +79,23 @@ public class Airfoil {
 
         Airfoil airfoil = (Airfoil) o;
 
-        return shortName != null ? shortName.equals(airfoil.shortName) : airfoil.shortName == null;
+        if (name != null ? !name.equals(airfoil.name) : airfoil.name != null) return false;
+        if (shortName != null ? !shortName.equals(airfoil.shortName) : airfoil.shortName != null) return false;
+        if (coordView != null ? !coordView.equals(airfoil.coordView) : airfoil.coordView != null) return false;
+        if (description != null ? !description.equals(airfoil.description) : airfoil.description != null) return false;
+        if (prefix != null ? !prefix.equals(airfoil.prefix) : airfoil.prefix != null) return false;
+        return coordinates != null ? coordinates.equals(airfoil.coordinates) : airfoil.coordinates == null;
     }
 
     @Override
     public int hashCode() {
-        return shortName != null ? shortName.hashCode() : 0;
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (shortName != null ? shortName.hashCode() : 0);
+        result = 31 * result + (coordView != null ? coordView.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (prefix != null ? prefix.hashCode() : 0);
+        result = 31 * result + (coordinates != null ? coordinates.hashCode() : 0);
+        return result;
     }
 
     public String getShortName() {
@@ -111,5 +112,15 @@ public class Airfoil {
 
     public void setCoordView(String coordView) {
         this.coordView = coordView;
+    }
+
+    @Override
+    public String toString() {
+        return "Airfoil{" +
+                "name='" + name + '\'' +
+                ", shortName='" + shortName + '\'' +
+                ", description='" + description + '\'' +
+                ", prefix=" + prefix +
+                '}';
     }
 }

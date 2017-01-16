@@ -43,8 +43,11 @@ public class Prefix {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Prefix prefix1 = (Prefix) o;
-        return id == prefix1.id && prefix == prefix1.prefix;
+
+        if (id != prefix1.id) return false;
+        return prefix == prefix1.prefix;
     }
 
     @Override
@@ -52,5 +55,13 @@ public class Prefix {
         int result = id;
         result = 31 * result + (int) prefix;
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Prefix{" +
+                "id=" + id +
+                ", prefix=" + prefix +
+                '}';
     }
 }

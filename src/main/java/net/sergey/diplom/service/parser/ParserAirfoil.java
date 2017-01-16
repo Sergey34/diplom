@@ -150,7 +150,7 @@ public class ParserAirfoil implements Callable<Void> {
         String name = detail.getElementsByTag("h1").get(0).text();
         String description = detail.getElementsByClass("cell1").get(0).html();
         String coordinateView = parseCoordinateView(airfoilId);
-        Airfoil airfoil = new Airfoil(name, description, new Prefix(airfoilId.charAt(0)), airfoilId);
+        Airfoil airfoil = new Airfoil(name, description, airfoilId);
         airfoil.setCoordView(coordinateView);
         Set<Coordinates> coordinates = downloadDetailInfo(detail);
         airfoil.setCoordinates(coordinates);

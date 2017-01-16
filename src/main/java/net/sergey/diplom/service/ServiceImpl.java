@@ -286,6 +286,7 @@ public class ServiceImpl implements ServiceInt {
             return new AsyncResult<>(new Message("Данные успешно загружены", SC_OK));
         } catch (Exception e) {
             LOGGER.warn("ошибка инициализации базы {}", e);
+            e.printStackTrace();
             return new AsyncResult<Message>(new MessageError("Произошла ошибка при загрузке данных", SC_NOT_IMPLEMENTED, e.getStackTrace()));
         } finally {
             parsingIsStarting = false;

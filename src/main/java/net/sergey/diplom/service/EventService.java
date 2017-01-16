@@ -9,19 +9,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Component
 public class EventService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final Map<String, String> progressMap = new ConcurrentHashMap<>();
-    private final List<SseEmitter> emitters = new ArrayList<>();
+    private final ConcurrentLinkedQueue<SseEmitter> emitters = new ConcurrentLinkedQueue<>();
 
-    public List<SseEmitter> getEmitters() {
+    public ConcurrentLinkedQueue<SseEmitter> getEmitters() {
         return emitters;
     }
 

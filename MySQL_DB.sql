@@ -79,7 +79,7 @@ CREATE TABLE prefix (
 CREATE TABLE airfoil (
   shortName   VARCHAR(60) PRIMARY KEY,
   name        VARCHAR(255) UNIQUE,
-  description VARCHAR(255),
+  description TEXT,
   prefix      INT,
   coord       TEXT,
   FOREIGN KEY (prefix) REFERENCES prefix (id_prefix)
