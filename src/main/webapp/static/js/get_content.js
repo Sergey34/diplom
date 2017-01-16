@@ -59,7 +59,7 @@ function getContent() {
                 h4.appendChild(name_detail_info_link);
                 caption.appendChild(h4);
                 var description = document.createElement('div');
-                description.innerHTML = element.name + ':</br>' + element.description;
+                description.innerHTML = element.description;
                 caption.appendChild(description);
                 thumbnail.appendChild(caption);
 
@@ -131,12 +131,12 @@ function createCursore(no) {
             link.setAttribute('aria-label', "Next");
             if (no == countItem) {
                 item.setAttribute("class", "disabled");
-                } else {
+            } else {
                 var no_next = no + 1;
                 link.setAttribute("href", "airfoilList.html?prefix=" + prefix + '&no=' + no_next);
-                }
+            }
             item.appendChild(link);
-                cursor.appendChild(item);
+            cursor.appendChild(item);
             // document.getElementById('contentid').appendChild(cursor);
         });
     });
