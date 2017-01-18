@@ -2,12 +2,12 @@ package net.sergey.diplom.service;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
+import net.sergey.diplom.domain.user.UserRole;
+import net.sergey.diplom.dto.UserView;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.dto.airfoil.AirfoilEdit;
-import net.sergey.diplom.dto.UserView;
 import net.sergey.diplom.dto.messages.Message;
-import net.sergey.diplom.domain.user.UserRole;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

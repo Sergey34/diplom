@@ -1,7 +1,7 @@
 package net.sergey.diplom.rest;
 
-import net.sergey.diplom.dto.airfoil.AirfoilEdit;
 import net.sergey.diplom.dto.UserView;
+import net.sergey.diplom.dto.airfoil.AirfoilEdit;
 import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.service.ServiceInt;
 import org.springframework.beans.factory.annotation.Autowired;

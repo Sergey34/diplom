@@ -23,7 +23,7 @@ $(document).ready(function () {
 
 
             function logMenuElements(element, index, array) {
-            // console.log(element.name + '   ' + element.url);
+                // console.log(element.name + '   ' + element.url);
 
                 // новый элемент
                 var menu_item = document.createElement('a');
@@ -35,7 +35,7 @@ $(document).ready(function () {
             }
 
             list.appendChild(list_group);
-            
+
         }
 
 
