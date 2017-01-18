@@ -69,6 +69,65 @@
                 <div class="col-sm-12 col-lg-12 col-md-12">
                     <div class="thumbnail">
                         <div class="caption">
+                            Получить список меню.<br>
+                            Запрос:
+                            <pre>
+GET /rest/menu
+                            </pre>
+                            Ответ:
+                            <pre>
+[
+   {
+      "id": -1043787113,
+      "header": "Airfoils A to Z",
+      "menuItems": [
+         {
+            "id": -625623784,
+            "name": "A a18 to avistar",
+            "urlCode": "A"
+         },
+         {
+            "id": 610183724,
+            "name": "B b29root to bw3",
+            "urlCode": "B"
+         }
+      ]
+   },
+   {
+      "id": -34245354,
+      "header": "header B",
+      "menuItems": [
+         {
+            "id": -456465,
+            "name": "name B",
+            "urlCode": "BB"
+         }
+      ]
+   }
+]
+                            </pre>
+                            Получить информацию о пользователе.<br>
+                            Запрос:
+                            <pre>
+GET /rest/userInfo
+                            </pre>
+                            Ответ:
+                            <pre>
+{
+   "userName": "alex",
+   "userRoles": [
+      {
+         "roleId": 1,
+         "role": "ROLE_USER"
+      },
+      {
+         "roleId": 2,
+         "role": "ROLE_ADMIN"
+      }
+   ]
+}
+                            </pre>
+
 
                             инфа про api
                         </div>

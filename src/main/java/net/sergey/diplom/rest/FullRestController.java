@@ -3,6 +3,7 @@ package net.sergey.diplom.rest;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.UserRole;
+import net.sergey.diplom.dto.UserDto;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.service.ServiceInt;
@@ -29,7 +30,7 @@ public class FullRestController {
     }
 
     @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
-    public String getUserInfo() {
+    public UserDto getUserInfo() {
         return service.getCurrentUserInfo();
     }
 

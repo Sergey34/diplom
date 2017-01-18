@@ -2,6 +2,8 @@ package net.sergey.diplom.service;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
+import net.sergey.diplom.domain.user.User;
+import net.sergey.diplom.dto.UserDto;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.dto.airfoil.CoordinatesDto;
@@ -68,5 +70,12 @@ public class Converter {
         coordinatesDto.setRenolgs(coordinate.getRenolgs());
         coordinatesDto.setFilePath(ServiceImpl.getRootUrl() + "/resources/tmpCsv/" + coordinate.getFileName());
         return coordinatesDto;
+    }
+
+    public UserDto userToUserDto(User userByName) {
+        UserDto userDto = new UserDto();
+        userDto.setUserName(userByName.getUserName());
+        userDto.setUserRoles(userByName.getUserRoles());
+        return userDto;
     }
 }

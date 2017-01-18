@@ -8,6 +8,7 @@ import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
+import net.sergey.diplom.dto.UserDto;
 import net.sergey.diplom.dto.UserView;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
@@ -30,6 +31,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -316,10 +319,12 @@ public class ServiceImpl implements ServiceInt {
 
 
     @Override
-    public String getCurrentUserInfo() {
-        Boolean isLogin = UtilsLogger.getAuthentication().isAuthenticated();
-        if (!"guest".equals(UtilsLogger.getAuthentication().getName()) && isLogin) {
-            return UtilsLogger.getAuthentication().getName();
+    public UserDto getCurrentUserInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Boolean isLogin = authentication.isAuthenticated();
+        String name = authentication.getName();
+        if (!"guest".equals(name) && isLogin) {
+            return converter.userToUserDto(dao.getUserByName(name));
         }
         return null;
     }

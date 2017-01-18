@@ -6,6 +6,8 @@ import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Aspect
 public class AspectLogger {
@@ -14,8 +16,9 @@ public class AspectLogger {
 
     @After("execution(* net.sergey.diplom.service.ServiceInt.*(..))")
     public void log(JoinPoint joinPoint) {
-        if (UtilsLogger.getAuthentication() != null) {
-            String name = UtilsLogger.getAuthentication().getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String name = authentication.getName();
             LOGGER.trace("User '{}' run method '{}'", name, joinPoint.getSignature());
         }
 

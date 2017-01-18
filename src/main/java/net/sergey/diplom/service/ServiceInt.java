@@ -3,6 +3,7 @@ package net.sergey.diplom.service;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.UserRole;
+import net.sergey.diplom.dto.UserDto;
 import net.sergey.diplom.dto.UserView;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
@@ -29,7 +30,7 @@ public interface ServiceInt {
 
     Future<Message> parse();
 
-    String getCurrentUserInfo();
+    UserDto getCurrentUserInfo();
 
     Message addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
 
