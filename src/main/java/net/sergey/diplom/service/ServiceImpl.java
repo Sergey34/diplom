@@ -94,9 +94,19 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public List<AirfoilDTO> getAllAirfoilMinimal(int startNumber, int count) {
+    public List<AirfoilDTO> getAllAirfoilDto(int startNumber, int count) {
         List<Airfoil> allAirfoils = dao.getAllAirfoils(startNumber, count, true);
         return converter.airfoilToAirfoilDto(allAirfoils);
+    }
+
+    @Override
+    public List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
+        return dao.getAirfoilsByPrefix(prefix, startNumber, count, false);
+    }
+
+    @Override
+    public Airfoil getAirfoilById(String airfoilId) {
+        return dao.getAirfoilById(airfoilId);
     }
 
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {
@@ -207,8 +217,8 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public List<AirfoilDTO> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
-        List<Airfoil> airfoilsByPrefix = dao.getAirfoilsByPrefix(prefix, startNumber, count);
+    public List<AirfoilDTO> getAirfoilsDtoByPrefix(char prefix, int startNumber, int count) {
+        List<Airfoil> airfoilsByPrefix = dao.getAirfoilsByPrefix(prefix, startNumber, count, true);
         for (Airfoil airfoil : airfoilsByPrefix) {
             drawViewAirfoil(airfoil);
         }

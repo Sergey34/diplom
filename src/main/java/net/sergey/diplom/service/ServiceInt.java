@@ -21,7 +21,7 @@ public interface ServiceInt {
 
     List<UserRole> getAllUserRoles();
 
-    List<AirfoilDTO> getAirfoilsByPrefix(char prefix, int startNumber, int count);
+    List<AirfoilDTO> getAirfoilsDtoByPrefix(char prefix, int startNumber, int count);
 
     List<Airfoil> getAllAirfoils(int startNumber, int count);
 
@@ -47,5 +47,9 @@ public interface ServiceInt {
 
     Message updateAirfoil(AirfoilEdit airfoilEdit);
 
-    List<AirfoilDTO> getAllAirfoilMinimal(int startNumber, int count);
+    List<AirfoilDTO> getAllAirfoilDto(int startNumber, int count);
+
+    List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count);
+
+    Airfoil getAirfoilById(String airfoilId);
 }

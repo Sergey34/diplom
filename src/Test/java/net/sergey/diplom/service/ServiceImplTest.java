@@ -89,15 +89,15 @@ public class ServiceImplTest {
 
     @Test
     public void getAirfoilsByPrefix() throws Exception {
-        List<AirfoilDTO> airfoilsByPrefix = service.getAirfoilsByPrefix('A', 0, -1);
+        List<AirfoilDTO> airfoilsByPrefix = service.getAirfoilsDtoByPrefix('A', 0, -1);
         Assert.assertNotNull(airfoilsByPrefix);
         Assert.assertTrue(airfoilsByPrefix.size() == 5);
 
-        airfoilsByPrefix = service.getAirfoilsByPrefix('A', 0, 100);
+        airfoilsByPrefix = service.getAirfoilsDtoByPrefix('A', 0, 100);
         Assert.assertNotNull(airfoilsByPrefix);
         Assert.assertTrue(airfoilsByPrefix.size() == 5);
 
-        airfoilsByPrefix = service.getAirfoilsByPrefix('A', 10, 100);
+        airfoilsByPrefix = service.getAirfoilsDtoByPrefix('A', 10, 100);
         Assert.assertNotNull(airfoilsByPrefix);
         Assert.assertTrue(airfoilsByPrefix.size() == 0);
 

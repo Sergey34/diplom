@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface DAO {
 
-    List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count);
+    List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count, boolean isLazyLoad);
 
     List<Menu> getAllMenu();
 

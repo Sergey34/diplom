@@ -187,7 +187,7 @@ public class DAOImplTest {
         airfoil.setCoordinates(Collections.<Coordinates>emptySet());
         dao.addAirfoil(airfoil);
         long start = System.currentTimeMillis();
-        List<Airfoil> airfoils = dao.getAirfoilsByPrefix('A', 0, 0);//900-700
+        List<Airfoil> airfoils = dao.getAirfoilsByPrefix('A', 0, 0, true);//900-700
         Assert.assertNotNull(airfoils);
         Assert.assertTrue(airfoils.size() == 5);
         for (Airfoil airfoil1 : airfoils) {

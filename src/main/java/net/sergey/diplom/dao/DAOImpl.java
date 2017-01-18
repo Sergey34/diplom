@@ -32,7 +32,7 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
+    public List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count, boolean isLazyLoad) {
         Prefix prefixTemplate = new Prefix(prefix);
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Airfoil.class)
                 .addOrder(Order.asc("shortName"))
@@ -44,6 +44,13 @@ public class DAOImpl implements DAO {
         }
         @SuppressWarnings("unchecked")
         List<Airfoil> airfoils = criteria.list();
+        if (isLazyLoad) {
+            return airfoils;
+        }
+        for (Airfoil airfoil : airfoils) {
+            Hibernate.initialize(airfoil.getPrefix());
+            Hibernate.initialize(airfoil.getCoordinates());
+        }
         return airfoils;
     }
 
@@ -114,6 +121,7 @@ public class DAOImpl implements DAO {
                 .createCriteria(Airfoil.class).add(Restrictions.eq("shortName", id)).uniqueResult();
         if (null != airfoil) {
             Hibernate.initialize(airfoil.getCoordinates());
+            Hibernate.initialize(airfoil.getPrefix());
         }
         return airfoil;
     }

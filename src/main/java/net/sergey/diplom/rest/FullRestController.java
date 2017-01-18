@@ -2,9 +2,9 @@ package net.sergey.diplom.rest;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
+import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
-import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.service.ServiceInt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -39,23 +39,33 @@ public class FullRestController {
     }
 
     @RequestMapping(value = "/getContext/{prefix}/{startNumber}/{count}", method = RequestMethod.GET)
-    public List<AirfoilDTO> getAirfoilByPrefix(@PathVariable char prefix, @PathVariable int startNumber, @PathVariable int count) throws IOException {
+    public List<AirfoilDTO> getAirfoilsDtoByPrefix(@PathVariable char prefix, @PathVariable int startNumber, @PathVariable int count) throws IOException {
+        return service.getAirfoilsDtoByPrefix(prefix, startNumber, count);
+    }
+
+    @RequestMapping(value = "/getAirfoilByPrefix/{prefix}/{startNumber}/{count}", method = RequestMethod.GET)
+    public List<Airfoil> getAirfoilByPrefix(@PathVariable char prefix, @PathVariable int startNumber, @PathVariable int count) throws IOException {
         return service.getAirfoilsByPrefix(prefix, startNumber, count);
     }
 
-    @RequestMapping(value = "/getContext/allAirfoil/{startNumber}/{count}", method = RequestMethod.GET)
-    public List<Airfoil> getAirfoilByPrefix(@PathVariable int startNumber, @PathVariable int count) {
-        return service.getAllAirfoils(startNumber, count);
+    @RequestMapping(value = "/getContext/allAirfoilMinimal/{startNumber}/{count}", method = RequestMethod.GET)
+    public List<AirfoilDTO> getAllAirfoilDto(@PathVariable int startNumber, @PathVariable int count) {
+        return service.getAllAirfoilDto(startNumber, count);
     }
 
-    @RequestMapping(value = "/getContext/allAirfoilMinimal/{startNumber}/{count}", method = RequestMethod.GET)
-    public List<AirfoilDTO> getAllAirfoilMinimal(@PathVariable int startNumber, @PathVariable int count) {
-        return service.getAllAirfoilMinimal(startNumber, count);
+    @RequestMapping(value = "/getContext/allAirfoil/{startNumber}/{count}", method = RequestMethod.GET)
+    public List<Airfoil> getAllAirfoilByPrefix(@PathVariable int startNumber, @PathVariable int count) {
+        return service.getAllAirfoils(startNumber, count);
     }
 
     @RequestMapping(value = "/getDetailInfo/{airfoilId}", method = RequestMethod.GET)
     public AirfoilDetail getDetailInfo(@PathVariable String airfoilId) {
         return service.getDetailInfo(airfoilId);
+    }
+
+    @RequestMapping(value = "/getAirfoil/{airfoilId}", method = RequestMethod.GET)
+    public Airfoil getAirfoilById(@PathVariable String airfoilId) {
+        return service.getAirfoilById(airfoilId);
     }
 
     @RequestMapping(value = "/getCountAirfoil/{prefix}", method = RequestMethod.GET)
