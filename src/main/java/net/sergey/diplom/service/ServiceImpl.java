@@ -373,9 +373,12 @@ public class ServiceImpl implements ServiceInt {
 
     @Override
     public Message stop() {
-        parserService.stop();
-        parsingIsStarting = false;
-        return null;
+        if (parsingIsStarting) {
+            parserService.stop();
+            parsingIsStarting = false;
+            return new Message("done", SC_OK);
+        }
+        return new Message("Обновление не запущено", SC_OK);
     }
 
     @Override

@@ -70,6 +70,7 @@
                     <div class="thumbnail">
                         <div class="caption">
                             <input type="button" class="btn btn-default" value="Обновить базу" id="updateDB">
+                            <input type="button" class="btn btn-default" value="Stop" id="stopUpdate">
                             <div id='content'>
 
                             </div>
@@ -77,6 +78,7 @@
 
                             <script>
                                 document.getElementById("updateDB").onclick = updateDB;
+                                document.getElementById("stopUpdate").onclick = stopUpdate;
                                 let source = new EventSource('/getRealTimeMessage');
                                 source.addEventListener('open', function (e) {
                                     console.log('connected');
