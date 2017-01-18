@@ -22,6 +22,7 @@ public class Coordinates {
     @Column(name = "maxClCd")
     private String maxClCd;
 
+
     public Coordinates(String coordinatesJson, String fileNameId) {
         this.coordinatesJson = coordinatesJson;
         this.fileName = fileNameId;
@@ -70,10 +71,6 @@ public class Coordinates {
         this.fileName = fileName;
     }
 
-    public void setNCrit(String NCrit) {
-        this.nCrit = NCrit;
-    }
-
     public String getRenolgs() {
         return renolgs;
     }
@@ -82,19 +79,19 @@ public class Coordinates {
         this.renolgs = renolgs;
     }
 
-    public String getnCrit() {
-        return nCrit;
-    }
-
-    public void setnCrit(String nCrit) {
-        this.nCrit = nCrit;
-    }
-
     public String getMaxClCd() {
         return maxClCd;
     }
 
     public void setMaxClCd(String maxClCd) {
         this.maxClCd = maxClCd;
+    }
+
+    public String getNCrit() {
+        return nCrit;
+    }
+
+    public void setNCrit(String NCrit) {
+        this.nCrit = NCrit;
     }
 }

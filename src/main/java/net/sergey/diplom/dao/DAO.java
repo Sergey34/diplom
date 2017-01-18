@@ -31,4 +31,6 @@ public interface DAO {
     int getCountAirfoilByPrefix(char prefix);
 
     MenuItem getMenuItemByUrl(String prefix);
+
+    List<Airfoil> getAllAirfoils(int startNumber, int count, boolean isLasyLoad);
 }

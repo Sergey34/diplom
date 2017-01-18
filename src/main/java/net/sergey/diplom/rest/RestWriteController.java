@@ -1,8 +1,8 @@
 package net.sergey.diplom.rest;
 
-import net.sergey.diplom.domain.model.AirfoilEdit;
-import net.sergey.diplom.domain.model.UserView;
-import net.sergey.diplom.domain.model.messages.Message;
+import net.sergey.diplom.dto.airfoil.AirfoilEdit;
+import net.sergey.diplom.dto.UserView;
+import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.service.ServiceInt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import static net.sergey.diplom.domain.model.messages.Message.SC_FORBIDDEN;
+import static net.sergey.diplom.dto.messages.Message.SC_FORBIDDEN;
 
 @RequestMapping(value = "/rest/write")
 @RestController(value = "write")

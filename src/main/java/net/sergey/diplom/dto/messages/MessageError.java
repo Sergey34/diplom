@@ -1,4 +1,4 @@
-package net.sergey.diplom.domain.model.messages;
+package net.sergey.diplom.dto.messages;
 
 public class MessageError extends Message {
     private StackTraceElement[] stackTrace;

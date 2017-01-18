@@ -39,16 +39,16 @@ function fillContentDetailInfo(data) {
     image.setAttribute("src", data.image);
 
     let description = document.getElementById('descr_detail');
-    description.innerText = data.description;
+    description.innerHTML = data.description;
 
     let Polars_for = document.getElementById('Polars_for');
     Polars_for.innerText = Polars_for.textContent + data.name;
 
-    let fileCsvName = data.fileCsvName;
+    let coordinates = data.coordinates;
 
 
     let table = document.getElementById('table1');
-    for (let i = 0, j = 1; i < fileCsvName.length; i++, j++) {
+    for (let i = 0, j = 1; i < coordinates.length; i++, j++) {
 
         let tr = document.createElement('tr');
         tr.id = j;
@@ -66,31 +66,31 @@ function fillContentDetailInfo(data) {
         checkbox.setAttribute('type', 'checkbox');
         checkbox.setAttribute('name', 'activ');
         checkbox.setAttribute('checked', 'checked');
-        checkbox.setAttribute('filename', fileCsvName[i].fileName);
+        checkbox.setAttribute('filename', coordinates[i].fileName);
         checkbox.id = 'checkbox' + j;
         td.appendChild(checkbox);
         tr.appendChild(td);
 
         td = document.createElement('td');
         td.id = "Renolds" + j;
-        td.innerHTML = fileCsvName[i].renolgs;
+        td.innerHTML = coordinates[i].renolgs;
         tr.appendChild(td);
 
         td = document.createElement('td');
         td.id = "NCrit" + j;
-        td.innerHTML = fileCsvName[i].nCrit;
+        td.innerHTML = coordinates[i].nCrit;
         tr.appendChild(td);
 
         td = document.createElement('td');
         td.id = "MaxClCd" + j;
-        td.innerHTML = fileCsvName[i].maxClCd;
+        td.innerHTML = coordinates[i].maxClCd;
         tr.appendChild(td);
 
         td = document.createElement('td');
         let link_file = document.createElement('a');
         link_file.id = "link_file" + j;
-        link_file.innerText = fileCsvName[i].fileName;
-        link_file.setAttribute('href', fileCsvName[i].fileName);
+        link_file.innerText = coordinates[i].fileName;
+        link_file.setAttribute('href', coordinates[i].filePath);
         td.appendChild(link_file);
         tr.appendChild(td);
 
@@ -140,12 +140,12 @@ function fillEditableContentDetailInfo(data) {
 
     fillEditableContentDetailInfoEditableTable(data);
 
-    let fileCsvName = data.fileCsvName;
+    let coordinates = data.coordinates;
     let links = document.getElementById('graf');
-    for (let i = 0; i < fileCsvName.length; i++) {
+    for (let i = 0; i < coordinates.length; i++) {
         let linkItem = document.createElement('a');
-        linkItem.setAttribute("href", "/resources/tmpCsv/" + fileCsvName[i].fileName);
-        linkItem.innerHTML = fileCsvName[i].fileName;
+        linkItem.setAttribute("href", coordinates[i].filePath);
+        linkItem.innerHTML = coordinates[i].fileName;
         links.appendChild(linkItem);
         links.appendChild(document.createElement('br'))
     }

@@ -2,13 +2,10 @@ package net.sergey.diplom.rest;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
-import net.sergey.diplom.domain.model.AirfoilDTO;
-import net.sergey.diplom.domain.model.AirfoilDetail;
+import net.sergey.diplom.dto.airfoil.AirfoilDTO;
+import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.service.ServiceInt;
-import net.sergey.diplom.service.utils.UtilsLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +16,6 @@ import java.util.List;
 @RequestMapping(value = "/rest")
 @RestController
 public class FullRestController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final ServiceInt service;
 
     @Autowired
@@ -50,6 +46,11 @@ public class FullRestController {
     @RequestMapping(value = "/getContext/allAirfoil/{startNumber}/{count}", method = RequestMethod.GET)
     public List<Airfoil> getAirfoilByPrefix(@PathVariable int startNumber, @PathVariable int count) {
         return service.getAllAirfoils(startNumber, count);
+    }
+
+    @RequestMapping(value = "/getContext/allAirfoilMinimal/{startNumber}/{count}", method = RequestMethod.GET)
+    public List<AirfoilDTO> getAllAirfoilMinimal(@PathVariable int startNumber, @PathVariable int count) {
+        return service.getAllAirfoilMinimal(startNumber, count);
     }
 
     @RequestMapping(value = "/getDetailInfo/{airfoilId}", method = RequestMethod.GET)

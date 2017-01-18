@@ -1,4 +1,4 @@
-package net.sergey.diplom.domain.model;
+package net.sergey.diplom.dto.airfoil;
 
 public class Data {
     private String fileName;

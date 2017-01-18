@@ -25,7 +25,7 @@ public class AirfoilStlGenerator {
     }
 
 
-    public String generate(String fileName, String coordView, String PATH) throws IOException {
+    public void generate(String fileName, String coordView, String PATH) throws IOException {
         String[] split1 = coordView.split("\n");
         List<Double> x = new ArrayList<>();
         List<Double> y = new ArrayList<>();
@@ -62,7 +62,6 @@ public class AirfoilStlGenerator {
                         String.format("%.6e", ySpline.get(i)) + "]\n");
             }
             scadWriter.write(FILE_FOOTER.toString());
-            return fileName + '_' + b + ".scad";
         } catch (IOException e) {
             LOGGER.warn("Ошибка генерации STL файлв {}", e);
             throw e;

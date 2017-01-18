@@ -6,11 +6,15 @@ import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
-import net.sergey.diplom.domain.model.*;
-import net.sergey.diplom.domain.model.messages.Message;
-import net.sergey.diplom.domain.model.messages.MessageError;
+import net.sergey.diplom.dto.airfoil.AirfoilDTO;
+import net.sergey.diplom.dto.airfoil.AirfoilDetail;
+import net.sergey.diplom.dto.airfoil.AirfoilEdit;
+import net.sergey.diplom.dto.airfoil.Data;
+import net.sergey.diplom.dto.messages.Message;
+import net.sergey.diplom.dto.messages.MessageError;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.domain.user.UserRole;
+import net.sergey.diplom.dto.*;
 import net.sergey.diplom.service.parser.ParserAirfoil;
 import net.sergey.diplom.service.parser.ParserService;
 import net.sergey.diplom.service.properties.PropertiesHandler;
@@ -38,27 +42,29 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Future;
 
-import static net.sergey.diplom.domain.model.messages.Message.*;
+import static net.sergey.diplom.dto.messages.Message.*;
 
 @Service
 public class ServiceImpl implements ServiceInt {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-    private static final List<String> CHART_NAMES =
+    protected static final List<String> CHART_NAMES =
             Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static String PATH;
     private static String rootUrl;
     private final DAO dao;
     private final ParserService parserService;
     private final ServletContext servletContext;
     private final PropertiesHandler propertiesHandler;
+    private final Converter converter;
     private boolean parsingIsStarting = false;
 
     @Autowired
-    public ServiceImpl(DAO dao, ServletContext servletContext, ParserService parserService, PropertiesHandler propertiesHandler) {
+    public ServiceImpl(DAO dao, ServletContext servletContext, ParserService parserService, PropertiesHandler propertiesHandler, Converter converter) {
         this.dao = dao;
         this.servletContext = servletContext;
         this.parserService = parserService;
         this.propertiesHandler = propertiesHandler;
+        this.converter = converter;
     }
 
     public static String getRootUrl() {
@@ -85,6 +91,12 @@ public class ServiceImpl implements ServiceInt {
         }
         LOGGER.debug("Airfoil успешно обновлен {}", SC_OK);
         return new Message("Airfoil успешно обновлен", SC_OK);
+    }
+
+    @Override
+    public List<AirfoilDTO> getAllAirfoilMinimal(int startNumber, int count) {
+        List<Airfoil> allAirfoils = dao.getAllAirfoils(startNumber, count, true);
+        return converter.airfoilToAirfoilDto(allAirfoils);
     }
 
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {
@@ -200,7 +212,7 @@ public class ServiceImpl implements ServiceInt {
         for (Airfoil airfoil : airfoilsByPrefix) {
             drawViewAirfoil(airfoil);
         }
-        return AirfoilDTO.mapAirfoilOnAirfoilId(airfoilsByPrefix);
+        return converter.airfoilToAirfoilDto(airfoilsByPrefix);
     }
 
     private void fillListXListY(List<Double> x, List<Double> y, String[] split) {
@@ -218,7 +230,7 @@ public class ServiceImpl implements ServiceInt {
 
     @Override
     public List<Airfoil> getAllAirfoils(int startNumber, int count) {
-        return new ArrayList<>();
+        return dao.getAllAirfoils(startNumber, count, false);
     }
 
     @Override
@@ -244,15 +256,14 @@ public class ServiceImpl implements ServiceInt {
         if (null == airfoil) {
             return null;
         }
-        String stlFilePath = null;
         try {
             new BuilderGraphs(PATH).draw(airfoil, null, false);
-            stlFilePath = new AirfoilStlGenerator().generate(airfoil.getShortName(), airfoil.getCoordView(), PATH);
+            new AirfoilStlGenerator().generate(airfoil.getShortName(), airfoil.getCoordView(), PATH);
         } catch (Exception e) {
             LOGGER.warn("Ошибка при обработке файлов с координатами {}", e);
         }
         drawViewAirfoil(airfoil);
-        return new AirfoilDetail(airfoil, CHART_NAMES, stlFilePath);
+        return converter.airfoilToAirfoilDetail(airfoil);
     }
 
     private void drawViewAirfoil(Airfoil airfoil) {

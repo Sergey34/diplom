@@ -132,4 +132,19 @@ public class DAOImpl implements DAO {
     }
 
 
+    @Override
+    public List<Airfoil> getAllAirfoils(int startNumber, int count, boolean isLazyLoad) {
+        @SuppressWarnings("unchecked")
+        List<Airfoil> airfoils = sessionFactory.getCurrentSession().createCriteria(Airfoil.class).setFirstResult(startNumber).setMaxResults(count).list();
+        if (isLazyLoad) {
+            return airfoils;
+        }
+        for (Airfoil airfoil : airfoils) {
+            Hibernate.initialize(airfoil.getCoordinates());
+            Hibernate.initialize(airfoil.getPrefix());
+        }
+        return airfoils;
+    }
+
+
 }
