@@ -29,7 +29,7 @@ public class FullRestController {
         return service.getMenu();
     }
 
-    @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
     public UserDto getUserInfo() {
         return service.getCurrentUserInfo();
     }
@@ -39,37 +39,37 @@ public class FullRestController {
         return service.getAllUserRoles();
     }
 
-    @RequestMapping(value = "/getContext/{prefix}/{startNumber}/{count}", method = RequestMethod.GET)
+    @RequestMapping(value = "/airfoilsDto/{prefix}/{startNumber}/{count}", method = RequestMethod.GET)
     public List<AirfoilDTO> getAirfoilsDtoByPrefix(@PathVariable char prefix, @PathVariable int startNumber, @PathVariable int count) throws IOException {
         return service.getAirfoilsDtoByPrefix(prefix, startNumber, count);
     }
 
-    @RequestMapping(value = "/getAirfoilByPrefix/{prefix}/{startNumber}/{count}", method = RequestMethod.GET)
+    @RequestMapping(value = "/airfoils/{prefix}/{startNumber}/{count}", method = RequestMethod.GET)
     public List<Airfoil> getAirfoilByPrefix(@PathVariable char prefix, @PathVariable int startNumber, @PathVariable int count) throws IOException {
         return service.getAirfoilsByPrefix(prefix, startNumber, count);
     }
 
-    @RequestMapping(value = "/getContext/allAirfoilMinimal/{startNumber}/{count}", method = RequestMethod.GET)
+    @RequestMapping(value = "/airfoilsDto/{startNumber}/{count}", method = RequestMethod.GET)
     public List<AirfoilDTO> getAllAirfoilDto(@PathVariable int startNumber, @PathVariable int count) {
         return service.getAllAirfoilDto(startNumber, count);
     }
 
-    @RequestMapping(value = "/getContext/allAirfoil/{startNumber}/{count}", method = RequestMethod.GET)
+    @RequestMapping(value = "/airfoils/{startNumber}/{count}", method = RequestMethod.GET)
     public List<Airfoil> getAllAirfoilByPrefix(@PathVariable int startNumber, @PathVariable int count) {
         return service.getAllAirfoils(startNumber, count);
     }
 
-    @RequestMapping(value = "/getDetailInfo/{airfoilId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/airfoilDto/{airfoilId}", method = RequestMethod.GET)
     public AirfoilDetail getDetailInfo(@PathVariable String airfoilId) {
         return service.getDetailInfo(airfoilId);
     }
 
-    @RequestMapping(value = "/getAirfoil/{airfoilId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/airfoil/{airfoilId}", method = RequestMethod.GET)
     public Airfoil getAirfoilById(@PathVariable String airfoilId) {
         return service.getAirfoilById(airfoilId);
     }
 
-    @RequestMapping(value = "/getCountAirfoil/{prefix}", method = RequestMethod.GET)
+    @RequestMapping(value = "/countAirfoil/{prefix}", method = RequestMethod.GET)
     public int getCountAirfoil(@PathVariable char prefix) {
         return service.getCountAirfoilByPrefix(prefix);
     }

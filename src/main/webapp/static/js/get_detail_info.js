@@ -7,7 +7,7 @@ function getDetailInfo(forEdit) {
         console.log('id = ' + id);
         $(document).ready(function () {
             $.ajax({
-                url: rootUrl + "/rest/getDetailInfo/" + id
+                url: rootUrl + "/rest/airfoilDto/" + id
             }).then(function (data) {
                 console.log(data);
                 if (data == '') {

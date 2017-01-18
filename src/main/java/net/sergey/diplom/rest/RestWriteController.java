@@ -24,7 +24,7 @@ public class RestWriteController {
         this.service = service;
     }
 
-    @RequestMapping(value = "/addUser", method = RequestMethod.POST)
+    @RequestMapping(value = "/user", method = RequestMethod.POST)
     public Message addUser(@RequestBody UserView userView) {
         return service.addUser(userView);
     }

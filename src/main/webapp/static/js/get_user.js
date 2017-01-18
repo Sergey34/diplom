@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $.ajax({
-        url: rootUrl + "/rest/userInfo"
+        url: rootUrl + "/rest/user"
     }).then(function (data) {
         console.log(data);
         let navbar_nav = document.getElementById('navbar-nav');
