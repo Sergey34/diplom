@@ -33,6 +33,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -198,6 +199,18 @@ public class ServiceImpl implements ServiceInt {
             bufferedWriter.write("let rootUrl = '" + rootUrl + "';");
         } catch (IOException e) {
             LOGGER.warn("Ошибка при инициализации rootUrl {}", e);
+        }
+
+        if (dao.getUserByName("admin") == null) {
+            User user = new User();
+            user.setEnabled(1);
+            user.setUserName("admin");
+            String password = new BCryptPasswordEncoder().encode("mex_mat");
+            user.setPassword(password);
+            UserRole userRole = new UserRole("ROLE_USER", 1);
+            UserRole adminRole = new UserRole("ROLE_ADMIN", 2);
+            user.setUserRoles(new HashSet<>(Arrays.asList(userRole, adminRole)));
+            dao.addUser(user);
         }
     }
 

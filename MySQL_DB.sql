@@ -2,7 +2,7 @@
 CREATE TABLE users (
   id       INT         NOT NULL AUTO_INCREMENT,
   username VARCHAR(45) NOT NULL UNIQUE,
-  password VARCHAR(45) NOT NULL,
+  password VARCHAR(256) NOT NULL,
   enabled  TINYINT     NOT NULL DEFAULT 1,
   PRIMARY KEY (id)
 );
@@ -72,8 +72,8 @@ CREATE TABLE menuHeader_menuItem (
 /* Airfoils */
 
 CREATE TABLE prefix (
-  id_prefix INT PRIMARY KEY AUTO_INCREMENT,
-  prefix    CHAR UNIQUE
+  id_prefix INT PRIMARY KEY,
+  prefix    CHAR
 );
 
 CREATE TABLE airfoil (

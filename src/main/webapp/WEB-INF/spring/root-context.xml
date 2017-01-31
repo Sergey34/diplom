@@ -11,6 +11,7 @@
         <property name="maxUploadSize" value="200000"/>
     </bean>
 
+
     <!-- Root Context: определяет ресурсы, доступные всему приложению, всем сервлетам -->
 
     <!-- Включаем опцию использования конфигурационных аннотаций (@Annotation-based configuration)-->
