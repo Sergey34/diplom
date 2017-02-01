@@ -169,7 +169,7 @@ public class ParserService {
         try {
             executorService.awaitTermination(60, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            LOGGER.warn(" {}", e);
+            LOGGER.warn("stop Error {}", e);
         }
         executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }

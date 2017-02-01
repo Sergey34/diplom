@@ -5,6 +5,7 @@ import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.service.EventService;
+import net.sergey.diplom.service.ServiceImpl;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -148,13 +149,31 @@ public class ParserAirfoil implements Callable<Void> {
     private Airfoil parseAirfoilById(String airfoilId) throws IOException {
         Element detail = ParserService.getJsoupConnect(ConstantApi.GET_DETAILS + airfoilId, constants.TIMEOUT).get().getElementById("content");
         String name = detail.getElementsByTag("h1").get(0).text();
-        String description = detail.getElementsByClass("cell1").get(0).html();
+        String description = filterDescription(detail, airfoilId).html();
         String coordinateView = parseCoordinateView(airfoilId);
         Airfoil airfoil = new Airfoil(name, description, airfoilId);
         airfoil.setCoordView(coordinateView);
         Set<Coordinates> coordinates = downloadDetailInfo(detail);
         airfoil.setCoordinates(coordinates);
         return airfoil;
+    }
+
+    private Element filterDescription(Element detail, String airfoilId) {
+        Element descriptionFull = detail.getElementsByClass("cell1").get(0);
+        for (Element a : descriptionFull.getElementsByTag("a")) {
+            if ("UIUC Airfoil Coordinates Database".equals(a.text())) {
+                a.attr("href", "http://m-selig.ae.illinois.edu/ads/coord_database.html");
+                a.removeAttr("onclick");
+                continue;
+            }
+            if ("Source dat file".equals(a.text())) {
+                a.attr("href", ServiceImpl.getRootUrl() + "/resources/airfoil_img/" + airfoilId + ".dat");
+                a.removeAttr("onclick");
+                continue;
+            }
+            a.remove();
+        }
+        return descriptionFull;
     }
 
     public void setPrefix(String prefix) {

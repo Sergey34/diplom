@@ -43,6 +43,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.Future;
 
@@ -100,17 +101,26 @@ public class ServiceImpl implements ServiceInt {
     @Override
     public List<AirfoilDTO> getAllAirfoilDto(int startNumber, int count) {
         List<Airfoil> allAirfoils = dao.getAllAirfoils(startNumber, count, true);
+        for (Airfoil airfoil : allAirfoils) {
+            createDatFile(airfoil);
+        }
         return converter.airfoilToAirfoilDto(allAirfoils);
     }
 
     @Override
     public List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
-        return dao.getAirfoilsByPrefix(prefix, startNumber, count, false);
+        List<Airfoil> airfoilsByPrefix = dao.getAirfoilsByPrefix(prefix, startNumber, count, false);
+        for (Airfoil airfoil : airfoilsByPrefix) {
+            createDatFile(airfoil);
+        }
+        return airfoilsByPrefix;
     }
 
     @Override
     public Airfoil getAirfoilById(String airfoilId) {
-        return dao.getAirfoilById(airfoilId);
+        Airfoil airfoilById = dao.getAirfoilById(airfoilId);
+        createDatFile(airfoilById);
+        return airfoilById;
     }
 
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {
@@ -237,8 +247,21 @@ public class ServiceImpl implements ServiceInt {
         List<Airfoil> airfoilsByPrefix = dao.getAirfoilsByPrefix(prefix, startNumber, count, true);
         for (Airfoil airfoil : airfoilsByPrefix) {
             drawViewAirfoil(airfoil);
+            createDatFile(airfoil);
         }
         return converter.airfoilToAirfoilDto(airfoilsByPrefix);
+    }
+
+    private void createDatFile(Airfoil airfoil) {
+        File file = new File(ServiceImpl.PATH + "/airfoil_img/" + airfoil.getShortName() + ".dat");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+                Files.write(file.toPath(), airfoil.getCoordView().getBytes());
+            } catch (IOException e) {
+                LOGGER.warn("Ошибка записи файла", e);
+            }
+        }
     }
 
     private void fillListXListY(List<Double> x, List<Double> y, String[] split) {
@@ -256,7 +279,11 @@ public class ServiceImpl implements ServiceInt {
 
     @Override
     public List<Airfoil> getAllAirfoils(int startNumber, int count) {
-        return dao.getAllAirfoils(startNumber, count, false);
+        List<Airfoil> allAirfoils = dao.getAllAirfoils(startNumber, count, false);
+        for (Airfoil airfoil : allAirfoils) {
+            createDatFile(airfoil);
+        }
+        return allAirfoils;
     }
 
     @Override
