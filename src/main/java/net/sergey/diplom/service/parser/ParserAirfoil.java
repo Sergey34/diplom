@@ -15,11 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
@@ -106,7 +104,21 @@ public class ParserAirfoil implements Callable<Void> {
                 stringBuilder.append(split[0]).append(",").append(split[split.length - 1]).append('\n');
             }
         }
-        return stringBuilder.toString();
+        String coordinateView = stringBuilder.toString();
+        writeCoordinateViewInDatFile(shortName,coordinateView);
+        return coordinateView;
+    }
+
+    private void writeCoordinateViewInDatFile(String shortName, String coordinateView) {
+        File file = new File(ServiceImpl.PATH + "/airfoil_img/" +shortName + ".dat");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+                Files.write(file.toPath(), coordinateView.getBytes());
+            } catch (IOException e) {
+                LOGGER.warn("Ошибка записи файла", e);
+            }
+        }
     }
 
     private int createIntByPattern(String item, Pattern pattern) {

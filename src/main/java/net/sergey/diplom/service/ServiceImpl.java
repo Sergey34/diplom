@@ -54,7 +54,7 @@ public class ServiceImpl implements ServiceInt {
     protected static final List<String> CHART_NAMES =
             Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-    private static String PATH;
+    public static String PATH;
     private static String rootUrl;
     private final DAO dao;
     private final ParserService parserService;
