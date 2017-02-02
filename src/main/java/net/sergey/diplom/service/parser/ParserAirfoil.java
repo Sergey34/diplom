@@ -105,12 +105,12 @@ public class ParserAirfoil implements Callable<Void> {
             }
         }
         String coordinateView = stringBuilder.toString();
-        writeCoordinateViewInDatFile(shortName,coordinateView);
+        writeCoordinateViewInDatFile(shortName, coordinateView);
         return coordinateView;
     }
 
     private void writeCoordinateViewInDatFile(String shortName, String coordinateView) {
-        File file = new File(ServiceImpl.PATH + "/airfoil_img/" +shortName + ".dat");
+        File file = new File(ServiceImpl.PATH + "/airfoil_img/" + shortName + ".dat");
         if (!file.exists()) {
             try {
                 file.createNewFile();
