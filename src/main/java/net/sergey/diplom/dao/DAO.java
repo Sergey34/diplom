@@ -3,8 +3,8 @@ package net.sergey.diplom.dao;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
+import net.sergey.diplom.domain.user.Authorities;
 import net.sergey.diplom.domain.user.User;
-import net.sergey.diplom.domain.user.UserRole;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public interface DAO {
 
     void addMenus(List<Menu> menus);
 
-    List<UserRole> getAllUserRoles();
+    List<Authorities> getAllUserRoles();
 
     void addAirfoils(List<Airfoil> airfoils);
 

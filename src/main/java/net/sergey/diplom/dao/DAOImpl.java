@@ -4,8 +4,8 @@ import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
+import net.sergey.diplom.domain.user.Authorities;
 import net.sergey.diplom.domain.user.User;
-import net.sergey.diplom.domain.user.UserRole;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
@@ -80,7 +80,7 @@ public class DAOImpl implements DAO {
         if (user == null) {
             return null;
         }
-        Hibernate.initialize(user.getUserRoles());
+        Hibernate.initialize(user.getAuthorities());
         return user;
     }
 
@@ -97,8 +97,8 @@ public class DAOImpl implements DAO {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<UserRole> getAllUserRoles() {
-        return sessionFactory.getCurrentSession().createCriteria(UserRole.class).list();
+    public List<Authorities> getAllUserRoles() {
+        return sessionFactory.getCurrentSession().createCriteria(Authorities.class).list();
     }
 
     @Override

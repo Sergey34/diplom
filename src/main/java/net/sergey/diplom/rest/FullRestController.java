@@ -2,7 +2,7 @@ package net.sergey.diplom.rest;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
-import net.sergey.diplom.domain.user.UserRole;
+import net.sergey.diplom.domain.user.Authorities;
 import net.sergey.diplom.dto.UserDto;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
@@ -35,7 +35,7 @@ public class FullRestController {
     }
 
     @RequestMapping(value = "/userRoles", method = RequestMethod.GET)
-    public List<UserRole> getUserRole() throws IOException {
+    public List<Authorities> getUserRole() throws IOException {
         return service.getAllUserRoles();
     }
 

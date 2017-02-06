@@ -6,8 +6,8 @@ import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
+import net.sergey.diplom.domain.user.Authorities;
 import net.sergey.diplom.domain.user.User;
-import net.sergey.diplom.domain.user.UserRole;
 import net.sergey.diplom.dto.UserDto;
 import net.sergey.diplom.dto.UserView;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
@@ -174,10 +174,10 @@ public class ServiceImpl implements ServiceInt {
     @Override
     public Message addUser(UserView userView) {
         User user = new User();
-        user.setEnabled(1);
+        user.setEnabled(true);
         user.setPassword(userView.getPassword());
         user.setUserName(userView.getName());
-        user.setUserRoles(findUserRoleByName(userView.getRole()));
+        user.setAuthorities(findUserRoleByName(userView.getRole()));
         try {
             dao.addUser(user);
             LOGGER.trace("Пользователь успешно создан");
@@ -192,7 +192,7 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public List<UserRole> getAllUserRoles() {
+    public List<Authorities> getAllUserRoles() {
         return dao.getAllUserRoles();
     }
 
@@ -213,31 +213,31 @@ public class ServiceImpl implements ServiceInt {
 
         if (dao.getUserByName("admin") == null) {
             User user = new User();
-            user.setEnabled(1);
+            user.setEnabled(true);
             user.setUserName("admin");
             String password = new BCryptPasswordEncoder().encode("mex_mat");
             user.setPassword(password);
-            UserRole userRole = new UserRole("ROLE_USER", 1);
-            UserRole adminRole = new UserRole("ROLE_ADMIN", 2);
-            user.setUserRoles(new HashSet<>(Arrays.asList(userRole, adminRole)));
+            Authorities userRole = new Authorities("ROLE_USER", "admin");
+            Authorities adminRole = new Authorities("ROLE_ADMIN", "admin");
+            user.setAuthorities(Arrays.asList(userRole, adminRole));
             dao.addUser(user);
         }
     }
 
 
-    private Set<UserRole> findUserRoleByName(List<String> roleNames) {
-        Map<String, UserRole> userRoleMap = initUserRoleMap();
-        Set<UserRole> userRoles = new HashSet<>();
+    private List<Authorities> findUserRoleByName(List<String> roleNames) {
+        Map<String, Authorities> userRoleMap = initUserRoleMap();
+        List<Authorities> userRoles = new ArrayList<>();
         for (String roleName : roleNames) {
             userRoles.add(userRoleMap.get(roleName));
         }
         return userRoles;
     }
 
-    private Map<String, UserRole> initUserRoleMap() {
-        Map<String, UserRole> userRoleMap = new HashMap<>();
-        for (UserRole userRole : dao.getAllUserRoles()) {
-            userRoleMap.put(userRole.getRole(), userRole);
+    private Map<String, Authorities> initUserRoleMap() {
+        Map<String, Authorities> userRoleMap = new HashMap<>();
+        for (Authorities userRole : dao.getAllUserRoles()) {
+            userRoleMap.put(userRole.getAuthority(), userRole);
         }
         return userRoleMap;
     }

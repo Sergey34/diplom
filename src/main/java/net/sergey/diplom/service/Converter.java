@@ -75,7 +75,7 @@ public class Converter {
     public UserDto userToUserDto(User userByName) {
         UserDto userDto = new UserDto();
         userDto.setUserName(userByName.getUserName());
-        userDto.setUserRoles(userByName.getUserRoles());
+        userDto.setUserRoles(userByName.getAuthorities());
         return userDto;
     }
 }

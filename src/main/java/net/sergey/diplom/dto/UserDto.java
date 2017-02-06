@@ -1,12 +1,12 @@
 package net.sergey.diplom.dto;
 
-import net.sergey.diplom.domain.user.UserRole;
+import net.sergey.diplom.domain.user.Authorities;
 
-import java.util.Set;
+import java.util.List;
 
 public class UserDto {
     private String userName;
-    private Set<UserRole> userRoles;
+    private List<Authorities> userRoles;
 
     public UserDto() {
     }
@@ -19,11 +19,11 @@ public class UserDto {
         this.userName = userName;
     }
 
-    public Set<UserRole> getUserRoles() {
+    public List<Authorities> getUserRoles() {
         return userRoles;
     }
 
-    public void setUserRoles(Set<UserRole> userRoles) {
+    public void setUserRoles(List<Authorities> userRoles) {
         this.userRoles = userRoles;
     }
 }

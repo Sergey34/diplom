@@ -5,8 +5,8 @@ import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
+import net.sergey.diplom.domain.user.Authorities;
 import net.sergey.diplom.domain.user.User;
-import net.sergey.diplom.domain.user.UserRole;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,10 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertTrue;
 
@@ -37,8 +34,8 @@ public class DAOImplTest {
         User user = new User();
         user.setUserName("11wwww2");
         user.setPassword("qweqwe");
-        user.setUserRoles(new HashSet<UserRole>());
-        user.setEnabled(1);
+        user.setAuthorities(new ArrayList<Authorities>());
+        user.setEnabled(true);
         dao.addUser(user);
         User userByName = dao.getUserByName("11wwww2");
         Assert.assertTrue(user.getUserName().equals(userByName.getUserName()));
@@ -71,7 +68,7 @@ public class DAOImplTest {
 
     @Test
     public void getAllUserRoles() throws Exception {
-        List<UserRole> allUserRoles = dao.getAllUserRoles();
+        List<Authorities> allUserRoles = dao.getAllUserRoles();
         Assert.assertNotNull(allUserRoles);
     }
 
