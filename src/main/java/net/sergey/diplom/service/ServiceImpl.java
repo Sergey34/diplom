@@ -39,9 +39,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
@@ -200,16 +198,16 @@ public class ServiceImpl implements ServiceInt {
     public void init() {
         PATH = servletContext.getRealPath("/resources/");
         rootUrl = servletContext.getContextPath();
-        try {
-            propertiesHandler.load(servletContext.getRealPath("/WEB-INF/") + "/config.properties");
+       /* try {
+            propertiesHandler.load("config.properties");
         } catch (IOException e) {
             LOGGER.warn("Ошибка при попытке инициализировать настройки парсера");
         }
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(servletContext.getRealPath("/static/js/getContextPath.js")))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("static/js/getContextPath.js"))) {
             bufferedWriter.write("let rootUrl = '" + rootUrl + "';");
         } catch (IOException e) {
             LOGGER.warn("Ошибка при инициализации rootUrl {}", e);
-        }
+        }*/
 
         if (dao.getUserByName("admin") == null) {
             User user = new User();

@@ -26,6 +26,7 @@ public class DAOImpl implements DAO {
 
     private final SessionFactory sessionFactory;
 
+
     @Autowired
     public DAOImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;

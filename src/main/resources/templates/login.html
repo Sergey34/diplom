@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="" lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,19 +9,13 @@
     <meta name="author" content="">
     <title>Airfoil tolls - Login</title>
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet"/>
     <!-- Custom CSS -->
-    <link href="css/shop-homepage.css" rel="stylesheet">
+    <link href="css/shop-homepage.css" rel="stylesheet"/>
     <script src="js/jquery-3.1.1.min.js"></script>
     <script src="js/get_user.js"></script>
     <script src="js/getContextPath.js"></script>
     <link rel="stylesheet" type="text/css" href="css/css_login.css">
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
-    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
-    <!--<![endif]&ndash;&gt;-->
 </head>
 <body>
 <!-- Navigation -->
@@ -71,20 +65,16 @@
                             <h2>Login with Username and Password</h2>
 
 
-                            <form method="POST" action="/j_spring_security_check">
-                                <p>
-                                    <label for="j_username">Username</label>
-                                    <input id="j_username" name="j_username" type="text"/>
-                                </p>
-                                <p>
-                                    <label for="j_password">Password</label>
-                                    <input id="j_password" name="j_password" type="password"/>
-                                </p>
-                                <p>
-                                    <label for="j_remember">Remember Me</label>
-                                    <input id="j_remember" name="_spring_security_remember_me" type="checkbox"/>
-                                </p>
-                                <input type="submit" class="btn btn-default" value="Login"/>
+                            <p th:if="${param.logout}" class="alert">You have been logged out</p>
+                            <p th:if="${param.error}" class="alert alert-error">There was an error, please try again</p>
+                            <h2>Login with Username and Password</h2>
+                            <form name="form" th:action="@{/login}" action="/login" method="POST">
+                                <fieldset>
+                                    <input type="text" name="username" value="" placeholder="Username"/>
+                                    <input type="password" name="password" placeholder="Password"/>
+                                </fieldset>
+                                <input type="submit" id="login" value="Login"
+                                       class="btn btn-primary"/>
                             </form>
                         </div>
                     </div>
@@ -112,4 +102,4 @@
 <!-- Bootstrap Core JavaScript -->
 <script src="js/bootstrap.min.js"></script>
 </body>
-</html>
+</>
