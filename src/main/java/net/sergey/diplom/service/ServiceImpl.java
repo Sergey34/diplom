@@ -359,7 +359,7 @@ public class ServiceImpl implements ServiceInt {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Boolean isLogin = authentication.isAuthenticated();
         String name = authentication.getName();
-        if (!"guest".equals(name) && isLogin) {
+        if (!"anonymousUser".equals(name) && isLogin) {
             return converter.userToUserDto(dao.getUserByName(name), dao.getRoleByUsername(name));
         }
         return null;

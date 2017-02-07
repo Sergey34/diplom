@@ -26,10 +26,11 @@ public class Main  extends WebMvcConfigurerAdapter {
         SpringApplication.run(Main.class, args);
     }
 
-
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");
+        registry.addRedirectViewController("/","static/");
+
     }
 
     @Bean
@@ -45,9 +46,8 @@ public class Main  extends WebMvcConfigurerAdapter {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http.authorizeRequests()
-                    .antMatchers("/getMenu").hasRole("ADMIN")
-                    .antMatchers("/getAirfoils").hasRole("USER")
-                    .antMatchers("/css*","/js*","/fonts*").permitAll().anyRequest()
+                    .antMatchers("/rest/write/*","/adminka/*").hasRole("ADMIN")
+                    .antMatchers("/rest/*","/**").permitAll().anyRequest()
                     .fullyAuthenticated().and().formLogin().loginPage("/login")
                     .failureUrl("/login?error").permitAll().and().logout().permitAll();
         }
