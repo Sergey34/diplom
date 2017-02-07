@@ -33,4 +33,10 @@ public interface DAO {
     MenuItem getMenuItemByUrl(String prefix);
 
     List<Airfoil> getAllAirfoils(int startNumber, int count, boolean isLasyLoad);
+
+    List getRoleByUsername(String name);
+
+    void addAuthorities(List<Authorities> authorities);
+
+    void addAuthority(Authorities authorities);
 }

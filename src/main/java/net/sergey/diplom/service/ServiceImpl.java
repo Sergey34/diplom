@@ -175,7 +175,6 @@ public class ServiceImpl implements ServiceInt {
         user.setEnabled(true);
         user.setPassword(userView.getPassword());
         user.setUserName(userView.getName());
-        user.setAuthorities(findUserRoleByName(userView.getRole()));
         try {
             dao.addUser(user);
             LOGGER.trace("Пользователь успешно создан");
@@ -209,16 +208,15 @@ public class ServiceImpl implements ServiceInt {
             LOGGER.warn("Ошибка при инициализации rootUrl {}", e);
         }*/
 
-        if (dao.getUserByName("admin") == null) {
+        if (dao.getUserByName("admin") == null || dao.getRoleByUsername("admin").size()==0) {
             User user = new User();
             user.setEnabled(true);
             user.setUserName("admin");
             String password = new BCryptPasswordEncoder().encode("mex_mat");
             user.setPassword(password);
-            Authorities userRole = new Authorities("ROLE_USER", "admin");
             Authorities adminRole = new Authorities("ROLE_ADMIN", "admin");
-            user.setAuthorities(Arrays.asList(userRole, adminRole));
             dao.addUser(user);
+            dao.addAuthority(adminRole);
         }
     }
 
@@ -362,7 +360,7 @@ public class ServiceImpl implements ServiceInt {
         Boolean isLogin = authentication.isAuthenticated();
         String name = authentication.getName();
         if (!"guest".equals(name) && isLogin) {
-            return converter.userToUserDto(dao.getUserByName(name));
+            return converter.userToUserDto(dao.getUserByName(name), dao.getRoleByUsername(name));
         }
         return null;
     }

@@ -34,7 +34,7 @@ public class DAOImplTest {
         User user = new User();
         user.setUserName("11wwww2");
         user.setPassword("qweqwe");
-        user.setAuthorities(new ArrayList<Authorities>());
+//        user.setAuthorities(new ArrayList<Authorities>());
         user.setEnabled(true);
         dao.addUser(user);
         User userByName = dao.getUserByName("11wwww2");

@@ -1,7 +1,9 @@
 package net.sergey.diplom.domain.user;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "users")
@@ -14,19 +16,8 @@ public class User {
     @Column(name = "enabled")
     private boolean enabled;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "users")
-    private List<Authorities> authorities;
-
 
     public User() {
-    }
-
-    public List<Authorities> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(List<Authorities> authorities) {
-        this.authorities = authorities;
     }
 
     public String getUserName() {

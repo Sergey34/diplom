@@ -12,6 +12,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaSessionFactoryBean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -35,6 +36,7 @@ public class Main  extends WebMvcConfigurerAdapter {
     public HibernateJpaSessionFactoryBean sessionFactory() {
         return new HibernateJpaSessionFactoryBean();
     }
+
     @Configuration
     @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
     protected static class ApplicationSecurity extends WebSecurityConfigurerAdapter {
@@ -43,17 +45,17 @@ public class Main  extends WebMvcConfigurerAdapter {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http.authorizeRequests()
-                    /*.antMatchers("/getMenu").hasRole("ADMIN")
+                    .antMatchers("/getMenu").hasRole("ADMIN")
                     .antMatchers("/getAirfoils").hasRole("USER")
-                    .antMatchers("/css*//**","/js*//**","/fonts*//**").permitAll().anyRequest()*/
-                    /*.fullyAuthenticated()*/.and().formLogin().loginPage("/login")
+                    .antMatchers("/css*","/js*","/fonts*").permitAll().anyRequest()
+                    .fullyAuthenticated().and().formLogin().loginPage("/login")
                     .failureUrl("/login?error").permitAll().and().logout().permitAll();
         }
 
         @Override
         public void configure(AuthenticationManagerBuilder auth) throws Exception {
-//            auth.jdbcAuthentication().dataSource(this.dataSource);
-             auth.inMemoryAuthentication().withUser("user").password("user").roles("USER");
+            auth.jdbcAuthentication().dataSource(this.dataSource).passwordEncoder(new BCryptPasswordEncoder());
+//             auth.inMemoryAuthentication().withUser("user").password("user").roles("USER");
         }
 
     }

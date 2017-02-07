@@ -81,7 +81,6 @@ public class DAOImpl implements DAO {
         if (user == null) {
             return null;
         }
-        Hibernate.initialize(user.getAuthorities());
         return user;
     }
 
@@ -153,6 +152,24 @@ public class DAOImpl implements DAO {
             Hibernate.initialize(airfoil.getPrefix());
         }
         return airfoils;
+    }
+
+    @Override
+    public List<Authorities> getRoleByUsername(String name) {
+        return sessionFactory.getCurrentSession().createCriteria(Authorities.class).add(Restrictions.eq("username",name)).list();
+    }
+
+    @Override
+    public void addAuthorities(List<Authorities> authorities) {
+        for (Authorities authority : authorities) {
+            sessionFactory.getCurrentSession().merge(authority);
+        }
+
+    }
+
+    @Override
+    public void addAuthority(Authorities authority) {
+        sessionFactory.getCurrentSession().merge(authority);
     }
 
 

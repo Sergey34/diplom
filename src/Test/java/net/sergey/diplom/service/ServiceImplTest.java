@@ -6,11 +6,10 @@ import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
-import net.sergey.diplom.domain.user.Authorities;
-import net.sergey.diplom.dto.airfoil.AirfoilDTO;
-import net.sergey.diplom.dto.UserView;
-import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.domain.user.User;
+import net.sergey.diplom.dto.UserView;
+import net.sergey.diplom.dto.airfoil.AirfoilDTO;
+import net.sergey.diplom.dto.messages.Message;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +20,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:/root-context.xml")
@@ -39,7 +41,7 @@ public class ServiceImplTest {
         User user = new User();
         user.setUserName("11wwww2");
         user.setPassword("qweqwe");
-        user.setAuthorities(new ArrayList<Authorities>());
+       // user.setAuthorities(new ArrayList<Authorities>());
         user.setEnabled(true);
         dao.addUser(user);
 

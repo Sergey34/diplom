@@ -72,10 +72,10 @@ public class Converter {
         return coordinatesDto;
     }
 
-    public UserDto userToUserDto(User userByName) {
+    public UserDto userToUserDto(User userByName, List roleByUsername) {
         UserDto userDto = new UserDto();
         userDto.setUserName(userByName.getUserName());
-        userDto.setUserRoles(userByName.getAuthorities());
+        userDto.setUserRoles(roleByUsername);
         return userDto;
     }
 }
