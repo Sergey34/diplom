@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 @Component
 public class Constant {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
+    public String DESCRIPTION;
     private final PropertiesHandler propertiesHandler;
     public Pattern GET_ID_BY_FULL_NAME_PATTERN;
     public Pattern GET_FILE_NAME_BY_URL_PATTERN;
@@ -78,6 +79,7 @@ public class Constant {
         N_CRIT = propertiesHandler.getProperty("nCrit");
         POLAR = propertiesHandler.getProperty("polar");
         REYNOLDS = propertiesHandler.getProperty("reynolds");
+        DESCRIPTION = propertiesHandler.getProperty("description");
         ConstantApi.GET_FILE_CSV = propertiesHandler.getProperty("GET_FILE_CSV");
         ConstantApi.GET_DETAILS = propertiesHandler.getProperty("GET_DETAILS");
         ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX = propertiesHandler.getProperty("GET_LIST_AIRFOIL_BY_PREFIX");
