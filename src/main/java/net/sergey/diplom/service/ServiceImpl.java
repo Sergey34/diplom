@@ -29,6 +29,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.security.core.Authentication;
@@ -60,6 +61,8 @@ public class ServiceImpl implements ServiceInt {
     private final PropertiesHandler propertiesHandler;
     private final Converter converter;
     private boolean parsingIsStarting = false;
+    @Value("${config.parser.path}")
+    private String configParserPath;
 
     @Autowired
     public ServiceImpl(DAO dao, ServletContext servletContext, ParserService parserService, PropertiesHandler propertiesHandler, Converter converter) {
@@ -191,16 +194,11 @@ public class ServiceImpl implements ServiceInt {
 
     @PostConstruct
     public void init() {
-       /* try {
-            propertiesHandler.load("config.properties");
+        try {
+            propertiesHandler.load(configParserPath);
         } catch (IOException e) {
             LOGGER.warn("Ошибка при попытке инициализировать настройки парсера");
         }
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("static/js/getContextPath.js"))) {
-            bufferedWriter.write("let rootUrl = '" + rootUrl + "';");
-        } catch (IOException e) {
-            LOGGER.warn("Ошибка при инициализации rootUrl {}", e);
-        }*/
 
         if (dao.getUserByName("admin") == null || dao.getRoleByUsername("admin").size()==0) {
             User user = new User();

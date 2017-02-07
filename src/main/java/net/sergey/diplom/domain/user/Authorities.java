@@ -1,6 +1,9 @@
 package net.sergey.diplom.domain.user;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "authorities")
@@ -15,8 +18,8 @@ public class Authorities {
     }
 
     public Authorities(String role, String username) {
-        this.username=username;
-        this.authority=role;
+        this.username = username;
+        this.authority = role;
     }
 
     public String getUsername() {
