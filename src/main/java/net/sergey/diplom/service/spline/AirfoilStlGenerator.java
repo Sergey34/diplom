@@ -25,7 +25,7 @@ public class AirfoilStlGenerator {
     }
 
 
-    public void generate(String fileName, String coordView, String PATH) throws IOException {
+    public void generate(String fileName, String coordView) throws IOException {
         String[] split1 = coordView.split("\n");
         List<Double> x = new ArrayList<>();
         List<Double> y = new ArrayList<>();
@@ -54,7 +54,7 @@ public class AirfoilStlGenerator {
         List<Double> xSpline = new ArrayList<>();
         spline(t, splineY, splineX, ySpline, xSpline);
 
-        String stlFileName = PATH + "/" + fileName + '_' + b + ".scad";
+        String stlFileName = "/scadFiles/" + fileName + '_' + b + ".scad";
         try (BufferedWriter scadWriter = new BufferedWriter(new FileWriter(stlFileName))) {
             scadWriter.write(FILE_HEADER.toString());
             for (int i = 0; i < xSpline.size(); i++) {

@@ -5,7 +5,6 @@ import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.service.EventService;
-import net.sergey.diplom.service.ServiceImpl;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -167,7 +166,7 @@ public class ParserAirfoil implements Callable<Void> {
                 continue;
             }
             if ("Source dat file".equals(a.text())) {
-                a.attr("href", ServiceImpl.getRootUrl() + "/resources/airfoil_img/" + airfoilId + ".dat");
+                a.attr("href", "/airfoil_img/" + airfoilId + ".dat");
                 a.removeAttr("onclick");
                 continue;
             }

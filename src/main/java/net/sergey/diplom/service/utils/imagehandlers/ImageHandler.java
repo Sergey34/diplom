@@ -14,7 +14,6 @@ import java.util.concurrent.Callable;
 public class ImageHandler implements Callable<Void> {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static String CATALOG;
-    private static String PATH;
     private final List<Xy> xyList;
     private final String title;
     private final String xAlisa;
@@ -42,8 +41,7 @@ public class ImageHandler implements Callable<Void> {
         this.style = style;
     }
 
-    public static void setSavePath(String path, String catalog) {
-        PATH = path;
+    public static void setSavePath(String catalog) {
         CATALOG = catalog;
     }
 
@@ -63,7 +61,7 @@ public class ImageHandler implements Callable<Void> {
             chart.addSeries(xy.getLegend(), x, y).setMarker(SeriesMarkers.NONE);
         }
         try {
-            BitmapEncoder.saveBitmapWithDPI(chart, PATH + CATALOG + fileName,
+            BitmapEncoder.saveBitmapWithDPI(chart, CATALOG + fileName,
                     BitmapEncoder.BitmapFormat.PNG, 80);
         } catch (Exception e) {
             LOGGER.warn("не удалось сохранить график {}", chart.getTitle());

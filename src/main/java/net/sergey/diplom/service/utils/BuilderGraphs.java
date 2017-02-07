@@ -23,14 +23,12 @@ import java.util.concurrent.Executors;
 
 public class BuilderGraphs {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-    private final String PATH;
     private final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private Map<String, ImageHandler> imageHandler = new ConcurrentHashMap<>();
 
 
-    public BuilderGraphs(String path) {
-        ImageHandler.setSavePath(path, "/chartTemp/");
-        PATH = path;
+    public BuilderGraphs() {
+        ImageHandler.setSavePath("/chartTemp/");
     }
 
     public void draw(final Airfoil airfoil, List<String> checkedList, boolean updateFiles) throws Exception {
@@ -48,7 +46,7 @@ public class BuilderGraphs {
 
     private void filterHandler(Map<String, ImageHandler> imageHandler) {
         for (Map.Entry<String, ImageHandler> item : imageHandler.entrySet()) {
-            File file = new File(PATH + "/chartTemp/" + item.getValue().getFileName() + ".png");
+            File file = new File("/chartTemp/" + item.getValue().getFileName() + ".png");
             if (file.exists()) {
                 imageHandler.remove(item.getKey());
             }
@@ -99,7 +97,7 @@ public class BuilderGraphs {
     }
 
     private boolean fileExist(String fileName) {
-        return new File(PATH + "/tmpCsv/" + fileName).exists();
+        return new File("/tmpCsv/" + fileName).exists();
     }
 
     private Map<String, List<Double>> parseStrCSVtoMap(String coordinateStr, String fileName) {
@@ -146,7 +144,7 @@ public class BuilderGraphs {
 
     private Map<String, List<Double>> parseStrCSVtoMapSaveFile(String coordinateStr, String fileName) {
         Map<String, List<Double>> coordinates;
-        try (CSVWriter csvWriter = new CSVWriter(new FileWriter(PATH + "/tmpCsv/" + fileName))) {
+        try (CSVWriter csvWriter = new CSVWriter(new FileWriter("/tmpCsv/" + fileName))) {
             CSVParser csvParser = new CSVParser();
             String[] csvLines = coordinateStr.split("\n");
             String[] keys = csvParser.parseLine(csvLines[10]);

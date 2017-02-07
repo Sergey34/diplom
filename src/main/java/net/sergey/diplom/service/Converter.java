@@ -29,7 +29,7 @@ public class Converter {
         airfoilDTO.setName(airfoil.getName());
         airfoilDTO.setDescription(airfoil.getDescription());
         airfoilDTO.setShortName(airfoil.getShortName());
-        airfoilDTO.setImage(ServiceImpl.getRootUrl() + "/resources/airfoil_img/" + airfoil.getShortName() + ".png");
+        airfoilDTO.setImage("/airfoil_img/" + airfoil.getShortName() + ".png");
         return airfoilDTO;
     }
 
@@ -38,18 +38,18 @@ public class Converter {
         airfoilDetail.setName(airfoil.getName());
         airfoilDetail.setDescription(airfoil.getDescription());
         airfoilDetail.setShortName(airfoil.getShortName());
-        airfoilDetail.setImage(ServiceImpl.getRootUrl() + "/resources/airfoil_img/" + airfoil.getShortName() + ".png");
+        airfoilDetail.setImage("/airfoil_img/" + airfoil.getShortName() + ".png");
 
         airfoilDetail.setCoordView(airfoil.getCoordView());
         airfoilDetail.setCoordinates(coordinatesToCoordinatesDto(airfoil.getCoordinates()));
 
         List<String> imgCsvName = new ArrayList<>();
         for (String chartName : ServiceImpl.CHART_NAMES) {
-            imgCsvName.add(ServiceImpl.getRootUrl() + "/resources/chartTemp/" + airfoil.getShortName() + chartName + ".png");
+            imgCsvName.add("/chartTemp/" + airfoil.getShortName() + chartName + ".png");
         }
         airfoilDetail.setImgCsvName(imgCsvName);
 
-        airfoilDetail.setStlFilePath(ServiceImpl.getRootUrl() + "/resources/" + airfoil.getShortName() + '_' + 100 + ".scad");
+        airfoilDetail.setStlFilePath("/scadFiles/" + airfoil.getShortName() + '_' + 100 + ".scad");
         return airfoilDetail;
     }
 
@@ -68,7 +68,7 @@ public class Converter {
         coordinatesDto.setMaxClCd(coordinate.getMaxClCd());
         coordinatesDto.setNCrit(coordinate.getNCrit());
         coordinatesDto.setRenolgs(coordinate.getRenolgs());
-        coordinatesDto.setFilePath(ServiceImpl.getRootUrl() + "/resources/tmpCsv/" + coordinate.getFileName());
+        coordinatesDto.setFilePath("/tmpCsv/" + coordinate.getFileName());
         return coordinatesDto;
     }
 

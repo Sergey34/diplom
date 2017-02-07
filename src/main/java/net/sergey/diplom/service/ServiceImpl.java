@@ -52,8 +52,8 @@ public class ServiceImpl implements ServiceInt {
     protected static final List<String> CHART_NAMES =
             Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-    private static String PATH;
-    private static String rootUrl;
+//    private static String PATH;
+//    private static String rootUrl;
     private final DAO dao;
     private final ParserService parserService;
     private final ServletContext servletContext;
@@ -68,10 +68,6 @@ public class ServiceImpl implements ServiceInt {
         this.parserService = parserService;
         this.propertiesHandler = propertiesHandler;
         this.converter = converter;
-    }
-
-    public static String getRootUrl() {
-        return rootUrl;
     }
 
     @Override
@@ -195,8 +191,6 @@ public class ServiceImpl implements ServiceInt {
 
     @PostConstruct
     public void init() {
-        PATH = servletContext.getRealPath("/resources/");
-        rootUrl = servletContext.getContextPath();
        /* try {
             propertiesHandler.load("config.properties");
         } catch (IOException e) {
@@ -220,24 +214,6 @@ public class ServiceImpl implements ServiceInt {
         }
     }
 
-
-    private List<Authorities> findUserRoleByName(List<String> roleNames) {
-        Map<String, Authorities> userRoleMap = initUserRoleMap();
-        List<Authorities> userRoles = new ArrayList<>();
-        for (String roleName : roleNames) {
-            userRoles.add(userRoleMap.get(roleName));
-        }
-        return userRoles;
-    }
-
-    private Map<String, Authorities> initUserRoleMap() {
-        Map<String, Authorities> userRoleMap = new HashMap<>();
-        for (Authorities userRole : dao.getAllUserRoles()) {
-            userRoleMap.put(userRole.getAuthority(), userRole);
-        }
-        return userRoleMap;
-    }
-
     @Override
     public List<AirfoilDTO> getAirfoilsDtoByPrefix(char prefix, int startNumber, int count) {
         List<Airfoil> airfoilsByPrefix = dao.getAirfoilsByPrefix(prefix, startNumber, count, true);
@@ -249,7 +225,7 @@ public class ServiceImpl implements ServiceInt {
     }
 
     private void createDatFile(Airfoil airfoil) {
-        File file = new File(ServiceImpl.PATH + "/airfoil_img/" + airfoil.getShortName() + ".dat");
+        File file = new File("/airfoil_img/" + airfoil.getShortName() + ".dat");
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -287,7 +263,7 @@ public class ServiceImpl implements ServiceInt {
         Airfoil airfoil = dao.getAirfoilById(airfoilId);
         if (airfoil != null) {
             try {
-                new BuilderGraphs(PATH).draw(airfoil, checkedList, true);
+                new BuilderGraphs().draw(airfoil, checkedList, true);
             } catch (Exception e) {
                 LOGGER.warn("Ошибка при обработке файловк с координатами {}", e);
             }
@@ -306,8 +282,8 @@ public class ServiceImpl implements ServiceInt {
             return null;
         }
         try {
-            new BuilderGraphs(PATH).draw(airfoil, null, false);
-            new AirfoilStlGenerator().generate(airfoil.getShortName(), airfoil.getCoordView(), PATH);
+            new BuilderGraphs().draw(airfoil, null, false);
+            new AirfoilStlGenerator().generate(airfoil.getShortName(), airfoil.getCoordView());
         } catch (Exception e) {
             LOGGER.warn("Ошибка при обработке файлов с координатами {}", e);
         }
@@ -316,7 +292,7 @@ public class ServiceImpl implements ServiceInt {
     }
 
     private void drawViewAirfoil(Airfoil airfoil) {
-        if (new File(PATH + "/airfoil_img/" + airfoil.getShortName() + ".png").exists()) {
+        if (new File("/airfoil_img/" + airfoil.getShortName() + ".png").exists()) {
             return;
         }
         if (airfoil.getCoordView() == null || airfoil.getCoordView().isEmpty()) {
@@ -326,7 +302,7 @@ public class ServiceImpl implements ServiceInt {
         List<Double> x = new ArrayList<>();
         List<Double> y = new ArrayList<>();
         fillListXListY(x, y, airfoil.getCoordView().split("\n"));
-        ImageHandler.setSavePath(PATH, "/airfoil_img/");
+        ImageHandler.setSavePath("/airfoil_img/");
         ImageHandler imageHandler = new ImageHandler(airfoil.getShortName(), new Xy(x, y, " "), new MinimalStyle());
         try {
             imageHandler.draw();
