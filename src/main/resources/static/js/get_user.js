@@ -9,7 +9,7 @@ $(document).ready(function () {
         if (data == '') {
             console.log('гость');
 
-            button_login.setAttribute('href', rootUrl + '/login.html');
+            button_login.setAttribute('href', rootUrl + '/login');
             button_login.innerText = "login";
         } else {
             console.log(data);

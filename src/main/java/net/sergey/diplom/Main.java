@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -21,7 +22,7 @@ import javax.sql.DataSource;
 @SpringBootApplication
 @ComponentScan
 @Configuration
-public class Main  extends WebMvcConfigurerAdapter {
+public class Main extends WebMvcConfigurerAdapter {
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
     }
@@ -41,13 +42,17 @@ public class Main  extends WebMvcConfigurerAdapter {
     protected static class ApplicationSecurity extends WebSecurityConfigurerAdapter {
         @Autowired
         DataSource dataSource;
+
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http.authorizeRequests()
-                    .antMatchers("/rest/write/*","/adminka/*").hasRole("ADMIN")
-                    .antMatchers("/rest/*","/**").permitAll().anyRequest()
+                    .antMatchers("/rest/write/*", "/adminka/*").hasRole("ADMIN")
+                    .antMatchers("/rest/*", "/**").permitAll().anyRequest()
                     .fullyAuthenticated().and().formLogin().loginPage("/login")
-                    .failureUrl("/login?error").permitAll().and().logout().permitAll();
+                    .failureUrl("/login?error").permitAll()
+                    .and()
+                    .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login")
+                    .permitAll();
         }
 
         @Override
