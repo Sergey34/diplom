@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Table(name = "users")
 public class User {
     @Id
-    @Column(name = "username", unique = true)
+    @Column(name = "username", unique = true, length = 128)
     private String userName;
     @Column(name = "password", columnDefinition = "Text")
     private String password;

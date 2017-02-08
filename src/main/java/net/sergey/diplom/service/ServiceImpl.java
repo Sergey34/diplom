@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.security.core.Authentication;
@@ -53,24 +54,26 @@ public class ServiceImpl implements ServiceInt {
     protected static final List<String> CHART_NAMES =
             Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-//    private static String PATH;
+    //    private static String PATH;
 //    private static String rootUrl;
     private final DAO dao;
     private final ParserService parserService;
     private final ServletContext servletContext;
     private final PropertiesHandler propertiesHandler;
     private final Converter converter;
+    private final ResourceLoader resourceLoader;
     private boolean parsingIsStarting = false;
     @Value("${config.parser.path}")
     private String configParserPath;
 
     @Autowired
-    public ServiceImpl(DAO dao, ServletContext servletContext, ParserService parserService, PropertiesHandler propertiesHandler, Converter converter) {
+    public ServiceImpl(DAO dao, ServletContext servletContext, ParserService parserService, PropertiesHandler propertiesHandler, Converter converter, ResourceLoader resourceLoader) {
         this.dao = dao;
         this.servletContext = servletContext;
         this.parserService = parserService;
         this.propertiesHandler = propertiesHandler;
         this.converter = converter;
+        this.resourceLoader = resourceLoader;
     }
 
     @Override
@@ -196,13 +199,8 @@ public class ServiceImpl implements ServiceInt {
     public void init() {
         try {
             //// TODO: 2/8/2017 delete this
-            if (!new File(configParserPath).exists()){
-                /*Set<String> contextPath = servletContext.getResourcePaths("/");
-                File file = new File(contextPath +"/config.properties");
-                boolean exists = file.exists();
-                System.out.println(exists);
-                System.out.println(file.getAbsolutePath());*/
-                configParserPath="src/main/resources/config.properties";
+            if (!new File(configParserPath).exists()) {
+                configParserPath = "src/main/resources/config.properties";
             }
             propertiesHandler.load(configParserPath);
 
@@ -210,7 +208,7 @@ public class ServiceImpl implements ServiceInt {
             LOGGER.warn("Ошибка при попытке инициализировать настройки парсера");
         }
 
-        if (dao.getUserByName("admin") == null || dao.getRoleByUsername("admin").size()==0) {
+        if (dao.getUserByName("admin") == null || dao.getRoleByUsername("admin").size() == 0) {
             User user = new User();
             user.setEnabled(true);
             user.setUserName("admin");
