@@ -158,7 +158,7 @@ public class ParserAirfoil implements Callable<Void> {
     }
 
     private Element filterDescription(Element detail, String airfoilId) {
-        Element descriptionFull = detail.getElementsByClass(Constant.DESCRIPTION).get(0);
+        Element descriptionFull = detail.getElementsByClass(constants.DESCRIPTION).get(0);
         for (Element a : detail.getElementsByTag("a")) {
             if ("UIUC Airfoil Coordinates Database".equals(a.text())) {
                 a.attr("href", "http://m-selig.ae.illinois.edu/ads/coord_database.html");

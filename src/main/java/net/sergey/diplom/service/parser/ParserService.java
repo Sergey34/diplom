@@ -13,12 +13,14 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -70,9 +72,14 @@ public class ParserService {
         return true;
     }
 
-
+    @Value("${config.parser.path}")
+    private String configParserPath;
     public void parse() throws Exception {
-        constants.initConst(servletContext.getRealPath("/WEB-INF/") + "/config.properties");
+        //// TODO: 2/8/2017 delete this
+        if (!new File(configParserPath).exists()){
+            configParserPath="src/main/resources/config.properties";
+        }
+        constants.initConst(configParserPath);
         List<String> menu = parseMenu();
         getAirfoilsByMenuList(menu);
     }
