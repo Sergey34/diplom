@@ -5,7 +5,7 @@
     <groupId>net.schastny</groupId>
     <artifactId>diplom</artifactId>
     <name>diplom</name>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <version>1.0.0-BUILD-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
