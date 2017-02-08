@@ -32,6 +32,8 @@ import static net.sergey.diplom.service.parser.ParserService.isDoubleStr;
 @Component
 public class ParserAirfoil implements Callable<Void> {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
+    private static final String ONCLICK = "onclick";
+    private static final String HTTP_M_SELIG_AE_ILLINOIS_EDU_ADS_COORD_DATABASE_HTML = "http://m-selig.ae.illinois.edu/ads/coord_database.html";
     private final DAO dao;
     private final EventService eventService;
     private final Constant constants;
@@ -159,20 +161,25 @@ public class ParserAirfoil implements Callable<Void> {
 
     private Element filterDescription(Element detail, String airfoilId) {
         Element descriptionFull = detail.getElementsByClass(constants.DESCRIPTION).get(0);
-        for (Element a : detail.getElementsByTag("a")) {
+        Elements aList = detail.getElementsByTag("a");
+
+        for (Element a : aList) {
             if ("UIUC Airfoil Coordinates Database".equals(a.text())) {
-                a.attr("href", "http://m-selig.ae.illinois.edu/ads/coord_database.html");
-                a.removeAttr("onclick");
+                replaceUrl(a, HTTP_M_SELIG_AE_ILLINOIS_EDU_ADS_COORD_DATABASE_HTML);
                 continue;
             }
             if ("Source dat file".equals(a.text())) {
-                a.attr("href", "/airfoil_img/" + airfoilId + ".dat");
-                a.removeAttr("onclick");
+                replaceUrl(a, "/airfoil_img/" + airfoilId + ".dat");
                 continue;
             }
             a.remove();
         }
         return descriptionFull;
+    }
+
+    private void replaceUrl(Element a, String attributeValue) {
+        a.attr("href", attributeValue);
+        a.removeAttr(ONCLICK);
     }
 
     public void setPrefix(String prefix) {

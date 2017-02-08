@@ -196,13 +196,12 @@ public class ServiceImpl implements ServiceInt {
     public void init() {
         try {
             //// TODO: 2/8/2017 delete this
-
             if (!new File(configParserPath).exists()){
-                Set<String> contextPath = servletContext.getResourcePaths("/");
+                /*Set<String> contextPath = servletContext.getResourcePaths("/");
                 File file = new File(contextPath +"/config.properties");
                 boolean exists = file.exists();
                 System.out.println(exists);
-                System.out.println(file.getAbsolutePath());
+                System.out.println(file.getAbsolutePath());*/
                 configParserPath="src/main/resources/config.properties";
             }
             propertiesHandler.load(configParserPath);
