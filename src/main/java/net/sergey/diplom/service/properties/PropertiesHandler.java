@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 @Component
@@ -35,5 +36,9 @@ public class PropertiesHandler {
 
     public String getProperty(String key) {
         return properties.getProperty(key);
+    }
+
+    public void load(InputStream inputStream) throws IOException {
+        properties.load(inputStream);
     }
 }

@@ -4,6 +4,7 @@ import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.service.EventService;
+import net.sergey.diplom.service.properties.PropertiesHandler;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.jsoup.Connection;
@@ -15,15 +16,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletContext;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.*;
@@ -39,15 +41,19 @@ public class ParserService {
     private final ApplicationContext applicationContext;
     private final DAO dao;
     private final EventService eventService;
-    private final ServletContext servletContext;
+    private final PropertiesHandler propertiesHandler;
+    @Value(value = "classpath:config.properties")
+    private Resource companiesXml;
+    @Value("${config.parser.path}")
+    private String configParserPath;
 
     @Autowired
-    public ParserService(ApplicationContext applicationContext, DAO dao, EventService eventService, Constant constants, ServletContext servletContext) {
+    public ParserService(ApplicationContext applicationContext, DAO dao, EventService eventService, Constant constants, PropertiesHandler propertiesHandler) {
         this.applicationContext = applicationContext;
         this.dao = dao;
         this.eventService = eventService;
         this.constants = constants;
-        this.servletContext = servletContext;
+        this.propertiesHandler = propertiesHandler;
     }
 
     static Connection getJsoupConnect(String url, int timeout) {
@@ -72,14 +78,18 @@ public class ParserService {
         return true;
     }
 
-    @Value("${config.parser.path}")
-    private String configParserPath;
     public void parse() throws Exception {
-        //// TODO: 2/8/2017 delete this
-        if (!new File(configParserPath).exists()){
-            configParserPath="src/main/resources/config.properties";
+        try {
+            if (!new File(configParserPath).exists()) {
+                propertiesHandler.load(companiesXml.getInputStream());
+            } else {
+                propertiesHandler.load(configParserPath);
+            }
+        } catch (IOException e) {
+            LOGGER.warn("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties {}", Arrays.toString(e.getStackTrace()));
+            throw new IllegalStateException("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties", e);
         }
-        constants.initConst(configParserPath);
+        constants.initConst();
         List<String> menu = parseMenu();
         getAirfoilsByMenuList(menu);
     }

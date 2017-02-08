@@ -30,7 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.security.core.Authentication;
@@ -40,7 +40,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -54,26 +53,22 @@ public class ServiceImpl implements ServiceInt {
     protected static final List<String> CHART_NAMES =
             Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-    //    private static String PATH;
-//    private static String rootUrl;
     private final DAO dao;
     private final ParserService parserService;
-    private final ServletContext servletContext;
     private final PropertiesHandler propertiesHandler;
     private final Converter converter;
-    private final ResourceLoader resourceLoader;
     private boolean parsingIsStarting = false;
     @Value("${config.parser.path}")
     private String configParserPath;
+    @Value(value = "classpath:config.properties")
+    private Resource companiesXml;
 
     @Autowired
-    public ServiceImpl(DAO dao, ServletContext servletContext, ParserService parserService, PropertiesHandler propertiesHandler, Converter converter, ResourceLoader resourceLoader) {
+    public ServiceImpl(DAO dao, ParserService parserService, PropertiesHandler propertiesHandler, Converter converter) {
         this.dao = dao;
-        this.servletContext = servletContext;
         this.parserService = parserService;
         this.propertiesHandler = propertiesHandler;
         this.converter = converter;
-        this.resourceLoader = resourceLoader;
     }
 
     @Override
@@ -198,12 +193,11 @@ public class ServiceImpl implements ServiceInt {
     @PostConstruct
     public void init() {
         try {
-            //// TODO: 2/8/2017 delete this
             if (!new File(configParserPath).exists()) {
-                configParserPath = "src/main/resources/config.properties";
+                propertiesHandler.load(companiesXml.getInputStream());
+            } else {
+                propertiesHandler.load(configParserPath);
             }
-            propertiesHandler.load(configParserPath);
-
         } catch (IOException e) {
             LOGGER.warn("Ошибка при попытке инициализировать настройки парсера");
         }
