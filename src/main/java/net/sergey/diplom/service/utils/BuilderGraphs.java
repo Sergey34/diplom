@@ -28,7 +28,7 @@ public class BuilderGraphs {
 
 
     public BuilderGraphs() {
-        ImageHandler.setSavePath("/chartTemp/");
+        ImageHandler.setSavePath("chartTemp/");
     }
 
     public void draw(final Airfoil airfoil, List<String> checkedList, boolean updateFiles) throws Exception {
@@ -97,7 +97,7 @@ public class BuilderGraphs {
     }
 
     private boolean fileExist(String fileName) {
-        return new File("/tmpCsv/" + fileName).exists();
+        return new File("tmpCsv/" + fileName).exists();
     }
 
     private Map<String, List<Double>> parseStrCSVtoMap(String coordinateStr, String fileName) {
@@ -144,7 +144,7 @@ public class BuilderGraphs {
 
     private Map<String, List<Double>> parseStrCSVtoMapSaveFile(String coordinateStr, String fileName) {
         Map<String, List<Double>> coordinates;
-        try (CSVWriter csvWriter = new CSVWriter(new FileWriter("/tmpCsv/" + fileName))) {
+        try (CSVWriter csvWriter = new CSVWriter(new FileWriter("tmpCsv/" + fileName))) {
             CSVParser csvParser = new CSVParser();
             String[] csvLines = coordinateStr.split("\n");
             String[] keys = csvParser.parseLine(csvLines[10]);

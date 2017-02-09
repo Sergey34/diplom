@@ -169,7 +169,7 @@ public class ParserAirfoil implements Callable<Void> {
                 continue;
             }
             if ("Source dat file".equals(a.text())) {
-                replaceUrl(a, "/airfoil_img/" + airfoilId + ".dat");
+                replaceUrl(a, "airfoil_img/" + airfoilId + ".dat");
                 continue;
             }
             a.remove();

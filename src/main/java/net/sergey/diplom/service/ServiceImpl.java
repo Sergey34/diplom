@@ -212,6 +212,13 @@ public class ServiceImpl implements ServiceInt {
             dao.addUser(user);
             dao.addAuthority(adminRole);
         }
+        new File("airfoil_img").mkdir();
+        new File("chartTemp").mkdir();
+        new File("tmpCsv").mkdir();
+//        airfoil_img
+//        chartTemp
+//        tmpCsv
+
     }
 
     @Override
@@ -225,7 +232,7 @@ public class ServiceImpl implements ServiceInt {
     }
 
     private void createDatFile(Airfoil airfoil) {
-        File file = new File("/airfoil_img/" + airfoil.getShortName() + ".dat");
+        File file = new File("airfoil_img/" + airfoil.getShortName() + ".dat");
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -270,7 +277,7 @@ public class ServiceImpl implements ServiceInt {
         }
         List<String> imgCsvName = new ArrayList<>();
         for (String chartName : CHART_NAMES) {
-            imgCsvName.add("/resources/chartTemp/" + airfoilId + chartName + ".png");
+            imgCsvName.add("chartTemp/" + airfoilId + chartName + ".png");
         }
         return imgCsvName;
     }
@@ -292,7 +299,7 @@ public class ServiceImpl implements ServiceInt {
     }
 
     private void drawViewAirfoil(Airfoil airfoil) {
-        if (new File("/airfoil_img/" + airfoil.getShortName() + ".png").exists()) {
+        if (new File("airfoil_img/" + airfoil.getShortName() + ".png").exists()) {
             return;
         }
         if (airfoil.getCoordView() == null || airfoil.getCoordView().isEmpty()) {
@@ -302,7 +309,7 @@ public class ServiceImpl implements ServiceInt {
         List<Double> x = new ArrayList<>();
         List<Double> y = new ArrayList<>();
         fillListXListY(x, y, airfoil.getCoordView().split("\n"));
-        ImageHandler.setSavePath("/airfoil_img/");
+        ImageHandler.setSavePath("airfoil_img/");
         ImageHandler imageHandler = new ImageHandler(airfoil.getShortName(), new Xy(x, y, " "), new MinimalStyle());
         try {
             imageHandler.draw();
