@@ -150,10 +150,10 @@ public class ParserAirfoil implements Callable<Void> {
     private Airfoil parseAirfoilById(String airfoilId) throws IOException {
         Element detail = ParserService.getJsoupConnect(ConstantApi.GET_DETAILS + airfoilId, constants.TIMEOUT).get().getElementById("content");
         String name = detail.getElementsByTag("h1").get(0).text();
-        Set<Coordinates> coordinates = downloadDetailInfo(detail);
         String description = filterDescription(detail, airfoilId).html();
         String coordinateView = parseCoordinateView(airfoilId);
         Airfoil airfoil = new Airfoil(name, description, airfoilId);
+        Set<Coordinates> coordinates = downloadDetailInfo(detail);
         airfoil.setCoordView(coordinateView);
         airfoil.setCoordinates(coordinates);
         return airfoil;
@@ -161,9 +161,7 @@ public class ParserAirfoil implements Callable<Void> {
 
     private Element filterDescription(Element detail, String airfoilId) {
         Element descriptionFull = detail.getElementsByClass(constants.DESCRIPTION).get(0);
-        Elements aList = detail.getElementsByTag("a");
-
-        for (Element a : aList) {
+        for (Element a : descriptionFull.getElementsByTag("a")) {
             if ("UIUC Airfoil Coordinates Database".equals(a.text())) {
                 replaceUrl(a, HTTP_M_SELIG_AE_ILLINOIS_EDU_ADS_COORD_DATABASE_HTML);
                 continue;

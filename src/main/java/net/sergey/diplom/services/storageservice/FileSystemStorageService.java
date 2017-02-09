@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
@@ -31,7 +32,7 @@ public class FileSystemStorageService {
     @PostConstruct
     public void init() {
         try {
-
+            FileSystemUtils.deleteRecursively(rootLocation.toFile());
             Files.createDirectory(rootLocation);
             Files.createDirectory(Paths.get(location + "/airfoil_img"));
             Files.createDirectory(Paths.get(location + "/chartTemp"));
