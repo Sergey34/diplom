@@ -129,10 +129,9 @@ public class ParserAirfoil implements Callable<Void> {
             Element reynolds = element.getElementsByClass(constants.REYNOLDS).first();
             Element nCrit = element.getElementsByClass(constants.N_CRIT).first();
             Element maxClCd = element.getElementsByClass(constants.MAX_CL_CD).first();
-            Elements elementsByClass = element.getElementsByClass(constants.CELL7);
-            Element cell7 = elementsByClass.first();
+            Element cell7 = element.getElementsByClass(constants.CELL7).first();
             if (cell7 != null) {
-                Elements a = cell7.getElementsByTag(constants.TEGA);//// TODO: 09.02.17 исправить
+                Elements a = cell7.getElementsByTag(constants.TEGA);
                 if (a.size() != 0) {
                     String fileName = ParserService.createStringByPattern(a.attr(constants.HREF), constants.GET_FILE_NAME_BY_URL_PATTERN);
                     URL urlFile = new URL(ConstantApi.GET_FILE_CSV + fileName);
