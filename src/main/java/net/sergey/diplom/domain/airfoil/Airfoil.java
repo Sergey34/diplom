@@ -20,9 +20,10 @@ public class Airfoil {
     @JoinColumn(name = "prefix")
     private Prefix prefix;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "airfoil_coordinates", joinColumns = {@JoinColumn(name = "id_airfoil")},
-            inverseJoinColumns = {@JoinColumn(name = "id_coordinates", unique = true)})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "airfoil_coordinates",
+            joinColumns = {@JoinColumn(name = "id_airfoil")},
+            inverseJoinColumns = {@JoinColumn(name = "id_coordinates")})
     private Set<Coordinates> coordinates;
 
 
