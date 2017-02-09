@@ -129,7 +129,8 @@ public class ParserAirfoil implements Callable<Void> {
             Element reynolds = element.getElementsByClass(constants.REYNOLDS).first();
             Element nCrit = element.getElementsByClass(constants.N_CRIT).first();
             Element maxClCd = element.getElementsByClass(constants.MAX_CL_CD).first();
-            Element cell7 = element.getElementsByClass(constants.CELL7).first();
+            Elements elementsByClass = element.getElementsByClass(constants.CELL7);
+            Element cell7 = elementsByClass.first();
             if (cell7 != null) {
                 Elements a = cell7.getElementsByTag(constants.TEGA);//// TODO: 09.02.17 исправить
                 if (a.size() != 0) {
@@ -150,11 +151,11 @@ public class ParserAirfoil implements Callable<Void> {
     private Airfoil parseAirfoilById(String airfoilId) throws IOException {
         Element detail = ParserService.getJsoupConnect(ConstantApi.GET_DETAILS + airfoilId, constants.TIMEOUT).get().getElementById("content");
         String name = detail.getElementsByTag("h1").get(0).text();
+        Set<Coordinates> coordinates = downloadDetailInfo(detail);
         String description = filterDescription(detail, airfoilId).html();
         String coordinateView = parseCoordinateView(airfoilId);
         Airfoil airfoil = new Airfoil(name, description, airfoilId);
         airfoil.setCoordView(coordinateView);
-        Set<Coordinates> coordinates = downloadDetailInfo(detail);
         airfoil.setCoordinates(coordinates);
         return airfoil;
     }

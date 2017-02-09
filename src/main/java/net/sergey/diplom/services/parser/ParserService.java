@@ -113,7 +113,7 @@ public class ParserService {
                 for (Element link : links) {
                     Element a = link.getElementsByTag(constants.TEGA).first();
                     if (menu1.getHeader().equals(constants.MENU_HEADER)) {
-                        String text = createStringByPattern(a.text(), constants.GET_MENU_TITLE_PATTERN);
+                        String text = createStringByPattern(a.text().trim(), constants.GET_MENU_TITLE_PATTERN);
                         String prefix = createPrefix(text);
                         MenuItem menuItem = new MenuItem(text, prefix);
 
