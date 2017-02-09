@@ -7,6 +7,7 @@ import net.sergey.diplom.dto.UserDto;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.service.ServiceInt;
+import net.sergey.diplom.service.storageservice.FileSystemStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,8 @@ import java.util.List;
 @RestController
 public class FullRestController {
     private final ServiceInt service;
+    @Autowired
+    private FileSystemStorageService storageService;
 
     @Autowired
     public FullRestController(ServiceInt service) {
@@ -61,7 +64,14 @@ public class FullRestController {
 
     @RequestMapping(value = "/airfoilDto/{airfoilId}", method = RequestMethod.GET)
     public AirfoilDetail getDetailInfo(@PathVariable String airfoilId) {
-        return service.getDetailInfo(airfoilId);
+        AirfoilDetail detailInfo = service.getDetailInfo(airfoilId);
+        try {
+            String s = storageService.listUploadedFiles("/airfoil_img/" + airfoilId);
+            System.out.println(s);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return detailInfo;
     }
 
     @RequestMapping(value = "/airfoil/{airfoilId}", method = RequestMethod.GET)

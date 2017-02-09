@@ -4,6 +4,7 @@ import au.com.bytecode.opencsv.CSVParser;
 import au.com.bytecode.opencsv.CSVWriter;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
+import net.sergey.diplom.service.storageservice.FileSystemStorageService;
 import net.sergey.diplom.service.utils.imagehandlers.ImageHandler;
 import net.sergey.diplom.service.utils.imagehandlers.Xy;
 import net.sergey.diplom.service.utils.imagehandlers.createxychartstyle.SimpleStyle;
@@ -24,11 +25,12 @@ import java.util.concurrent.Executors;
 public class BuilderGraphs {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private final FileSystemStorageService storageService;
     private Map<String, ImageHandler> imageHandler = new ConcurrentHashMap<>();
 
-
-    public BuilderGraphs() {
-        ImageHandler.setSavePath("chartTemp/");
+    public BuilderGraphs(FileSystemStorageService storageService) {
+        this.storageService = storageService;
+        ImageHandler.setSavePath(this.storageService.getRootLocation() + "/chartTemp/");
     }
 
     public void draw(final Airfoil airfoil, List<String> checkedList, boolean updateFiles) throws Exception {
@@ -46,13 +48,12 @@ public class BuilderGraphs {
 
     private void filterHandler(Map<String, ImageHandler> imageHandler) {
         for (Map.Entry<String, ImageHandler> item : imageHandler.entrySet()) {
-            File file = new File("/chartTemp/" + item.getValue().getFileName() + ".png");
+            File file = new File(storageService.getRootLocation() + "/chartTemp/" + item.getValue().getFileName() + ".png");
             if (file.exists()) {
                 imageHandler.remove(item.getKey());
             }
         }
     }
-
 
     private void fillXYChart(final Airfoil airfoil, List<String> checkedList, boolean updateFiles) {
         for (Coordinates coordinates : airfoil.getCoordinates()) {
@@ -97,7 +98,7 @@ public class BuilderGraphs {
     }
 
     private boolean fileExist(String fileName) {
-        return new File("tmpCsv/" + fileName).exists();
+        return new File(storageService.getRootLocation() + "/tmpCsv/" + fileName).exists();
     }
 
     private Map<String, List<Double>> parseStrCSVtoMap(String coordinateStr, String fileName) {
@@ -144,7 +145,7 @@ public class BuilderGraphs {
 
     private Map<String, List<Double>> parseStrCSVtoMapSaveFile(String coordinateStr, String fileName) {
         Map<String, List<Double>> coordinates;
-        try (CSVWriter csvWriter = new CSVWriter(new FileWriter("tmpCsv/" + fileName))) {
+        try (CSVWriter csvWriter = new CSVWriter(new FileWriter(storageService.getRootLocation() + "/tmpCsv/" + fileName))) {
             CSVParser csvParser = new CSVParser();
             String[] csvLines = coordinateStr.split("\n");
             String[] keys = csvParser.parseLine(csvLines[10]);

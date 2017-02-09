@@ -1,5 +1,6 @@
 package net.sergey.diplom.service.spline;
 
+import net.sergey.diplom.service.storageservice.FileSystemStorageService;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +25,7 @@ public class AirfoilStlGenerator {
         FILE_FOOTER.append("\t\t\t],\n\t\tconvexity=10);\n\t}\n}\n\nairfoil(10, 0.2);\n");
     }
 
-
-    public void generate(String fileName, String coordView) throws IOException {
+    public void generate(String fileName, String coordView, FileSystemStorageService storageService) throws IOException {
         String[] split1 = coordView.split("\n");
         List<Double> x = new ArrayList<>();
         List<Double> y = new ArrayList<>();
@@ -54,7 +54,7 @@ public class AirfoilStlGenerator {
         List<Double> xSpline = new ArrayList<>();
         spline(t, splineY, splineX, ySpline, xSpline);
 
-        String stlFileName = "/scadFiles/" + fileName + '_' + b + ".scad";
+        String stlFileName = storageService.getRootLocation() + "/scadFiles/" + fileName + '_' + b + ".scad";
         try (BufferedWriter scadWriter = new BufferedWriter(new FileWriter(stlFileName))) {
             scadWriter.write(FILE_HEADER.toString());
             for (int i = 0; i < xSpline.size(); i++) {

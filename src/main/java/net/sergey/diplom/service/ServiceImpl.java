@@ -20,6 +20,7 @@ import net.sergey.diplom.service.parser.ParserAirfoil;
 import net.sergey.diplom.service.parser.ParserService;
 import net.sergey.diplom.service.properties.PropertiesHandler;
 import net.sergey.diplom.service.spline.AirfoilStlGenerator;
+import net.sergey.diplom.service.storageservice.FileSystemStorageService;
 import net.sergey.diplom.service.utils.BuilderGraphs;
 import net.sergey.diplom.service.utils.UtilsLogger;
 import net.sergey.diplom.service.utils.imagehandlers.ImageHandler;
@@ -57,6 +58,7 @@ public class ServiceImpl implements ServiceInt {
     private final ParserService parserService;
     private final PropertiesHandler propertiesHandler;
     private final Converter converter;
+    private final FileSystemStorageService storageService;
     private boolean parsingIsStarting = false;
     @Value("${config.parser.path}")
     private String configParserPath;
@@ -64,11 +66,12 @@ public class ServiceImpl implements ServiceInt {
     private Resource companiesXml;
 
     @Autowired
-    public ServiceImpl(DAO dao, ParserService parserService, PropertiesHandler propertiesHandler, Converter converter) {
+    public ServiceImpl(DAO dao, ParserService parserService, PropertiesHandler propertiesHandler, Converter converter, FileSystemStorageService storageService) {
         this.dao = dao;
         this.parserService = parserService;
         this.propertiesHandler = propertiesHandler;
         this.converter = converter;
+        this.storageService = storageService;
     }
 
     @Override
@@ -212,13 +215,6 @@ public class ServiceImpl implements ServiceInt {
             dao.addUser(user);
             dao.addAuthority(adminRole);
         }
-        new File("airfoil_img").mkdir();
-        new File("chartTemp").mkdir();
-        new File("tmpCsv").mkdir();
-//        airfoil_img
-//        chartTemp
-//        tmpCsv
-
     }
 
     @Override
@@ -232,7 +228,8 @@ public class ServiceImpl implements ServiceInt {
     }
 
     private void createDatFile(Airfoil airfoil) {
-        File file = new File("airfoil_img/" + airfoil.getShortName() + ".dat");
+        String s = storageService.getRootLocation() + "/airfoil_img/" + airfoil.getShortName() + ".dat";
+        File file = new File(s);
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -270,14 +267,14 @@ public class ServiceImpl implements ServiceInt {
         Airfoil airfoil = dao.getAirfoilById(airfoilId);
         if (airfoil != null) {
             try {
-                new BuilderGraphs().draw(airfoil, checkedList, true);
+                new BuilderGraphs(storageService).draw(airfoil, checkedList, true);
             } catch (Exception e) {
                 LOGGER.warn("Ошибка при обработке файловк с координатами {}", e);
             }
         }
         List<String> imgCsvName = new ArrayList<>();
         for (String chartName : CHART_NAMES) {
-            imgCsvName.add("chartTemp/" + airfoilId + chartName + ".png");
+            imgCsvName.add(storageService.getRootLocation() + "/chartTemp/" + airfoilId + chartName + ".png");
         }
         return imgCsvName;
     }
@@ -289,8 +286,8 @@ public class ServiceImpl implements ServiceInt {
             return null;
         }
         try {
-            new BuilderGraphs().draw(airfoil, null, false);
-            new AirfoilStlGenerator().generate(airfoil.getShortName(), airfoil.getCoordView());
+            new BuilderGraphs(storageService).draw(airfoil, null, false);
+            new AirfoilStlGenerator().generate(airfoil.getShortName(), airfoil.getCoordView(), storageService);
         } catch (Exception e) {
             LOGGER.warn("Ошибка при обработке файлов с координатами {}", e);
         }
@@ -299,7 +296,7 @@ public class ServiceImpl implements ServiceInt {
     }
 
     private void drawViewAirfoil(Airfoil airfoil) {
-        if (new File("airfoil_img/" + airfoil.getShortName() + ".png").exists()) {
+        if (new File(storageService.getRootLocation() + "/airfoil_img/" + airfoil.getShortName() + ".png").exists()) {
             return;
         }
         if (airfoil.getCoordView() == null || airfoil.getCoordView().isEmpty()) {
@@ -309,7 +306,7 @@ public class ServiceImpl implements ServiceInt {
         List<Double> x = new ArrayList<>();
         List<Double> y = new ArrayList<>();
         fillListXListY(x, y, airfoil.getCoordView().split("\n"));
-        ImageHandler.setSavePath("airfoil_img/");
+        ImageHandler.setSavePath(storageService.getRootLocation() + "/airfoil_img/");
         ImageHandler imageHandler = new ImageHandler(airfoil.getShortName(), new Xy(x, y, " "), new MinimalStyle());
         try {
             imageHandler.draw();
