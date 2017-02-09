@@ -9,6 +9,9 @@ import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.service.ServiceInt;
 import net.sergey.diplom.service.storageservice.FileSystemStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -72,6 +75,19 @@ public class FullRestController {
             e.printStackTrace();
         }
         return detailInfo;
+    }
+
+
+    //    http://localhost:8081/rest/files/airfoil_img/a18-il.dat
+    @RequestMapping("/files/{dir}/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename, @PathVariable String dir) {
+
+        Resource file = storageService.loadAsResource(dir + "/" + filename);
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                .body(file);
     }
 
     @RequestMapping(value = "/airfoil/{airfoilId}", method = RequestMethod.GET)
