@@ -64,7 +64,7 @@ public class ImageHandler implements Callable<Void> {
             BitmapEncoder.saveBitmapWithDPI(chart, CATALOG + fileName,
                     BitmapEncoder.BitmapFormat.PNG, 80);
         } catch (Exception e) {
-            LOGGER.warn("не удалось сохранить график {}", chart.getTitle());
+            LOGGER.warn("не удалось сохранить график {}", chart.getTitle(), e);
         }
         return null;
     }
