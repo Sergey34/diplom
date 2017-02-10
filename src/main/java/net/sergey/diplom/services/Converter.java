@@ -2,6 +2,8 @@ package net.sergey.diplom.services;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
+import net.sergey.diplom.domain.airfoil.Prefix;
+import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.dto.UserDto;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
@@ -77,5 +79,9 @@ public class Converter {
         userDto.setUserName(userByName.getUserName());
         userDto.setUserRoles(roleByUsername);
         return userDto;
+    }
+
+    public MenuItem prefixToMenuItem(Prefix prefix) {
+        return new MenuItem(String.valueOf(prefix.getPrefix()), String.valueOf(prefix.getPrefix()));
     }
 }

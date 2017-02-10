@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
@@ -37,24 +36,15 @@ public class ParserAirfoil implements Callable<Void> {
     private final DAO dao;
     private final EventService eventService;
     private final Constant constants;
+    private final ParseFileScv parseFileScv;
     private String prefix;
 
     @Autowired
-    public ParserAirfoil(DAO dao, EventService eventService, Constant constants) {
+    public ParserAirfoil(DAO dao, EventService eventService, Constant constants, ParseFileScv parseFileScv) {
         this.dao = dao;
         this.eventService = eventService;
         this.constants = constants;
-    }
-
-    public static String csvToString(InputStream urlFile) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlFile))) {
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line).append('\n');
-            }
-            return stringBuilder.toString();
-        }
+        this.parseFileScv = parseFileScv;
     }
 
     @Override
@@ -136,7 +126,7 @@ public class ParserAirfoil implements Callable<Void> {
                     String fileName = ParserService.createStringByPattern(a.attr(constants.HREF), constants.GET_FILE_NAME_BY_URL_PATTERN);
                     URL urlFile = new URL(ConstantApi.GET_FILE_CSV + fileName);
                     LOGGER.debug("url {}{}", ConstantApi.GET_FILE_CSV, fileName);
-                    Coordinates coordinateItem = new Coordinates(csvToString(urlFile.openStream()), fileName + constants.FILE_TYPE);
+                    Coordinates coordinateItem = new Coordinates(parseFileScv.csvToString(urlFile.openStream()), fileName + constants.FILE_TYPE);
                     coordinateItem.setRenolgs(reynolds.text());
                     coordinateItem.setNCrit(nCrit.text());
                     coordinateItem.setMaxClCd(maxClCd.text());

@@ -7,7 +7,7 @@ import net.sergey.diplom.dto.UserDto;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.services.ServiceInt;
-import net.sergey.diplom.services.storageservice.FileSystemStorageService;
+import net.sergey.diplom.services.usermanagerservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +20,7 @@ import java.util.List;
 public class FullRestController {
     private final ServiceInt service;
     @Autowired
-    private FileSystemStorageService storageService;
+    private UserService userService;
 
     @Autowired
     public FullRestController(ServiceInt service) {
@@ -34,12 +34,12 @@ public class FullRestController {
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public UserDto getUserInfo() {
-        return service.getCurrentUserInfo();
+        return userService.getCurrentUserInfo();
     }
 
     @RequestMapping(value = "/userRoles", method = RequestMethod.GET)
     public List<Authorities> getUserRole() throws IOException {
-        return service.getAllUserRoles();
+        return userService.getAllUserRoles();
     }
 
     @RequestMapping(value = "/airfoilsDto/{prefix}/{startNumber}/{count}", method = RequestMethod.GET)

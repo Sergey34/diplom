@@ -1,16 +1,16 @@
 package net.sergey.diplom.services.storageservice;
 
+import net.sergey.diplom.services.utils.UtilsLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,6 +19,7 @@ import java.util.List;
 
 @Service
 public class FileSystemStorageService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final Path rootLocation;
     @Value("upload-dir")
     private String location = "upload-dir";
@@ -40,7 +41,7 @@ public class FileSystemStorageService {
             Files.createDirectory(Paths.get(location + "/chartTemp"));
             Files.createDirectory(Paths.get(location + "/tmpCsv"));
             Files.createDirectory(Paths.get(location + "/scadFiles"));
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new IllegalStateException("Could not initialize storage", e);
         }
     }
@@ -53,24 +54,15 @@ public class FileSystemStorageService {
                 return resource;
             } else {
                 throw new IllegalArgumentException("Could not read file: " + filename);
-
             }
-        } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("Could not read file: " + filename, e);
+        } catch (Exception e) {
+            LOGGER.warn("Could not read file: {}", filename, e);
+            return null;
         }
     }
 
     public Path load(String filename) {
         return rootLocation.resolve(filename);
-    }
-
-    public String listUploadedFiles(String filename) throws IOException {
-        Path path = load(filename);
-        String serveFile = MvcUriComponentsBuilder
-                .fromMethodName(FileSystemStorageService.class, "serveFile", path.getFileName().toString())
-                .build().toString();
-
-        return serveFile;
     }
 
     public void removeFiles(String shortName, List<String> chartNames) {

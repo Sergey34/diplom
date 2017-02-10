@@ -6,18 +6,12 @@ import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
-import net.sergey.diplom.domain.user.Authorities;
-import net.sergey.diplom.domain.user.User;
-import net.sergey.diplom.dto.UserDto;
-import net.sergey.diplom.dto.UserView;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.dto.airfoil.AirfoilEdit;
 import net.sergey.diplom.dto.airfoil.Data;
 import net.sergey.diplom.dto.messages.Message;
-import net.sergey.diplom.dto.messages.MessageError;
-import net.sergey.diplom.services.parser.ParserAirfoil;
-import net.sergey.diplom.services.parser.ParserService;
+import net.sergey.diplom.services.parser.ParseFileScv;
 import net.sergey.diplom.services.properties.PropertiesHandler;
 import net.sergey.diplom.services.spline.AirfoilStlGenerator;
 import net.sergey.diplom.services.storageservice.FileSystemStorageService;
@@ -26,17 +20,11 @@ import net.sergey.diplom.services.utils.UtilsLogger;
 import net.sergey.diplom.services.utils.imagehandlers.ImageHandler;
 import net.sergey.diplom.services.utils.imagehandlers.Xy;
 import net.sergey.diplom.services.utils.imagehandlers.createxychartstyle.MinimalStyle;
-import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,7 +33,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
-import java.util.concurrent.Future;
 
 import static net.sergey.diplom.dto.messages.Message.*;
 
@@ -55,28 +42,22 @@ public class ServiceImpl implements ServiceInt {
             Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final DAO dao;
-    private final ParserService parserService;
+    private final ParseFileScv parseFileScv;
     private final PropertiesHandler propertiesHandler;
     private final Converter converter;
     private final FileSystemStorageService storageService;
-    private boolean parsingIsStarting = false;
     @Value("${config.parser.path}")
     private String configParserPath;
     @Value(value = "classpath:config.properties")
     private Resource companiesXml;
 
     @Autowired
-    public ServiceImpl(DAO dao, ParserService parserService, PropertiesHandler propertiesHandler, Converter converter, FileSystemStorageService storageService) {
+    public ServiceImpl(DAO dao, ParseFileScv parseFileScv, PropertiesHandler propertiesHandler, Converter converter, FileSystemStorageService storageService) {
         this.dao = dao;
-        this.parserService = parserService;
+        this.parseFileScv = parseFileScv;
         this.propertiesHandler = propertiesHandler;
         this.converter = converter;
         this.storageService = storageService;
-    }
-
-    @Override
-    public boolean parsingIsStarting() {
-        return parsingIsStarting;
     }
 
     @Override
@@ -127,7 +108,7 @@ public class ServiceImpl implements ServiceInt {
             List<Menu> allMenu = dao.getAllMenu();
             for (Menu menu : allMenu) {
                 if (menu.getHeader().equals(propertiesHandler.getProperty("menu_Header"))) {
-                    MenuItem menuItem = MenuItem.createMenuItemByNewPrefix(airfoil.getPrefix());
+                    MenuItem menuItem = converter.prefixToMenuItem(airfoil.getPrefix());
                     menu.getMenuItems().add(menuItem);
                     break;
                 }
@@ -170,29 +151,8 @@ public class ServiceImpl implements ServiceInt {
         return allMenu;
     }
 
-    @Override
-    public Message addUser(UserView userView) {
-        User user = new User();
-        user.setEnabled(true);
-        user.setPassword(userView.getPassword());
-        user.setUserName(userView.getName());
-        try {
-            dao.addUser(user);
-            LOGGER.trace("Пользователь успешно создан");
-            return new Message("Пользователь успешно создан", SC_OK);
-        } catch (ConstraintViolationException e) {
-            LOGGER.trace("пользователь с именем {} уже существует в базе.", user.getUserName());
-            return new Message("Пользователь с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
-        } catch (Exception e) {
-            LOGGER.trace("Ошибка при добавлении пользователя {}, {}", user.getUserName(), e);
-            return new Message("Ошибка при добавлении пользователя", SC_CONFLICT);
-        }
-    }
 
-    @Override
-    public List<Authorities> getAllUserRoles() {
-        return dao.getAllUserRoles();
-    }
+
 
     @PostConstruct
     public void init() {
@@ -204,17 +164,6 @@ public class ServiceImpl implements ServiceInt {
             }
         } catch (IOException e) {
             LOGGER.warn("Ошибка при попытке инициализировать настройки парсера", e);
-        }
-
-        if (dao.getUserByName("admin") == null || dao.getRoleByUsername("admin").size() == 0) {
-            User user = new User();
-            user.setEnabled(true);
-            user.setUserName("admin");
-            String password = new BCryptPasswordEncoder().encode("mex_mat");
-            user.setPassword(password);
-            Authorities adminRole = new Authorities("ROLE_ADMIN", "admin");
-            dao.addUser(user);
-            dao.addAuthority(adminRole);
         }
     }
 
@@ -321,33 +270,7 @@ public class ServiceImpl implements ServiceInt {
     }
 
 
-    @Override
-    @Async("executor")
-    public Future<Message> parse() {
-        parsingIsStarting = true;
-        try {
-            parserService.parse();
-            return new AsyncResult<>(new Message("Данные успешно загружены", SC_OK));
-        } catch (Exception e) {
-            LOGGER.warn("ошибка инициализации базы", e);
-            e.printStackTrace();
-            return new AsyncResult<Message>(new MessageError("Произошла ошибка при загрузке данных", SC_NOT_IMPLEMENTED, e.getStackTrace()));
-        } finally {
-            parsingIsStarting = false;
-        }
-    }
 
-
-    @Override
-    public UserDto getCurrentUserInfo() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Boolean isLogin = authentication.isAuthenticated();
-        String name = authentication.getName();
-        if (!"anonymousUser".equals(name) && isLogin) {
-            return converter.userToUserDto(dao.getUserByName(name), dao.getRoleByUsername(name));
-        }
-        return null;
-    }
 
     @Override
     public Message addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
@@ -368,7 +291,7 @@ public class ServiceImpl implements ServiceInt {
             if (fileAirfoil == null || fileAirfoil.isEmpty()) {
                 airfoil.setCoordView(dao.getAirfoilById(airfoil.getShortName()).getCoordView());
             } else {
-                airfoil.setCoordView(parserService.parseFileAirfoil(fileAirfoil));
+                airfoil.setCoordView(parseFileScv.parseFileAirfoil(fileAirfoil));
             }
             if (files == null || files.size() == 1 && files.get(0).isEmpty()) {
                 airfoil.setCoordinates(dao.getAirfoilById(airfoil.getShortName()).getCoordinates());
@@ -419,16 +342,6 @@ public class ServiceImpl implements ServiceInt {
     }
 
     @Override
-    public Message stop() {
-        if (parsingIsStarting) {
-            parserService.stop();
-            parsingIsStarting = false;
-            return new Message("done", SC_OK);
-        }
-        return new Message("Обновление не запущено", SC_OK);
-    }
-
-    @Override
     public int getCountAirfoilByPrefix(char prefix) {
         return dao.getCountAirfoilByPrefix(prefix);
     }
@@ -436,7 +349,7 @@ public class ServiceImpl implements ServiceInt {
     private Set<Coordinates> createCoordinateSet(List<MultipartFile> files) throws IOException {
         Set<Coordinates> coordinates = new HashSet<>();
         for (MultipartFile file : files) {
-            coordinates.add(new Coordinates(ParserAirfoil.csvToString(file.getInputStream()), file.getOriginalFilename()));
+            coordinates.add(new Coordinates(parseFileScv.csvToString(file.getInputStream()), file.getOriginalFilename()));
         }
         return coordinates;
     }

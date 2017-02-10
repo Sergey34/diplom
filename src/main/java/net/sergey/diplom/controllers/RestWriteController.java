@@ -4,6 +4,8 @@ import net.sergey.diplom.dto.UserView;
 import net.sergey.diplom.dto.airfoil.AirfoilEdit;
 import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.services.ServiceInt;
+import net.sergey.diplom.services.parser.ParserService;
+import net.sergey.diplom.services.usermanagerservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.web.bind.annotation.*;
@@ -18,15 +20,19 @@ import static net.sergey.diplom.dto.messages.Message.SC_FORBIDDEN;
 @RestController(value = "write")
 public class RestWriteController {
     private final ServiceInt service;
+    private final UserService userService;
+    private final ParserService parserService;
 
     @Autowired
-    public RestWriteController(ServiceInt service) {
+    public RestWriteController(ServiceInt service, UserService userService, ParserService parserService) {
         this.service = service;
+        this.userService = userService;
+        this.parserService = parserService;
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     public Message addUser(@RequestBody UserView userView) {
-        return service.addUser(userView);
+        return userService.addUser(userView);
     }
 
     @RequestMapping(value = "/addAirfoilForFileCsv", method = RequestMethod.POST)
@@ -60,14 +66,14 @@ public class RestWriteController {
 
     @RequestMapping(value = "/init", method = RequestMethod.GET)
     public Future<Message> init() {
-        if (service.parsingIsStarting()) {
+        if (parserService.parsingIsStarting()) {
             return new AsyncResult<>(new Message("В данный момент данные уже кем-то обновляются. Необходимо дождаться завершения обновления", SC_FORBIDDEN));
         }
-        return service.parse();
+        return parserService.startParsing();
     }
 
     @RequestMapping(value = "/stop", method = RequestMethod.GET)
     public Message stop() {
-        return service.stop();
+        return parserService.stopParsing();
     }
 }

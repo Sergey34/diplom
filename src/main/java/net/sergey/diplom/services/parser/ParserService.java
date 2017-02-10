@@ -3,6 +3,8 @@ package net.sergey.diplom.services.parser;
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
+import net.sergey.diplom.dto.messages.Message;
+import net.sergey.diplom.dto.messages.MessageError;
 import net.sergey.diplom.services.EventService;
 import net.sergey.diplom.services.properties.PropertiesHandler;
 import net.sergey.diplom.services.utils.UtilsLogger;
@@ -17,13 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -31,9 +32,12 @@ import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static net.sergey.diplom.dto.messages.Message.SC_NOT_IMPLEMENTED;
+import static net.sergey.diplom.dto.messages.Message.SC_OK;
+
 
 @Component
-public class ParserService {
+public class ParserService implements ParseFileScv {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private final Constant constants;
@@ -45,6 +49,7 @@ public class ParserService {
     private Resource companiesXml;
     @Value("${config.parser.path}")
     private String configParserPath;
+    private boolean parsingIsStarting = false;
 
     @Autowired
     public ParserService(ApplicationContext applicationContext, DAO dao, EventService eventService, Constant constants, PropertiesHandler propertiesHandler) {
@@ -160,6 +165,7 @@ public class ParserService {
         }
     }
 
+    @Override
     public String parseFileAirfoil(MultipartFile fileAirfoil) throws IOException {
         if (fileAirfoil.getContentType().equals("text/csv")) {
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileAirfoil.getInputStream()))) {
@@ -180,6 +186,18 @@ public class ParserService {
         }
     }
 
+    @Override
+    public String csvToString(InputStream urlFile) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(urlFile))) {
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line).append('\n');
+            }
+            return stringBuilder.toString();
+        }
+    }
+
     public void stop() {
         executorService.shutdownNow();
         try {
@@ -189,4 +207,33 @@ public class ParserService {
         }
         executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
+
+    public boolean parsingIsStarting() {
+        return parsingIsStarting;
+    }
+
+    @Async("executor")
+    public Future<Message> startParsing() {
+        parsingIsStarting = true;
+        try {
+            parse();
+            return new AsyncResult<>(new Message("Данные успешно загружены", SC_OK));
+        } catch (Exception e) {
+            LOGGER.warn("ошибка инициализации базы", e);
+            e.printStackTrace();
+            return new AsyncResult<Message>(new MessageError("Произошла ошибка при загрузке данных", SC_NOT_IMPLEMENTED, e.getStackTrace()));
+        } finally {
+            parsingIsStarting = false;
+        }
+    }
+
+    public Message stopParsing() {
+        if (parsingIsStarting) {
+            stop();
+            parsingIsStarting = false;
+            return new Message("done", SC_OK);
+        }
+        return new Message("Обновление не запущено", SC_OK);
+    }
+
 }

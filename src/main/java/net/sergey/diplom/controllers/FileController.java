@@ -4,6 +4,7 @@ import net.sergey.diplom.services.storageservice.FileSystemStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +20,10 @@ public class FileController {
     @RequestMapping("/files/{dir}/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename, @PathVariable String dir) {
-
         Resource file = storageService.loadAsResource(dir + "/" + filename);
+        if (file == null) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
