@@ -45,7 +45,7 @@ public class Main extends WebMvcConfigurerAdapter {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.authorizeRequests()
+            http.csrf().disable().authorizeRequests()
                     .antMatchers("/rest/write/*", "/adminka/*").hasRole("ADMIN")
                     .antMatchers("/rest/*", "/**").permitAll().anyRequest()
                     .fullyAuthenticated().and().formLogin().loginPage("/login")
