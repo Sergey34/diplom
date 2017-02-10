@@ -274,7 +274,7 @@ public class ServiceImpl implements ServiceInt {
         }
         List<String> imgCsvName = new ArrayList<>();
         for (String chartName : CHART_NAMES) {
-            imgCsvName.add(storageService.getRootLocation() + "/chartTemp/" + airfoilId + chartName + ".png");
+            imgCsvName.add("/files/chartTemp/" + airfoilId + chartName + ".png");
         }
         return imgCsvName;
     }
