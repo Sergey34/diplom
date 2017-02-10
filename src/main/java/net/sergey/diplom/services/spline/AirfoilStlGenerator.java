@@ -35,7 +35,7 @@ public class AirfoilStlGenerator {
                 x.add(Double.parseDouble(strings[0]));
                 y.add(Double.parseDouble(strings[strings.length - 1]));
             } catch (Exception e) {
-                LOGGER.warn("Ошибка генерации STL файлв {}", e);
+                LOGGER.warn("Ошибка генерации STL файлв", e);
                 throw e;
             }
         }
@@ -63,7 +63,7 @@ public class AirfoilStlGenerator {
             }
             scadWriter.write(FILE_FOOTER.toString());
         } catch (IOException e) {
-            LOGGER.warn("Ошибка генерации STL файлв {}", e);
+            LOGGER.warn("Ошибка генерации STL файлв", e);
             throw e;
         }
     }

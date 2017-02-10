@@ -117,7 +117,7 @@ public class BuilderGraphs {
                 }
             }
         } catch (NumberFormatException | IOException e) {
-            LOGGER.warn("невалидный файл!!! {}\n{}", fileName, e.getMessage());
+            LOGGER.warn("невалидный файл!!! {}", fileName, e);
             return null;
         }
         return coordinates;
@@ -160,7 +160,7 @@ public class BuilderGraphs {
                 }
             }
         } catch (NumberFormatException | IOException e) {
-            LOGGER.warn("невалидный файл!!! {}\n{}", fileName, e.getMessage());
+            LOGGER.warn("невалидный файл!!! {}", fileName, e);
             return null;
         }
         return coordinates;

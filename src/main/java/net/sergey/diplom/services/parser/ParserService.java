@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.*;
@@ -86,7 +85,7 @@ public class ParserService {
                 propertiesHandler.load(configParserPath);
             }
         } catch (IOException e) {
-            LOGGER.warn("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties {}", Arrays.toString(e.getStackTrace()));
+            LOGGER.warn("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties", e);
             throw new IllegalStateException("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties", e);
         }
         constants.initConst();
@@ -135,7 +134,7 @@ public class ParserService {
             dao.addMenus(menus);
             eventService.updateProgress("menu", 100.0);
         } catch (ConstraintViolationException e) {
-            LOGGER.warn("Элемент меню: {} \n уже существует в базе {}", menus, e.getStackTrace());
+            LOGGER.warn("Элемент меню: {} \n уже существует в базе ", menus, e);
             throw e;
         }
         return airfoilMenu;
@@ -186,7 +185,7 @@ public class ParserService {
         try {
             executorService.awaitTermination(60, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            LOGGER.warn("stop Error {}", e);
+            LOGGER.warn("stop Error", e);
         }
         executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }

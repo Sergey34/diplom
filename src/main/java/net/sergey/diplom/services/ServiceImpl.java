@@ -90,7 +90,7 @@ public class ServiceImpl implements ServiceInt {
             storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
             dao.addAirfoil(airfoil);
         } catch (Exception e) {
-            LOGGER.warn("Ошибка при обновлении airfoil {}", e);
+            LOGGER.warn("Ошибка при обновлении airfoil ", e);
             return new Message("Ошибка при добавлении в базу нового airfoil", SC_CONFLICT);
         }
         LOGGER.debug("Airfoil успешно обновлен {}", SC_OK);
@@ -203,7 +203,7 @@ public class ServiceImpl implements ServiceInt {
                 propertiesHandler.load(configParserPath);
             }
         } catch (IOException e) {
-            LOGGER.warn("Ошибка при попытке инициализировать настройки парсера");
+            LOGGER.warn("Ошибка при попытке инициализировать настройки парсера", e);
         }
 
         if (dao.getUserByName("admin") == null || dao.getRoleByUsername("admin").size() == 0) {
@@ -251,7 +251,7 @@ public class ServiceImpl implements ServiceInt {
                 x.add(Double.parseDouble(strings[0]));
                 y.add(Double.parseDouble(strings[strings.length - 1]));
             } catch (Exception e) {
-                LOGGER.warn("Оштбка чтения файла {}", e);
+                LOGGER.warn("Оштбка чтения файла", e);
                 break;
             }
         }
@@ -273,7 +273,7 @@ public class ServiceImpl implements ServiceInt {
             try {
                 new BuilderGraphs(storageService).draw(airfoil, checkedList, true);
             } catch (Exception e) {
-                LOGGER.warn("Ошибка при обработке файловк с координатами {}", e);
+                LOGGER.warn("Ошибка при обработке файловк с координатами", e);
             }
         }
         List<String> imgCsvName = new ArrayList<>();
@@ -293,7 +293,7 @@ public class ServiceImpl implements ServiceInt {
             new BuilderGraphs(storageService).draw(airfoil, null, false);
             new AirfoilStlGenerator().generate(airfoil.getShortName(), airfoil.getCoordView(), storageService);
         } catch (Exception e) {
-            LOGGER.warn("Ошибка при обработке файлов с координатами {}", e);
+            LOGGER.warn("Ошибка при обработке файлов с координатами", e);
         }
         drawViewAirfoil(airfoil);
         return converter.airfoilToAirfoilDetail(airfoil);
@@ -315,7 +315,7 @@ public class ServiceImpl implements ServiceInt {
         try {
             imageHandler.draw();
         } catch (Exception e) {
-            LOGGER.warn("Ошибка при рисовании графиков {}", e);
+            LOGGER.warn("Ошибка при рисовании графиков", e);
         }
 
     }
@@ -329,7 +329,7 @@ public class ServiceImpl implements ServiceInt {
             parserService.parse();
             return new AsyncResult<>(new Message("Данные успешно загружены", SC_OK));
         } catch (Exception e) {
-            LOGGER.warn("ошибка инициализации базы {}", e);
+            LOGGER.warn("ошибка инициализации базы", e);
             e.printStackTrace();
             return new AsyncResult<Message>(new MessageError("Произошла ошибка при загрузке данных", SC_NOT_IMPLEMENTED, e.getStackTrace()));
         } finally {
@@ -378,7 +378,7 @@ public class ServiceImpl implements ServiceInt {
             addMenuItemForNewAirfoil(airfoil);
             dao.addAirfoil(airfoil);
         } catch (Exception e) {
-            LOGGER.warn("Один из файлов имеет не верный формат {}", e);
+            LOGGER.warn("Один из файлов имеет не верный формат", e);
             return new Message("Один из файлов имеет не верный формат", SC_NOT_ACCEPTABLE);
         }
         LOGGER.debug("Airfoil успешно добален / обновлен");
@@ -412,7 +412,7 @@ public class ServiceImpl implements ServiceInt {
         try {
             dao.addAirfoil(airfoil);
         } catch (Exception e) {
-            LOGGER.warn("ошибка при добавлении в базу нового airfoil {}", e);
+            LOGGER.warn("ошибка при добавлении в базу нового airfoil", e);
             return new Message("Ошибка при добавлении в базу нового airfoil", SC_CONFLICT);
         }
         return new Message("Airfoil успешно добавлен", SC_OK);
