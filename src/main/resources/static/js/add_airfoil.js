@@ -21,7 +21,12 @@ function saveWab() {
         let table = document.getElementById('tabular' + i).getElementsByTagName('*');
         for (let j = 1; j <= tableLength('tabular' + i); j++) {
             for (let k = 0; k < 7; k++) {
-                resultCSV += getTableItem(k, j, table);
+                let value = getTableItem(k, j, table);
+                if (value == '') {
+                    alert("Ошибка! таблица заполнена не корректно");
+                    return;
+                }
+                resultCSV += value;
                 if (k != 6) {
                     resultCSV += ',';
                 }
@@ -43,7 +48,12 @@ function saveWab() {
     let viewCsv = "";
     for (let j = 1; j <= tableLength('viewTab'); j++) {
         for (let k = 0; k < 2; k++) {
-            viewCsv += getTableItem(k, j, tableView);
+            let value = getTableItem(k, j, tableView);
+            if (value == '') {
+                alert("Ошибка! таблица заполнена не корректно");
+                return;
+            }
+            viewCsv += value;
             if (k != 1) {
                 viewCsv += ',';
             }

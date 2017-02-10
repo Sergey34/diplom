@@ -245,6 +245,9 @@ public class ServiceImpl implements ServiceInt {
         for (String line : split) {
             try {
                 String[] strings = line.trim().split(",");
+                if (strings.length == 0) {
+                    return;
+                }
                 x.add(Double.parseDouble(strings[0]));
                 y.add(Double.parseDouble(strings[strings.length - 1]));
             } catch (Exception e) {

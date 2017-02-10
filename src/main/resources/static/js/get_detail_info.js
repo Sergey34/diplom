@@ -380,11 +380,14 @@ function updateWab() {
         resultCSV += 'Alpha,Cl,Cd,CDp,Cm,Top_Xtr,Bot_Xtr\n';
 
 
-
-
         for (let j = 1; j <= tableLength('tabular' + i); j++) {
             for (let k = 0; k < 7; k++) {
-                resultCSV += getTableItem(k, j, i, "tabular");
+                let value = getTableItem(k, j, i, "tabular");
+                if (value == '') {
+                    alert("Ошибка! таблица заполнена не корректно");
+                    return;
+                }
+                resultCSV += value;
                 if (k != 6) {
                     resultCSV += ',';
                 }
@@ -406,7 +409,12 @@ function updateWab() {
     let viewCsv = "";
     for (let j = 1; j <= tableLength('viewTab'); j++) {
         for (let k = 0; k < 2; k++) {
-            viewCsv += getTableItem(k, j, '', "view");
+            let value = getTableItem(k, j, '', "view");
+            if (value == '') {
+                alert("Ошибка! таблица заполнена не корректно");
+                return;
+            }
+            viewCsv += value;
             if (k != 1) {
                 viewCsv += ',';
             }
