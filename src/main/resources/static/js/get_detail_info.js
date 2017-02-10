@@ -166,6 +166,8 @@ function refreshiframe() {
         let carousel_example_generic = document.getElementById("carousel-example-generic");
         carousel_example_generic.removeChild(document.getElementById("carousel-indicators"));
         carousel_example_generic.removeChild(document.getElementById("carousel-inner"));
+        carousel_example_generic.removeChild(document.getElementById("a1"));
+        carousel_example_generic.removeChild(document.getElementById("a2"));
 
         let ol = document.createElement('ol');
         ol.id = 'carousel-indicators';
@@ -176,6 +178,24 @@ function refreshiframe() {
         div.id = "carousel-inner";
         div.setAttribute('class', 'carousel-inner');
         carousel_example_generic.appendChild(div);
+
+
+        let a1 = document.createElement("a");
+        a1.innerHTML = "<span class='glyphicon glyphicon-chevron-left'></span>";
+        a1.setAttribute("href", "#carousel-example-generic");
+        a1.setAttribute("class", "left carousel-control");
+        a1.setAttribute("data-slide", "prev");
+        a1.id = "a1";
+
+        let a2 = document.createElement("a");
+        a2.innerHTML = "<span class='glyphicon glyphicon-chevron-right'></span>";
+        a2.setAttribute("href", "#carousel-example-generic");
+        a2.setAttribute("class", "right carousel-control");
+        a2.setAttribute("data-slide", "next");
+        a2.id = "a2";
+
+        carousel_example_generic.appendChild(a1);
+        carousel_example_generic.appendChild(a2);
     }
 
     $(document).ready(function () {
