@@ -51,7 +51,7 @@ import static net.sergey.diplom.dto.messages.Message.*;
 
 @Service
 public class ServiceImpl implements ServiceInt {
-    protected static final List<String> CHART_NAMES =
+    public static final List<String> CHART_NAMES =
             Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final DAO dao;
@@ -87,6 +87,7 @@ public class ServiceImpl implements ServiceInt {
         Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
         addMenuItemForNewAirfoil(airfoil);
         try {
+            storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
             dao.addAirfoil(airfoil);
         } catch (Exception e) {
             LOGGER.warn("Ошибка при обновлении airfoil {}", e);
@@ -389,6 +390,7 @@ public class ServiceImpl implements ServiceInt {
             return new Message("Имя не должно быть пустым", SC_NOT_ACCEPTABLE);
         }
         Airfoil airfoil = new Airfoil(name, details, shortName);
+        storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
         return addUpdateAirfoil(fileAirfoil, files, airfoil);
     }
 

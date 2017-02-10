@@ -354,6 +354,13 @@ function createLabel(id, value, number, valueInput) {
 }
 
 
+function tableLength(i) {
+    return document.getElementById(i).getElementsByTagName('tbody')[0].childElementCount
+}
+function getTableItem(i, j, number, name) {
+    return document.getElementsByName(name + number + "[" + i + "][" + j + "]")[0].value;
+}
+
 function updateWab() {
     let resultCSVList = [];
     for (let i = 0; i < number; i++) {
@@ -373,13 +380,7 @@ function updateWab() {
         resultCSV += 'Alpha,Cl,Cd,CDp,Cm,Top_Xtr,Bot_Xtr\n';
 
 
-        function tableLength(i) {
-            return document.getElementById(i).getElementsByTagName('tbody')[0].childElementCount
-        }
 
-        function getTableItem(i, j, number, name) {
-            return document.getElementsByName(name + number + "[" + i + "][" + j + "]")[0].value;
-        }
 
         for (let j = 1; j <= tableLength('tabular' + i); j++) {
             for (let k = 0; k < 7; k++) {

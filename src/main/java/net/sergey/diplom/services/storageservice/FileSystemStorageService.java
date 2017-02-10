@@ -8,11 +8,13 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 
 @Service
@@ -63,7 +65,6 @@ public class FileSystemStorageService {
     }
 
     public String listUploadedFiles(String filename) throws IOException {
-
         Path path = load(filename);
         String serveFile = MvcUriComponentsBuilder
                 .fromMethodName(FileSystemStorageService.class, "serveFile", path.getFileName().toString())
@@ -72,4 +73,13 @@ public class FileSystemStorageService {
         return serveFile;
     }
 
+    public void removeFiles(String shortName, List<String> chartNames) {
+        FileSystemUtils.deleteRecursively(new File(location + "/airfoil_img/" + shortName + ".dat"));
+        FileSystemUtils.deleteRecursively(new File(location + "/airfoil_img/" + shortName + ".png"));
+        FileSystemUtils.deleteRecursively(new File(location + "/chartTemp/"));
+        FileSystemUtils.deleteRecursively(new File(location + "/tmpCsv/" + shortName + "_100.scad"));
+        for (String chartName : chartNames) {
+            FileSystemUtils.deleteRecursively(new File(location + "/scadFiles/" + shortName + "-" + chartName + ".csv"));
+        }
+    }
 }
