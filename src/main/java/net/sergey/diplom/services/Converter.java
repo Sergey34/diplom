@@ -33,7 +33,7 @@ public class Converter {
         return airfoilDTO;
     }
 
-    public AirfoilDetail airfoilToAirfoilDetail(Airfoil airfoil) {
+    public AirfoilDetail airfoilToAirfoilDetail(Airfoil airfoil, List<String> chartNames) {
         AirfoilDetail airfoilDetail = new AirfoilDetail();
         airfoilDetail.setName(airfoil.getName());
         airfoilDetail.setDescription(airfoil.getDescription());
@@ -44,7 +44,7 @@ public class Converter {
         airfoilDetail.setCoordinates(coordinatesToCoordinatesDto(airfoil.getCoordinates()));
 
         List<String> imgCsvName = new ArrayList<>();
-        for (String chartName : ServiceImpl.CHART_NAMES) {
+        for (String chartName : chartNames) {
             imgCsvName.add("/files/chartTemp/" + airfoil.getShortName() + chartName + ".png");
         }
         airfoilDetail.setImgCsvName(imgCsvName);

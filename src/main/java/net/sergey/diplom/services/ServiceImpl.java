@@ -51,7 +51,7 @@ import static net.sergey.diplom.dto.messages.Message.*;
 
 @Service
 public class ServiceImpl implements ServiceInt {
-    public static final List<String> CHART_NAMES =
+    private static final List<String> CHART_NAMES =
             Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final DAO dao;
@@ -296,7 +296,7 @@ public class ServiceImpl implements ServiceInt {
             LOGGER.warn("Ошибка при обработке файлов с координатами", e);
         }
         drawViewAirfoil(airfoil);
-        return converter.airfoilToAirfoilDetail(airfoil);
+        return converter.airfoilToAirfoilDetail(airfoil, ServiceImpl.CHART_NAMES);
     }
 
     private void drawViewAirfoil(Airfoil airfoil) {
