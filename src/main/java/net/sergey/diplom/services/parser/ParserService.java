@@ -25,9 +25,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -112,7 +110,8 @@ public class ParserService implements ParseFileScv {
             Element element = headerMenu.get(i);
             if (constants.MENU_HEADER.equals(element.text())) {
                 Menu menu1 = new Menu(element.text());
-                List<MenuItem> menuItems = new ArrayList<>();
+                Set<MenuItem> menuItems = new HashSet<>();
+                menuItems.addAll(getMenuItemsInDB());
                 Elements links = menuElement.getElementsByTag(constants.LINKS);
                 for (Element link : links) {
                     Element a = link.getElementsByTag(constants.TEGA).first();
@@ -143,6 +142,16 @@ public class ParserService implements ParseFileScv {
             throw e;
         }
         return airfoilMenu;
+    }
+
+    private Collection<MenuItem> getMenuItemsInDB() {
+        List<Menu> allMenu = dao.getAllMenu();
+        for (Menu menu : allMenu) {
+            if (menu.getHeader().equals(propertiesHandler.getProperty("menu_Header"))) {
+                return menu.getMenuItems();
+            }
+        }
+        return null;
     }
 
     private String createPrefix(String text) {

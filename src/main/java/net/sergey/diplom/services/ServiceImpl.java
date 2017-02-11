@@ -141,7 +141,7 @@ public class ServiceImpl implements ServiceInt {
     public List<Menu> getMenu() {
         List<Menu> allMenu = dao.getAllMenu();
         for (Menu menu : allMenu) {
-            Collections.sort(menu.getMenuItems(), new Comparator<MenuItem>() {
+            Collections.sort(new ArrayList<>(menu.getMenuItems()), new Comparator<MenuItem>() {
                 @Override
                 public int compare(MenuItem o1, MenuItem o2) {
                     return o1.getUrlCode().charAt(0) - o2.getUrlCode().charAt(0);
@@ -150,9 +150,6 @@ public class ServiceImpl implements ServiceInt {
         }
         return allMenu;
     }
-
-
-
 
     @PostConstruct
     public void init() {
@@ -266,11 +263,7 @@ public class ServiceImpl implements ServiceInt {
         } catch (Exception e) {
             LOGGER.warn("Ошибка при рисовании графиков", e);
         }
-
     }
-
-
-
 
     @Override
     public Message addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
@@ -308,7 +301,6 @@ public class ServiceImpl implements ServiceInt {
         return new Message("Airfoil успешно добален / обновлен", SC_OK);
 
     }
-
 
     @Override
     public Message updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
