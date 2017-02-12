@@ -39,4 +39,6 @@ public interface DAO {
     void addAuthorities(List<Authorities> authorities);
 
     void addAuthority(Authorities authorities);
+
+    void delete(String id);
 }

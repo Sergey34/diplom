@@ -172,5 +172,10 @@ public class DAOImpl implements DAO {
         sessionFactory.getCurrentSession().merge(authority);
     }
 
+    @Override
+    public void delete(String id) {
+        sessionFactory.getCurrentSession().delete(getAirfoilById(id));
+    }
+
 
 }
