@@ -38,7 +38,8 @@
                 <li><a href="about.html" id="about">About</a></li>
             </ul>
         </div>
-        <script>             document.getElementById('about').setAttribute('href', rootUrl + "/about.html");         </script>
+        <script>             document.getElementById('about').setAttribute('href', rootUrl + "/about.html");
+        </script>
         <!-- /.navbar-collapse -->
     </div>
     <!-- /.container -->
@@ -47,6 +48,7 @@
 <script src="js/get_menu.js"></script>
 <script>
     getDetailInfo(false);
+
 </script>
 <div class="container">
     <div class="row">
@@ -98,6 +100,7 @@
                         &nbsp;
                         <div>
                             <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                                <!--<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">-->
                                 <ol id="carousel-indicators" class="carousel-indicators">
                                     <!--<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
                                     <li data-target="#carousel-example-generic" data-slide-to="1"></li>-->
@@ -113,15 +116,21 @@
                                 </div>
 
                                 <a id="a1" class="left carousel-control" href="#carousel-example-generic"
-                                   data-slide="prev">
+                                   data-slide="prev" style="background:none !important">
                                     <span class="glyphicon glyphicon-chevron-left"></span>
                                 </a>
                                 <a id="a2" class="right carousel-control" href="#carousel-example-generic"
-                                   data-slide="next">
+                                   data-slide="next" style="background:none !important">
                                     <span class="glyphicon glyphicon-chevron-right"></span>
                                 </a>
                             </div>
-
+                            <script type="text/javascript">
+                               $(function() {
+                                    $('.carousel').each(function(){
+                                        $(this).carousel("pause");
+                                    });
+                               });
+                            </script>
                         </div>
                     </div>
                 </div>

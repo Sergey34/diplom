@@ -185,13 +185,16 @@ function refreshiframe() {
         a1.setAttribute("href", "#carousel-example-generic");
         a1.setAttribute("class", "left carousel-control");
         a1.setAttribute("data-slide", "prev");
+        a1.setAttribute("style","background:none !important");
         a1.id = "a1";
+
 
         let a2 = document.createElement("a");
         a2.innerHTML = "<span class='glyphicon glyphicon-chevron-right'></span>";
         a2.setAttribute("href", "#carousel-example-generic");
         a2.setAttribute("class", "right carousel-control");
         a2.setAttribute("data-slide", "next");
+        a2.setAttribute("style","background:none !important");
         a2.id = "a2";
 
         carousel_example_generic.appendChild(a1);
