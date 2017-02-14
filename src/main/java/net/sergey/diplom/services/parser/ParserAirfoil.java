@@ -35,13 +35,14 @@ public class ParserAirfoil implements Callable<Void> {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static final String ONCLICK = "onclick";
     private static final String HTTP_M_SELIG_AE_ILLINOIS_EDU_ADS_COORD_DATABASE_HTML = "http://m-selig.ae.illinois.edu/ads/coord_database.html";
+    private static AtomicBoolean finish;
     private final DAO dao;
     private final EventService eventService;
     private final Constant constants;
     private final ParseFileScv parseFileScv;
-    private String prefix;
     private final ConnectionManager connectionManager;
     private final StringHandler stringHandler;
+    private String prefix;
 
     @Autowired
     public ParserAirfoil(DAO dao, EventService eventService,
@@ -56,17 +57,15 @@ public class ParserAirfoil implements Callable<Void> {
         ParserAirfoil.finish = new AtomicBoolean(false);
     }
 
+    static void setFinish(boolean finish) {
+        ParserAirfoil.finish = new AtomicBoolean(finish);
+    }
+
     @Override
     public Void call() throws Exception {
         parseAirfoilByUrl(prefix);
         return null;
     }
-
-    public static void setFinish(boolean finish) {
-        ParserAirfoil.finish = new AtomicBoolean(finish);
-    }
-
-    private static AtomicBoolean finish;
 
     private void parseAirfoilByUrl(String prefix) throws IOException {
         String url = ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX + prefix + constants.NO;

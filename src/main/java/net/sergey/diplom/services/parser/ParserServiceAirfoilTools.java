@@ -41,13 +41,13 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
     private final DAO dao;
     private final EventService eventService;
     private final PropertiesHandler propertiesHandler;
+    private final ConnectionManager connectionManager;
+    private final StringHandler stringHandler;
     @Value(value = "classpath:config.properties")
     private Resource companiesXml;
     @Value("${config.parser.path}")
     private String configParserPath;
     private boolean parsingIsStarting = false;
-    private final ConnectionManager connectionManager;
-    private final StringHandler stringHandler;
 
     @Autowired
     public ParserServiceAirfoilTools(ApplicationContext applicationContext, DAO dao, EventService eventService,

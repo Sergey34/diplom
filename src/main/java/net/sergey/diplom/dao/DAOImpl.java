@@ -156,7 +156,7 @@ public class DAOImpl implements DAO {
 
     @Override
     public List<Authorities> getRoleByUsername(String name) {
-        return sessionFactory.getCurrentSession().createCriteria(Authorities.class).add(Restrictions.eq("username",name)).list();
+        return sessionFactory.getCurrentSession().createCriteria(Authorities.class).add(Restrictions.eq("username", name)).list();
     }
 
     @Override
