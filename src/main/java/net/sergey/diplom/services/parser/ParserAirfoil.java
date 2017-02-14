@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,6 +53,7 @@ public class ParserAirfoil implements Callable<Void> {
         this.parseFileScv = parseFileScv;
         this.connectionManager = connectionManager;
         this.stringHandler = stringHandler;
+        ParserAirfoil.finish = new AtomicBoolean(false);
     }
 
     @Override
@@ -60,11 +62,20 @@ public class ParserAirfoil implements Callable<Void> {
         return null;
     }
 
+    public static void setFinish(boolean finish) {
+        ParserAirfoil.finish = new AtomicBoolean(finish);
+    }
+
+    private static AtomicBoolean finish;
+
     private void parseAirfoilByUrl(String prefix) throws IOException {
         String url = ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX + prefix + constants.NO;
         Prefix prefix1 = new Prefix(prefix.charAt(0));
         int countPages = createIntByPattern(connectionManager.getJsoupConnect(url, constants.TIMEOUT).get().html(), constants.GET_COUNT_PAGES_PATTERN);
         for (int i = 0; i < countPages; i++) {
+            if (finish.get()) {
+                return;
+            }
             Elements airfoilList = connectionManager.getJsoupConnect(url + i, constants.TIMEOUT).get().body().getElementsByClass(constants.AFSEARCHRESULT).
                     first().getElementsByTag(constants.TR);
             List<Airfoil> airfoils = parsePage(prefix1, airfoilList, countPages);

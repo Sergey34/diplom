@@ -191,6 +191,7 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
 
     private void stop() {
         executorService.shutdownNow();
+        ParserAirfoil.setFinish(true);
         try {
             executorService.awaitTermination(60, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
