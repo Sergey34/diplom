@@ -3,8 +3,8 @@ package net.sergey.diplom.controllers;
 import net.sergey.diplom.dto.UserView;
 import net.sergey.diplom.dto.airfoil.AirfoilEdit;
 import net.sergey.diplom.dto.messages.Message;
-import net.sergey.diplom.services.ServiceInt;
-import net.sergey.diplom.services.parser.ParserService;
+import net.sergey.diplom.services.ServiceAirfoil;
+import net.sergey.diplom.services.parser.Parser;
 import net.sergey.diplom.services.usermanagerservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -19,13 +19,13 @@ import static net.sergey.diplom.dto.messages.Message.SC_FORBIDDEN;
 @RequestMapping(value = "/rest/write")
 @RestController(value = "write")
 public class RestWriteController {
-    private final ServiceInt service;
+    private final ServiceAirfoil serviceAirfoil;
     private final UserService userService;
-    private final ParserService parserService;
+    private final Parser parserService;
 
     @Autowired
-    public RestWriteController(ServiceInt service, UserService userService, ParserService parserService) {
-        this.service = service;
+    public RestWriteController(ServiceAirfoil serviceAirfoil, UserService userService, Parser parserService) {
+        this.serviceAirfoil = serviceAirfoil;
         this.userService = userService;
         this.parserService = parserService;
     }
@@ -41,12 +41,12 @@ public class RestWriteController {
                                         @RequestParam("ShortName") String shortName,
                                         @RequestParam("Details") String details,
                                         @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
-        return service.addAirfoil(shortName, name, details, fileAirfoil, files);
+        return serviceAirfoil.addAirfoil(shortName, name, details, fileAirfoil, files);
     }
 
     @RequestMapping(value = "/addAirfoilForStringCsv", method = RequestMethod.POST)
     public Message addAirfoilForStringCsv(@RequestBody AirfoilEdit airfoilEdit) {
-        return service.addAirfoil(airfoilEdit);
+        return serviceAirfoil.addAirfoil(airfoilEdit);
     }
 
     @RequestMapping(value = "/updateAirfoil", method = RequestMethod.POST)
@@ -55,12 +55,12 @@ public class RestWriteController {
                                  @RequestParam("ShortName") String shortName,
                                  @RequestParam("Details") String details,
                                  @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
-        return service.updateAirfoil(shortName, name, details, fileAirfoil, files);
+        return serviceAirfoil.updateAirfoil(shortName, name, details, fileAirfoil, files);
     }
 
     @RequestMapping(value = "/updateAirfoilStringCsv", method = RequestMethod.POST)
     public Message updateAirfoilStringCsv(@RequestBody AirfoilEdit airfoilEdit) {
-        return service.updateAirfoil(airfoilEdit);
+        return serviceAirfoil.updateAirfoil(airfoilEdit);
     }
 
 

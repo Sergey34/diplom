@@ -60,6 +60,5 @@ public class Main extends WebMvcConfigurerAdapter {
             auth.jdbcAuthentication().dataSource(this.dataSource).passwordEncoder(new BCryptPasswordEncoder());
 //             auth.inMemoryAuthentication().withUser("user").password("user").roles("USER");
         }
-
     }
 }

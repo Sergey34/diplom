@@ -5,6 +5,9 @@ import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.services.EventService;
+import net.sergey.diplom.services.parser.consts.Constant;
+import net.sergey.diplom.services.parser.consts.ConstantApi;
+import net.sergey.diplom.services.parser.siteconnection.ConnectionManager;
 import net.sergey.diplom.services.utils.UtilsLogger;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -23,9 +26,7 @@ import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static net.sergey.diplom.services.parser.ConstantApi.GET_COORDINATE_VIEW;
-import static net.sergey.diplom.services.parser.ParserService.getJsoupConnect;
-import static net.sergey.diplom.services.parser.ParserService.isDoubleStr;
+import static net.sergey.diplom.services.parser.consts.ConstantApi.GET_COORDINATE_VIEW;
 
 @Scope("prototype")
 @Component
@@ -38,13 +39,19 @@ public class ParserAirfoil implements Callable<Void> {
     private final Constant constants;
     private final ParseFileScv parseFileScv;
     private String prefix;
+    private final ConnectionManager connectionManager;
+    private final StringHandler stringHandler;
 
     @Autowired
-    public ParserAirfoil(DAO dao, EventService eventService, Constant constants, ParseFileScv parseFileScv) {
+    public ParserAirfoil(DAO dao, EventService eventService,
+                         Constant constants, ParseFileScv parseFileScv,
+                         ConnectionManager connectionManager, StringHandler stringHandler) {
         this.dao = dao;
         this.eventService = eventService;
         this.constants = constants;
         this.parseFileScv = parseFileScv;
+        this.connectionManager = connectionManager;
+        this.stringHandler = stringHandler;
     }
 
     @Override
@@ -56,9 +63,9 @@ public class ParserAirfoil implements Callable<Void> {
     private void parseAirfoilByUrl(String prefix) throws IOException {
         String url = ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX + prefix + constants.NO;
         Prefix prefix1 = new Prefix(prefix.charAt(0));
-        int countPages = createIntByPattern(getJsoupConnect(url, constants.TIMEOUT).get().html(), constants.GET_COUNT_PAGES_PATTERN);
+        int countPages = createIntByPattern(connectionManager.getJsoupConnect(url, constants.TIMEOUT).get().html(), constants.GET_COUNT_PAGES_PATTERN);
         for (int i = 0; i < countPages; i++) {
-            Elements airfoilList = getJsoupConnect(url + i, constants.TIMEOUT).get().body().getElementsByClass(constants.AFSEARCHRESULT).
+            Elements airfoilList = connectionManager.getJsoupConnect(url + i, constants.TIMEOUT).get().body().getElementsByClass(constants.AFSEARCHRESULT).
                     first().getElementsByTag(constants.TR);
             List<Airfoil> airfoils = parsePage(prefix1, airfoilList, countPages);
             dao.addAirfoils(airfoils);
@@ -75,7 +82,7 @@ public class ParserAirfoil implements Callable<Void> {
                 j--;//фильтруем реламу
             } else {
                 String name = cell12.text();
-                String idAirfoil = ParserService.createStringByPattern(name, constants.GET_ID_BY_FULL_NAME_PATTERN);
+                String idAirfoil = stringHandler.createStringByPattern(name, constants.GET_ID_BY_FULL_NAME_PATTERN);
                 Airfoil airfoil = parseAirfoilById(idAirfoil);
                 airfoils.add(airfoil);
                 String key = String.valueOf(prefix1.getPrefix());
@@ -93,7 +100,7 @@ public class ParserAirfoil implements Callable<Void> {
         StringBuilder stringBuilder = new StringBuilder();
         while ((line = bufferedReader.readLine()) != null) {
             String[] split = line.trim().split(" +");
-            if (isDoubleStr(split[0]) && isDoubleStr(split[split.length - 1])) {
+            if (stringHandler.isDoubleStr(split[0]) && stringHandler.isDoubleStr(split[split.length - 1])) {
                 stringBuilder.append(split[0]).append(",").append(split[split.length - 1]).append('\n');
             }
         }
@@ -123,7 +130,7 @@ public class ParserAirfoil implements Callable<Void> {
             if (cell7 != null) {
                 Elements a = cell7.getElementsByTag(constants.TEGA);
                 if (a.size() != 0) {
-                    String fileName = ParserService.createStringByPattern(a.attr(constants.HREF), constants.GET_FILE_NAME_BY_URL_PATTERN);
+                    String fileName = stringHandler.createStringByPattern(a.attr(constants.HREF), constants.GET_FILE_NAME_BY_URL_PATTERN);
                     URL urlFile = new URL(ConstantApi.GET_FILE_CSV + fileName);
                     LOGGER.debug("url {}{}", ConstantApi.GET_FILE_CSV, fileName);
                     Coordinates coordinateItem = new Coordinates(parseFileScv.csvToString(urlFile.openStream()), fileName + constants.FILE_TYPE);
@@ -138,7 +145,7 @@ public class ParserAirfoil implements Callable<Void> {
     }
 
     private Airfoil parseAirfoilById(String airfoilId) throws IOException {
-        Element detail = ParserService.getJsoupConnect(ConstantApi.GET_DETAILS + airfoilId, constants.TIMEOUT).get().getElementById("content");
+        Element detail = connectionManager.getJsoupConnect(ConstantApi.GET_DETAILS + airfoilId, constants.TIMEOUT).get().getElementById("content");
         String name = detail.getElementsByTag("h1").get(0).text();
         String description = filterDescription(detail, airfoilId).html();
         String coordinateView = parseCoordinateView(airfoilId);

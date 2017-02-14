@@ -37,7 +37,7 @@ import java.util.*;
 import static net.sergey.diplom.dto.messages.Message.*;
 
 @Service
-public class ServiceImpl implements ServiceInt {
+public class ServiceAirfoilTools implements ServiceAirfoil {
     private static final List<String> CHART_NAMES =
             Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
@@ -52,7 +52,7 @@ public class ServiceImpl implements ServiceInt {
     private Resource companiesXml;
 
     @Autowired
-    public ServiceImpl(DAO dao, ParseFileScv parseFileScv, PropertiesHandler propertiesHandler, Converter converter, FileSystemStorageService storageService) {
+    public ServiceAirfoilTools(DAO dao, ParseFileScv parseFileScv, PropertiesHandler propertiesHandler, Converter converter, FileSystemStorageService storageService) {
         this.dao = dao;
         this.parseFileScv = parseFileScv;
         this.propertiesHandler = propertiesHandler;
@@ -141,12 +141,15 @@ public class ServiceImpl implements ServiceInt {
     public List<Menu> getMenu() {
         List<Menu> allMenu = dao.getAllMenu();
         for (Menu menu : allMenu) {
-            Collections.sort(new ArrayList<>(menu.getMenuItems()), new Comparator<MenuItem>() {
+            List<MenuItem> MenuItemsSorting = new ArrayList<>();
+            MenuItemsSorting.addAll(menu.getMenuItems());
+            Collections.sort(MenuItemsSorting, new Comparator<MenuItem>() {
                 @Override
                 public int compare(MenuItem o1, MenuItem o2) {
                     return o1.getUrlCode().charAt(0) - o2.getUrlCode().charAt(0);
                 }
             });
+            menu.setMenuItems(MenuItemsSorting);
         }
         return allMenu;
     }
@@ -242,7 +245,7 @@ public class ServiceImpl implements ServiceInt {
             LOGGER.warn("Ошибка при обработке файлов с координатами", e);
         }
         drawViewAirfoil(airfoil);
-        return converter.airfoilToAirfoilDetail(airfoil, ServiceImpl.CHART_NAMES);
+        return converter.airfoilToAirfoilDetail(airfoil, ServiceAirfoilTools.CHART_NAMES);
     }
 
     private void drawViewAirfoil(Airfoil airfoil) {
@@ -299,7 +302,6 @@ public class ServiceImpl implements ServiceInt {
         }
         LOGGER.debug("Airfoil успешно добален / обновлен");
         return new Message("Airfoil успешно добален / обновлен", SC_OK);
-
     }
 
     @Override

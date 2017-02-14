@@ -6,11 +6,11 @@ import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.dto.messages.MessageError;
 import net.sergey.diplom.services.EventService;
+import net.sergey.diplom.services.parser.consts.Constant;
+import net.sergey.diplom.services.parser.siteconnection.ConnectionManager;
 import net.sergey.diplom.services.properties.PropertiesHandler;
 import net.sergey.diplom.services.utils.UtilsLogger;
 import org.hibernate.exception.ConstraintViolationException;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -27,15 +27,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static net.sergey.diplom.dto.messages.Message.SC_NOT_IMPLEMENTED;
 import static net.sergey.diplom.dto.messages.Message.SC_OK;
 
 
 @Component
-public class ParserService implements ParseFileScv {
+public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private final Constant constants;
@@ -48,39 +46,23 @@ public class ParserService implements ParseFileScv {
     @Value("${config.parser.path}")
     private String configParserPath;
     private boolean parsingIsStarting = false;
+    private final ConnectionManager connectionManager;
+    private final StringHandler stringHandler;
 
     @Autowired
-    public ParserService(ApplicationContext applicationContext, DAO dao, EventService eventService, Constant constants, PropertiesHandler propertiesHandler) {
+    public ParserServiceAirfoilTools(ApplicationContext applicationContext, DAO dao, EventService eventService,
+                                     Constant constants, PropertiesHandler propertiesHandler,
+                                     ConnectionManager connectionManager, StringHandler stringHandler) {
         this.applicationContext = applicationContext;
         this.dao = dao;
         this.eventService = eventService;
         this.constants = constants;
         this.propertiesHandler = propertiesHandler;
+        this.connectionManager = connectionManager;
+        this.stringHandler = stringHandler;
     }
 
-    static Connection getJsoupConnect(String url, int timeout) {
-        return Jsoup.connect(url).timeout(timeout).userAgent("Mozilla").ignoreHttpErrors(true);
-    }
-
-    static String createStringByPattern(String item, Pattern pattern) {
-        Matcher matcher = pattern.matcher(item);
-        if (matcher.find()) {
-            return matcher.group(1);
-        }
-        return "";
-    }
-
-    static boolean isDoubleStr(String str) {
-        try {
-            //noinspection ResultOfMethodCallIgnored
-            Double.parseDouble(str);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
-    }
-
-    public void parse() throws Exception {
+    private void parse() throws Exception {
         try {
             if (!new File(configParserPath).exists()) {
                 propertiesHandler.load(companiesXml.getInputStream());
@@ -100,7 +82,7 @@ public class ParserService implements ParseFileScv {
         eventService.clearProgressMap();
         eventService.updateProgress("menu", 0.0);
         final List<String> airfoilMenu = new ArrayList<>();
-        Element mmenu = getJsoupConnect(constants.HTTP_AIRFOIL_TOOLS_COM, constants.TIMEOUT).get().body().getElementsByClass(constants.MENU_CLASS_NAME).first();
+        Element mmenu = connectionManager.getJsoupConnect(constants.HTTP_AIRFOIL_TOOLS_COM, constants.TIMEOUT).get().body().getElementsByClass(constants.MENU_CLASS_NAME).first();
         Elements menuList = mmenu.getElementsByTag(constants.MENU_LIST);
         Elements headerMenu = mmenu.getElementsByTag(constants.HEADER_MENU);
         List<Menu> menus = new ArrayList<>();
@@ -116,7 +98,7 @@ public class ParserService implements ParseFileScv {
                 for (Element link : links) {
                     Element a = link.getElementsByTag(constants.TEGA).first();
                     if (menu1.getHeader().equals(constants.MENU_HEADER)) {
-                        String text = createStringByPattern(a.text().trim(), constants.GET_MENU_TITLE_PATTERN);
+                        String text = stringHandler.createStringByPattern(a.text().trim(), constants.GET_MENU_TITLE_PATTERN);
                         String prefix = createPrefix(text);
                         MenuItem menuItem = new MenuItem(text, prefix);
 
@@ -151,7 +133,7 @@ public class ParserService implements ParseFileScv {
                 return menu.getMenuItems();
             }
         }
-        return null;
+        return Collections.emptyList();
     }
 
     private String createPrefix(String text) {
@@ -182,7 +164,7 @@ public class ParserService implements ParseFileScv {
                 StringBuilder stringBuilder = new StringBuilder();
                 while ((line = bufferedReader.readLine()) != null) {
                     String[] split = line.split(",");
-                    if (split.length == 2 && isDoubleStr(split[0]) && isDoubleStr(split[1])) {
+                    if (split.length == 2 && stringHandler.isDoubleStr(split[0]) && stringHandler.isDoubleStr(split[1])) {
                         stringBuilder.append(line).append('\n');
                     } else {
                         throw new IllegalArgumentException("Невалидный файл для графика профиля");
@@ -207,7 +189,7 @@ public class ParserService implements ParseFileScv {
         }
     }
 
-    public void stop() {
+    private void stop() {
         executorService.shutdownNow();
         try {
             executorService.awaitTermination(60, TimeUnit.SECONDS);
