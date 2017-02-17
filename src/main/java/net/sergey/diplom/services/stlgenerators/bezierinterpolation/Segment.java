@@ -1,11 +1,16 @@
 package net.sergey.diplom.services.stlgenerators.bezierinterpolation;
 
-/**
- * Created by seko0716 on 2/17/2017.
- */
 public class Segment {
 
     private Point2D[] points = new Point2D[4];
+
+    public static Segment getDefaultSegment() {
+        Segment segment = new Segment();
+        for (int i = 0; i < 4; i++) {
+            segment.setPoint(i, new Point2D());
+        }
+        return segment;
+    }
 
     void calc(double t, Point2D p) {
         double t2 = t * t;

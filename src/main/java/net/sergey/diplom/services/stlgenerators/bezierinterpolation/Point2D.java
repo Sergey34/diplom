@@ -1,8 +1,5 @@
 package net.sergey.diplom.services.stlgenerators.bezierinterpolation;
 
-/**
- * Created by seko0716 on 2/17/2017.
- */
 public class Point2D {
     private double x, y;
 
@@ -11,8 +8,8 @@ public class Point2D {
     }
 
     Point2D(double x, double y) {
-        x = x;
-        y = y;
+        this.x = x;
+        this.y = y;
     }
 
     void normalize() {
@@ -52,7 +49,7 @@ public class Point2D {
     }
 
 
-    public Point2D multiplication(double l1) {
-        return null;
+    public Point2D multiplication(double value) {
+        return new Point2D(x * value, y * value);
     }
 }
