@@ -5,12 +5,14 @@ import net.sergey.diplom.services.stlgenerators.Interpolation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Spline implements Interpolation {
+public class CubeSpline implements Interpolation {
 
     private List<SplineTuple> splines;
+    private List<Double> t;
 
     @Override
-    public void BuildSpline(List<Double> t, List<Double> coord, int n) {
+    public CubeSpline BuildSpline(List<Double> t, List<Double> coord, int n) {
+        this.t = t;
         splines = new ArrayList<>(n);
 
         for (int i = 0; i < n; ++i) {
@@ -44,6 +46,7 @@ public class Spline implements Interpolation {
             splines.get(i).b =
                     h_i * (2.0 * splines.get(i).c + splines.get(i - 1).c) / 6.0 + (coord.get(i) - coord.get(i - 1)) / h_i;
         }
+        return this;
     }
 
     private double calculateValue(double x) {
@@ -70,18 +73,19 @@ public class Spline implements Interpolation {
         // Вычисляем значение сплайна в заданной точке по схеме Горнера
         return s.a + (s.b + (s.c / 2.0 + s.d * dx / 6.0) * dx) * dx;
     }
+
     @Override
-    public List<Double> applySpline(List<Double> t, Spline spline) {
+    public List<Double> applySpline() {
         List<Double> listTmp = new ArrayList<>();
         for (int i = 0; i < t.size() - 1; i++) {
             Double start = t.get(i);
             double v = (t.get(i + 1) - start) / 4;
-            listTmp.add(spline.calculateValue(start));
+            listTmp.add(this.calculateValue(start));
             for (int j = 1; j < 4; j++) {
-                listTmp.add(spline.calculateValue(start + j * v));
+                listTmp.add(this.calculateValue(start + j * v));
             }
         }
-        listTmp.add(spline.calculateValue(t.get(t.size() - 1)));
+        listTmp.add(this.calculateValue(t.get(t.size() - 1)));
         return listTmp;
     }
 
