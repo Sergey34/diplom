@@ -45,8 +45,8 @@ public class AirfoilStlGenerator {
             t.set(i, t.get(i - 1) + dist(i, i - 1, x, y));
         }
 
-        List<Double> xSpline = new CubeSpline().BuildSpline(t, x, x.size()).applySpline();
-        List<Double> ySpline = new CubeSpline().BuildSpline(t, y, x.size()).applySpline();
+        List<Double> xSpline = new CubeSpline().BuildSpline(t, x).applySpline();
+        List<Double> ySpline = new CubeSpline().BuildSpline(t, y).applySpline();
 
         String stlFileName = storageService.getRootLocation() + "/scadFiles/" + fileName + '_' + b + ".scad";
         try (BufferedWriter scadWriter = new BufferedWriter(new FileWriter(stlFileName))) {

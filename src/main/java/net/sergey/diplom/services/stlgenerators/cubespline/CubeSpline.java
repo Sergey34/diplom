@@ -10,23 +10,24 @@ public class CubeSpline implements Interpolation {
     private List<SplineTuple> splines;
     private List<Double> t;
 
-    @Override
-    public CubeSpline BuildSpline(List<Double> t, List<Double> coord, int n) {
-        this.t = t;
-        splines = new ArrayList<>(n);
 
-        for (int i = 0; i < n; ++i) {
+    @Override
+    public CubeSpline BuildSpline(List<Double> t, List<Double> coord) {
+        this.t = t;
+        splines = new ArrayList<>(coord.size());
+
+        for (int i = 0; i < coord.size(); ++i) {
             splines.add(new SplineTuple(coord.get(i), t.get(i)));
         }
-        splines.get(0).c = splines.get(n - 1).c = 0.0;
+        splines.get(0).c = splines.get(coord.size() - 1).c = 0.0;
 
         // Решение СЛАУ относительно коэффициентов сплайнов c[i] методом прогонки для трехдиагональных матриц
         // Вычисление прогоночных коэффициентов - прямой ход метода прогонки
-        List<Double> alpha = new ArrayList<>(n - 1);
-        List<Double> beta = new ArrayList<>(n - 1);
+        List<Double> alpha = new ArrayList<>(coord.size() - 1);
+        List<Double> beta = new ArrayList<>(coord.size() - 1);
         alpha.add(0, 0.0);
         beta.add(0, 0.0);
-        for (int i = 1; i < n - 1; ++i) {
+        for (int i = 1; i < coord.size() - 1; ++i) {
             double h_i = t.get(i) - t.get(i - 1), h_i1 = t.get(i + 1) - t.get(i);
             double C = 2.0 * (h_i + h_i1);
             double F = 6.0 * ((coord.get(i + 1) - coord.get(i)) / h_i1 - (coord.get(i) - coord.get(i - 1)) / h_i);
@@ -36,11 +37,11 @@ public class CubeSpline implements Interpolation {
         }
 
         // Нахождение решения - обратный ход метода прогонки
-        for (int i = n - 2; i > 0; --i)
+        for (int i = coord.size() - 2; i > 0; --i)
             splines.get(i).c = alpha.get(i) * splines.get(i + 1).c + beta.get(i);
 
         // По известным коэффициентам c[i] находим значения b[i] и d[i]
-        for (int i = n - 1; i > 0; --i) {
+        for (int i = coord.size() - 1; i > 0; --i) {
             double h_i = t.get(i) - t.get(i - 1);
             splines.get(i).d = (splines.get(i).c - splines.get(i - 1).c) / h_i;
             splines.get(i).b =
