@@ -1,16 +1,19 @@
 package net.sergey.diplom.services.stlgenerators.bezierinterpolation;
 
+import net.sergey.diplom.services.stlgenerators.Interpolation;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class BezierInterpolation /*implements Interpolation*/ {
+@Component(value = "bezier")
+public class BezierInterpolation implements Interpolation {
     public static final double RESOLUTION = 32;
     private static final double EPSILON = 1.0e-5;
+    private List<Segment> spline;
 
     public static void main(String[] args) {
         List<Point2D> testValues = new ArrayList<>();
-        List<Segment> spline = new ArrayList<>();
-        Point2D p = new Point2D();
 
         testValues.add(new Point2D(0, 0));
         testValues.add(new Point2D(20, 0));
@@ -23,25 +26,25 @@ public class BezierInterpolation /*implements Interpolation*/ {
         testValues.add(new Point2D(95, 100));
         testValues.add(new Point2D(100, 0));
 
-        new BezierInterpolation().calculateSpline(testValues, spline);
-
-        for (Segment s : spline) {
-            for (int i = 0; i < RESOLUTION; ++i) {
-                s.calc((double) i / RESOLUTION, p);
-                System.out.println(p.getX() + " " + p.getY());
-            }
+//        new BezierInterpolation().calculateSpline(testValues).applySpline();
+        List<Double> x = new ArrayList<>();
+        List<Double> y = new ArrayList<>();
+        for (Point2D testValue : testValues) {
+            x.add(testValue.getX());
+            y.add(testValue.getY());
         }
+        new BezierInterpolation().BuildSplineForLists(x, y).applySpline();
 
     }
 
-    boolean calculateSpline(List<Point2D> values, List<Segment> bezier) {
+    private BezierInterpolation calculateSpline(List<Point2D> values) {
         int n = values.size() - 1;
 
         if (n < 2) {
-            return false;
+            return null;
         }
 
-        bezier.addAll(resize(n));
+        List<Segment> bezier = resize(n);
 
         Point2D tgL = new Point2D();
         Point2D tgR = new Point2D();
@@ -114,7 +117,8 @@ public class BezierInterpolation /*implements Interpolation*/ {
 
         bezier.get(n).setPoint(1, bezier.get(n).getPoint(1).plus(tgR.multiplication(l1)));
 
-        return true;
+        this.spline = bezier;
+        return this;
     }
 
     private List<Segment> resize(int n) {
@@ -123,8 +127,36 @@ public class BezierInterpolation /*implements Interpolation*/ {
             list.add(Segment.getDefaultSegment());
         }
         return list;
-//        return new ArrayList<>(Collections.nCopies(n, Segment.getDefaultSegment()));
 
+    }
+
+    @Override
+    public Interpolation BuildSplineForLists(List<Double> x, List<Double> y) {
+        if (x.size() != y.size()) {
+            throw new IllegalArgumentException("списки координат долны быть равной длины");
+        }
+
+        List<Point2D> points = new ArrayList<>();
+        for (int i = 0; i < x.size(); i++) {
+            points.add(new Point2D(x.get(i), y.get(i)));
+        }
+
+        calculateSpline(points);
+        return this;
+    }
+
+    @Override
+    public List<Point2D> applySpline() {
+        Point2D p = new Point2D();
+        List<Point2D> points = new ArrayList<>();
+        for (Segment s : spline) {
+            for (int i = 0; i < RESOLUTION; ++i) {
+                s.calc((double) i / RESOLUTION, p);
+                System.out.println(p.getX() + " " + p.getY());
+                points.add(new Point2D(p));
+            }
+        }
+        return points;
     }
 }
 

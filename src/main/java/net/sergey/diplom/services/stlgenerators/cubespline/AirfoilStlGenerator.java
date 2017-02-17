@@ -1,9 +1,15 @@
 package net.sergey.diplom.services.stlgenerators.cubespline;
 
+import net.sergey.diplom.services.stlgenerators.Interpolation;
+import net.sergey.diplom.services.stlgenerators.bezierinterpolation.Point2D;
 import net.sergey.diplom.services.storageservice.FileSystemStorageService;
 import net.sergey.diplom.services.utils.UtilsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -12,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Component
 public class AirfoilStlGenerator {
     private static final String REGEX = ",";
     private static final int b = 100;
@@ -25,7 +32,14 @@ public class AirfoilStlGenerator {
         FILE_FOOTER.append("\t\t\t],\n\t\tconvexity=10);\n\t}\n}\n\nairfoil(10, 0.2);\n");
     }
 
-    public void generate(String fileName, String coordView, FileSystemStorageService storageService) throws IOException {
+    private Interpolation interpolator;
+
+    @Autowired
+    public AirfoilStlGenerator(ApplicationContext context, @Value("${interpolation}") String interpolationType) {
+        this.interpolator = (Interpolation) context.getBean(interpolationType);
+    }
+
+    public void generate(String fileName, String coordView, FileSystemStorageService storageService) throws Exception {
         String[] split1 = coordView.split("\n");
         List<Double> x = new ArrayList<>();
         List<Double> y = new ArrayList<>();
@@ -45,15 +59,15 @@ public class AirfoilStlGenerator {
             t.set(i, t.get(i - 1) + dist(i, i - 1, x, y));
         }
 
-        List<Double> xSpline = new CubeSpline().BuildSpline(t, x).applySpline();
-        List<Double> ySpline = new CubeSpline().BuildSpline(t, y).applySpline();
+        List<Point2D> spline = interpolator.BuildSplineForLists(x, y).applySpline();
+
 
         String stlFileName = storageService.getRootLocation() + "/scadFiles/" + fileName + '_' + b + ".scad";
         try (BufferedWriter scadWriter = new BufferedWriter(new FileWriter(stlFileName))) {
             scadWriter.write(FILE_HEADER.toString());
-            for (int i = 0; i < xSpline.size(); i++) {
-                scadWriter.write("\t\t\t\t[" + String.format("%.6e", xSpline.get(i)) + ", " +
-                        String.format("%.6e", ySpline.get(i)) + "]\n");
+            for (Point2D point2D : spline) {
+                scadWriter.write("\t\t\t\t[" + String.format("%.6e", point2D.getX()) + ", " +
+                        String.format("%.6e", point2D.getY()) + "]\n");
             }
             scadWriter.write(FILE_FOOTER.toString());
         } catch (IOException e) {

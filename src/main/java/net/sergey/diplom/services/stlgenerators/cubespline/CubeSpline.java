@@ -1,20 +1,22 @@
 package net.sergey.diplom.services.stlgenerators.cubespline;
 
 import net.sergey.diplom.services.stlgenerators.Interpolation;
+import net.sergey.diplom.services.stlgenerators.bezierinterpolation.Point2D;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+@Component(value = "cube")
 public class CubeSpline implements Interpolation {
-
-    private List<SplineTuple> splines;
     private List<Double> t;
+    private List<SplineTuple> splinesX;
+    private List<SplineTuple> splinesY;
 
-
-    @Override
-    public CubeSpline BuildSpline(List<Double> t, List<Double> coord) {
+    private List<SplineTuple> BuildSpline(List<Double> t, List<Double> coord) {
         this.t = t;
-        splines = new ArrayList<>(coord.size());
+        List<SplineTuple> splines = new ArrayList<>(coord.size());
 
         for (int i = 0; i < coord.size(); ++i) {
             splines.add(new SplineTuple(coord.get(i), t.get(i)));
@@ -47,10 +49,10 @@ public class CubeSpline implements Interpolation {
             splines.get(i).b =
                     h_i * (2.0 * splines.get(i).c + splines.get(i - 1).c) / 6.0 + (coord.get(i) - coord.get(i - 1)) / h_i;
         }
-        return this;
+        return splines;
     }
 
-    private double calculateValue(double x) {
+    private double calculateValue(double x, List<SplineTuple> splines) {
         SplineTuple s;
         int n = splines.size();
         if (x <= splines.get(0).x) { // Если t меньше точки сетки t[0] - пользуемся первым эл-тов массива
@@ -76,17 +78,38 @@ public class CubeSpline implements Interpolation {
     }
 
     @Override
-    public List<Double> applySpline() {
-        List<Double> listTmp = new ArrayList<>();
+    public Interpolation BuildSplineForLists(List<Double> x, List<Double> y) {
+        List<Double> t = new ArrayList<>(Collections.nCopies(x.size(), 0.0));
+        for (int i = 1; i < x.size(); i++) {
+            t.set(i, t.get(i - 1) + dist(i, i - 1, x, y));
+        }
+        this.splinesX = BuildSpline(t, x);
+        this.splinesY = BuildSpline(t, y);
+        return this;
+    }
+
+    private Double dist(int j, int k, List<Double> x, List<Double> y) {
+        return Math.sqrt(Math.pow((x.get(j) - x.get(k)), 2) + Math.pow((y.get(j) - y.get(k)), 2));
+    }
+
+    @Override
+    public List<Point2D> applySpline() {
+        List<Point2D> listTmp = new ArrayList<>();
         for (int i = 0; i < t.size() - 1; i++) {
             Double start = t.get(i);
             double v = (t.get(i + 1) - start) / 4;
-            listTmp.add(this.calculateValue(start));
+            double x = this.calculateValue(start, splinesX);
+            double y = this.calculateValue(start, splinesY);
+            listTmp.add(new Point2D(x, y));
             for (int j = 1; j < 4; j++) {
-                listTmp.add(this.calculateValue(start + j * v));
+                x = this.calculateValue(start + j * v, splinesX);
+                y = this.calculateValue(start + j * v, splinesY);
+                listTmp.add(new Point2D(x, y));
             }
         }
-        listTmp.add(this.calculateValue(t.get(t.size() - 1)));
+        double x = this.calculateValue(t.get(t.size() - 1), splinesX);
+        double y = this.calculateValue(t.get(t.size() - 1), splinesY);
+        listTmp.add(new Point2D(x, y));
         return listTmp;
     }
 

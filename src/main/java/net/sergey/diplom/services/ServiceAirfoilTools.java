@@ -46,18 +46,20 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     private final PropertiesHandler propertiesHandler;
     private final Converter converter;
     private final FileSystemStorageService storageService;
+    private final AirfoilStlGenerator stlGenerator;
     @Value("${config.parser.path}")
     private String configParserPath;
     @Value(value = "classpath:config.properties")
     private Resource companiesXml;
 
     @Autowired
-    public ServiceAirfoilTools(DAO dao, ParseFileScv parseFileScv, PropertiesHandler propertiesHandler, Converter converter, FileSystemStorageService storageService) {
+    public ServiceAirfoilTools(DAO dao, ParseFileScv parseFileScv, PropertiesHandler propertiesHandler, Converter converter, FileSystemStorageService storageService, AirfoilStlGenerator stlGenerator) {
         this.dao = dao;
         this.parseFileScv = parseFileScv;
         this.propertiesHandler = propertiesHandler;
         this.converter = converter;
         this.storageService = storageService;
+        this.stlGenerator = stlGenerator;
     }
 
     @Override
@@ -240,7 +242,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         }
         try {
             new BuilderGraphs(storageService).draw(airfoil, null, false);
-            new AirfoilStlGenerator().generate(airfoil.getShortName(), airfoil.getCoordView(), storageService);
+            stlGenerator.generate(airfoil.getShortName(), airfoil.getCoordView(), storageService);
         } catch (Exception e) {
             LOGGER.warn("Ошибка при обработке файлов с координатами", e);
         }

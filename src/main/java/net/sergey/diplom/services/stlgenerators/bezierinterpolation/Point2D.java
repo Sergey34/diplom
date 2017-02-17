@@ -7,9 +7,14 @@ public class Point2D {
         this.x = this.y = 0.0;
     }
 
-    Point2D(double x, double y) {
+    public Point2D(double x, double y) {
         this.x = x;
         this.y = y;
+    }
+
+    public Point2D(Point2D point2D) {
+        this.x = point2D.x;
+        this.y = point2D.y;
     }
 
     void normalize() {
