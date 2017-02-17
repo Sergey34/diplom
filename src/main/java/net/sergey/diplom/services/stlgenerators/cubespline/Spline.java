@@ -1,9 +1,11 @@
-package net.sergey.diplom.services.spline;
+package net.sergey.diplom.services.stlgenerators.cubespline;
+
+import net.sergey.diplom.services.stlgenerators.Interpolation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Spline {
+public class Spline implements Interpolation {
 
     private List<SplineTuple> splines;
 

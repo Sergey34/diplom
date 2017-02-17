@@ -1,4 +1,4 @@
-package net.sergey.diplom.services.spline;
+package net.sergey.diplom.services.stlgenerators.cubespline;
 
 import net.sergey.diplom.services.storageservice.FileSystemStorageService;
 import net.sergey.diplom.services.utils.UtilsLogger;
