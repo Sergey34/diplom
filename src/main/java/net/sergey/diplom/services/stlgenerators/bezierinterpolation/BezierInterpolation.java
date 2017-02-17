@@ -14,11 +14,9 @@ public class BezierInterpolation implements Interpolation {
 
     private BezierInterpolation calculateSpline(List<Point2D> values) {
         int n = values.size() - 1;
-
         if (n < 2) {
             return null;
         }
-
         List<Segment> bezier = resize(n);
 
         Point2D tgL = new Point2D();
@@ -26,18 +24,13 @@ public class BezierInterpolation implements Interpolation {
         Point2D cur;
         Point2D next = values.get(1).subtraction(values.get(0));
         next.normalize();
-
         double l1, l2, tmp, x;
 
-        --n;
-
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < n - 1; ++i) {
             bezier.get(i).setPoint(0, values.get(i));
             bezier.get(i).setPoint(1, values.get(i));
             bezier.get(i).setPoint(2, values.get(i + 1));
             bezier.get(i).setPoint(3, values.get(i + 1));
-
-            System.out.println(bezier);
 
             cur = next;
             next = values.get(i + 2).subtraction(values.get(i + 1));
@@ -86,12 +79,9 @@ public class BezierInterpolation implements Interpolation {
 
         bezier.get(n).setPoint(0, values.get(n));
         bezier.get(n).setPoint(1, values.get(n));
-
         bezier.get(n).setPoint(2, values.get(n + 1));
         bezier.get(n).setPoint(3, values.get(n + 1));
-
         bezier.get(n).setPoint(1, bezier.get(n).getPoint(1).plus(tgR.multiplication(l1)));
-
         this.spline = bezier;
         return this;
     }
