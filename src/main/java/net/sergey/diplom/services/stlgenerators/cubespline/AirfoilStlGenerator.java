@@ -50,9 +50,9 @@ public class AirfoilStlGenerator {
 
         Spline splineY = new Spline();
         splineY.BuildSpline(t, y, x.size());
-        List<Double> ySpline = new ArrayList<>();
-        List<Double> xSpline = new ArrayList<>();
-        spline(t, splineY, splineX, ySpline, xSpline);
+
+        List<Double> xSpline = splineX.applySpline(t, splineX);
+        List<Double> ySpline = splineY.applySpline(t, splineY);
 
         String stlFileName = storageService.getRootLocation() + "/scadFiles/" + fileName + '_' + b + ".scad";
         try (BufferedWriter scadWriter = new BufferedWriter(new FileWriter(stlFileName))) {
@@ -66,22 +66,6 @@ public class AirfoilStlGenerator {
             LOGGER.warn("Ошибка генерации STL файлв", e);
             throw e;
         }
-    }
-
-    private void spline(List<Double> t, Spline splineY, Spline splineX, List<Double> ySpline, List<Double> xSpline) {
-        for (int i = 0; i < t.size() - 1; i++) {
-            Double start = t.get(i);
-            double v = (t.get(i + 1) - start) / 4;
-            xSpline.add(splineX.calculateValue(start));
-            ySpline.add(splineY.calculateValue(start));
-            for (int j = 1; j < 4; j++) {
-                xSpline.add(splineX.calculateValue(start + j * v));
-                ySpline.add(splineY.calculateValue(start + j * v));
-            }
-        }
-        xSpline.add(splineX.calculateValue(t.get(t.size() - 1)));
-        ySpline.add(splineY.calculateValue(t.get(t.size() - 1)));
-
     }
 
     private Double dist(int j, int k, List<Double> x, List<Double> y) {

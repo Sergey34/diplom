@@ -9,6 +9,7 @@ public class Spline implements Interpolation {
 
     private List<SplineTuple> splines;
 
+    @Override
     public void BuildSpline(List<Double> t, List<Double> coord, int n) {
         splines = new ArrayList<>(n);
 
@@ -45,7 +46,7 @@ public class Spline implements Interpolation {
         }
     }
 
-    public double calculateValue(double x) {
+    private double calculateValue(double x) {
         SplineTuple s;
         int n = splines.size();
         if (x <= splines.get(0).x) { // Если t меньше точки сетки t[0] - пользуемся первым эл-тов массива
@@ -68,6 +69,20 @@ public class Spline implements Interpolation {
         double dx = (x - s.x);
         // Вычисляем значение сплайна в заданной точке по схеме Горнера
         return s.a + (s.b + (s.c / 2.0 + s.d * dx / 6.0) * dx) * dx;
+    }
+    @Override
+    public List<Double> applySpline(List<Double> t, Spline spline) {
+        List<Double> listTmp = new ArrayList<>();
+        for (int i = 0; i < t.size() - 1; i++) {
+            Double start = t.get(i);
+            double v = (t.get(i + 1) - start) / 4;
+            listTmp.add(spline.calculateValue(start));
+            for (int j = 1; j < 4; j++) {
+                listTmp.add(spline.calculateValue(start + j * v));
+            }
+        }
+        listTmp.add(spline.calculateValue(t.get(t.size() - 1)));
+        return listTmp;
     }
 
     private class SplineTuple {
