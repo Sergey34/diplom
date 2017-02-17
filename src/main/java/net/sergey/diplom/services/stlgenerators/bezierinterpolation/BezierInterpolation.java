@@ -12,31 +12,6 @@ public class BezierInterpolation implements Interpolation {
     private static final double EPSILON = 1.0e-5;
     private List<Segment> spline;
 
-    public static void main(String[] args) {
-        List<Point2D> testValues = new ArrayList<>();
-
-        testValues.add(new Point2D(0, 0));
-        testValues.add(new Point2D(20, 0));
-        testValues.add(new Point2D(45, -47));
-        testValues.add(new Point2D(53, 335));
-        testValues.add(new Point2D(57, 26));
-        testValues.add(new Point2D(62, 387));
-        testValues.add(new Point2D(74, 104));
-        testValues.add(new Point2D(89, 0));
-        testValues.add(new Point2D(95, 100));
-        testValues.add(new Point2D(100, 0));
-
-//        new BezierInterpolation().calculateSpline(testValues).applySpline();
-        List<Double> x = new ArrayList<>();
-        List<Double> y = new ArrayList<>();
-        for (Point2D testValue : testValues) {
-            x.add(testValue.getX());
-            y.add(testValue.getY());
-        }
-        new BezierInterpolation().BuildSplineForLists(x, y).applySpline();
-
-    }
-
     private BezierInterpolation calculateSpline(List<Point2D> values) {
         int n = values.size() - 1;
 
