@@ -1,6 +1,5 @@
-package net.sergey.diplom.services.stlgenerators.cubespline;
+package net.sergey.diplom.services.stlgenerators;
 
-import net.sergey.diplom.services.stlgenerators.Interpolation;
 import net.sergey.diplom.services.stlgenerators.bezierinterpolation.Point2D;
 import net.sergey.diplom.services.storageservice.FileSystemStorageService;
 import net.sergey.diplom.services.utils.UtilsLogger;
@@ -39,6 +38,7 @@ public class AirfoilStlGenerator {
             beanNames.clear();
             beanNames.add("cube");
         }
+        this.interpolators = new ArrayList<>();
         for (String beanName : beanNames) {
             this.interpolators.add((Interpolation) context.getBean(beanName));
         }

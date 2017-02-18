@@ -32,8 +32,21 @@ function fillContentDetailInfo(data) {
     let name = document.getElementById('airfoil_name');
     name.innerText = data.name;
 
-    let downloadStl = document.getElementById('downloadStl');
-    downloadStl.setAttribute("href", data.stlFilePath);
+    //<p class="pull-left"><a id="downloadStl" class="list-group-item" href="">Скачать STL</a></p>
+    let files = data.stlFilePath;
+    for (let i = 0; i < files.length; i++) {
+        let p = document.createElement('p');
+        p.setAttribute("class", "pull-left");
+        let a = document.createElement('a');
+        a.setAttribute("class", "list-group-item");
+        a.setAttribute("href", files[i]);
+        a.innerText = "Скачать STL";
+        p.appendChild(a);
+        document.getElementById("bottoms").appendChild(p);
+    }
+
+    // let downloadStl = document.getElementById('downloadStl');
+    // downloadStl.setAttribute("href", data.stlFilePath);
 
     let image = document.getElementById('imgDetail');
     image.setAttribute("src", data.image);
@@ -185,7 +198,7 @@ function refreshiframe() {
         a1.setAttribute("href", "#carousel-example-generic");
         a1.setAttribute("class", "left carousel-control");
         a1.setAttribute("data-slide", "prev");
-        a1.setAttribute("style","background:none !important");
+        a1.setAttribute("style", "background:none !important");
         a1.id = "a1";
 
 
@@ -194,7 +207,7 @@ function refreshiframe() {
         a2.setAttribute("href", "#carousel-example-generic");
         a2.setAttribute("class", "right carousel-control");
         a2.setAttribute("data-slide", "next");
-        a2.setAttribute("style","background:none !important");
+        a2.setAttribute("style", "background:none !important");
         a2.id = "a2";
 
         carousel_example_generic.appendChild(a1);

@@ -52,8 +52,10 @@ public class Converter {
         airfoilDetail.setImgCsvName(imgCsvName);
 
         airfoilDetail.setStlFilePath(new ArrayList<String>());
-        for (String stlFileName : stlFileNames) {
-            airfoilDetail.addStlFilePath("/files/scadFiles/" + stlFileName);
+        if (stlFileNames != null) {
+            for (String stlFileName : stlFileNames) {
+                airfoilDetail.addStlFilePath("/files/scadFiles/" + stlFileName);
+            }
         }
 
         return airfoilDetail;

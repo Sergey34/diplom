@@ -25,8 +25,8 @@ public class BezierInterpolation implements Interpolation {
         Point2D next = values.get(1).subtraction(values.get(0));
         next.normalize();
         double l1, l2, tmp, x;
-
-        for (int i = 0; i < n - 1; ++i) {
+        n--;
+        for (int i = 0; i < n; ++i) {
             bezier.get(i).setPoint(0, values.get(i));
             bezier.get(i).setPoint(1, values.get(i));
             bezier.get(i).setPoint(2, values.get(i + 1));

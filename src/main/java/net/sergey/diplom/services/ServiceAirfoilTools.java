@@ -13,7 +13,7 @@ import net.sergey.diplom.dto.airfoil.Data;
 import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.services.parser.ParseFileScv;
 import net.sergey.diplom.services.properties.PropertiesHandler;
-import net.sergey.diplom.services.stlgenerators.cubespline.AirfoilStlGenerator;
+import net.sergey.diplom.services.stlgenerators.AirfoilStlGenerator;
 import net.sergey.diplom.services.storageservice.FileSystemStorageService;
 import net.sergey.diplom.services.utils.BuilderGraphs;
 import net.sergey.diplom.services.utils.UtilsLogger;
