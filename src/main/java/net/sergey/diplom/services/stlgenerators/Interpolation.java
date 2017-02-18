@@ -9,4 +9,6 @@ public interface Interpolation {
     Interpolation BuildSplineForLists(List<Double> x, List<Double> y);
 
     List<Point2D> applySpline();
+
+    String getName();
 }

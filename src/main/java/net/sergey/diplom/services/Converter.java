@@ -35,7 +35,7 @@ public class Converter {
         return airfoilDTO;
     }
 
-    public AirfoilDetail airfoilToAirfoilDetail(Airfoil airfoil, List<String> chartNames) {
+    public AirfoilDetail airfoilToAirfoilDetail(Airfoil airfoil, List<String> chartNames, List<String> stlFileNames) {
         AirfoilDetail airfoilDetail = new AirfoilDetail();
         airfoilDetail.setName(airfoil.getName());
         airfoilDetail.setDescription(airfoil.getDescription());
@@ -51,7 +51,11 @@ public class Converter {
         }
         airfoilDetail.setImgCsvName(imgCsvName);
 
-        airfoilDetail.setStlFilePath("/files/scadFiles/" + airfoil.getShortName() + '_' + 100 + ".scad");
+        airfoilDetail.setStlFilePath(new ArrayList<String>());
+        for (String stlFileName : stlFileNames) {
+            airfoilDetail.addStlFilePath("/files/scadFiles/" + stlFileName);
+        }
+
         return airfoilDetail;
     }
 

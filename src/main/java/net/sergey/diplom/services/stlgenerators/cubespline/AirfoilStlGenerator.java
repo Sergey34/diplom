@@ -31,44 +31,61 @@ public class AirfoilStlGenerator {
         FILE_FOOTER.append("\t\t\t],\n\t\tconvexity=10);\n\t}\n}\n\nairfoil(10, 0.2);\n");
     }
 
-    private Interpolation interpolator;
+    private List<Interpolation> interpolators;
 
     @Autowired
-    public AirfoilStlGenerator(ApplicationContext context, @Value("${interpolation}") String interpolationType) {
-        if (!context.containsBeanDefinition(interpolationType)) {
-            interpolationType = "cube";
+    public AirfoilStlGenerator(ApplicationContext context, @Value("#{'${interpolation}'.split(', ?')}") List<String> beanNames) {
+        if (!allBeanNameExist(context, beanNames)) {
+            beanNames.clear();
+            beanNames.add("cube");
         }
-        this.interpolator = (Interpolation) context.getBean(interpolationType);
+        for (String beanName : beanNames) {
+            this.interpolators.add((Interpolation) context.getBean(beanName));
+        }
     }
 
-    public void generate(String fileName, String coordView, FileSystemStorageService storageService) throws Exception {
+    private boolean allBeanNameExist(ApplicationContext context, List<String> beanNames) {
+        for (String beanName : beanNames) {
+            if (!context.containsBeanDefinition(beanName)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public List<String> generate(String airfoilName, String coordView, FileSystemStorageService storageService) throws Exception {
         String[] split1 = coordView.split("\n");
         List<Double> x = new ArrayList<>();
         List<Double> y = new ArrayList<>();
         for (String line : split1) {
             try {
                 String[] strings = line.trim().split(REGEX);
-                x.add(Double.parseDouble(strings[0]));
-                y.add(Double.parseDouble(strings[strings.length - 1]));
+                x.add(Double.parseDouble(strings[0]) * b);
+                y.add(Double.parseDouble(strings[strings.length - 1]) * b);
             } catch (Exception e) {
                 LOGGER.warn("Ошибка генерации STL файлв", e);
                 throw e;
             }
         }
+        List<String> fileNames = new ArrayList<>();
+        for (Interpolation interpolator : interpolators) {
+            List<Point2D> spline = interpolator.BuildSplineForLists(x, y).applySpline();
 
-        List<Point2D> spline = interpolator.BuildSplineForLists(x, y).applySpline();
-
-        String stlFileName = storageService.getRootLocation() + "/scadFiles/" + fileName + '_' + b + ".scad";
-        try (BufferedWriter scadWriter = new BufferedWriter(new FileWriter(stlFileName))) {
-            scadWriter.write(FILE_HEADER.toString());
-            for (Point2D point2D : spline) {
-                scadWriter.write("\t\t\t\t[" + String.format("%.6e", point2D.getX()) + ", " +
-                        String.format("%.6e", point2D.getY()) + "]\n");
+            String fileName = airfoilName + '_' + interpolator.getName() + "_" + b + ".scad";
+            String stlFileName = storageService.getRootLocation() + "/scadFiles/" + fileName;
+            try (BufferedWriter scadWriter = new BufferedWriter(new FileWriter(stlFileName))) {
+                scadWriter.write(FILE_HEADER.toString());
+                for (Point2D point2D : spline) {
+                    scadWriter.write("\t\t\t\t[" + String.format("%.6e", point2D.getX()) + ", " +
+                            String.format("%.6e", point2D.getY()) + "]\n");
+                }
+                scadWriter.write(FILE_FOOTER.toString());
+            } catch (IOException e) {
+                LOGGER.warn("Ошибка генерации STL файлв", e);
+                throw e;
             }
-            scadWriter.write(FILE_FOOTER.toString());
-        } catch (IOException e) {
-            LOGGER.warn("Ошибка генерации STL файлв", e);
-            throw e;
+            fileNames.add(fileName);
         }
+        return fileNames;
     }
 }

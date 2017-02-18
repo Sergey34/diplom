@@ -240,14 +240,15 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         if (null == airfoil) {
             return null;
         }
+        List<String> stlFileNames = null;
         try {
             new BuilderGraphs(storageService).draw(airfoil, null, false);
-            stlGenerator.generate(airfoil.getShortName(), airfoil.getCoordView(), storageService);
+            stlFileNames = stlGenerator.generate(airfoil.getShortName(), airfoil.getCoordView(), storageService);
         } catch (Exception e) {
             LOGGER.warn("Ошибка при обработке файлов с координатами", e);
         }
         drawViewAirfoil(airfoil);
-        return converter.airfoilToAirfoilDetail(airfoil, ServiceAirfoilTools.CHART_NAMES);
+        return converter.airfoilToAirfoilDetail(airfoil, ServiceAirfoilTools.CHART_NAMES, stlFileNames);
     }
 
     private void drawViewAirfoil(Airfoil airfoil) {

@@ -113,6 +113,11 @@ public class CubeSpline implements Interpolation {
         return listTmp;
     }
 
+    @Override
+    public String getName() {
+        return "cube";
+    }
+
     private class SplineTuple {
         final double a;
         final double x;

@@ -123,6 +123,11 @@ public class BezierInterpolation implements Interpolation {
         }
         return points;
     }
+
+    @Override
+    public String getName() {
+        return "bezier";
+    }
 }
 
 
