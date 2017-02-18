@@ -15,7 +15,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -36,6 +35,9 @@ public class AirfoilStlGenerator {
 
     @Autowired
     public AirfoilStlGenerator(ApplicationContext context, @Value("${interpolation}") String interpolationType) {
+        if (!context.containsBeanDefinition(interpolationType)) {
+            interpolationType = "cube";
+        }
         this.interpolator = (Interpolation) context.getBean(interpolationType);
     }
 
@@ -54,13 +56,7 @@ public class AirfoilStlGenerator {
             }
         }
 
-        List<Double> t = new ArrayList<>(Collections.nCopies(x.size(), 0.0));
-        for (int i = 1; i < x.size(); i++) {
-            t.set(i, t.get(i - 1) + dist(i, i - 1, x, y));
-        }
-
         List<Point2D> spline = interpolator.BuildSplineForLists(x, y).applySpline();
-
 
         String stlFileName = storageService.getRootLocation() + "/scadFiles/" + fileName + '_' + b + ".scad";
         try (BufferedWriter scadWriter = new BufferedWriter(new FileWriter(stlFileName))) {
@@ -74,9 +70,5 @@ public class AirfoilStlGenerator {
             LOGGER.warn("Ошибка генерации STL файлв", e);
             throw e;
         }
-    }
-
-    private Double dist(int j, int k, List<Double> x, List<Double> y) {
-        return Math.sqrt(Math.pow((x.get(j) - x.get(k)), 2) + Math.pow((y.get(j) - y.get(k)), 2));
     }
 }
