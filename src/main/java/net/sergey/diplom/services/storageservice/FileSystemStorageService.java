@@ -11,6 +11,7 @@ import org.springframework.util.FileSystemUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -70,6 +71,11 @@ public class FileSystemStorageService {
         FileSystemUtils.deleteRecursively(new File(location + "/airfoil_img/" + shortName + ".png"));
         FileSystemUtils.deleteRecursively(new File(location + "/chartTemp/"));
         FileSystemUtils.deleteRecursively(new File(location + "/tmpCsv/" + shortName + "_100.scad"));
+        try {
+            Files.createDirectory(Paths.get(location + "/chartTemp"));
+        } catch (IOException e) {
+            LOGGER.warn("не удалось создать папку chartTemp", e);
+        }
         for (String chartName : chartNames) {
             FileSystemUtils.deleteRecursively(new File(location + "/scadFiles/" + shortName + "-" + chartName + ".csv"));
         }
