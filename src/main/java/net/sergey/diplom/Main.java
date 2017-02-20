@@ -30,6 +30,7 @@ public class Main extends WebMvcConfigurerAdapter {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/").setViewName("login");
     }
 
     @Bean
@@ -50,6 +51,7 @@ public class Main extends WebMvcConfigurerAdapter {
                     .antMatchers("/rest/*", "/**").permitAll().anyRequest()
                     .fullyAuthenticated().and().formLogin().loginPage("/login")
                     .failureUrl("/login?error").permitAll()
+                    .defaultSuccessUrl("/airfoilList.html")
                     .and()
                     .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login")
                     .permitAll();
