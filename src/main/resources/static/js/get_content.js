@@ -14,7 +14,7 @@ function getContent() {
     currentPrefix = prefix;
     $(document).ready(function () {
         $.ajax({
-            url: rootUrl + "/rest/airfoilsDto/" + prefix + "/" + no * 20 + "/20"
+            url: "/rest/airfoilsDto/" + prefix + "/" + no * 20 + "/20"
         }).then(function (data) {
             createCursore(no + 1);
             console.log(data);
@@ -86,7 +86,7 @@ function createCursore(no) {
     // var prefix = 'A';
     $(document).ready(function () {
         $.ajax({
-            url: rootUrl + "/rest/countAirfoil/" + prefix
+            url: "/rest/countAirfoil/" + prefix
         }).then(function (data) {
             console.log(data);
             var countItem = Math.ceil(data / 20.0);

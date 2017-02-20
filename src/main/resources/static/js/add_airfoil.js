@@ -73,7 +73,7 @@ function saveWab() {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: rootUrl + "/rest/write/addAirfoilForStringCsv",
+            url: "/rest/write/addAirfoilForStringCsv",
             data: JSON.stringify(data),
             dataType: 'json',
             timeout: 600000

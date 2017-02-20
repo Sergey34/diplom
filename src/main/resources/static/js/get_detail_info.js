@@ -7,7 +7,7 @@ function getDetailInfo(forEdit) {
         console.log('id = ' + id);
         $(document).ready(function () {
             $.ajax({
-                url: rootUrl + "/rest/airfoilDto/" + id
+                url: "/rest/airfoilDto/" + id
             }).then(function (data) {
                 console.log(data);
                 if (data == '') {
@@ -218,7 +218,7 @@ function refreshiframe() {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: rootUrl + "/rest/updateGraf/" + id,
+            url: "/rest/updateGraf/" + id,
             data: JSON.stringify(checkeds),
             dataType: 'json',
             timeout: 600000,
@@ -450,7 +450,7 @@ function updateWab() {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: rootUrl + "/rest/write/updateAirfoilStringCsv",
+            url: "/rest/write/updateAirfoilStringCsv",
             data: JSON.stringify(data),
             dataType: 'json',
             timeout: 600000

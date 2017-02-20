@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $.ajax({
-        url: rootUrl + "/rest/user"
+        url: "/rest/user"
     }).then(function (data) {
         console.log(data);
         let navbar_nav = document.getElementById('navbar-nav');
@@ -9,7 +9,7 @@ $(document).ready(function () {
         if (data == '') {
             console.log('гость');
 
-            button_login.setAttribute('href', rootUrl + '/login');
+            button_login.setAttribute('href', '/login');
             button_login.innerText = "login";
         } else {
             console.log(data);
@@ -23,7 +23,7 @@ $(document).ready(function () {
             navbar_nav_sign.appendChild(nav_item_sign);
 
 
-            button_login.setAttribute('href', rootUrl + '/logout');
+            button_login.setAttribute('href', '/logout');
             button_login.innerText = "Logout";
         }
         nav_item.appendChild(button_login);

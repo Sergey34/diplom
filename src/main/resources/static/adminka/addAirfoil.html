@@ -16,7 +16,6 @@
     <script src="../js/get_user.js"></script>
     <script src="../js/add_airfoil.js"></script>
     <script src='../js/tabular-input.min.js'></script>
-    <script src="../js/getContextPath.js"></script>
     <link type='text/css' rel='stylesheet' href='../css/tabular-input.css'/>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -44,10 +43,10 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav" id="navbar-nav">
-                <li><a href="about.html" id="about">About</a></li>
+                <li><a href="/about.html" id="about">About</a></li>
             </ul>
         </div>
-        <script>             document.getElementById('about').setAttribute('href', rootUrl + "/about.html");         </script>
+
         <!-- /.navbar-collapse -->
     </div>
     <!-- /.container -->
@@ -138,7 +137,7 @@
 
                             </div>
                             <script>
-                                document.getElementById('addAirfoil').setAttribute('action', rootUrl + "/rest/write/addAirfoilForFileCsv");
+                                document.getElementById('addAirfoil').setAttribute('action', "/rest/write/addAirfoilForFileCsv");
                                 jQuery('#viewTab').tabularInput({
                                     'rows': 10,
                                     'columns': 2,

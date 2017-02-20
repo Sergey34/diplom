@@ -11,7 +11,7 @@ function someFunc() {
             $.ajax({
                 type: "POST",
                 contentType: "application/json",
-                url: rootUrl + "/rest/write/user",
+                url: "/rest/write/user",
                 data: JSON.stringify(data),
                 dataType: 'json',
                 timeout: 600000,
