@@ -105,6 +105,13 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         return airfoilById;
     }
 
+    @Override
+    public Message clearAll() {
+        System.gc();
+        storageService.init();
+        return new Message("done",SC_OK);
+    }
+
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {
         if (dao.getMenuItemByUrl(String.valueOf(airfoil.getPrefix().getPrefix())) == null) {
             List<Menu> allMenu = dao.getAllMenu();

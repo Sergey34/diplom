@@ -76,4 +76,10 @@ public class RestWriteController {
     public Message stop() {
         return parserService.stopParsing();
     }
+
+    @RequestMapping(value = "/clearAll", method = RequestMethod.GET)
+    public Message clearAll() {
+        return serviceAirfoil.clearAll();
+    }
+
 }

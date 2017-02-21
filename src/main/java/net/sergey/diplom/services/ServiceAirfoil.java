@@ -37,4 +37,6 @@ public interface ServiceAirfoil {
     List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count);
 
     Airfoil getAirfoilById(String airfoilId);
+
+    Message clearAll();
 }
