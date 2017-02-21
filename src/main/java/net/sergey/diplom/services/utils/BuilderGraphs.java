@@ -24,7 +24,17 @@ import java.util.concurrent.Executors;
 
 public class BuilderGraphs {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-    private final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private final ExecutorService executorService;
+
+    {
+        int n = Runtime.getRuntime().availableProcessors();
+        if (n > 5) {
+            executorService = Executors.newFixedThreadPool(5);
+        } else {
+            executorService = Executors.newFixedThreadPool(n);
+        }
+    }
+
     private final FileSystemStorageService storageService;
     private Map<String, ImageHandler> imageHandler = new ConcurrentHashMap<>();
 
