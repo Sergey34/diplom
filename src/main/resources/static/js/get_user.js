@@ -18,7 +18,7 @@ $(document).ready(function () {
             //<p class="navbar-text">Signed in as Mark Otto</p>
             let signed_in = document.createElement('p');
             signed_in.setAttribute('class', 'navbar-text');
-            signed_in.innerText = "Signed in as " + data.userName;
+            signed_in.innerHTML = "Signed in as " + data.userName;
             nav_item_sign.appendChild(signed_in);
             navbar_nav_sign.appendChild(nav_item_sign);
 
