@@ -28,7 +28,7 @@ $(document).ready(function () {
                 // новый элемент
                 var menu_item = document.createElement('a');
                 menu_item.setAttribute('class', 'list-group-item');
-                menu_item.innerText = element.name;
+                menu_item.innerHTML = element.name;
                 menu_item.setAttribute('href', '/airfoilList.html?prefix=' + element.urlCode);
 
                 list_group.appendChild(menu_item);
