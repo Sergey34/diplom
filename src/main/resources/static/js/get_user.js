@@ -10,7 +10,7 @@ $(document).ready(function () {
             console.log('гость');
 
             button_login.setAttribute('href', '/login');
-            button_login.innerText = "login";
+            button_login.innerHTML = "login";
         } else {
             console.log(data);
             let navbar_nav_sign = document.getElementById('navbar-nav');
@@ -24,7 +24,7 @@ $(document).ready(function () {
 
 
             button_login.setAttribute('href', '/logout');
-            button_login.innerText = "Logout";
+            button_login.innerHTML = "Logout";
         }
         nav_item.appendChild(button_login);
         navbar_nav.appendChild(nav_item);

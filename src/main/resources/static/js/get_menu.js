@@ -11,7 +11,7 @@ $(document).ready(function () {
             var list = document.getElementById('list_menu');
             // новый элемент
             var header = document.createElement('p');
-            header.innerText = element.header;
+            header.innerHTML = element.header;
             header.setAttribute('class', 'lead');
             // добавление в конец
             list.appendChild(header);

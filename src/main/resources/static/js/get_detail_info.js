@@ -11,7 +11,7 @@ function getDetailInfo(forEdit) {
             }).then(function (data) {
                 console.log(data);
                 if (data == '') {
-                    document.getElementById('airfoilDetailInfo').innerText = "Airfoil не найден";
+                    document.getElementById('airfoilDetailInfo').innerHTML = "Airfoil не найден";
                 } else {
                     if (forEdit) {
                         fillEditableContentDetailInfo(data);
@@ -30,7 +30,7 @@ function fillContentDetailInfo(data) {
     edit.setAttribute("href", "adminka/edit_airfoil.html?airfoilId=" + id);
 
     let name = document.getElementById('airfoil_name');
-    name.innerText = data.name;
+    name.innerHTML = data.name;
 
     //<p class="pull-left"><a id="downloadStl" class="list-group-item" href="">Скачать STL</a></p>
     let files = data.stlFilePath;
@@ -40,7 +40,7 @@ function fillContentDetailInfo(data) {
         let a = document.createElement('a');
         a.setAttribute("class", "list-group-item");
         a.setAttribute("href", files[i]);
-        a.innerText = "Скачать STL";
+        a.innerHTML = "Скачать STL";
         p.appendChild(a);
         document.getElementById("bottoms").appendChild(p);
     }
@@ -55,7 +55,7 @@ function fillContentDetailInfo(data) {
     description.innerHTML = data.description;
 
     let Polars_for = document.getElementById('Polars_for');
-    Polars_for.innerText = Polars_for.textContent + data.name;
+    Polars_for.innerHTML = Polars_for.textContent + data.name;
 
     let coordinates = data.coordinates;
 
@@ -102,7 +102,7 @@ function fillContentDetailInfo(data) {
         td = document.createElement('td');
         let link_file = document.createElement('a');
         link_file.id = "link_file" + j;
-        link_file.innerText = coordinates[i].fileName;
+        link_file.innerHTML = coordinates[i].fileName;
         link_file.setAttribute('href', coordinates[i].filePath);
         td.appendChild(link_file);
         tr.appendChild(td);
@@ -359,7 +359,7 @@ function fillEditableContentDetailInfoEditableTable(data) {
 function createLabel(id, value, number, valueInput) {
     let label = document.createElement('label');
     label.id = id + number;
-    label.innerText = value;
+    label.innerHTML = value;
     let input = document.createElement('input');
     input.id = 'input_' + id + number;
     input.setAttribute('type', 'text');
