@@ -4,7 +4,10 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "airfoil")
+@Table(name = "airfoil", indexes = {
+        @Index(columnList = "shortName", name = "shortName", unique = true),
+        @Index(columnList = "prefix", name = "prefix")
+})
 public class Airfoil {
     @Column(name = "name")
     private String name;
