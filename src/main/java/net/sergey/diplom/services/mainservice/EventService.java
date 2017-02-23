@@ -1,4 +1,4 @@
-package net.sergey.diplom.services;
+package net.sergey.diplom.services.mainservice;
 
 
 import net.sergey.diplom.services.utils.UtilsLogger;

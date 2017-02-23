@@ -4,7 +4,7 @@ import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
-import net.sergey.diplom.services.EventService;
+import net.sergey.diplom.services.mainservice.EventService;
 import net.sergey.diplom.services.parser.consts.Constant;
 import net.sergey.diplom.services.parser.consts.ConstantApi;
 import net.sergey.diplom.services.parser.siteconnection.ConnectionManager;

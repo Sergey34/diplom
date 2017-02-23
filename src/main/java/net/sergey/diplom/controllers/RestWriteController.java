@@ -3,7 +3,7 @@ package net.sergey.diplom.controllers;
 import net.sergey.diplom.dto.airfoil.AirfoilEdit;
 import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.dto.user.UserView;
-import net.sergey.diplom.services.ServiceAirfoil;
+import net.sergey.diplom.services.mainservice.ServiceAirfoil;
 import net.sergey.diplom.services.parser.Parser;
 import net.sergey.diplom.services.usermanagerservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

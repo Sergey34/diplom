@@ -6,7 +6,7 @@ import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.dto.user.UserDto;
 import net.sergey.diplom.dto.user.UserView;
-import net.sergey.diplom.services.Converter;
+import net.sergey.diplom.services.mainservice.Converter;
 import net.sergey.diplom.services.utils.UtilsLogger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;

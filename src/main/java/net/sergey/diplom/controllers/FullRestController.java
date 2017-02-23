@@ -6,7 +6,7 @@ import net.sergey.diplom.domain.user.Authorities;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.dto.user.UserDto;
-import net.sergey.diplom.services.ServiceAirfoil;
+import net.sergey.diplom.services.mainservice.ServiceAirfoil;
 import net.sergey.diplom.services.usermanagerservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

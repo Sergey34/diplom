@@ -5,7 +5,7 @@ import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.dto.messages.MessageError;
-import net.sergey.diplom.services.EventService;
+import net.sergey.diplom.services.mainservice.EventService;
 import net.sergey.diplom.services.parser.consts.Constant;
 import net.sergey.diplom.services.parser.siteconnection.ConnectionManager;
 import net.sergey.diplom.services.properties.PropertiesHandler;
