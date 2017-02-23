@@ -5,10 +5,10 @@ import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.domain.user.User;
-import net.sergey.diplom.dto.UserDto;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.dto.airfoil.CoordinatesDto;
+import net.sergey.diplom.dto.user.UserDto;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

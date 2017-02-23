@@ -1,4 +1,4 @@
-package net.sergey.diplom.dto;
+package net.sergey.diplom.dto.user;
 
 import java.util.List;
 
