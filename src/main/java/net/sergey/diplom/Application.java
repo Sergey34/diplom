@@ -22,9 +22,9 @@ import javax.sql.DataSource;
 @SpringBootApplication
 @ComponentScan
 @Configuration
-public class Main extends WebMvcConfigurerAdapter {
+public class Application extends WebMvcConfigurerAdapter {
     public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
     @Override
