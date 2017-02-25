@@ -2,7 +2,7 @@ package net.sergey.diplom.domain.menu;
 
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "menuHeader")
@@ -17,7 +17,7 @@ public class Menu {
     @JoinTable(name = "menuHeader_menuItem",
             joinColumns = {@JoinColumn(name = "headerId")},
             inverseJoinColumns = {@JoinColumn(name = "ItemId")})
-    private Collection<MenuItem> menuItems;
+    private List<MenuItem> menuItems;
 
 
     public Menu() {
@@ -45,11 +45,11 @@ public class Menu {
     }
 
 
-    public Collection<MenuItem> getMenuItems() {
+    public List<MenuItem> getMenuItems() {
         return menuItems;
     }
 
-    public void setMenuItems(Collection<MenuItem> menuItems) {
+    public void setMenuItems(List<MenuItem> menuItems) {
         this.menuItems = menuItems;
     }
 

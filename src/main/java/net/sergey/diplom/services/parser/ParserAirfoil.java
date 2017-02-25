@@ -31,7 +31,7 @@ import static net.sergey.diplom.services.parser.consts.ConstantApi.GET_COORDINAT
 
 @Scope("prototype")
 @Component
-public class ParserAirfoil implements Callable<Void> {
+class ParserAirfoil implements Callable<Void> {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static final String ONCLICK = "onclick";
     private static final String HTTP_M_SELIG_AE_ILLINOIS_EDU_ADS_COORD_DATABASE_HTML = "http://m-selig.ae.illinois.edu/ads/coord_database.html";

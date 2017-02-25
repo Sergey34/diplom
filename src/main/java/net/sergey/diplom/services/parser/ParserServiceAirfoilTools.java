@@ -5,14 +5,9 @@ import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.dto.messages.MessageError;
-import net.sergey.diplom.services.mainservice.EventService;
 import net.sergey.diplom.services.parser.consts.Constant;
-import net.sergey.diplom.services.parser.siteconnection.ConnectionManager;
 import net.sergey.diplom.services.properties.PropertiesHandler;
 import net.sergey.diplom.services.utils.UtilsLogger;
-import org.hibernate.exception.ConstraintViolationException;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +20,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.*;
 
 import static net.sergey.diplom.dto.messages.Message.SC_NOT_IMPLEMENTED;
@@ -39,10 +37,9 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
     private final Constant constants;
     private final ApplicationContext applicationContext;
     private final DAO dao;
-    private final EventService eventService;
     private final PropertiesHandler propertiesHandler;
-    private final ConnectionManager connectionManager;
     private final StringHandler stringHandler;
+    private final ParserMenu parseMenu;
     @Value(value = "classpath:config.properties")
     private Resource companiesXml;
     @Value("${config.parser.path}")
@@ -50,16 +47,15 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
     private boolean parsingIsStarting = false;
 
     @Autowired
-    public ParserServiceAirfoilTools(ApplicationContext applicationContext, DAO dao, EventService eventService,
-                                     Constant constants, PropertiesHandler propertiesHandler,
-                                     ConnectionManager connectionManager, StringHandler stringHandler) {
+    public ParserServiceAirfoilTools(ApplicationContext applicationContext, DAO dao, Constant constants,
+                                     PropertiesHandler propertiesHandler, StringHandler stringHandler,
+                                     ParserMenu parseMenu) {
         this.applicationContext = applicationContext;
         this.dao = dao;
-        this.eventService = eventService;
         this.constants = constants;
         this.propertiesHandler = propertiesHandler;
-        this.connectionManager = connectionManager;
         this.stringHandler = stringHandler;
+        this.parseMenu = parseMenu;
     }
 
     private void parse() throws Exception {
@@ -74,56 +70,9 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
             throw new IllegalStateException("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties", e);
         }
         constants.initConst();
-        List<String> menu = parseMenu();
-        getAirfoilsByMenuList(menu);
-    }
-
-    private List<String> parseMenu() throws IOException {
-        eventService.clearProgressMap();
-        eventService.updateProgress("menu", 0.0);
-        final List<String> airfoilMenu = new ArrayList<>();
-        Element mmenu = connectionManager.getJsoupConnect(constants.HTTP_AIRFOIL_TOOLS_COM, constants.TIMEOUT).get().body().getElementsByClass(constants.MENU_CLASS_NAME).first();
-        Elements menuList = mmenu.getElementsByTag(constants.MENU_LIST);
-        Elements headerMenu = mmenu.getElementsByTag(constants.HEADER_MENU);
-        List<Menu> menus = new ArrayList<>();
-        eventService.updateProgress("menu", 20.0);
-        for (int i = 0; i < menuList.size(); i++) {
-            Element menuElement = menuList.get(i);
-            Element element = headerMenu.get(i);
-            if (constants.MENU_HEADER.equals(element.text())) {
-                Menu menu1 = new Menu(element.text());
-                Set<MenuItem> menuItems = new HashSet<>();
-                menuItems.addAll(getMenuItemsInDB());
-                Elements links = menuElement.getElementsByTag(constants.LINKS);
-                for (Element link : links) {
-                    Element a = link.getElementsByTag(constants.TEGA).first();
-                    if (menu1.getHeader().equals(constants.MENU_HEADER)) {
-                        String text = stringHandler.createStringByPattern(a.text().trim(), constants.GET_MENU_TITLE_PATTERN);
-                        String prefix = createPrefix(text);
-                        MenuItem menuItem = new MenuItem(text, prefix);
-
-                        if (!prefix.equals(constants.FILTER_ITEM)) {
-                            eventService.addKey(prefix);
-                            airfoilMenu.add(prefix);
-                            menuItems.add(menuItem);
-                            eventService.updateProgress("menu", eventService.getProgressValueByKey("menu") + 70.0 / links.size());
-                        }
-                    }
-                }
-                menu1.setMenuItems(menuItems);
-                menus.add(menu1);
-                break;
-            }
-        }
-
-        try {
-            dao.addMenus(menus);
-            eventService.updateProgress("menu", 100.0);
-        } catch (ConstraintViolationException e) {
-            LOGGER.warn("Элемент меню: {} \n уже существует в базе ", menus, e);
-            throw e;
-        }
-        return airfoilMenu;
+        List<Menu> menu = parseMenu.parse(getMenuItemsInDB());
+        dao.addMenus(menu);
+        getAirfoilsByMenuList(menu.get(0).getMenuItems());
     }
 
     private Collection<MenuItem> getMenuItemsInDB() {
@@ -136,19 +85,11 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
         return Collections.emptyList();
     }
 
-    private String createPrefix(String text) {
-        if (!"".equals(text)) {
-            return String.valueOf(text.charAt(0));
-        } else {
-            return "allAirfoil";
-        }
-    }
-
-    private void getAirfoilsByMenuList(List<String> prefixList) throws InterruptedException, ExecutionException {
+    private void getAirfoilsByMenuList(Collection<MenuItem> menuItems) throws InterruptedException, ExecutionException {
         Collection<Callable<Void>> futureList = new ArrayList<>();
-        for (String prefix : prefixList) {
+        for (MenuItem menuItem : menuItems) {
             ParserAirfoil parserAirfoil = applicationContext.getBean(ParserAirfoil.class);
-            parserAirfoil.setPrefix(prefix);
+            parserAirfoil.setPrefix(menuItem.getUrlCode());
             futureList.add(parserAirfoil);
         }
         for (Future<Void> voidFuture : executorService.invokeAll(futureList)) {
