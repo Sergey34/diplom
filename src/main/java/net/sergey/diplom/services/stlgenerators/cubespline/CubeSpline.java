@@ -2,6 +2,7 @@ package net.sergey.diplom.services.stlgenerators.cubespline;
 
 import net.sergey.diplom.services.stlgenerators.Interpolation;
 import net.sergey.diplom.services.stlgenerators.bezierinterpolation.Point2D;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Component(value = "cube")
+@Scope(value = "prototype")
 public class CubeSpline implements Interpolation {
     private List<Double> t;
     private List<SplineTuple> splinesX;
@@ -78,7 +80,7 @@ public class CubeSpline implements Interpolation {
     }
 
     @Override
-    public Interpolation BuildSplineForLists(List<Double> x, List<Double> y) {
+    public Interpolation buildSplineForLists(List<Double> x, List<Double> y) {
         List<Double> t = new ArrayList<>(Collections.nCopies(x.size(), 0.0));
         for (int i = 1; i < x.size(); i++) {
             t.set(i, t.get(i - 1) + dist(i, i - 1, x, y));

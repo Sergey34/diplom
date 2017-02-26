@@ -30,18 +30,18 @@ public class AirfoilStlGenerator {
         FILE_FOOTER.append("\t\t\t],\n\t\tconvexity=10);\n\t}\n}\n\nairfoil(10, 0.2);\n");
     }
 
-    private List<Interpolation> interpolators;
+    private final List<String> beanNames;
+    private final ApplicationContext context;
 
     @Autowired
     public AirfoilStlGenerator(ApplicationContext context, @Value("#{'${interpolation}'.split(', ?')}") List<String> beanNames) {
+        this.context = context;
         if (!allBeanNameExist(context, beanNames)) {
             beanNames.clear();
             beanNames.add("cube");
         }
-        this.interpolators = new ArrayList<>();
-        for (String beanName : beanNames) {
-            this.interpolators.add((Interpolation) context.getBean(beanName));
-        }
+        this.beanNames = beanNames;
+
     }
 
     private boolean allBeanNameExist(ApplicationContext context, List<String> beanNames) {
@@ -68,8 +68,13 @@ public class AirfoilStlGenerator {
             }
         }
         List<String> fileNames = new ArrayList<>();
+        List<Interpolation> interpolators = new ArrayList<>();
+        for (String beanName : beanNames) {
+            interpolators.add((Interpolation) context.getBean(beanName));
+        }
+
         for (Interpolation interpolator : interpolators) {
-            List<Point2D> spline = interpolator.BuildSplineForLists(x, y).applySpline();
+            List<Point2D> spline = interpolator.buildSplineForLists(x, y).applySpline();
 
             String fileName = airfoilName + '_' + interpolator.getName() + "_" + b + ".scad";
             String stlFileName = storageService.getRootLocation() + "/scadFiles/" + fileName;

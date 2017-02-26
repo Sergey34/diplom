@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface Interpolation {
 
-    Interpolation BuildSplineForLists(List<Double> x, List<Double> y);
+    Interpolation buildSplineForLists(List<Double> x, List<Double> y);
 
     List<Point2D> applySpline();
 

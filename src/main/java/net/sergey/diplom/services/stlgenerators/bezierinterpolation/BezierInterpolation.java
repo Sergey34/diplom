@@ -1,14 +1,16 @@
 package net.sergey.diplom.services.stlgenerators.bezierinterpolation;
 
 import net.sergey.diplom.services.stlgenerators.Interpolation;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component(value = "bezier")
+@Scope(value = "prototype")
 public class BezierInterpolation implements Interpolation {
-    public static final double RESOLUTION = 32;
+    private static final double RESOLUTION = 32;
     private static final double EPSILON = 1.0e-5;
     private List<Segment> spline;
 
@@ -96,7 +98,7 @@ public class BezierInterpolation implements Interpolation {
     }
 
     @Override
-    public Interpolation BuildSplineForLists(List<Double> x, List<Double> y) {
+    public Interpolation buildSplineForLists(List<Double> x, List<Double> y) {
         if (x.size() != y.size()) {
             throw new IllegalArgumentException("списки координат долны быть равной длины");
         }
@@ -115,9 +117,9 @@ public class BezierInterpolation implements Interpolation {
         Point2D p = new Point2D();
         List<Point2D> points = new ArrayList<>();
         for (Segment s : spline) {
-            for (int i = 0; i < RESOLUTION; ++i) {
+            for (int i = 0; i <= RESOLUTION; ++i) {
                 s.calc((double) i / RESOLUTION, p);
-//                System.out.println(p.getX() + " " + p.getY());
+                System.out.println(p.getX() + " " + p.getY());
                 points.add(new Point2D(p));
             }
         }
