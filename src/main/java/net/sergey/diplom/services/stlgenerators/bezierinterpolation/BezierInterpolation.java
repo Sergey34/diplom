@@ -119,7 +119,7 @@ public class BezierInterpolation implements Interpolation {
         for (Segment s : spline) {
             for (int i = 0; i <= RESOLUTION; ++i) {
                 s.calc((double) i / RESOLUTION, p);
-                System.out.println(p.getX() + " " + p.getY());
+//                System.out.println(p.getX() + " " + p.getY());
                 points.add(new Point2D(p));
             }
         }
