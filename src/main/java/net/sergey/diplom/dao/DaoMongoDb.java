@@ -6,9 +6,11 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-//@Transactional
-//@Repository
+@Transactional
+@Repository
 public class DaoMongoDb {
     private final MongoOperations mongoOperation;
 
