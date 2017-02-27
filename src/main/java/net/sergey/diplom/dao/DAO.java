@@ -34,7 +34,7 @@ public interface DAO {
 
     List<Airfoil> getAllAirfoils(int startNumber, int count, boolean isLasyLoad);
 
-    List getRoleByUsername(String name);
+    List<Authorities> getRoleByUsername(String name);
 
     void addAuthorities(List<Authorities> authorities);
 

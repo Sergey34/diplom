@@ -22,10 +22,7 @@ import java.util.List;
 @Transactional
 @Repository
 public class DAOImpl implements DAO {
-
-
     private final SessionFactory sessionFactory;
-
 
     @Autowired
     public DAOImpl(SessionFactory sessionFactory) {
