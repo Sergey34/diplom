@@ -156,7 +156,7 @@ public class DAOImpl implements DAO {
 
     @Override
     public List<Authorities> getRoleByUsername(String name) {
-        return sessionFactory.getCurrentSession().createCriteria(Authorities.class).add(Restrictions.eq("username",name)).list();
+        return sessionFactory.getCurrentSession().createCriteria(Authorities.class).add(Restrictions.eq("username", name)).list();
     }
 
     @Override
@@ -170,6 +170,11 @@ public class DAOImpl implements DAO {
     @Override
     public void addAuthority(Authorities authority) {
         sessionFactory.getCurrentSession().merge(authority);
+    }
+
+    @Override
+    public void delete(String id) {
+        sessionFactory.getCurrentSession().delete(getAirfoilById(id));
     }
 
 

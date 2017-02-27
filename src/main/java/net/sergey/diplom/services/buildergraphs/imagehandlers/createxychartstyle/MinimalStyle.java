@@ -1,6 +1,6 @@
-package net.sergey.diplom.services.utils.imagehandlers.createxychartstyle;
+package net.sergey.diplom.services.buildergraphs.imagehandlers.createxychartstyle;
 
-import net.sergey.diplom.services.utils.imagehandlers.StyleXYChart;
+import net.sergey.diplom.services.buildergraphs.imagehandlers.StyleXYChart;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.style.XYStyler;
 

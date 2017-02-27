@@ -1,4 +1,4 @@
-package net.sergey.diplom.services;
+package net.sergey.diplom.services.mainservice;
 
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.airfoil.Airfoil;
@@ -11,15 +11,15 @@ import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.dto.airfoil.AirfoilEdit;
 import net.sergey.diplom.dto.airfoil.Data;
 import net.sergey.diplom.dto.messages.Message;
+import net.sergey.diplom.services.buildergraphs.BuilderGraphs;
+import net.sergey.diplom.services.buildergraphs.imagehandlers.ImageHandler;
+import net.sergey.diplom.services.buildergraphs.imagehandlers.Xy;
+import net.sergey.diplom.services.buildergraphs.imagehandlers.createxychartstyle.MinimalStyle;
 import net.sergey.diplom.services.parser.ParseFileScv;
 import net.sergey.diplom.services.properties.PropertiesHandler;
-import net.sergey.diplom.services.spline.AirfoilStlGenerator;
+import net.sergey.diplom.services.stlgenerators.AirfoilStlGenerator;
 import net.sergey.diplom.services.storageservice.FileSystemStorageService;
-import net.sergey.diplom.services.utils.BuilderGraphs;
 import net.sergey.diplom.services.utils.UtilsLogger;
-import net.sergey.diplom.services.utils.imagehandlers.ImageHandler;
-import net.sergey.diplom.services.utils.imagehandlers.Xy;
-import net.sergey.diplom.services.utils.imagehandlers.createxychartstyle.MinimalStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ import java.util.*;
 import static net.sergey.diplom.dto.messages.Message.*;
 
 @Service
-public class ServiceImpl implements ServiceInt {
+public class ServiceAirfoilTools implements ServiceAirfoil {
     private static final List<String> CHART_NAMES =
             Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
@@ -46,18 +46,20 @@ public class ServiceImpl implements ServiceInt {
     private final PropertiesHandler propertiesHandler;
     private final Converter converter;
     private final FileSystemStorageService storageService;
+    private final AirfoilStlGenerator stlGenerator;
     @Value("${config.parser.path}")
     private String configParserPath;
     @Value(value = "classpath:config.properties")
     private Resource companiesXml;
 
     @Autowired
-    public ServiceImpl(DAO dao, ParseFileScv parseFileScv, PropertiesHandler propertiesHandler, Converter converter, FileSystemStorageService storageService) {
+    public ServiceAirfoilTools(DAO dao, ParseFileScv parseFileScv, PropertiesHandler propertiesHandler, Converter converter, FileSystemStorageService storageService, AirfoilStlGenerator stlGenerator) {
         this.dao = dao;
         this.parseFileScv = parseFileScv;
         this.propertiesHandler = propertiesHandler;
         this.converter = converter;
         this.storageService = storageService;
+        this.stlGenerator = stlGenerator;
     }
 
     @Override
@@ -103,6 +105,13 @@ public class ServiceImpl implements ServiceInt {
         return airfoilById;
     }
 
+    @Override
+    public Message clearAll() {
+        System.gc();
+        storageService.init();
+        return new Message("done",SC_OK);
+    }
+
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {
         if (dao.getMenuItemByUrl(String.valueOf(airfoil.getPrefix().getPrefix())) == null) {
             List<Menu> allMenu = dao.getAllMenu();
@@ -141,18 +150,18 @@ public class ServiceImpl implements ServiceInt {
     public List<Menu> getMenu() {
         List<Menu> allMenu = dao.getAllMenu();
         for (Menu menu : allMenu) {
-            Collections.sort(menu.getMenuItems(), new Comparator<MenuItem>() {
+            List<MenuItem> MenuItemsSorting = new ArrayList<>();
+            MenuItemsSorting.addAll(menu.getMenuItems());
+            Collections.sort(MenuItemsSorting, new Comparator<MenuItem>() {
                 @Override
                 public int compare(MenuItem o1, MenuItem o2) {
                     return o1.getUrlCode().charAt(0) - o2.getUrlCode().charAt(0);
                 }
             });
+            menu.setMenuItems(MenuItemsSorting);
         }
         return allMenu;
     }
-
-
-
 
     @PostConstruct
     public void init() {
@@ -238,14 +247,15 @@ public class ServiceImpl implements ServiceInt {
         if (null == airfoil) {
             return null;
         }
+        List<String> stlFileNames = null;
         try {
             new BuilderGraphs(storageService).draw(airfoil, null, false);
-            new AirfoilStlGenerator().generate(airfoil.getShortName(), airfoil.getCoordView(), storageService);
+            stlFileNames = stlGenerator.generate(airfoil.getShortName(), airfoil.getCoordView(), storageService);
         } catch (Exception e) {
             LOGGER.warn("Ошибка при обработке файлов с координатами", e);
         }
         drawViewAirfoil(airfoil);
-        return converter.airfoilToAirfoilDetail(airfoil, ServiceImpl.CHART_NAMES);
+        return converter.airfoilToAirfoilDetail(airfoil, ServiceAirfoilTools.CHART_NAMES, stlFileNames);
     }
 
     private void drawViewAirfoil(Airfoil airfoil) {
@@ -266,11 +276,7 @@ public class ServiceImpl implements ServiceInt {
         } catch (Exception e) {
             LOGGER.warn("Ошибка при рисовании графиков", e);
         }
-
     }
-
-
-
 
     @Override
     public Message addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
@@ -306,9 +312,7 @@ public class ServiceImpl implements ServiceInt {
         }
         LOGGER.debug("Airfoil успешно добален / обновлен");
         return new Message("Airfoil успешно добален / обновлен", SC_OK);
-
     }
-
 
     @Override
     public Message updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {

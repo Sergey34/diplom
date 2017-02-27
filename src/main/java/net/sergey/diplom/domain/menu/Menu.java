@@ -1,7 +1,6 @@
 package net.sergey.diplom.domain.menu;
 
 
-
 import javax.persistence.*;
 import java.util.List;
 

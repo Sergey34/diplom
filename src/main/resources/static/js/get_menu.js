@@ -1,9 +1,9 @@
 $(document).ready(function () {
     $.ajax({
-        url: rootUrl + "/rest/menu"
+        url: "/rest/menu"
     }).then(function (data) {
-        document.getElementById('addAirf').setAttribute('href', rootUrl + "/adminka/addAirfoil.html");
-        document.getElementById('adm').setAttribute('href', rootUrl + "/adminka/adminka.html");
+        document.getElementById('addAirf').setAttribute('href', "/adminka/addAirfoil.html");
+        document.getElementById('adm').setAttribute('href', "/adminka/adminka.html");
         data.forEach(logArrayElements);
         function logArrayElements(element, index, array) {
             console.log(element.header);
@@ -11,7 +11,7 @@ $(document).ready(function () {
             var list = document.getElementById('list_menu');
             // новый элемент
             var header = document.createElement('p');
-            header.innerText = element.header;
+            header.innerHTML = element.header;
             header.setAttribute('class', 'lead');
             // добавление в конец
             list.appendChild(header);
@@ -28,8 +28,8 @@ $(document).ready(function () {
                 // новый элемент
                 var menu_item = document.createElement('a');
                 menu_item.setAttribute('class', 'list-group-item');
-                menu_item.innerText = element.name;
-                menu_item.setAttribute('href', rootUrl + '/airfoilList.html?prefix=' + element.urlCode);
+                menu_item.innerHTML = element.name;
+                menu_item.setAttribute('href', '/airfoilList.html?prefix=' + element.urlCode);
 
                 list_group.appendChild(menu_item);
             }

@@ -3,10 +3,10 @@ package net.sergey.diplom.services.usermanagerservice;
 import net.sergey.diplom.dao.DAO;
 import net.sergey.diplom.domain.user.Authorities;
 import net.sergey.diplom.domain.user.User;
-import net.sergey.diplom.dto.UserDto;
-import net.sergey.diplom.dto.UserView;
 import net.sergey.diplom.dto.messages.Message;
-import net.sergey.diplom.services.Converter;
+import net.sergey.diplom.dto.user.UserDto;
+import net.sergey.diplom.dto.user.UserView;
+import net.sergey.diplom.services.mainservice.Converter;
 import net.sergey.diplom.services.utils.UtilsLogger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
@@ -26,11 +26,14 @@ import static net.sergey.diplom.dto.messages.Message.SC_OK;
 @Component
 public class UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-    @Autowired
-    private DAO dao;
-    @Autowired
-    private Converter converter;
+    private final DAO dao;
+    private final Converter converter;
 
+    @Autowired
+    public UserService(DAO dao, Converter converter) {
+        this.dao = dao;
+        this.converter = converter;
+    }
 
     public Message addUser(UserView userView) {
         User user = new User();

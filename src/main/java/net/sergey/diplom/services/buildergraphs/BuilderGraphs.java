@@ -1,13 +1,14 @@
-package net.sergey.diplom.services.utils;
+package net.sergey.diplom.services.buildergraphs;
 
 import au.com.bytecode.opencsv.CSVParser;
 import au.com.bytecode.opencsv.CSVWriter;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
+import net.sergey.diplom.services.buildergraphs.imagehandlers.ImageHandler;
+import net.sergey.diplom.services.buildergraphs.imagehandlers.Xy;
+import net.sergey.diplom.services.buildergraphs.imagehandlers.createxychartstyle.SimpleStyle;
 import net.sergey.diplom.services.storageservice.FileSystemStorageService;
-import net.sergey.diplom.services.utils.imagehandlers.ImageHandler;
-import net.sergey.diplom.services.utils.imagehandlers.Xy;
-import net.sergey.diplom.services.utils.imagehandlers.createxychartstyle.SimpleStyle;
+import net.sergey.diplom.services.utils.UtilsLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,9 +25,18 @@ import java.util.concurrent.Executors;
 
 public class BuilderGraphs {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-    private final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private final ExecutorService executorService;
     private final FileSystemStorageService storageService;
     private Map<String, ImageHandler> imageHandler = new ConcurrentHashMap<>();
+
+    {
+        int n = Runtime.getRuntime().availableProcessors();
+        if (n > 5) {
+            executorService = Executors.newFixedThreadPool(5);
+        } else {
+            executorService = Executors.newFixedThreadPool(n);
+        }
+    }
 
     public BuilderGraphs(FileSystemStorageService storageService) {
         this.storageService = storageService;

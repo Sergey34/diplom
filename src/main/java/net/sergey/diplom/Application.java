@@ -22,14 +22,15 @@ import javax.sql.DataSource;
 @SpringBootApplication
 @ComponentScan
 @Configuration
-public class Main extends WebMvcConfigurerAdapter {
+public class Application extends WebMvcConfigurerAdapter {
     public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/").setViewName("login");
     }
 
     @Bean
@@ -50,6 +51,7 @@ public class Main extends WebMvcConfigurerAdapter {
                     .antMatchers("/rest/*", "/**").permitAll().anyRequest()
                     .fullyAuthenticated().and().formLogin().loginPage("/login")
                     .failureUrl("/login?error").permitAll()
+                    .defaultSuccessUrl("/airfoilList.html")
                     .and()
                     .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login")
                     .permitAll();
@@ -60,6 +62,5 @@ public class Main extends WebMvcConfigurerAdapter {
             auth.jdbcAuthentication().dataSource(this.dataSource).passwordEncoder(new BCryptPasswordEncoder());
 //             auth.inMemoryAuthentication().withUser("user").password("user").roles("USER");
         }
-
     }
 }

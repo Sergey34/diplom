@@ -1,4 +1,4 @@
-package net.sergey.diplom.services.parser;
+package net.sergey.diplom.services.parser.consts;
 
 import net.sergey.diplom.services.properties.PropertiesHandler;
 import net.sergey.diplom.services.utils.UtilsLogger;

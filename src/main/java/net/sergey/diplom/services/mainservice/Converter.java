@@ -1,14 +1,14 @@
-package net.sergey.diplom.services;
+package net.sergey.diplom.services.mainservice;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.domain.user.User;
-import net.sergey.diplom.dto.UserDto;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.dto.airfoil.CoordinatesDto;
+import net.sergey.diplom.dto.user.UserDto;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class Converter {
         return airfoilDTO;
     }
 
-    public AirfoilDetail airfoilToAirfoilDetail(Airfoil airfoil, List<String> chartNames) {
+    public AirfoilDetail airfoilToAirfoilDetail(Airfoil airfoil, List<String> chartNames, List<String> stlFileNames) {
         AirfoilDetail airfoilDetail = new AirfoilDetail();
         airfoilDetail.setName(airfoil.getName());
         airfoilDetail.setDescription(airfoil.getDescription());
@@ -51,7 +51,13 @@ public class Converter {
         }
         airfoilDetail.setImgCsvName(imgCsvName);
 
-        airfoilDetail.setStlFilePath("/files/scadFiles/" + airfoil.getShortName() + '_' + 100 + ".scad");
+        airfoilDetail.setStlFilePath(new ArrayList<String>());
+        if (stlFileNames != null) {
+            for (String stlFileName : stlFileNames) {
+                airfoilDetail.addStlFilePath("/files/scadFiles/" + stlFileName);
+            }
+        }
+
         return airfoilDetail;
     }
 

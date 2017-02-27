@@ -1,6 +1,6 @@
 package net.sergey.diplom.controllers;
 
-import net.sergey.diplom.services.EventService;
+import net.sergey.diplom.services.mainservice.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;

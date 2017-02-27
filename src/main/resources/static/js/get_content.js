@@ -14,7 +14,7 @@ function getContent() {
     currentPrefix = prefix;
     $(document).ready(function () {
         $.ajax({
-            url: rootUrl + "/rest/airfoilsDto/" + prefix + "/" + no * 20 + "/20"
+            url: "/rest/airfoilsDto/" + prefix + "/" + no * 20 + "/20"
         }).then(function (data) {
             createCursore(no + 1);
             console.log(data);
@@ -55,7 +55,7 @@ function getContent() {
                 var h4 = document.createElement('h4');
                 var name_detail_info_link = document.createElement('a');
                 name_detail_info_link.setAttribute('href', 'detailInfo.html?airfoilId=' + element.shortName);
-                name_detail_info_link.innerText = element.shortName;
+                name_detail_info_link.innerHTML = element.shortName;
                 h4.appendChild(name_detail_info_link);
                 caption.appendChild(h4);
                 var description = document.createElement('div');
@@ -86,7 +86,7 @@ function createCursore(no) {
     // var prefix = 'A';
     $(document).ready(function () {
         $.ajax({
-            url: rootUrl + "/rest/countAirfoil/" + prefix
+            url: "/rest/countAirfoil/" + prefix
         }).then(function (data) {
             console.log(data);
             var countItem = Math.ceil(data / 20.0);
@@ -96,7 +96,7 @@ function createCursore(no) {
             var item = document.createElement('li');
             var link = document.createElement('a');
 
-            link.innerText = "«";
+            link.innerHTML = "«";
 
             if (no == 1) {
                 item.setAttribute("class", "disabled");

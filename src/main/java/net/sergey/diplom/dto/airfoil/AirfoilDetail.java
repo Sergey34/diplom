@@ -4,7 +4,7 @@ import java.util.List;
 
 public class AirfoilDetail extends AirfoilDTO {
     private List<String> imgCsvName;
-    private String stlFilePath;
+    private List<String> stlFilePath;
     private List<CoordinatesDto> coordinates;
     private String coordView;
 
@@ -36,11 +36,15 @@ public class AirfoilDetail extends AirfoilDTO {
         this.coordView = coordView;
     }
 
-    public String getStlFilePath() {
+    public List<String> getStlFilePath() {
         return stlFilePath;
     }
 
-    public void setStlFilePath(String stlFilePath) {
+    public void setStlFilePath(List<String> stlFilePath) {
         this.stlFilePath = stlFilePath;
+    }
+
+    public void addStlFilePath(String filePath) {
+        stlFilePath.add(filePath);
     }
 }

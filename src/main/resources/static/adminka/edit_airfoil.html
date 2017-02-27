@@ -17,7 +17,6 @@
     <script src="../js/get_content.js"></script>
     <script src="../js/get_params_url.js"></script>
     <script src="../js/get_detail_info.js"></script>
-    <script src="../js/getContextPath.js"></script>
     <script src='../js/tabular-input.min.js'></script>
     <link type='text/css' rel='stylesheet' href='../css/tabular-input.css'/>
     <link rel="stylesheet" type="text/css" href="../css/css_login.css">
@@ -46,10 +45,10 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav" id="navbar-nav">
-                <li><a href="about.html" id="about">About</a></li>
+                <li><a href="/about.html" id="about">About</a></li>
             </ul>
         </div>
-        <script>             document.getElementById('about').setAttribute('href', rootUrl + "/about.html");         </script>
+
         <!-- /.navbar-collapse -->
     </div>
     <!-- /.container -->
@@ -124,7 +123,7 @@
 
 
                             <script>
-                                document.getElementById('updateAirfoil').setAttribute('action', rootUrl + "/rest/write/updateAirfoil");
+                                document.getElementById('updateAirfoil').setAttribute('action', "/rest/write/updateAirfoil");
                                 document.getElementById("saveWab").onclick = updateWab;
                                 getDetailInfo(true);
                             </script>

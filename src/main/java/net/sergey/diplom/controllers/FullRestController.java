@@ -3,10 +3,10 @@ package net.sergey.diplom.controllers;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.Authorities;
-import net.sergey.diplom.dto.UserDto;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
-import net.sergey.diplom.services.ServiceInt;
+import net.sergey.diplom.dto.user.UserDto;
+import net.sergey.diplom.services.mainservice.ServiceAirfoil;
 import net.sergey.diplom.services.usermanagerservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +18,12 @@ import java.util.List;
 @RequestMapping(value = "/rest")
 @RestController
 public class FullRestController {
-    private final ServiceInt service;
+    private final ServiceAirfoil service;
     @Autowired
     private UserService userService;
 
     @Autowired
-    public FullRestController(ServiceInt service) {
+    public FullRestController(ServiceAirfoil service) {
         this.service = service;
     }
 

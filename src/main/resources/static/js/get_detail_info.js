@@ -7,11 +7,11 @@ function getDetailInfo(forEdit) {
         console.log('id = ' + id);
         $(document).ready(function () {
             $.ajax({
-                url: rootUrl + "/rest/airfoilDto/" + id
+                url: "/rest/airfoilDto/" + id
             }).then(function (data) {
                 console.log(data);
                 if (data == '') {
-                    document.getElementById('airfoilDetailInfo').innerText = "Airfoil не найден";
+                    document.getElementById('airfoilDetailInfo').innerHTML = "Airfoil не найден";
                 } else {
                     if (forEdit) {
                         fillEditableContentDetailInfo(data);
@@ -30,10 +30,23 @@ function fillContentDetailInfo(data) {
     edit.setAttribute("href", "adminka/edit_airfoil.html?airfoilId=" + id);
 
     let name = document.getElementById('airfoil_name');
-    name.innerText = data.name;
+    name.innerHTML = data.name;
 
-    let downloadStl = document.getElementById('downloadStl');
-    downloadStl.setAttribute("href", data.stlFilePath);
+    //<p class="pull-left"><a id="downloadStl" class="list-group-item" href="">Скачать STL</a></p>
+    let files = data.stlFilePath;
+    for (let i = 0; i < files.length; i++) {
+        let p = document.createElement('p');
+        p.setAttribute("class", "pull-left");
+        let a = document.createElement('a');
+        a.setAttribute("class", "list-group-item");
+        a.setAttribute("href", files[i]);
+        a.innerHTML = "Скачать STL";
+        p.appendChild(a);
+        document.getElementById("bottoms").appendChild(p);
+    }
+
+    // let downloadStl = document.getElementById('downloadStl');
+    // downloadStl.setAttribute("href", data.stlFilePath);
 
     let image = document.getElementById('imgDetail');
     image.setAttribute("src", data.image);
@@ -42,7 +55,7 @@ function fillContentDetailInfo(data) {
     description.innerHTML = data.description;
 
     let Polars_for = document.getElementById('Polars_for');
-    Polars_for.innerText = Polars_for.textContent + data.name;
+    Polars_for.innerHTML = Polars_for.textContent + data.name;
 
     let coordinates = data.coordinates;
 
@@ -89,7 +102,7 @@ function fillContentDetailInfo(data) {
         td = document.createElement('td');
         let link_file = document.createElement('a');
         link_file.id = "link_file" + j;
-        link_file.innerText = coordinates[i].fileName;
+        link_file.innerHTML = coordinates[i].fileName;
         link_file.setAttribute('href', coordinates[i].filePath);
         td.appendChild(link_file);
         tr.appendChild(td);
@@ -185,13 +198,16 @@ function refreshiframe() {
         a1.setAttribute("href", "#carousel-example-generic");
         a1.setAttribute("class", "left carousel-control");
         a1.setAttribute("data-slide", "prev");
+        a1.setAttribute("style", "background:none !important");
         a1.id = "a1";
+
 
         let a2 = document.createElement("a");
         a2.innerHTML = "<span class='glyphicon glyphicon-chevron-right'></span>";
         a2.setAttribute("href", "#carousel-example-generic");
         a2.setAttribute("class", "right carousel-control");
         a2.setAttribute("data-slide", "next");
+        a2.setAttribute("style", "background:none !important");
         a2.id = "a2";
 
         carousel_example_generic.appendChild(a1);
@@ -202,7 +218,7 @@ function refreshiframe() {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: rootUrl + "/rest/updateGraf/" + id,
+            url: "/rest/updateGraf/" + id,
             data: JSON.stringify(checkeds),
             dataType: 'json',
             timeout: 600000,
@@ -343,7 +359,7 @@ function fillEditableContentDetailInfoEditableTable(data) {
 function createLabel(id, value, number, valueInput) {
     let label = document.createElement('label');
     label.id = id + number;
-    label.innerText = value;
+    label.innerHTML = value;
     let input = document.createElement('input');
     input.id = 'input_' + id + number;
     input.setAttribute('type', 'text');
@@ -434,7 +450,7 @@ function updateWab() {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: rootUrl + "/rest/write/updateAirfoilStringCsv",
+            url: "/rest/write/updateAirfoilStringCsv",
             data: JSON.stringify(data),
             dataType: 'json',
             timeout: 600000

@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $.ajax({
-        url: rootUrl + "/rest/user"
+        url: "/rest/user"
     }).then(function (data) {
         console.log(data);
         let navbar_nav = document.getElementById('navbar-nav');
@@ -9,8 +9,8 @@ $(document).ready(function () {
         if (data == '') {
             console.log('гость');
 
-            button_login.setAttribute('href', rootUrl + '/login');
-            button_login.innerText = "login";
+            button_login.setAttribute('href', '/login');
+            button_login.innerHTML = "login";
         } else {
             console.log(data);
             let navbar_nav_sign = document.getElementById('navbar-nav');
@@ -18,13 +18,13 @@ $(document).ready(function () {
             //<p class="navbar-text">Signed in as Mark Otto</p>
             let signed_in = document.createElement('p');
             signed_in.setAttribute('class', 'navbar-text');
-            signed_in.innerText = "Signed in as " + data.userName;
+            signed_in.innerHTML = "Signed in as " + data.userName;
             nav_item_sign.appendChild(signed_in);
             navbar_nav_sign.appendChild(nav_item_sign);
 
 
-            button_login.setAttribute('href', rootUrl + '/logout');
-            button_login.innerText = "Logout";
+            button_login.setAttribute('href', '/logout');
+            button_login.innerHTML = "Logout";
         }
         nav_item.appendChild(button_login);
         navbar_nav.appendChild(nav_item);
