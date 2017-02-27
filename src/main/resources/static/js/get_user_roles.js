@@ -7,7 +7,7 @@ $(document).ready(function () {
         data.forEach(logArrayElements);
         function logArrayElements(element, index, array) {
             var opt = document.createElement('option');
-            opt.innerHTML = element.role;
+            opt.innerHTML = element.authority;
             select.appendChild(opt);
         }
     });
