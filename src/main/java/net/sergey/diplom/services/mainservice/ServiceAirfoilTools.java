@@ -101,7 +101,8 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
-        List<Airfoil> airfoilsByPrefix = dao.getAirfoilsByPrefix(prefix, startNumber, count, false);
+//        List<Airfoil> airfoilsByPrefix = dao.getAirfoilsByPrefix(prefix, startNumber, count, false);
+        List<Airfoil> airfoilsByPrefix = daoAirfoil.findByPrefixOrderByShortName(new Prefix(prefix), new PageRequest(startNumber, count));
         for (Airfoil airfoil : airfoilsByPrefix) {
             createDatFile(airfoil);
         }
@@ -175,9 +176,6 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @PostConstruct
     public void init() {
-        //// TODO: 2/28/2017 test
-        List<Airfoil> a = daoAirfoil.findByPrefixOrderByShortName(new Prefix('A'), new PageRequest(0, 20));
-        System.out.println(a);
         try {
             if (!new File(configParserPath).exists()) {
                 propertiesHandler.load(companiesXml.getInputStream());
@@ -191,8 +189,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public List<AirfoilDTO> getAirfoilsDtoByPrefix(char prefix, int startNumber, int count) {
-//        List<Airfoil> airfoilsByPrefix = dao.getAirfoilsByPrefix(prefix, startNumber, count, true);
-        List<Airfoil> airfoilsByPrefix = daoAirfoil.findByPrefixOrderByShortName(new Prefix(prefix), new PageRequest(0, 20));
+        List<Airfoil> airfoilsByPrefix = daoAirfoil.findByPrefixOrderByShortName(new Prefix(prefix), new PageRequest(startNumber, count));
         for (Airfoil airfoil : airfoilsByPrefix) {
             drawViewAirfoil(airfoil);
             createDatFile(airfoil);

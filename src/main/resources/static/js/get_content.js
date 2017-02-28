@@ -14,7 +14,7 @@ function getContent() {
     currentPrefix = prefix;
     $(document).ready(function () {
         $.ajax({
-            url: "/rest/airfoilsDto/" + prefix + "/" + no * 20 + "/20"
+            url: "/rest/airfoilsDto/" + prefix + "/" + no + "/20"
         }).then(function (data) {
             createCursore(no + 1);
             console.log(data);
@@ -113,7 +113,7 @@ function createCursore(no) {
                 item.setAttribute("class", "");
 
                 link = document.createElement('a');
-                link.setAttribute("href", "airfoilList.html?prefix=" + prefix + '&no=' + i);
+                link.setAttribute("href", "airfoilList.html?prefix=" + prefix + '&no=' + i-1);
 
                 if (no == i) {
                     item.setAttribute("class", "active");

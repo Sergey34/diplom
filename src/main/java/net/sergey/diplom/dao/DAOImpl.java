@@ -50,51 +50,9 @@ public class DAOImpl implements DAO {
         return airfoils;
     }
 
-    /*@Override
-    public List<Menu> getAllMenu() {
-        @SuppressWarnings("unchecked")
-        List<Menu> menus = sessionFactory.getCurrentSession().createCriteria(Menu.class).list();
-        for (Menu menu : menus) {
-            if (menu != null) {
-                Hibernate.initialize(menu.getMenuItems());
-            }
-        }
-        return menus;
-    }*/
-
-  /*  @Override
-    public void addUser(User user) {
-        save(user);
-    }
-
-    @Override
-    public User getUserByName(String name) {
-        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(User.class)
-                .add(Restrictions.eq("userName", name));
-        @SuppressWarnings("unchecked")
-        User user = (User) criteria.uniqueResult();
-        if (user == null) {
-            return null;
-        }
-        return user;
-    }*/
-
     private <T> void save(T object) {
         sessionFactory.getCurrentSession().saveOrUpdate(object);
     }
-
-   /* @Override
-    public void addMenus(List<Menu> menus) {
-        for (Menu menu : menus) {
-            save(menu);
-        }
-    }*/
-
-   /* @Override
-    @SuppressWarnings("unchecked")
-    public List<Authorities> getAllUserRoles() {
-        return sessionFactory.getCurrentSession().createCriteria(Authorities.class).list();
-    }*/
 
     @Override
     public void addAirfoils(List<Airfoil> airfoils) {
@@ -128,12 +86,6 @@ public class DAOImpl implements DAO {
                 .add(Example.create(prefixTemplate)).list().size();
     }
 
-  /*  @Override
-    public MenuItem getMenuItemByUrl(String prefix) {
-        return (MenuItem) sessionFactory.getCurrentSession().createCriteria(MenuItem.class).
-                add(Restrictions.eq("urlCode", prefix)).uniqueResult();
-    }*/
-
 
     @Override
     public List<Airfoil> getAllAirfoils(int startNumber, int count, boolean isLazyLoad) {
@@ -149,24 +101,6 @@ public class DAOImpl implements DAO {
         return airfoils;
     }
 
-    /*  @Override
-      public List<Authorities> getRoleByUsername(String name) {
-          return sessionFactory.getCurrentSession().createCriteria(Authorities.class).add(Restrictions.eq("username", name)).list();
-      }
-
-      @Override
-      public void addAuthorities(List<Authorities> authorities) {
-          for (Authorities authority : authorities) {
-              sessionFactory.getCurrentSession().merge(authority);
-          }
-
-      }
-
-      @Override
-      public void addAuthority(Authorities authority) {
-          sessionFactory.getCurrentSession().merge(authority);
-      }
-  */
     @Override
     public void delete(String id) {
         sessionFactory.getCurrentSession().delete(getAirfoilById(id));

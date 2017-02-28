@@ -12,6 +12,7 @@ import java.util.List;
 @Repository
 @Transactional
 public interface DaoAirfoil extends CrudRepository<Airfoil, String> {
+
     List<Airfoil> findByPrefixOrderByShortName(Prefix prefix, Pageable pageable);
 
     Airfoil findOneByShortName(String shortName);
