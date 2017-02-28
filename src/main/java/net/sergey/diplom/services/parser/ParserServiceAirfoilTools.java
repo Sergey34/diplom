@@ -1,6 +1,7 @@
 package net.sergey.diplom.services.parser;
 
 import net.sergey.diplom.dao.DAO;
+import net.sergey.diplom.dao.MySql.menu.DaoMenu;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.dto.messages.Message;
@@ -40,6 +41,7 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
     private final PropertiesHandler propertiesHandler;
     private final StringHandler stringHandler;
     private final ParserMenu parseMenu;
+    private final DaoMenu daoMenu;
     @Value(value = "classpath:config.properties")
     private Resource companiesXml;
     @Value("${config.parser.path}")
@@ -49,13 +51,14 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
     @Autowired
     public ParserServiceAirfoilTools(ApplicationContext applicationContext, DAO dao, Constant constants,
                                      PropertiesHandler propertiesHandler, StringHandler stringHandler,
-                                     ParserMenu parseMenu) {
+                                     ParserMenu parseMenu, DaoMenu daoMenu) {
         this.applicationContext = applicationContext;
         this.dao = dao;
         this.constants = constants;
         this.propertiesHandler = propertiesHandler;
         this.stringHandler = stringHandler;
         this.parseMenu = parseMenu;
+        this.daoMenu = daoMenu;
     }
 
     private void parse() throws Exception {
@@ -71,12 +74,12 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
         }
         constants.initConst();
         List<Menu> menu = parseMenu.parse(getMenuItemsInDB());
-        dao.addMenus(menu);
+        daoMenu.save(menu);
         getAirfoilsByMenuList(menu.get(0).getMenuItems());
     }
 
     private Collection<MenuItem> getMenuItemsInDB() {
-        List<Menu> allMenu = dao.getAllMenu();
+        List<Menu> allMenu = daoMenu.findAll();
         for (Menu menu : allMenu) {
             if (menu.getHeader().equals(propertiesHandler.getProperty("menu_Header"))) {
                 return menu.getMenuItems();

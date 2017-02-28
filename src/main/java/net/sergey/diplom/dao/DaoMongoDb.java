@@ -41,29 +41,29 @@ public class DaoMongoDb implements DAO {
         return mongoOperation.find(query, Airfoil.class);
     }
 
-    @Override
+
     public List<Menu> getAllMenu() {
         return mongoOperation.findAll(Menu.class);
     }
 
-    @Override
+    //    @Override
     public void addUser(User user) {
         mongoOperation.save(user);
     }
 
-    @Override
+    //    @Override
     public User getUserByName(String name) {
         return mongoOperation.findOne(new Query(Criteria.where("username").is(name)), User.class);
     }
 
-    @Override
+
     public void addMenus(List<Menu> menus) {
         for (Menu menu : menus) {
             mongoOperation.save(menu);
         }
     }
 
-    @Override
+    //    @Override
     public List<Authorities> getAllUserRoles() {
         return mongoOperation.findAll(Authorities.class);
     }
@@ -90,9 +90,8 @@ public class DaoMongoDb implements DAO {
         return (int) mongoOperation.count(new Query(Criteria.where("prefix").is(new Prefix(prefix))), Airfoil.class);
     }
 
-    @Override
-    public MenuItem getMenuItemByUrl(String prefix) {
 
+    public MenuItem getMenuItemByUrl(String prefix) {
         return mongoOperation.findOne(new Query(Criteria.where("urlCode").is(prefix)), MenuItem.class);
     }
 
@@ -101,19 +100,19 @@ public class DaoMongoDb implements DAO {
         return null;
     }
 
-    @Override
+    //    @Override
     public List<Authorities> getRoleByUsername(String name) {
         return mongoOperation.find(new Query(Criteria.where("username").is(name)), Authorities.class);
     }
 
-    @Override
+    //    @Override
     public void addAuthorities(List<Authorities> authorities) {
         for (Authorities authority : authorities) {
             addAuthority(authority);
         }
     }
 
-    @Override
+    //    @Override
     public void addAuthority(Authorities authority) {
         mongoOperation.save(authority);
     }

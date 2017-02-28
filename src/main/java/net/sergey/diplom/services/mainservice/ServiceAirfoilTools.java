@@ -1,6 +1,9 @@
 package net.sergey.diplom.services.mainservice;
 
 import net.sergey.diplom.dao.DAO;
+import net.sergey.diplom.dao.MySql.airfoil.DaoAirfoil;
+import net.sergey.diplom.dao.MySql.menu.DaoMenu;
+import net.sergey.diplom.dao.MySql.menu.DaoMenuItem;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
@@ -25,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,19 +51,25 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     private final Converter converter;
     private final FileSystemStorageService storageService;
     private final AirfoilStlGenerator stlGenerator;
+    private final DaoMenu daoMenu;
+    private final DaoMenuItem daoMenuItem;
+    private final DaoAirfoil daoAirfoil;
     @Value("${config.parser.path}")
     private String configParserPath;
     @Value(value = "classpath:config.properties")
     private Resource companiesXml;
 
     @Autowired
-    public ServiceAirfoilTools(DAO dao, ParseFileScv parseFileScv, PropertiesHandler propertiesHandler, Converter converter, FileSystemStorageService storageService, AirfoilStlGenerator stlGenerator) {
+    public ServiceAirfoilTools(DAO dao, ParseFileScv parseFileScv, PropertiesHandler propertiesHandler, Converter converter, FileSystemStorageService storageService, AirfoilStlGenerator stlGenerator, DaoMenu daoMenu, DaoMenuItem daoMenuItem, DaoAirfoil daoAirfoil) {
         this.dao = dao;
         this.parseFileScv = parseFileScv;
         this.propertiesHandler = propertiesHandler;
         this.converter = converter;
         this.storageService = storageService;
         this.stlGenerator = stlGenerator;
+        this.daoMenu = daoMenu;
+        this.daoMenuItem = daoMenuItem;
+        this.daoAirfoil = daoAirfoil;
     }
 
     @Override
@@ -109,12 +119,12 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     public Message clearAll() {
         System.gc();
         storageService.init();
-        return new Message("done",SC_OK);
+        return new Message("done", SC_OK);
     }
 
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {
-        if (dao.getMenuItemByUrl(String.valueOf(airfoil.getPrefix().getPrefix())) == null) {
-            List<Menu> allMenu = dao.getAllMenu();
+        if (daoMenuItem.findOneByUrlCode(String.valueOf(airfoil.getPrefix().getPrefix())) == null) {
+            List<Menu> allMenu = daoMenu.findAll();
             for (Menu menu : allMenu) {
                 if (menu.getHeader().equals(propertiesHandler.getProperty("menu_Header"))) {
                     MenuItem menuItem = converter.prefixToMenuItem(airfoil.getPrefix());
@@ -122,7 +132,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
                     break;
                 }
             }
-            dao.addMenus(allMenu);
+            daoMenu.save(allMenu);
         }
     }
 
@@ -148,7 +158,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public List<Menu> getMenu() {
-        List<Menu> allMenu = dao.getAllMenu();
+        List<Menu> allMenu = daoMenu.findAll();
         for (Menu menu : allMenu) {
             List<MenuItem> MenuItemsSorting = new ArrayList<>();
             MenuItemsSorting.addAll(menu.getMenuItems());
@@ -165,6 +175,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @PostConstruct
     public void init() {
+        //// TODO: 2/28/2017 test
+        List<Airfoil> a = daoAirfoil.findByPrefixOrderByShortName(new Prefix('A'), new PageRequest(0, 20));
+        System.out.println(a);
         try {
             if (!new File(configParserPath).exists()) {
                 propertiesHandler.load(companiesXml.getInputStream());
@@ -178,7 +191,8 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public List<AirfoilDTO> getAirfoilsDtoByPrefix(char prefix, int startNumber, int count) {
-        List<Airfoil> airfoilsByPrefix = dao.getAirfoilsByPrefix(prefix, startNumber, count, true);
+//        List<Airfoil> airfoilsByPrefix = dao.getAirfoilsByPrefix(prefix, startNumber, count, true);
+        List<Airfoil> airfoilsByPrefix = daoAirfoil.findByPrefixOrderByShortName(new Prefix(prefix), new PageRequest(0, 20));
         for (Airfoil airfoil : airfoilsByPrefix) {
             drawViewAirfoil(airfoil);
             createDatFile(airfoil);
@@ -243,7 +257,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public AirfoilDetail getDetailInfo(String airfoilId) {
-        Airfoil airfoil = dao.getAirfoilById(airfoilId);
+        Airfoil airfoil = daoAirfoil.findOne(airfoilId);
         if (null == airfoil) {
             return null;
         }

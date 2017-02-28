@@ -1,10 +1,6 @@
 package net.sergey.diplom.dao;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.domain.menu.Menu;
-import net.sergey.diplom.domain.menu.MenuItem;
-import net.sergey.diplom.domain.user.Authorities;
-import net.sergey.diplom.domain.user.User;
 
 import java.util.List;
 
@@ -12,15 +8,15 @@ public interface DAO {
 
     List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count, boolean isLazyLoad);
 
-    List<Menu> getAllMenu();
+//    List<Menu> getAllMenu();
 
-    void addUser(User user);
+//    void addUser(User user);
 
-    User getUserByName(String name);
+//    User getUserByName(String name);
 
-    void addMenus(List<Menu> menus);
+//    void addMenus(List<Menu> menus);
 
-    List<Authorities> getAllUserRoles();
+//    List<Authorities> getAllUserRoles();
 
     void addAirfoils(List<Airfoil> airfoils);
 
@@ -30,15 +26,15 @@ public interface DAO {
 
     int getCountAirfoilByPrefix(char prefix);
 
-    MenuItem getMenuItemByUrl(String prefix);
+//    MenuItem getMenuItemByUrl(String prefix);
 
     List<Airfoil> getAllAirfoils(int startNumber, int count, boolean isLasyLoad);
 
-    List<Authorities> getRoleByUsername(String name);
+//    List<Authorities> getRoleByUsername(String name);
 
-    void addAuthorities(List<Authorities> authorities);
+//    void addAuthorities(List<Authorities> authorities);
 
-    void addAuthority(Authorities authorities);
+//    void addAuthority(Authorities authorities);
 
     void delete(String id);
 }
