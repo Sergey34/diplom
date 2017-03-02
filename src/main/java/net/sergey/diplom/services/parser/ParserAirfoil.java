@@ -147,7 +147,8 @@ class ParserAirfoil implements Callable<Void> {
                     Coordinates coordinateItem = new Coordinates(parseFileScv.csvToString(urlFile.openStream()), fileName + constants.FILE_TYPE);
                     coordinateItem.setRenolgs(reynolds.text());
                     coordinateItem.setNCrit(nCrit.text());
-                    coordinateItem.setMaxClCd(maxClCd.text());
+                    coordinateItem.setMaxClCd(stringHandler.createStringByPattern(maxClCd.text(), constants.GET_MAXCLCD_PATTERN));
+                    coordinateItem.setAlpha(stringHandler.createStringByPattern(maxClCd.text(), constants.GET_ALPHA_PATTERN));
                     coordinates.add(coordinateItem);
                 }
             }

@@ -21,6 +21,8 @@ public class Coordinates {
     private String nCrit;
     @Column(name = "maxClCd")
     private String maxClCd;
+    @Column(name = "alpha")
+    private String alpha;
 
 
     public Coordinates(String coordinatesJson, String fileNameId) {
@@ -93,5 +95,13 @@ public class Coordinates {
 
     public void setNCrit(String NCrit) {
         this.nCrit = NCrit;
+    }
+
+    public String getAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(String alpha) {
+        this.alpha = alpha;
     }
 }
