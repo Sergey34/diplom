@@ -1,8 +1,7 @@
 package net.sergey.diplom.services.usermanagerservice;
 
-import net.sergey.diplom.dao.DAO;
-import net.sergey.diplom.dao.MySql.user.DaoAuthorities;
-import net.sergey.diplom.dao.MySql.user.DaoUser;
+import net.sergey.diplom.dao.user.DaoAuthorities;
+import net.sergey.diplom.dao.user.DaoUser;
 import net.sergey.diplom.domain.user.Authorities;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.dto.messages.Message;
@@ -28,13 +27,12 @@ import static net.sergey.diplom.dto.messages.Message.SC_OK;
 @Component
 public class UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-    private final DAO dao;
     private final Converter converter;
     private final DaoUser daoUser;
     private final DaoAuthorities daoAuthorities;
+
     @Autowired
-    public UserService(DAO dao, Converter converter, DaoUser daoUser, DaoAuthorities daoAuthorities) {
-        this.dao = dao;
+    public UserService(Converter converter, DaoUser daoUser, DaoAuthorities daoAuthorities) {
         this.converter = converter;
         this.daoUser = daoUser;
         this.daoAuthorities = daoAuthorities;

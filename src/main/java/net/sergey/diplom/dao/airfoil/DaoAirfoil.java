@@ -1,4 +1,4 @@
-package net.sergey.diplom.dao.MySql.airfoil;
+package net.sergey.diplom.dao.airfoil;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Prefix;
@@ -19,4 +19,7 @@ public interface DaoAirfoil extends CrudRepository<Airfoil, String> {
 
     int countByPrefix(Prefix prefix);
 
+    List<Airfoil> findAll(Pageable pageRequest);
+//    @Override
+//    List<Airfoil> findAll();
 }

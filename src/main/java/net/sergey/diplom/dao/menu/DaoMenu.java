@@ -1,4 +1,4 @@
-package net.sergey.diplom.dao.MySql.menu;
+package net.sergey.diplom.dao.menu;
 
 import net.sergey.diplom.domain.menu.Menu;
 import org.springframework.data.repository.CrudRepository;

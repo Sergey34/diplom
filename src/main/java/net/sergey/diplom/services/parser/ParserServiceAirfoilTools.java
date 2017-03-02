@@ -1,7 +1,7 @@
 package net.sergey.diplom.services.parser;
 
-import net.sergey.diplom.dao.DAO;
-import net.sergey.diplom.dao.MySql.menu.DaoMenu;
+
+import net.sergey.diplom.dao.menu.DaoMenu;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.dto.messages.Message;
@@ -37,7 +37,7 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
     private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private final Constant constants;
     private final ApplicationContext applicationContext;
-    private final DAO dao;
+
     private final PropertiesHandler propertiesHandler;
     private final StringHandler stringHandler;
     private final ParserMenu parseMenu;
@@ -48,12 +48,12 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
     private String configParserPath;
     private boolean parsingIsStarting = false;
 
+
     @Autowired
-    public ParserServiceAirfoilTools(ApplicationContext applicationContext, DAO dao, Constant constants,
+    public ParserServiceAirfoilTools(ApplicationContext applicationContext, Constant constants,
                                      PropertiesHandler propertiesHandler, StringHandler stringHandler,
                                      ParserMenu parseMenu, DaoMenu daoMenu) {
         this.applicationContext = applicationContext;
-        this.dao = dao;
         this.constants = constants;
         this.propertiesHandler = propertiesHandler;
         this.stringHandler = stringHandler;

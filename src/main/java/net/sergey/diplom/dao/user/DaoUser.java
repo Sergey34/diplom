@@ -1,4 +1,4 @@
-package net.sergey.diplom.dao.MySql.user;
+package net.sergey.diplom.dao.user;
 
 import net.sergey.diplom.domain.user.User;
 import org.springframework.data.repository.CrudRepository;

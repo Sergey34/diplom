@@ -113,7 +113,7 @@ function createCursore(no) {
                 item.setAttribute("class", "");
 
                 link = document.createElement('a');
-                link.setAttribute("href", "airfoilList.html?prefix=" + prefix + '&no=' + i-1);
+                link.setAttribute("href", "airfoilList.html?prefix=" + prefix + '&no=' + i);
 
                 if (no == i) {
                     item.setAttribute("class", "active");

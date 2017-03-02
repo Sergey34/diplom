@@ -1,9 +1,8 @@
 package net.sergey.diplom.services.mainservice;
 
-import net.sergey.diplom.dao.DAO;
-import net.sergey.diplom.dao.MySql.airfoil.DaoAirfoil;
-import net.sergey.diplom.dao.MySql.menu.DaoMenu;
-import net.sergey.diplom.dao.MySql.menu.DaoMenuItem;
+import net.sergey.diplom.dao.airfoil.DaoAirfoil;
+import net.sergey.diplom.dao.menu.DaoMenu;
+import net.sergey.diplom.dao.menu.DaoMenuItem;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
@@ -45,7 +44,6 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     private static final List<String> CHART_NAMES =
             Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
-    private final DAO dao;
     private final ParseFileScv parseFileScv;
     private final PropertiesHandler propertiesHandler;
     private final Converter converter;
@@ -60,8 +58,10 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     private Resource companiesXml;
 
     @Autowired
-    public ServiceAirfoilTools(DAO dao, ParseFileScv parseFileScv, PropertiesHandler propertiesHandler, Converter converter, FileSystemStorageService storageService, AirfoilStlGenerator stlGenerator, DaoMenu daoMenu, DaoMenuItem daoMenuItem, DaoAirfoil daoAirfoil) {
-        this.dao = dao;
+    public ServiceAirfoilTools(ParseFileScv parseFileScv, PropertiesHandler propertiesHandler,
+                               Converter converter, FileSystemStorageService storageService,
+                               AirfoilStlGenerator stlGenerator, DaoMenu daoMenu,
+                               DaoMenuItem daoMenuItem, DaoAirfoil daoAirfoil) {
         this.parseFileScv = parseFileScv;
         this.propertiesHandler = propertiesHandler;
         this.converter = converter;
@@ -81,7 +81,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         addMenuItemForNewAirfoil(airfoil);
         try {
             storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
-            dao.addAirfoil(airfoil);
+            daoAirfoil.save(airfoil);
         } catch (Exception e) {
             LOGGER.warn("Ошибка при обновлении airfoil ", e);
             return new Message("Ошибка при добавлении в базу нового airfoil", SC_CONFLICT);
@@ -92,7 +92,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public List<AirfoilDTO> getAllAirfoilDto(int startNumber, int count) {
-        List<Airfoil> allAirfoils = dao.getAllAirfoils(startNumber, count, true);
+        List<Airfoil> allAirfoils = daoAirfoil.findAll(new PageRequest(startNumber, count));
         for (Airfoil airfoil : allAirfoils) {
             createDatFile(airfoil);
         }
@@ -101,7 +101,6 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
-//        List<Airfoil> airfoilsByPrefix = dao.getAirfoilsByPrefix(prefix, startNumber, count, false);
         List<Airfoil> airfoilsByPrefix = daoAirfoil.findByPrefixOrderByShortName(new Prefix(prefix), new PageRequest(startNumber, count));
         for (Airfoil airfoil : airfoilsByPrefix) {
             createDatFile(airfoil);
@@ -111,7 +110,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public Airfoil getAirfoilById(String airfoilId) {
-        Airfoil airfoilById = dao.getAirfoilById(airfoilId);
+        Airfoil airfoilById = daoAirfoil.findOneByShortName(airfoilId);
         createDatFile(airfoilById);
         return airfoilById;
     }
@@ -228,7 +227,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public List<Airfoil> getAllAirfoils(int startNumber, int count) {
-        List<Airfoil> allAirfoils = dao.getAllAirfoils(startNumber, count, false);
+        List<Airfoil> allAirfoils = daoAirfoil.findAll(new PageRequest(startNumber, count));
         for (Airfoil airfoil : allAirfoils) {
             createDatFile(airfoil);
         }
@@ -236,8 +235,8 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
-    public List<String> updateGraf(String airfoilId, List<String> checkedList) {
-        Airfoil airfoil = dao.getAirfoilById(airfoilId);
+    public List<String> updateGraf(String shortName, List<String> checkedList) {
+        Airfoil airfoil = daoAirfoil.findOneByShortName(shortName);
         if (airfoil != null) {
             try {
                 new BuilderGraphs(storageService).draw(airfoil, checkedList, true);
@@ -247,7 +246,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         }
         List<String> imgCsvName = new ArrayList<>();
         for (String chartName : CHART_NAMES) {
-            imgCsvName.add("/files/chartTemp/" + airfoilId + chartName + ".png");
+            imgCsvName.add("/files/chartTemp/" + shortName + chartName + ".png");
         }
         return imgCsvName;
     }
@@ -296,7 +295,8 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             return new Message("Имя не должно быть пустым", SC_NOT_ACCEPTABLE);
         }
         Airfoil airfoil = new Airfoil(name, details, shortName);
-        if (dao.getAirfoilById(shortName) != null) {
+//        if (dao.getAirfoilById(shortName) != null) {
+        if (daoAirfoil.exists(shortName)) {
             LOGGER.debug("Airfoil с таким именем уже существует, Выберите другое имя");
             return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
         }
@@ -306,17 +306,17 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     private Message addUpdateAirfoil(MultipartFile fileAirfoil, List<MultipartFile> files, Airfoil airfoil) {
         try {
             if (fileAirfoil == null || fileAirfoil.isEmpty()) {
-                airfoil.setCoordView(dao.getAirfoilById(airfoil.getShortName()).getCoordView());
+                airfoil.setCoordView(daoAirfoil.findOneByShortName(airfoil.getShortName()).getCoordView());
             } else {
                 airfoil.setCoordView(parseFileScv.parseFileAirfoil(fileAirfoil));
             }
             if (files == null || files.size() == 1 && files.get(0).isEmpty()) {
-                airfoil.setCoordinates(dao.getAirfoilById(airfoil.getShortName()).getCoordinates());
+                airfoil.setCoordinates(daoAirfoil.findOneByShortName(airfoil.getShortName()).getCoordinates());
             } else {
                 airfoil.setCoordinates(createCoordinateSet(files));
             }
             addMenuItemForNewAirfoil(airfoil);
-            dao.addAirfoil(airfoil);
+            daoAirfoil.save(airfoil);
         } catch (Exception e) {
             LOGGER.warn("Один из файлов имеет не верный формат", e);
             return new Message("Один из файлов имеет не верный формат", SC_NOT_ACCEPTABLE);
@@ -341,14 +341,14 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             LOGGER.debug("airfoil не добавлен - Короткое имя профиля не должно быть пустым");
             return new Message("Ошибка при добавлении в базу нового airfoil. Короткое имя профиля не должно быть пустым", SC_NOT_ACCEPTABLE);
         }
-        if (dao.getAirfoilById(airfoilEdit.getShortName()) != null) {
+        if (daoAirfoil.findOneByShortName(airfoilEdit.getShortName()) != null) {
             LOGGER.debug("Airfoil с таким именем уже существует, Выберите другое имя");
             return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
         }
         Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
         addMenuItemForNewAirfoil(airfoil);
         try {
-            dao.addAirfoil(airfoil);
+            daoAirfoil.save(airfoil);
         } catch (Exception e) {
             LOGGER.warn("ошибка при добавлении в базу нового airfoil", e);
             return new Message("Ошибка при добавлении в базу нового airfoil", SC_CONFLICT);
@@ -358,7 +358,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public int getCountAirfoilByPrefix(char prefix) {
-        return dao.getCountAirfoilByPrefix(prefix);
+        return daoAirfoil.countByPrefix(new Prefix(prefix));
     }
 
     private Set<Coordinates> createCoordinateSet(List<MultipartFile> files) throws IOException {
