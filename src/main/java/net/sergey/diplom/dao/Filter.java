@@ -1,4 +1,3 @@
-
 package net.sergey.diplom.dao;
 
 import net.sergey.diplom.dto.Condition;

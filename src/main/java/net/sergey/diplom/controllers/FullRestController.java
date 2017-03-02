@@ -3,6 +3,7 @@ package net.sergey.diplom.controllers;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.Authorities;
+import net.sergey.diplom.dto.Condition;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.dto.user.UserDto;
@@ -82,8 +83,13 @@ public class FullRestController {
         return service.updateGraf(airfoilId, checkedList);
     }
 
-  /*  @RequestMapping(value = "/searchAirfoil", method = RequestMethod.POST)
-    public List<AirfoilDTO> searchAirfoils(List<Condition> conditions) {
-        return service.searchAirfoils(conditions,"");
-    }*/
+    @RequestMapping(value = "/searchByShortNameLike/{shortName}", method = RequestMethod.GET)
+    public List<AirfoilDTO> searchByShortNameLike(@PathVariable String shortName) {
+        return null;
+    }
+
+    @RequestMapping(value = "/searchAirfoil", method = RequestMethod.POST)
+    public List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String shortNameTemplate) {
+        return service.searchAirfoils(conditions, shortNameTemplate);
+    }
 }
