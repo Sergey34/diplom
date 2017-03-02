@@ -1,11 +1,14 @@
 package net.sergey.diplom.dto;
 
-public class SearchRule {
+public class Condition {
     private String action;
     private String attrName;
     private String value;
 
-    public SearchRule() {
+    public Condition(String action, String attrName, String value) {
+        this.action = action;
+        this.attrName = attrName;
+        this.value = value;
     }
 
     public String getAction() {

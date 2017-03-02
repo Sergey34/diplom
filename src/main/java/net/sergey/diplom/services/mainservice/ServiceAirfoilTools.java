@@ -1,6 +1,9 @@
 package net.sergey.diplom.services.mainservice;
 
+
+import net.sergey.diplom.dao.Filter;
 import net.sergey.diplom.dao.airfoil.DaoAirfoil;
+import net.sergey.diplom.dao.airfoil.DaoCoordinates;
 import net.sergey.diplom.dao.menu.DaoMenu;
 import net.sergey.diplom.dao.menu.DaoMenuItem;
 import net.sergey.diplom.domain.airfoil.Airfoil;
@@ -8,7 +11,7 @@ import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
-import net.sergey.diplom.dto.SearchRule;
+import net.sergey.diplom.dto.Condition;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.dto.airfoil.AirfoilEdit;
@@ -29,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,6 +56,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     private final DaoMenu daoMenu;
     private final DaoMenuItem daoMenuItem;
     private final DaoAirfoil daoAirfoil;
+    private final DaoCoordinates daoCoordinates;
     @Value("${config.parser.path}")
     private String configParserPath;
     @Value(value = "classpath:config.properties")
@@ -63,7 +66,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     public ServiceAirfoilTools(ParseFileScv parseFileScv, PropertiesHandler propertiesHandler,
                                Converter converter, FileSystemStorageService storageService,
                                AirfoilStlGenerator stlGenerator, DaoMenu daoMenu,
-                               DaoMenuItem daoMenuItem, DaoAirfoil daoAirfoil) {
+                               DaoMenuItem daoMenuItem, DaoAirfoil daoAirfoil, DaoCoordinates daoCoordinates) {
         this.parseFileScv = parseFileScv;
         this.propertiesHandler = propertiesHandler;
         this.converter = converter;
@@ -72,6 +75,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         this.daoMenu = daoMenu;
         this.daoMenuItem = daoMenuItem;
         this.daoAirfoil = daoAirfoil;
+        this.daoCoordinates = daoCoordinates;
     }
 
     @Override
@@ -125,26 +129,14 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
-    public List<AirfoilDTO> searchAirfoils(List<SearchRule> searchRules) {
-        Criteria criteria = new Criteria();
-        for (SearchRule searchRule : searchRules) {
-            switch (searchRule.getAction()) {
-                case ">":
-                    criteria.andOperator(Criteria.where(searchRule.getAttrName()).gt(Integer.parseInt(searchRule.getValue())));
-                    break;
-                case "<":
-                    criteria.andOperator(Criteria.where(searchRule.getAttrName()).lt(Integer.parseInt(searchRule.getValue())));
-                    break;
-                case "=":
-                    criteria.andOperator(Criteria.where(searchRule.getAttrName()).is(searchRule.getValue()));
-                    break;
-                case "=="://contains
-                    criteria.andOperator(Criteria.where(searchRule.getAttrName()).regex(searchRule.getValue()));
-                    break;
-            }
+    public List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String name) {
+        Filter filter = new Filter(conditions);
+        List<Coordinates> coords = daoCoordinates.findAll(filter);
+        List<Airfoil> byShortNameLikeAndCoordinates = daoAirfoil.findByCoordinatesIn(coords);
+        List<AirfoilDTO> airfoilDTOs = converter.airfoilToAirfoilDto(byShortNameLikeAndCoordinates);
+        System.out.println(airfoilDTOs);
 
-        }
-        return daoAirfoil.findAll(criteria);
+        return null;
     }
 
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {
@@ -200,6 +192,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @PostConstruct
     public void init() {
+        List<Condition> conditions = Arrays.asList(new Condition(">", "maxClCd", "100"));
+        List<AirfoilDTO> airfoilDTOs = searchAirfoils(conditions, "%a18%");
+        System.out.println(airfoilDTOs);
         try {
             if (!new File(configParserPath).exists()) {
                 propertiesHandler.load(companiesXml.getInputStream());

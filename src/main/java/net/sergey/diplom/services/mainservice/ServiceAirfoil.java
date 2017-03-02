@@ -2,7 +2,7 @@ package net.sergey.diplom.services.mainservice;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
-import net.sergey.diplom.dto.SearchRule;
+import net.sergey.diplom.dto.Condition;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.dto.airfoil.AirfoilEdit;
@@ -41,5 +41,5 @@ public interface ServiceAirfoil {
 
     Message clearAll();
 
-    List<AirfoilDTO> searchAirfoils(List<SearchRule> searchRules);
+    List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String name);
 }
