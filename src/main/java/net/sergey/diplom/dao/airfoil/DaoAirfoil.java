@@ -22,6 +22,7 @@ public interface DaoAirfoil extends CrudRepository<Airfoil, String> {
 
     List<Airfoil> findAll(Pageable pageRequest);
 
-    List<Airfoil> findByCoordinatesIn(List<Coordinates> coordinates);
-//    List<Airfoil> findByCoordinatesInAndShortNameLike(String shortName, List<Coordinates> coordinates);
+    List<Airfoil> findByCoordinatesInAndShortNameLike(List<Coordinates> coordinates, String shortName);
+//    List<Airfoil> findByCoordinatesIn(List<Coordinates> coordinates);
+
 }

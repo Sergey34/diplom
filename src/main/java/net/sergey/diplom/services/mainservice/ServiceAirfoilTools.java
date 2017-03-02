@@ -132,11 +132,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     public List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String name) {
         Filter filter = new Filter(conditions);
         List<Coordinates> coords = daoCoordinates.findAll(filter);
-        List<Airfoil> byShortNameLikeAndCoordinates = daoAirfoil.findByCoordinatesIn(coords);
-        List<AirfoilDTO> airfoilDTOs = converter.airfoilToAirfoilDto(byShortNameLikeAndCoordinates);
-        System.out.println(airfoilDTOs);
-
-        return null;
+        return converter.airfoilToAirfoilDto(daoAirfoil.findByCoordinatesInAndShortNameLike(coords, name));
     }
 
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {
