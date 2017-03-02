@@ -188,9 +188,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @PostConstruct
     public void init() {
-        List<Condition> conditions = Arrays.asList(new Condition(">", "maxClCd", "100"));
-        List<AirfoilDTO> airfoilDTOs = searchAirfoils(conditions, "%a18%");
-        System.out.println(airfoilDTOs);
+//        List<Condition> conditions = Arrays.asList(new Condition(">", "maxClCd", "100"));
+//        List<AirfoilDTO> airfoilDTOs = searchAirfoils(conditions, "%a%");
+//        System.out.println(airfoilDTOs);
         try {
             if (!new File(configParserPath).exists()) {
                 propertiesHandler.load(companiesXml.getInputStream());
@@ -311,7 +311,6 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             return new Message("Имя не должно быть пустым", SC_NOT_ACCEPTABLE);
         }
         Airfoil airfoil = new Airfoil(name, details, shortName);
-//        if (dao.getAirfoilById(shortName) != null) {
         if (daoAirfoil.exists(shortName)) {
             LOGGER.debug("Airfoil с таким именем уже существует, Выберите другое имя");
             return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
