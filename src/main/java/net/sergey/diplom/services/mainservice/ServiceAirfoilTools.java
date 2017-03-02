@@ -8,6 +8,7 @@ import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
+import net.sergey.diplom.dto.SearchRule;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.dto.airfoil.AirfoilEdit;
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -120,6 +122,29 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         System.gc();
         storageService.init();
         return new Message("done", SC_OK);
+    }
+
+    @Override
+    public List<AirfoilDTO> searchAirfoils(List<SearchRule> searchRules) {
+        Criteria criteria = new Criteria();
+        for (SearchRule searchRule : searchRules) {
+            switch (searchRule.getAction()) {
+                case ">":
+                    criteria.andOperator(Criteria.where(searchRule.getAttrName()).gt(Integer.parseInt(searchRule.getValue())));
+                    break;
+                case "<":
+                    criteria.andOperator(Criteria.where(searchRule.getAttrName()).lt(Integer.parseInt(searchRule.getValue())));
+                    break;
+                case "=":
+                    criteria.andOperator(Criteria.where(searchRule.getAttrName()).is(searchRule.getValue()));
+                    break;
+                case "=="://contains
+                    criteria.andOperator(Criteria.where(searchRule.getAttrName()).regex(searchRule.getValue()));
+                    break;
+            }
+
+        }
+        return daoAirfoil.findAll(criteria);
     }
 
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {
