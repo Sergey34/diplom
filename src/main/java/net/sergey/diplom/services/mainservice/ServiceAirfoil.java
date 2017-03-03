@@ -42,4 +42,8 @@ public interface ServiceAirfoil {
     Message clearAll();
 
     List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String name);
+
+    List<AirfoilDTO> findByShortNameLike(String shortName);
+
+    int countByShortNameLike(String shortName);
 }

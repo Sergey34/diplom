@@ -132,7 +132,29 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     public List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String name) {
         Filter filter = new Filter(conditions);
         List<Coordinates> coords = daoCoordinates.findAll(filter);
-        return converter.airfoilToAirfoilDto(daoAirfoil.findByCoordinatesInAndShortNameLike(coords, name));
+        List<Airfoil> airfoils = daoAirfoil.findByCoordinatesInAndShortNameLike(coords, name);
+        for (Airfoil airfoil : airfoils) {
+            drawViewAirfoil(airfoil);
+            createDatFile(airfoil);
+        }
+        return converter.airfoilToAirfoilDto(airfoils);
+    }
+
+    @Override
+    public List<AirfoilDTO> findByShortNameLike(String shortName) {
+        String shortNameTemplate = '%' + shortName + '%';
+        List<Airfoil> airfoils = daoAirfoil.findByShortNameLike(shortNameTemplate);
+        for (Airfoil airfoil : airfoils) {
+            drawViewAirfoil(airfoil);
+            createDatFile(airfoil);
+        }
+        return converter.airfoilToAirfoilDto(airfoils);
+    }
+
+    @Override
+    public int countByShortNameLike(String shortName) {
+        String shortNameTemplate = '%' + shortName + '%';
+        return daoAirfoil.countByShortNameLike(shortNameTemplate);
     }
 
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {

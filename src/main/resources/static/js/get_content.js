@@ -4,6 +4,13 @@ function getContent() {
     var prefix = $.getUrlVar('prefix') != undefined ? $.getUrlVar('prefix') : 'A';
     var no = $.getUrlVar('no') != undefined ? $.getUrlVar('no') - 1 : 0;
 
+    let url;
+    var searchTemplate = $.getUrlVar('st');
+    if (searchTemplate!=undefined){
+        url="/rest/searchByShortNameLike/" + searchTemplate;
+    }else{
+        url="/rest/airfoilsDto/" + prefix + "/" + no + "/20";
+    }
     console.log("no=" + no);
 
     console.log(currentPrefix);
@@ -14,13 +21,13 @@ function getContent() {
     currentPrefix = prefix;
     $(document).ready(function () {
         $.ajax({
-            url: "/rest/airfoilsDto/" + prefix + "/" + no + "/20"
+            url: url
         }).then(function (data) {
             createCursore(no + 1);
             console.log(data);
             var airfoil_list = document.getElementById('airfoil_list');
             if (data.length === 0) {
-                airfoil_list.innerHTML = "не удалось загрузить airfoil с перфиксом " + prefix;
+                airfoil_list.innerHTML = "не удалось загрузить airfoils";
             } else {
                 data.forEach(logArrayElements);
             }
@@ -83,10 +90,17 @@ function getContent() {
 function createCursore(no) {
     console.log("createCursore");
     var prefix = $.getUrlVar('prefix') != undefined ? $.getUrlVar('prefix') : 'A';
+    var searchTemplate = $.getUrlVar('st');
+    let url;
+    if (searchTemplate!=undefined){
+        url="/rest/countByShortNameLike/" + searchTemplate;
+    }else{
+        url="/rest/countAirfoil/" + prefix;
+    }
     // var prefix = 'A';
     $(document).ready(function () {
         $.ajax({
-            url: "/rest/countAirfoil/" + prefix
+            url: url
         }).then(function (data) {
             console.log(data);
             var countItem = Math.ceil(data / 20.0);
