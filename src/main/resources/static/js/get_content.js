@@ -9,7 +9,7 @@ function getContent() {
     if (searchTemplate!=undefined){
         url="/rest/searchByShortNameLike/" + searchTemplate;
     }else{
-        url="/rest/airfoilsDto/" + prefix + "/" + no + "/20";
+        url="/rest/airfoilsDto/" + prefix + "/" + no + "/21";
     }
     console.log("no=" + no);
 

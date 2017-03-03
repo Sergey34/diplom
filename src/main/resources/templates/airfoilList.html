@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Airfoil tolls - Airfoils</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/shop-homepage.css" rel="stylesheet">
+
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/get_user.js"></script>
+    <script src="js/get_content.js"></script>
+    <script src="js/get_params_url.js"></script>
+    <script src="js/searcher.js"></script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <!--<![endif]&ndash;&gt;-->
+</head>
+
+<body>
+<script>
+    getContent();
+
+</script>
+<script src="js/get_menu.js"></script>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/airfoilList.html">Airfoils</a>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group"><input id="searchTemplate" type="text" class="form-control"
+                                               placeholder="shortName contains ...">
+                </div>
+                <button id="search" type="button" class="btn btn-default">Найти</button>
+            </form>
+            <a class="navbar-brand" href="/searcher.html">Расширенный поиск</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav" id="navbar-nav">
+                <li><a href="/about.html" id="about">About</a></li>
+            </ul>
+        </div>
+
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<!-- Page Content -->
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3" id="list_menu">
+            <p class="lead">Навигация</p>
+            <div class="list-group">
+                <a class="list-group-item" id="addAirf" href="/adminka/addAirfoil.html">Добавить новый профиль</a>
+                <a class="list-group-item" id="adm" href="/adminka/adminka.html">Админка</a>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <form class="well form-horizontal col-sm-6 col-lg-6 col-md-6">
+                <div class="form-group">
+                    <label class="control-label" for="select01">ShortName</label>
+                    <select id="select01">
+                        <option>Содержит</option>
+                        <option>Равно</option>
+                    </select>
+                    <input class="control-input" for="select01">
+                </div>
+
+
+                <div class="form-group">
+                    <label class="control-label" for="select02">nCrit</label>
+                    <select id="select02">
+                        <option>Равно</option>
+                        <option><</option>
+                        <option>></option>
+                    </select>
+                    <input class="control-input" for="select02">
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="select03">maxCL/CD</label>
+                    <select id="select03">
+                        <option>Равно</option>
+                        <option><</option>
+                        <option>></option>
+                    </select>
+                    <input class="control-input" for="select03">
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="select04">Renolds</label>
+                    <select id="select04">
+                        <option>Равно</option>
+                        <option><</option>
+                        <option>></option>
+                    </select>
+                    <input class="control-input" for="select04">
+                </div>
+                </br>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-primary">Найти</button>
+                    <button class="btn">Отменить</button>
+                </div>
+
+            </form>
+            <div id="airfoil_list">
+                <!--<div class="col-sm-6 col-lg-6 col-md-6">
+                <div class="thumbnail">
+                    <img src="img/a18-il.png" alt="">
+                    <div class="caption">
+                         <h4><a href="#">(a18-il) A18 (original)</a>
+               </h4>
+                        <p>Drela AG26 airfoil used on the Bubble Dancer R/C DLG
+                            <br>Max thickness 6.8% at 23.3% chord
+                            <br>Max camber 2.5% at 45.5% chord
+                            <br>Source <a rel="nofollow" target="_blank" onclick="_gaq.push(['_trackEvent','external','http://www.ae.illinois.edu/m-selig/ads/coord_database.html', '']);return true;" href="/site/external?url=http%3A%2F%2Fwww.ae.illinois.edu%2Fm-selig%2Fads%2Fcoord_database.html">UIUC Airfoil Coordinates Database</a>
+                        </p>
+                    </div>
+                </div>
+            </div>-->
+            </div>
+
+            <nav aria-label="...">
+                <ul class="pagination" id="cursor">
+
+                    <br>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+
+
+</div>
+<!-- /.container -->
+<div class="container">
+    <hr>
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Copyright &copy; Your Website 2014</p>
+            </div>
+        </div>
+    </footer>
+</div>
+<!-- /.container -->
+<!-- jQuery -->
+<!--<script src="js/jquery.js"></script>-->
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+<script>document.getElementById("search").onclick = search;</script>
+</body>
+
+</html>
