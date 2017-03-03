@@ -1,11 +1,11 @@
 var number = 0;
 function saveWab() {
-    let resultCSVList = [];
+    var resultCSVList = [];
     for (let i = 0; i < number; i++) {
-        let resultCSV = "Xfoil polar. Reynolds number fixed. Mach  number fixed\n";
-        let airfoilName = document.getElementById('ShortName').value;
-        let Reynolds_number = document.getElementById('input_Reynolds_number' + i).value;
-        let fileName = "xf-" + airfoilName + "-" + Reynolds_number;
+        var resultCSV = "Xfoil polar. Reynolds number fixed. Mach  number fixed\n";
+        var airfoilName = document.getElementById('ShortName').value;
+        var Reynolds_number = document.getElementById('input_Reynolds_number' + i).value;
+        var fileName = "xf-" + airfoilName + "-" + Reynolds_number;
         resultCSV += "Polar key," + fileName + "\n";
         resultCSV += "Airfoil," + airfoilName + "\n";
         resultCSV += "Reynolds number," + Reynolds_number + "\n";
@@ -18,10 +18,10 @@ function saveWab() {
         resultCSV += 'Alpha,Cl,Cd,CDp,Cm,Top_Xtr,Bot_Xtr\n';
 
 
-        let table = document.getElementById('tabular' + i).getElementsByTagName('*');
+        var table = document.getElementById('tabular' + i).getElementsByTagName('*');
         for (let j = 1; j <= tableLength('tabular' + i); j++) {
             for (let k = 0; k < 7; k++) {
-                let value = getTableItem(k, j, table);
+                var value = getTableItem(k, j, table);
                 if (value == '') {
                     alert("Ошибка! таблица заполнена не корректно");
                     return;
@@ -33,7 +33,7 @@ function saveWab() {
             }
             resultCSV += '\n';
         }
-        let resultCsvObj = {};
+        var resultCsvObj = {};
         resultCsvObj["fileName"] = fileName;
         resultCsvObj["data"] = resultCSV;
         resultCsvObj["reynolds"] = Reynolds_number;
@@ -44,11 +44,11 @@ function saveWab() {
         console.log(resultCSV);
         resultCSVList[i] = resultCsvObj;
     }
-    let tableView = document.getElementById('viewTab').getElementsByTagName('*');
-    let viewCsv = "";
+    var tableView = document.getElementById('viewTab').getElementsByTagName('*');
+    var viewCsv = "";
     for (let j = 1; j <= tableLength('viewTab'); j++) {
         for (let k = 0; k < 2; k++) {
-            let value = getTableItem(k, j, tableView);
+            var value = getTableItem(k, j, tableView);
             if (value == '') {
                 alert("Ошибка! таблица заполнена не корректно");
                 return;
@@ -62,7 +62,7 @@ function saveWab() {
     }
 
 
-    let data = {};
+    var data = {};
     data["airfoilName"] = $("#airfoilName").val();
     data["shortName"] = $("#ShortName").val();
     data["details"] = $("#Details").val();
@@ -94,10 +94,10 @@ function tableLength(i) {
 //создание таблиц
 
 function createLabel(id, value) {
-    let label = document.createElement('label');
+    var label = document.createElement('label');
     label.id = id + number;
     label.innerHTML = value;
-    let input = document.createElement('input');
+    var input = document.createElement('input');
     input.id = 'input_' + id + number;
     input.setAttribute('type', 'text');
     label.appendChild(input);
@@ -106,27 +106,27 @@ function createLabel(id, value) {
 }
 function addTable() {
 
-    let Reynolds_number = createLabel('Reynolds_number', "Reynolds number");
-    let Ncrit = createLabel('Ncrit', "Ncrit");
-    let Mach = createLabel('Mach', "Mach");
-    let MaxClCd = createLabel('MaxClCd', "Max Cl/Cd");
-    let MaxClCdalpha = createLabel('MaxClCdalpha', "Max Cl/Cd alpha");
+    var Reynolds_number = createLabel('Reynolds_number', "Reynolds number");
+    var Ncrit = createLabel('Ncrit', "Ncrit");
+    var Mach = createLabel('Mach', "Mach");
+    var MaxClCd = createLabel('MaxClCd', "Max Cl/Cd");
+    var MaxClCdalpha = createLabel('MaxClCdalpha', "Max Cl/Cd alpha");
 
 
-    let tableDiv = document.createElement('div');
+    var tableDiv = document.createElement('div');
     tableDiv.setAttribute("class", 'example');
-    let btn = document.createElement('input');
+    var btn = document.createElement('input');
     btn.setAttribute("type", 'button');
     btn.setAttribute("class", 'btn btn-default');
     btn.setAttribute("value", 'Add New Row');
     btn.setAttribute("onClick", 'javascript:$("#tabular' + number + '").tabularInput("addRow")');
-    let btn2 = document.createElement('input');
+    var btn2 = document.createElement('input');
     btn2.setAttribute("type", 'button');
     btn2.setAttribute("class", 'btn btn-default');
     btn2.setAttribute("value", 'Delete Last Row');
     btn2.setAttribute("onClick", 'javascript:$("#tabular' + number + '").tabularInput("deleteRow")');
 
-    let table = document.createElement('div');
+    var table = document.createElement('div');
     table.id = 'tabular' + number;
 
     tableDiv.appendChild(Reynolds_number);
@@ -139,7 +139,7 @@ function addTable() {
     tableDiv.appendChild(document.createElement('Br'));
     tableDiv.appendChild(table);
 
-    let addAirfoilWeb = document.getElementById('addAirfoilWeb');
+    var addAirfoilWeb = document.getElementById('addAirfoilWeb');
     addAirfoilWeb.appendChild(tableDiv);
     jQuery('#tabular' + number).tabularInput({
         'rows': 10,

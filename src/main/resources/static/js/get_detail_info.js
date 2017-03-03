@@ -26,18 +26,18 @@ function getDetailInfo(forEdit) {
 
 function fillContentDetailInfo(data) {
 
-    let edit = document.getElementById('edit_link');
+    var edit = document.getElementById('edit_link');
     edit.setAttribute("href", "adminka/edit_airfoil.html?airfoilId=" + id);
 
-    let name = document.getElementById('airfoil_name');
+    var name = document.getElementById('airfoil_name');
     name.innerHTML = data.name;
 
     //<p class="pull-left"><a id="downloadStl" class="list-group-item" href="">Скачать STL</a></p>
-    let files = data.stlFilePath;
+    var files = data.stlFilePath;
     for (let i = 0; i < files.length; i++) {
-        let p = document.createElement('p');
+        var p = document.createElement('p');
         p.setAttribute("class", "pull-left");
-        let a = document.createElement('a');
+        var a = document.createElement('a');
         a.setAttribute("class", "list-group-item");
         a.setAttribute("href", files[i]);
         a.innerHTML = "Скачать STL";
@@ -45,25 +45,25 @@ function fillContentDetailInfo(data) {
         document.getElementById("bottoms").appendChild(p);
     }
 
-    // let downloadStl = document.getElementById('downloadStl');
+    // var downloadStl = document.getElementById('downloadStl');
     // downloadStl.setAttribute("href", data.stlFilePath);
 
-    let image = document.getElementById('imgDetail');
+    var image = document.getElementById('imgDetail');
     image.setAttribute("src", data.image);
 
-    let description = document.getElementById('descr_detail');
+    var description = document.getElementById('descr_detail');
     description.innerHTML = data.description;
 
-    let Polars_for = document.getElementById('Polars_for');
+    var Polars_for = document.getElementById('Polars_for');
     Polars_for.innerHTML = Polars_for.textContent + data.name;
 
-    let coordinates = data.coordinates;
+    var coordinates = data.coordinates;
 
 
-    let table = document.getElementById('table1');
+    var table = document.getElementById('table1');
     for (let i = 0, j = 1; i < coordinates.length; i++, j++) {
 
-        let tr = document.createElement('tr');
+        var tr = document.createElement('tr');
         tr.id = j;
         /*
          <td><input type="checkbox" id="checkbox1" class="csvItemChBox" name="activ"
@@ -74,8 +74,8 @@ function fillContentDetailInfo(data) {
          <td id="fileName1"><a id="link_file1"
          href="http://localhost:8080/resources/tmpCsv/xf-a18-il-50000-n5.csv">xf-a18-il-50000-n5.csv</a>
          </td>*/
-        let td = document.createElement('td');
-        let checkbox = document.createElement('input');
+        var td = document.createElement('td');
+        var checkbox = document.createElement('input');
         checkbox.setAttribute('type', 'checkbox');
         checkbox.setAttribute('name', 'activ');
         checkbox.setAttribute('checked', 'checked');
@@ -100,7 +100,7 @@ function fillContentDetailInfo(data) {
         tr.appendChild(td);
 
         td = document.createElement('td');
-        let link_file = document.createElement('a');
+        var link_file = document.createElement('a');
         link_file.id = "link_file" + j;
         link_file.innerHTML = coordinates[i].fileName;
         link_file.setAttribute('href', coordinates[i].filePath);
@@ -110,13 +110,13 @@ function fillContentDetailInfo(data) {
         table.appendChild(tr);
     }
 
-    let imgCsvName = data.imgCsvName;
-    let carousel_indicators = document.getElementById('carousel-indicators');
-    let carousel_inner = document.getElementById('carousel-inner');
+    var imgCsvName = data.imgCsvName;
+    var carousel_indicators = document.getElementById('carousel-indicators');
+    var carousel_inner = document.getElementById('carousel-inner');
     for (let i = 0; i < imgCsvName.length; i++) {
         // <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
 
-        let li = document.createElement('li');
+        var li = document.createElement('li');
         li.setAttribute('data-target', "#carousel-example-generic");
         li.setAttribute('data-slide-to', i + '');
         if (i == 0) {
@@ -124,14 +124,14 @@ function fillContentDetailInfo(data) {
         }
         carousel_indicators.appendChild(li);
 
-        let item = document.createElement('div');
+        var item = document.createElement('div');
         if (i == 0) {
             item.setAttribute('class', "item active")
         } else {
             item.setAttribute('class', "item");
         }
 
-        let img = document.createElement('img');
+        var img = document.createElement('img');
         img.setAttribute('src', imgCsvName[i]);
         img.setAttribute('class', "slide-image");
         img.setAttribute('alt', "");
@@ -146,17 +146,17 @@ function fillEditableContentDetailInfo(data) {
     document.getElementById("airfoilName").setAttribute("value", data.name);
     document.getElementById("shortName").setAttribute("value", data.shortName);
     document.getElementById("description").setAttribute("value", data.description);
-    let img_detail = document.getElementById("img_detail");
-    let img = document.createElement('img');
+    var img_detail = document.getElementById("img_detail");
+    var img = document.createElement('img');
     img.setAttribute("src", data.image);
     img_detail.appendChild(img);
 
     fillEditableContentDetailInfoEditableTable(data);
 
-    let coordinates = data.coordinates;
-    let links = document.getElementById('graf');
+    var coordinates = data.coordinates;
+    var links = document.getElementById('graf');
     for (let i = 0; i < coordinates.length; i++) {
-        let linkItem = document.createElement('a');
+        var linkItem = document.createElement('a');
         linkItem.setAttribute("href", coordinates[i].filePath);
         linkItem.innerHTML = coordinates[i].fileName;
         links.appendChild(linkItem);
@@ -166,8 +166,8 @@ function fillEditableContentDetailInfo(data) {
 
 function refreshiframe() {
     console.log("refreshiframe");
-    let actions = document.getElementsByName("activ");
-    let checkeds = new Array(10);
+    var actions = document.getElementsByName("activ");
+    var checkeds = new Array(10);
     for (let i = 0; i < actions.length; i++) {
         if (actions[i].checked) {
             checkeds[i] = actions[i].getAttribute('filename');
@@ -176,24 +176,24 @@ function refreshiframe() {
     console.log(checkeds);
 
     function cleanImgFrame() {
-        let carousel_example_generic = document.getElementById("carousel-example-generic");
+        var carousel_example_generic = document.getElementById("carousel-example-generic");
         carousel_example_generic.removeChild(document.getElementById("carousel-indicators"));
         carousel_example_generic.removeChild(document.getElementById("carousel-inner"));
         carousel_example_generic.removeChild(document.getElementById("a1"));
         carousel_example_generic.removeChild(document.getElementById("a2"));
 
-        let ol = document.createElement('ol');
+        var ol = document.createElement('ol');
         ol.id = 'carousel-indicators';
         ol.setAttribute('class', 'carousel-indicators');
         carousel_example_generic.appendChild(ol);
 
-        let div = document.createElement('div');
+        var div = document.createElement('div');
         div.id = "carousel-inner";
         div.setAttribute('class', 'carousel-inner');
         carousel_example_generic.appendChild(div);
 
 
-        let a1 = document.createElement("a");
+        var a1 = document.createElement("a");
         a1.innerHTML = "<span class='glyphicon glyphicon-chevron-left'></span>";
         a1.setAttribute("href", "#carousel-example-generic");
         a1.setAttribute("class", "left carousel-control");
@@ -202,7 +202,7 @@ function refreshiframe() {
         a1.id = "a1";
 
 
-        let a2 = document.createElement("a");
+        var a2 = document.createElement("a");
         a2.innerHTML = "<span class='glyphicon glyphicon-chevron-right'></span>";
         a2.setAttribute("href", "#carousel-example-generic");
         a2.setAttribute("class", "right carousel-control");
@@ -230,12 +230,12 @@ function refreshiframe() {
                 cleanImgFrame();
 
 
-                let carousel_indicators = document.getElementById('carousel-indicators');
-                let carousel_inner = document.getElementById('carousel-inner');
+                var carousel_indicators = document.getElementById('carousel-indicators');
+                var carousel_inner = document.getElementById('carousel-inner');
                 for (let i = 0; i < data.length; i++) {
                     // <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
 
-                    let li = document.createElement('li');
+                    var li = document.createElement('li');
                     li.setAttribute('data-target', "#carousel-example-generic");
                     li.setAttribute('data-slide-to', i + '');
                     if (i == 0) {
@@ -243,14 +243,14 @@ function refreshiframe() {
                     }
                     carousel_indicators.appendChild(li);
 
-                    let item = document.createElement('div');
+                    var item = document.createElement('div');
                     if (i == 0) {
                         item.setAttribute('class', "item active")
                     } else {
                         item.setAttribute('class', "item");
                     }
 
-                    let img = document.createElement('img');
+                    var img = document.createElement('img');
                     img.setAttribute('src', data[i] + "?" + Math.random());
                     img.setAttribute('class', "slide-image");
                     img.setAttribute('alt', "");
@@ -265,10 +265,10 @@ function refreshiframe() {
 
 let number = 0;
 function fillEditableContentDetailInfoEditableTable(data) {
-    let tablesView = document.createElement("div");
+    var tablesView = document.createElement("div");
     tablesView.id = 'tablesView';
-    let viewCsv = data.coordView;
-    let rows = viewCsv.split('\n');
+    var viewCsv = data.coordView;
+    var rows = viewCsv.split('\n');
 
 
     jQuery('#viewTab').tabularInput({
@@ -281,43 +281,43 @@ function fillEditableContentDetailInfoEditableTable(data) {
         'animate': true
     });
     for (let i = 0; i < rows.length - 1; i++) {
-        let item = rows[i].split(',');
+        var item = rows[i].split(',');
         document.getElementsByName('view[0][' + (i + 1) + ']')[0].setAttribute('value', item[0]);
         document.getElementsByName('view[1][' + (i + 1) + ']')[0].setAttribute('value', item[1]);
     }
-    let coordinates = data.coordinates;
+    var coordinates = data.coordinates;
     number = coordinates.length;
     for (let i = 0; i < number; i++) {
         (function (i) {
             setTimeout(function () {
-                let tabular = document.createElement('div');
+                var tabular = document.createElement('div');
                 tabular.id = 'tabular' + i;
-                let tableDiv = document.createElement('div');
+                var tableDiv = document.createElement('div');
                 tableDiv.setAttribute("class", 'example');
-                let btn = document.createElement('input');
+                var btn = document.createElement('input');
                 btn.setAttribute("type", 'button');
                 btn.setAttribute("class", 'btn btn-default');
                 btn.setAttribute("value", 'Add New Row');
                 btn.setAttribute("onClick", 'javascript:$("#tabular' + i + '").tabularInput("addRow")');
-                let btn2 = document.createElement('input');
+                var btn2 = document.createElement('input');
                 btn2.setAttribute("type", 'button');
                 btn2.setAttribute("class", 'btn btn-default');
                 btn2.setAttribute("value", 'Delete Last Row');
                 btn2.setAttribute("onClick", 'javascript:$("#tabular' + i + '").tabularInput("deleteRow")');
                 document.getElementById('editableTables').appendChild(btn);
                 document.getElementById('editableTables').appendChild(btn2);
-                let coordinatesItem = coordinates[i];
+                var coordinatesItem = coordinates[i];
 
 
-                let tableCsv = document.createElement('div');
+                var tableCsv = document.createElement('div');
                 tableCsv.id = 'tableCsv' + i;
 
 
-                let Reynolds_number = createLabel('Reynolds_number', "Reynolds number", i, coordinatesItem.renolgs);
-                let Ncrit = createLabel('Ncrit', "Ncrit", i, coordinatesItem.nCrit);
-                let Mach = createLabel('Mach', "Mach", i, "Mach");
-                let MaxClCd = createLabel('MaxClCd', "Max Cl/Cd", i, coordinatesItem.maxClCd);
-                let MaxClCdalpha = createLabel('MaxClCdalpha', "Max Cl/Cd alpha", i, "MaxClCdalpha");
+                var Reynolds_number = createLabel('Reynolds_number', "Reynolds number", i, coordinatesItem.renolgs);
+                var Ncrit = createLabel('Ncrit', "Ncrit", i, coordinatesItem.nCrit);
+                var Mach = createLabel('Mach', "Mach", i, "Mach");
+                var MaxClCd = createLabel('MaxClCd', "Max Cl/Cd", i, coordinatesItem.maxClCd);
+                var MaxClCdalpha = createLabel('MaxClCdalpha', "Max Cl/Cd alpha", i, "MaxClCdalpha");
 
                 document.getElementById('editableTables').appendChild(Reynolds_number);
                 document.getElementById('editableTables').appendChild(Ncrit);
@@ -325,7 +325,7 @@ function fillEditableContentDetailInfoEditableTable(data) {
                 document.getElementById('editableTables').appendChild(MaxClCd);
                 document.getElementById('editableTables').appendChild(MaxClCdalpha);
 
-                let coordinatesJson = coordinatesItem.coordinatesJson.split('\n');
+                var coordinatesJson = coordinatesItem.coordinatesJson.split('\n');
 
 
                 document.getElementById('editableTables').appendChild(tabular);
@@ -342,7 +342,7 @@ function fillEditableContentDetailInfoEditableTable(data) {
                 document.getElementById('input_MaxClCdalpha' + i).setAttribute('value', coordinatesJson[7].split(',')[1]);
 
                 for (let j = 11, l = 1; j < coordinatesJson.length - 1; j++, l++) {
-                    let items = coordinatesJson[j].split(',');
+                    var items = coordinatesJson[j].split(',');
                     for (let k = 0; k < items.length; k++) {
                         document.getElementsByName('tabular' + i + '[' + k + '][' + l + ']')[0].setAttribute('value', items[k]);
                     }
@@ -357,10 +357,10 @@ function fillEditableContentDetailInfoEditableTable(data) {
 
 
 function createLabel(id, value, number, valueInput) {
-    let label = document.createElement('label');
+    var label = document.createElement('label');
     label.id = id + number;
     label.innerHTML = value;
-    let input = document.createElement('input');
+    var input = document.createElement('input');
     input.id = 'input_' + id + number;
     input.setAttribute('type', 'text');
     input.setAttribute('value', valueInput);
@@ -378,12 +378,12 @@ function getTableItem(i, j, number, name) {
 }
 
 function updateWab() {
-    let resultCSVList = [];
+    var resultCSVList = [];
     for (let i = 0; i < number; i++) {
-        let resultCSV = "Xfoil polar. Reynolds number fixed. Mach  number fixed\n";
-        let airfoilName = document.getElementById('shortName').value;
-        let Reynolds_number = document.getElementById('input_Reynolds_number' + i).value;
-        let fileName = "xf-" + airfoilName + "-" + Reynolds_number;
+        var resultCSV = "Xfoil polar. Reynolds number fixed. Mach  number fixed\n";
+        var airfoilName = document.getElementById('shortName').value;
+        var Reynolds_number = document.getElementById('input_Reynolds_number' + i).value;
+        var fileName = "xf-" + airfoilName + "-" + Reynolds_number;
         resultCSV += "Polar key," + fileName + "\n";
         resultCSV += "Airfoil," + airfoilName + "\n";
         resultCSV += "Reynolds number," + Reynolds_number + "\n";
@@ -398,7 +398,7 @@ function updateWab() {
 
         for (let j = 1; j <= tableLength('tabular' + i); j++) {
             for (let k = 0; k < 7; k++) {
-                let value = getTableItem(k, j, i, "tabular");
+                var value = getTableItem(k, j, i, "tabular");
                 if (value == '') {
                     alert("Ошибка! таблица заполнена не корректно");
                     return;
@@ -410,7 +410,7 @@ function updateWab() {
             }
             resultCSV += '\n';
         }
-        let resultCsvObj = {};
+        var resultCsvObj = {};
         resultCsvObj["fileName"] = fileName + document.getElementById('input_Ncrit' + i).value;
         resultCsvObj["data"] = resultCSV;
         resultCsvObj["reynolds"] = Reynolds_number;
@@ -422,10 +422,10 @@ function updateWab() {
         resultCSVList[i] = resultCsvObj;
     }
 
-    let viewCsv = "";
+    var viewCsv = "";
     for (let j = 1; j <= tableLength('viewTab'); j++) {
         for (let k = 0; k < 2; k++) {
-            let value = getTableItem(k, j, '', "view");
+            var value = getTableItem(k, j, '', "view");
             if (value == '') {
                 alert("Ошибка! таблица заполнена не корректно");
                 return;
@@ -439,7 +439,7 @@ function updateWab() {
     }
 
 
-    let data = {};
+    var data = {};
     data["airfoilName"] = $("#airfoilName").val();
     data["shortName"] = $("#shortName").val();
     data["details"] = $("#description").val();

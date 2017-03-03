@@ -3,9 +3,9 @@ $(document).ready(function () {
         url: "/rest/user"
     }).then(function (data) {
         console.log(data);
-        let navbar_nav = document.getElementById('navbar-nav');
-        let nav_item = document.createElement('li');
-        let button_login = document.createElement('a');
+        var navbar_nav = document.getElementById('navbar-nav');
+        var nav_item = document.createElement('li');
+        var button_login = document.createElement('a');
         if (data == '') {
             console.log('гость');
 
@@ -13,10 +13,10 @@ $(document).ready(function () {
             button_login.innerHTML = "login";
         } else {
             console.log(data);
-            let navbar_nav_sign = document.getElementById('navbar-nav');
-            let nav_item_sign = document.createElement('li');
+            var navbar_nav_sign = document.getElementById('navbar-nav');
+            var nav_item_sign = document.createElement('li');
             //<p class="navbar-text">Signed in as Mark Otto</p>
-            let signed_in = document.createElement('p');
+            var signed_in = document.createElement('p');
             signed_in.setAttribute('class', 'navbar-text');
             signed_in.innerHTML = "Signed in as " + data.userName;
             nav_item_sign.appendChild(signed_in);

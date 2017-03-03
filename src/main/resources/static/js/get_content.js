@@ -4,7 +4,7 @@ function getContent() {
     var prefix = $.getUrlVar('prefix') != undefined ? $.getUrlVar('prefix') : 'A';
     var no = $.getUrlVar('no') != undefined ? $.getUrlVar('no') - 1 : 0;
 
-    let url;
+    var url;
     var searchTemplate = $.getUrlVar('st');
     if (searchTemplate!=undefined){
         url="/rest/searchByShortNameLike/" + searchTemplate;
@@ -91,7 +91,7 @@ function createCursore(no) {
     console.log("createCursore");
     var prefix = $.getUrlVar('prefix') != undefined ? $.getUrlVar('prefix') : 'A';
     var searchTemplate = $.getUrlVar('st');
-    let url;
+    var url;
     if (searchTemplate!=undefined){
         url="/rest/countByShortNameLike/" + searchTemplate;
     }else{

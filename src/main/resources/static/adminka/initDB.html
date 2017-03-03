@@ -85,12 +85,12 @@
                             <script>
                                 document.getElementById("updateDB").onclick = updateDB;
                                 document.getElementById("stopUpdate").onclick = stopUpdate;
-                                let source = new EventSource('/getRealTimeMessage');
+                                var source = new EventSource('/getRealTimeMessage');
                                 source.addEventListener('open', function (e) {
                                     console.log('connected');
                                 });
                                 function objToStrMap(obj) {
-                                    let strMap = new Map();
+                                    var strMap = new Map();
                                     for (let k of Object.keys(obj)) {
                                         strMap.set(k, obj[k]);
                                     }
@@ -101,14 +101,14 @@
                                     return objToStrMap(JSON.parse(jsonStr));
                                 }
                                 source.addEventListener('message', function (e) {
-                                    let progressMap = jsonToStrMap(e.data);
-                                    let keys = progressMap.keys();
+                                    var progressMap = jsonToStrMap(e.data);
+                                    var keys = progressMap.keys();
 
 
-                                    let list = document.getElementById("content");
+                                    var list = document.getElementById("content");
 
                                     for (let key of keys) {
-                                        let item = document.getElementById(key);
+                                        var item = document.getElementById(key);
                                         if (item == null) {
                                             item = document.createElement('h2');
                                             item.id = key;
