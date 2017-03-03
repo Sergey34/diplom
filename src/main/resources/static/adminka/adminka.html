@@ -15,6 +15,7 @@
     <script src="../js/jquery-3.1.1.min.js"></script>
     <script src="../js/get_user.js"></script>
     <script src="../js/add_user.js"></script>
+    <script src="../js/searcher.js"></script>
     <script src="../js/get_user_roles.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/css_login.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -39,11 +40,10 @@
             </button>
             <a class="navbar-brand" href="/airfoilList.html">Airfoils</a>
             <form class="navbar-form navbar-left" role="search">
-                <div class="form-group">
-                    <input name="shortNameTemplate" type="text" class="form-control"
-                           placeholder="shortName contains ...">
+                <div class="form-group"><input id="searchTemplate" type="text" class="form-control"
+                                               placeholder="shortName contains ...">
                 </div>
-                <button type="submit" class="btn btn-default">Отправить</button>
+                <button id="search" type="button" class="btn btn-default">Найти</button>
             </form>
             <a class="navbar-brand" href="/searcher.html">Расширенный поиск</a>
         </div>
@@ -103,5 +103,6 @@
 <!--<script src="../js/jquery.js"></script>-->
 <!-- Bootstrap Core JavaScript -->
 <script src="../js/bootstrap.min.js"></script>
+<script>document.getElementById("search").onclick = search;</script>
 </body>
 </html>
