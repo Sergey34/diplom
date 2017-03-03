@@ -129,10 +129,11 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
-    public List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String name) {
+    public List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String shortName) {
         Filter filter = new Filter(conditions);
         List<Coordinates> coords = daoCoordinates.findAll(filter);
-        List<Airfoil> airfoils = daoAirfoil.findByCoordinatesInAndShortNameLike(coords, name);
+        String shortNameTemplate = '%' + shortName + '%';
+        List<Airfoil> airfoils = daoAirfoil.findByCoordinatesInAndShortNameLike(coords, shortNameTemplate);
         for (Airfoil airfoil : airfoils) {
             drawViewAirfoil(airfoil);
             createDatFile(airfoil);

@@ -11,6 +11,9 @@ public class Condition {
         this.value = value;
     }
 
+    public Condition() {
+    }
+
     public String getAction() {
         return action;
     }

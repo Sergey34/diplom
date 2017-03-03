@@ -93,8 +93,13 @@ public class FullRestController {
         return service.countByShortNameLike(shortName);
     }
 
-    @RequestMapping(value = "/searchAirfoil", method = RequestMethod.POST)
-    public List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String shortNameTemplate) {
-        return service.searchAirfoils(conditions, shortNameTemplate);
+    @RequestMapping(value = {"/searchAirfoil/{shortName}"}, method = RequestMethod.POST)
+    public List<AirfoilDTO> searchAirfoilsForName(@RequestBody List<Condition> conditions, @PathVariable String shortName) {
+        return service.searchAirfoils(conditions, shortName);
+    }
+
+    @RequestMapping(value = {"/searchAirfoil"}, method = RequestMethod.POST)
+    public List<AirfoilDTO> searchAirfoils(@RequestBody List<Condition> conditions) {
+        return service.searchAirfoils(conditions, "");
     }
 }
