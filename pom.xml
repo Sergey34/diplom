@@ -10,6 +10,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.7</java.version>
+        <appengine.maven.plugin>1.0.0</appengine.maven.plugin>
     </properties>
 
     <parent>
@@ -25,6 +26,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <!-- START plugin -->
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>1.2.0</version>
+            </plugin>
+            <!-- END plugin -->
         </plugins>
     </build>
 
@@ -47,10 +55,6 @@
                     <groupId>xml-apis</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
         <!-- Test -->
         <dependency>
@@ -79,17 +83,6 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-mongodb -->
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-mongodb</artifactId>
-            <version>1.8.2.RELEASE</version>
-        </dependency>
-
 
         <!-- https://mvnrepository.com/artifact/org.webjars/jquery -->
         <dependency>
@@ -125,4 +118,6 @@
 
 
     </dependencies>
+
+
 </project>
