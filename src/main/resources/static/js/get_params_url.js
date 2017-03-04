@@ -11,5 +11,8 @@ $.extend({
     },
     getUrlVar: function (name) {
         return $.getUrlVars()[name];
+    },
+    getAllUrlParams: function () {
+        return window.location.href.slice(window.location.href.indexOf('?') + 1);
     }
 });

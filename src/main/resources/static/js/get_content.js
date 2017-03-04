@@ -150,7 +150,7 @@ function createCursore(no) {
                 item.setAttribute("class", "disabled");
             } else {
                 var no_last = no - 1;
-                link.setAttribute("href", "airfoilList.html?prefix=" + prefix + '&no=' + no_last);
+                link.setAttribute("href", "airfoilList.html?" + $.getAllUrlParams() + '&no=' + no_last);
             }
             item.appendChild(link);
             cursor.appendChild(item);
@@ -161,7 +161,7 @@ function createCursore(no) {
                 item.setAttribute("class", "");
 
                 link = document.createElement('a');
-                link.setAttribute("href", "airfoilList.html?prefix=" + prefix + '&no=' + i);
+                link.setAttribute("href", "airfoilList.html?" + $.getAllUrlParams() + '&no=' + i);
 
                 if (no == i) {
                     item.setAttribute("class", "active");
@@ -181,7 +181,7 @@ function createCursore(no) {
                 item.setAttribute("class", "disabled");
             } else {
                 var no_next = no + 1;
-                link.setAttribute("href", "airfoilList.html?prefix=" + prefix + '&no=' + no_next);
+                link.setAttribute("href", "airfoilList.html?" + $.getAllUrlParams() + '&no=' + no_next);
             }
             item.appendChild(link);
             cursor.appendChild(item);
