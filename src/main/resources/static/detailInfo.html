@@ -15,6 +15,7 @@
     <script src="js/jquery-3.1.1.min.js"></script>
     <script src="js/get_user.js"></script>
     <script src="js/get_params_url.js"></script>
+    <script src="js/searcher.js"></script>
 </head>
 <body>
 <!-- Navigation -->
@@ -29,7 +30,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Airfoils</a>
+            <a class="navbar-brand" href="/airfoilList.html">Airfoils</a>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group"><input id="searchTemplate" type="text" class="form-control"
+                                               placeholder="shortName contains ...">
+                </div>
+                <button id="search" type="button" class="btn btn-default">Найти</button>
+            </form>
+
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -124,11 +132,11 @@
                                 </a>
                             </div>
                             <script type="text/javascript">
-                               $(function() {
-                                    $('.carousel').each(function(){
+                                $(function () {
+                                    $('.carousel').each(function () {
                                         $(this).carousel("pause");
                                     });
-                               });
+                                });
                             </script>
                         </div>
                     </div>
@@ -154,5 +162,6 @@
 <!--<script src="js/jquery.js"></script>-->
 <!-- Bootstrap Core JavaScript -->
 <script src="js/bootstrap.min.js"></script>
+<script>document.getElementById("search").onclick = search;</script>
 </body>
 </html>

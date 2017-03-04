@@ -1,6 +1,6 @@
 package net.sergey.diplom.services.parser;
 
-import net.sergey.diplom.dao.DAO;
+import net.sergey.diplom.dao.airfoil.DaoAirfoil;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Coordinates;
 import net.sergey.diplom.domain.airfoil.Prefix;
@@ -36,24 +36,25 @@ class ParserAirfoil implements Callable<Void> {
     private static final String ONCLICK = "onclick";
     private static final String HTTP_M_SELIG_AE_ILLINOIS_EDU_ADS_COORD_DATABASE_HTML = "http://m-selig.ae.illinois.edu/ads/coord_database.html";
     private static volatile AtomicBoolean finish;
-    private final DAO dao;
+
     private final EventService eventService;
     private final Constant constants;
     private final ParseFileScv parseFileScv;
     private final ConnectionManager connectionManager;
     private final StringHandler stringHandler;
+    private final DaoAirfoil daoAirfoil;
     private String prefix;
 
     @Autowired
-    public ParserAirfoil(DAO dao, EventService eventService,
+    public ParserAirfoil(EventService eventService,
                          Constant constants, ParseFileScv parseFileScv,
-                         ConnectionManager connectionManager, StringHandler stringHandler) {
-        this.dao = dao;
+                         ConnectionManager connectionManager, StringHandler stringHandler, DaoAirfoil daoAirfoil) {
         this.eventService = eventService;
         this.constants = constants;
         this.parseFileScv = parseFileScv;
         this.connectionManager = connectionManager;
         this.stringHandler = stringHandler;
+        this.daoAirfoil = daoAirfoil;
         ParserAirfoil.finish = new AtomicBoolean(false);
     }
 
@@ -78,7 +79,7 @@ class ParserAirfoil implements Callable<Void> {
             Elements airfoilList = connectionManager.getJsoupConnect(url + i, constants.TIMEOUT).get().body().getElementsByClass(constants.AFSEARCHRESULT).
                     first().getElementsByTag(constants.TR);
             List<Airfoil> airfoils = parsePage(prefix1, airfoilList, countPages);
-            dao.addAirfoils(airfoils);
+            daoAirfoil.save(airfoils);
         }
         eventService.updateProgress(prefix, 100.0);
     }
@@ -146,7 +147,8 @@ class ParserAirfoil implements Callable<Void> {
                     Coordinates coordinateItem = new Coordinates(parseFileScv.csvToString(urlFile.openStream()), fileName + constants.FILE_TYPE);
                     coordinateItem.setRenolgs(reynolds.text());
                     coordinateItem.setNCrit(nCrit.text());
-                    coordinateItem.setMaxClCd(maxClCd.text());
+                    coordinateItem.setMaxClCd(stringHandler.createStringByPattern(maxClCd.text(), constants.GET_MAXCLCD_PATTERN));
+                    coordinateItem.setAlpha(stringHandler.createStringByPattern(maxClCd.text(), constants.GET_ALPHA_PATTERN));
                     coordinates.add(coordinateItem);
                 }
             }

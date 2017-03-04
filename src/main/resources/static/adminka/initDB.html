@@ -14,6 +14,7 @@
     <link href="../css/shop-homepage.css" rel="stylesheet">
     <script src="../js/jquery-3.1.1.min.js"></script>
     <script src="../js/init_db.js"></script>
+    <script src="../js/searcher.js"></script>
     <script src="../js/get_user.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/css_login.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -36,7 +37,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Airfoils</a>
+            <a class="navbar-brand" href="/airfoilList.html">Airfoils</a>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group"><input id="searchTemplate" type="text" class="form-control"
+                                               placeholder="shortName contains ...">
+                </div>
+                <button id="search" type="button" class="btn btn-default">Найти</button>
+            </form>
+
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -77,12 +85,12 @@
                             <script>
                                 document.getElementById("updateDB").onclick = updateDB;
                                 document.getElementById("stopUpdate").onclick = stopUpdate;
-                                let source = new EventSource('/getRealTimeMessage');
+                                var source = new EventSource('/getRealTimeMessage');
                                 source.addEventListener('open', function (e) {
                                     console.log('connected');
                                 });
                                 function objToStrMap(obj) {
-                                    let strMap = new Map();
+                                    var strMap = new Map();
                                     for (let k of Object.keys(obj)) {
                                         strMap.set(k, obj[k]);
                                     }
@@ -93,14 +101,14 @@
                                     return objToStrMap(JSON.parse(jsonStr));
                                 }
                                 source.addEventListener('message', function (e) {
-                                    let progressMap = jsonToStrMap(e.data);
-                                    let keys = progressMap.keys();
+                                    var progressMap = jsonToStrMap(e.data);
+                                    var keys = progressMap.keys();
 
 
-                                    let list = document.getElementById("content");
+                                    var list = document.getElementById("content");
 
                                     for (let key of keys) {
-                                        let item = document.getElementById(key);
+                                        var item = document.getElementById(key);
                                         if (item == null) {
                                             item = document.createElement('h2');
                                             item.id = key;
@@ -146,5 +154,6 @@
 <!--<script src="../js/jquery.js"></script>-->
 <!-- Bootstrap Core JavaScript -->
 <script src="../js/bootstrap.min.js"></script>
+<script>document.getElementById("search").onclick = search;</script>
 </body>
 </html>

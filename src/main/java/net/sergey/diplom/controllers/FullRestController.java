@@ -3,6 +3,7 @@ package net.sergey.diplom.controllers;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.Authorities;
+import net.sergey.diplom.dto.Condition;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.dto.user.UserDto;
@@ -42,7 +43,7 @@ public class FullRestController {
         return userService.getAllUserRoles();
     }
 
-    @RequestMapping(value = "/airfoilsDto/{prefix}/{startNumber}/{count}", method = RequestMethod.GET)
+    @RequestMapping(value = "/airfoilsDto/{prefix}/{startNumber}/{count}", method = RequestMethod.POST)
     public List<AirfoilDTO> getAirfoilsDtoByPrefix(@PathVariable char prefix, @PathVariable int startNumber, @PathVariable int count) throws IOException {
         return service.getAirfoilsDtoByPrefix(prefix, startNumber, count);
     }
@@ -52,7 +53,7 @@ public class FullRestController {
         return service.getAirfoilsByPrefix(prefix, startNumber, count);
     }
 
-    @RequestMapping(value = "/airfoilsDto/{startNumber}/{count}", method = RequestMethod.GET)
+    @RequestMapping(value = "/airfoilsDto/{startNumber}/{count}", method = RequestMethod.POST)
     public List<AirfoilDTO> getAllAirfoilDto(@PathVariable int startNumber, @PathVariable int count) {
         return service.getAllAirfoilDto(startNumber, count);
     }
@@ -72,7 +73,7 @@ public class FullRestController {
         return service.getAirfoilById(airfoilId);
     }
 
-    @RequestMapping(value = "/countAirfoil/{prefix}", method = RequestMethod.GET)
+    @RequestMapping(value = "/countAirfoil/{prefix}", method = RequestMethod.POST)
     public int getCountAirfoil(@PathVariable char prefix) {
         return service.getCountAirfoilByPrefix(prefix);
     }
@@ -81,4 +82,36 @@ public class FullRestController {
     public List<String> updateGraf(@PathVariable String airfoilId, @RequestBody List<String> checkedList) {
         return service.updateGraf(airfoilId, checkedList);
     }
+
+    @RequestMapping(value = "/searchByShortNameLike/{shortName}/{startNumber}/{count}", method = RequestMethod.GET)
+    public List<AirfoilDTO> searchByShortNameLike(@PathVariable String shortName, @PathVariable int startNumber, @PathVariable int count) {
+        return service.findByShortNameLike(shortName, startNumber, count);
+    }
+
+    @RequestMapping(value = "/countByShortNameLike/{shortName}", method = RequestMethod.POST)
+    public int countByShortNameLike(@PathVariable String shortName) {
+        return service.countByShortNameLike(shortName);
+    }
+
+    @RequestMapping(value = {"/searchAirfoil/{shortName}/{startNumber}/{count}"}, method = RequestMethod.POST)
+    public List<AirfoilDTO> searchAirfoilsForName(@RequestBody List<Condition> conditions, @PathVariable String shortName, @PathVariable int startNumber, @PathVariable int count) {
+        return service.searchAirfoils(conditions, shortName, startNumber, count);
+    }
+
+    @RequestMapping(value = {"/searchAirfoil/{startNumber}/{count}"}, method = RequestMethod.POST)
+    public List<AirfoilDTO> searchAirfoils(@RequestBody List<Condition> conditions, @PathVariable int startNumber, @PathVariable int count) {
+        return service.searchAirfoils(conditions, "", startNumber, count);
+    }
+
+    @RequestMapping(value = {"/countSearchAirfoil"}, method = RequestMethod.POST)
+    public int countSearchAirfoil(@RequestBody List<Condition> conditions) {
+        return service.countSearchAirfoil(conditions, "");
+    }
+
+    @RequestMapping(value = {"/countSearchAirfoil/{shortName}"}, method = RequestMethod.POST)
+    public int countSearchAirfoilsForName(@RequestBody List<Condition> conditions, @PathVariable String shortName) {
+        return service.countSearchAirfoil(conditions, shortName);
+    }
+
+
 }
