@@ -129,11 +129,14 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
-    public List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String shortName) {
+    public List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String shortName, int startNumber, int count) {
+        if (conditions == null || conditions.isEmpty()) {
+            return findByShortNameLike(shortName, startNumber, count);
+        }
         Filter filter = new Filter(conditions);
         List<Coordinates> coords = daoCoordinates.findAll(filter);
         String shortNameTemplate = '%' + shortName + '%';
-        List<Airfoil> airfoils = daoAirfoil.findByCoordinatesInAndShortNameLike(coords, shortNameTemplate);
+        List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCoordinatesInAndShortNameLike(coords, shortNameTemplate, new PageRequest(startNumber, count));
         for (Airfoil airfoil : airfoils) {
             drawViewAirfoil(airfoil);
             createDatFile(airfoil);
@@ -142,9 +145,14 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
-    public List<AirfoilDTO> findByShortNameLike(String shortName) {
-        String shortNameTemplate = '%' + shortName + '%';
-        List<Airfoil> airfoils = daoAirfoil.findByShortNameLike(shortNameTemplate);
+    public List<AirfoilDTO> findByShortNameLike(String shortName, int startNumber, int count) {
+        String shortNameTemplate;
+        if ("null".equals(shortName)) {
+            shortNameTemplate = "%";
+        } else {
+            shortNameTemplate = '%' + shortName + '%';
+        }
+        List<Airfoil> airfoils = daoAirfoil.findByShortNameLike(shortNameTemplate, new PageRequest(startNumber, count));
         for (Airfoil airfoil : airfoils) {
             drawViewAirfoil(airfoil);
             createDatFile(airfoil);
@@ -156,6 +164,17 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     public int countByShortNameLike(String shortName) {
         String shortNameTemplate = '%' + shortName + '%';
         return daoAirfoil.countByShortNameLike(shortNameTemplate);
+    }
+
+    @Override
+    public int countSearchAirfoil(List<Condition> conditions, String shortName) {
+        if (conditions == null || conditions.isEmpty()) {
+            return countByShortNameLike(shortName);
+        }
+        Filter filter = new Filter(conditions);
+        List<Coordinates> coords = daoCoordinates.findAll(filter);
+        String shortNameTemplate = '%' + shortName + '%';
+        return daoAirfoil.countDistinctAirfoilByCoordinatesInAndShortNameLike(coords, shortNameTemplate);
     }
 
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {

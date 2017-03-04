@@ -17,9 +17,8 @@ function searchFull() {
         n++;
     }
     var short_name = $("#short_name").val();
-    // window.location.replace("/airfoilList.html?st="+searchTemplate);
-
     console.log("n= " + n);
+
     var array = new Array(n);
     for (var i = 0; i < 3 && n != 0; i++) {
         let val = $("#value" + i).val();
@@ -34,12 +33,13 @@ function searchFull() {
             n--;
         }
     }
+    window.location.replace("/airfoilList.html?sf=" + short_name + "&data=" + encodeURIComponent(JSON.stringify(array)));
 
 
     console.log(array);
     console.log(short_name);
     $(document).ready(function () {
-
+        // encodeURI('[{"action":"=","attrName":"maxClCd","value":"5"}]')
         var data2 = JSON.stringify(array);
         console.log(data2);
         $.ajax({

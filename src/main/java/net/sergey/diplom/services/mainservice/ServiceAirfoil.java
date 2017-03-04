@@ -41,9 +41,11 @@ public interface ServiceAirfoil {
 
     Message clearAll();
 
-    List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String name);
+    List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String name, int startNumber, int count);
 
-    List<AirfoilDTO> findByShortNameLike(String shortName);
+    List<AirfoilDTO> findByShortNameLike(String shortName, int startNumber, int count);
 
     int countByShortNameLike(String shortName);
+
+    int countSearchAirfoil(List<Condition> conditions, String shortName);
 }

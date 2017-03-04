@@ -5,12 +5,25 @@ function getContent() {
     var no = $.getUrlVar('no') != undefined ? $.getUrlVar('no') - 1 : 0;
 
     var url;
+    var dataS = "";
     var searchTemplate = $.getUrlVar('st');
-    if (searchTemplate!=undefined){
-        url="/rest/searchByShortNameLike/" + searchTemplate;
-    }else{
-        url="/rest/airfoilsDto/" + prefix + "/" + no + "/21";
+    var searchName = $.getUrlVar('sf');
+    var searchData = decodeURIComponent($.getUrlVar('data'));
+
+    if (searchTemplate != undefined) {
+        url = "/rest/searchByShortNameLike/" + searchTemplate + "/" + no + "/21";
+    } else {
+        if (searchName != undefined && searchData != undefined) {
+            if (searchName == "") {
+                searchName = "null";
+            }
+            url = "/rest/searchAirfoil/" + searchName + "/" + no + "/21";
+            dataS = searchData;
+        } else {
+            url = "/rest/airfoilsDto/" + prefix + "/" + no + "/21";
+        }
     }
+
     console.log("no=" + no);
 
     console.log(currentPrefix);
@@ -19,9 +32,14 @@ function getContent() {
         document.getElementById("contentid").removeChild(document.getElementById("airfoil_list"));
     }
     currentPrefix = prefix;
+
     $(document).ready(function () {
         $.ajax({
-            url: url
+            type: "POST",
+            contentType: "application/json",
+            url: url,
+            data: dataS,
+            dataType: 'json'
         }).then(function (data) {
             createCursore(no + 1);
             console.log(data);
@@ -90,17 +108,33 @@ function getContent() {
 function createCursore(no) {
     console.log("createCursore");
     var prefix = $.getUrlVar('prefix') != undefined ? $.getUrlVar('prefix') : 'A';
-    var searchTemplate = $.getUrlVar('st');
     var url;
-    if (searchTemplate!=undefined){
-        url="/rest/countByShortNameLike/" + searchTemplate;
-    }else{
-        url="/rest/countAirfoil/" + prefix;
+    var dataS = "";
+    var searchTemplate = $.getUrlVar('st');
+    var searchName = $.getUrlVar('sf');
+    var searchData = decodeURIComponent($.getUrlVar('data'));
+    if (searchTemplate != undefined) {
+        url = "/rest/countByShortNameLike/" + searchTemplate;
+    } else {
+        if (searchName != undefined && searchData != undefined) {
+            if (searchName == "") {
+                searchName = "null";
+            }
+            url = "/rest/countSearchAirfoil/" + searchName;
+            dataS = searchData;
+        } else {
+            url = "/rest/countAirfoil/" + prefix;
+        }
     }
+
     // var prefix = 'A';
     $(document).ready(function () {
         $.ajax({
-            url: url
+            type: "POST",
+            contentType: "application/json",
+            url: url,
+            data: dataS,
+            dataType: 'json'
         }).then(function (data) {
             console.log(data);
             var countItem = Math.ceil(data / 20.0);
