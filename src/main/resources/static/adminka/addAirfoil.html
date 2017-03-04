@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Airfoil tolls - Add Airfoil</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/shop-homepage.css" rel="stylesheet">
+    <script src="../js/jquery-3.1.1.min.js"></script>
+    <script src="../js/get_user.js"></script>
+    <script src="../js/searcher.js"></script>
+    <script src="../js/add_airfoil.js"></script>
+    <script src='../js/tabular-input.min.js'></script>
+    <link type='text/css' rel='stylesheet' href='../css/tabular-input.css'/>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <!--<![endif]&ndash;&gt;-->
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/airfoilList.html">Airfoils</a>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group"><input id="searchTemplate" type="text" class="form-control"
+                                               placeholder="shortName contains ...">
+                </div>
+                <button id="search" type="button" class="btn btn-default">Найти</button>
+            </form>
+            <a class="navbar-brand" href="/searcher.html">Расширенный поиск</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav" id="navbar-nav">
+                <li><a href="/about.html" id="about">About</a></li>
+            </ul>
+        </div>
+
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<!-- Page Content -->
+<script src="../js/get_menu.js"></script>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3" id="list_menu">
+            <p class="lead">Навигация</p>
+            <div class="list-group">
+                <a class="list-group-item" id="addAirf" href="/adminka/addAirfoil.html">Добавить новый профиль</a>
+                <a class="list-group-item" id="adm" href="/adminka/adminka.html">Админка</a>
+            </div>
+
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-sm-12 col-lg-12 col-md-12">
+                    <div class="thumbnail">
+                        <div class="caption">
+                            <div class="content" id="contentid">
+                                <div id="airfoilDetailInfo">
+                                    <form action="/rest/write/addAirfoilForFileCsv" method="post"
+                                          enctype="multipart/form-data"
+                                          id="addAirfoil">
+                                        <label>
+                                            Название профиля
+                                            <input type="text" value="" name="name"/>
+                                        </label>
+                                        </Br>
+                                        <label>
+                                            Короткое название профиля
+                                            <input type="text" value="" name="ShortName"/>
+                                        </label>
+                                        </Br>
+                                        <label>
+                                            Детали
+                                            <input type="text" value="" name="Details"/>
+                                        </label>
+                                        </Br>
+                                        <label>
+                                            Выберите файл для построения графика профиля
+                                            <input class="fileInput btn btn-default" type="file" name="fileAirfoil"/>
+                                        </label>
+
+                                        </Br>
+                                        <label>
+                                            Выберите файлы построения графиков
+                                            <input class="fileInput btn btn-default" name="files" multiple="multiple"
+                                                   value="Выбрать файлы"/>
+                                        </label>
+                                        </Br>
+                                        <input class="btn btn-default" type="submit"/>
+
+                                    </form>
+                                </div>
+
+                                <div id="addAirfoilWeb">
+                                    <label>
+                                        Название профиля
+                                        <input type="text" value="" name="airfoilName" id="airfoilName"/>
+                                    </label>
+                                    </Br>
+                                    <label>
+                                        Короткое название профиля
+                                        <input type="text" value="" name="ShortName" id="ShortName"/>
+                                    </label>
+                                    </Br>
+                                    <label>
+                                        Детали
+                                        <input type="text" value="" name="Details" id="Details"/>
+                                    </label>
+                                    </Br>
+                                    <div id="view">
+                                        <input type="button" class="btn btn-default" value="Add New Row"
+                                               onclick='javascript:$("#viewTab").tabularInput("addRow")'>
+                                        <input type="button" class="btn btn-default" value="Delete Last Row"
+                                               onclick="javascript:$('#viewTab').tabularInput('deleteRow')">
+                                        <div id="viewTab">
+                                        </div>
+                                    </div>
+                                    </Br>
+                                    <input type="button" id="addTable" class="btn btn-default" value="add table">
+                                </div>
+                                <input type="button" id="saveWab" class="btn btn-default" value="add airfoil">
+
+                            </div>
+                            <script>
+                                document.getElementById('addAirfoil').setAttribute('action', "/rest/write/addAirfoilForFileCsv");
+                                jQuery('#viewTab').tabularInput({
+                                    'rows': 10,
+                                    'columns': 2,
+                                    'minRows': 10,
+                                    'newRowOnTab': true,
+                                    'columnHeads': ['x', 'y'],
+                                    'name': '',
+                                    'animate': true
+                                });
+                                document.getElementById("addTable").onclick = addTable;
+                                document.getElementById("saveWab").onclick = saveWab;
+                            </script>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.container -->
+<div class="container">
+    <hr>
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Copyright &copy; Your Website 2014</p>
+            </div>
+        </div>
+    </footer>
+</div>
+<!-- /.container -->
+<!-- jQuery -->
+<!--<script src="../js/jquery.js"></script>-->
+<!-- Bootstrap Core JavaScript -->
+<script src="../js/bootstrap.min.js"></script>
+<script>document.getElementById("search").onclick = search;</script>
+</body>
+</html>

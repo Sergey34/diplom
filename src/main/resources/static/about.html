@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Airfoil tolls - About</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/shop-homepage.css" rel="stylesheet">
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/init_db.js"></script>
+    <script src="js/get_user.js"></script>
+    <script src="js/searcher.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/css_login.css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>-->
+    <!--<![endif]&ndash;&gt;-->
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/airfoilList.html">Airfoils</a>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group"><input id="searchTemplate" type="text" class="form-control"
+                                               placeholder="shortName contains ...">
+                </div>
+                <button id="search" type="button" class="btn btn-default">Найти</button>
+            </form>
+            <a class="navbar-brand" href="/searcher.html">Расширенный поиск</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav" id="navbar-nav">
+                <li><a href="/about.html" id="about">About</a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<!-- Page Content -->
+<script src="js/get_menu.js"></script>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3" id="list_menu">
+            <p class="lead">Навигация</p>
+            <div class="list-group">
+                <a class="list-group-item" id="addAirf" href="/adminka/addAirfoil.html">Добавить новый профиль</a>
+                <a class="list-group-item" id="adm" href="/adminka/adminka.html">Админка</a>
+            </div>
+
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-sm-12 col-lg-12 col-md-12">
+                    <div class="thumbnail">
+                        <div class="caption">
+                            Получить список меню.<br>
+                            Запрос:
+                            <pre>
+GET /rest/menu
+                            </pre>
+                            Ответ:
+                            <pre>
+[
+   {
+      "id": -1043787113,
+      "header": "Airfoils A to Z",
+      "menuItems": [
+         {
+            "id": -625623784,
+            "name": "A a18 to avistar",
+            "urlCode": "A"
+         },
+         {
+            "id": 610183724,
+            "name": "B b29root to bw3",
+            "urlCode": "B"
+         }
+      ]
+   },
+   {
+      "id": -34245354,
+      "header": "header B",
+      "menuItems": [
+         {
+            "id": -456465,
+            "name": "name B",
+            "urlCode": "BB"
+         }
+      ]
+   }
+]
+                            </pre>
+                            Получить информацию о пользователе.<br>
+                            Запрос:
+                            <pre>
+GET /rest/userInfo
+                            </pre>
+                            Ответ:
+                            <pre>
+{
+   "userName": "alex",
+   "userRoles": [
+      {
+         "roleId": 1,
+         "role": "ROLE_USER"
+      },
+      {
+         "roleId": 2,
+         "role": "ROLE_ADMIN"
+      }
+   ]
+}
+                            </pre>
+
+                            Получить количество профлей по заданному префиксу.<br>
+                            Запрос:
+                            <pre>
+GET /rest/countAirfoil/{prefix}
+                            </pre>
+                            Ответ:
+                            <pre>
+24
+                            </pre>
+                            Получить список ролей пользователей.<br>
+                            Запрос:
+                            <pre>
+GET /rest/userRoles
+                            </pre>
+                            Ответ:
+                            <pre>
+[{"roleId":2,"role":"ROLE_ADMIN"},{"roleId":1,"role":"ROLE_USER"}]
+                            </pre>
+
+                            Получить airfoil по id.<br>
+                            Запрос:
+                            <pre>
+Полная информаця о профиле для самостоятельной обработки.
+GET /rest/airfoil/{airfoilId}
+Подробная информация со ссылками на построенные графики и файлы.
+GET /rest/airfoilDto/{airfoilId}
+Обновить построенные графики (имена файлов на сервере не изменятся)
+GET /updateGraf/{airfoilId}"
+                            </pre>
+                            Ответ:
+                            <pre>
+{
+   "name": "AG13 (ag13-il)",
+   "description": "(ag13-il) AG13&lt;br&gt;Drela AG13 airfoil&lt;br&gt;Max thickness 5.8% at 21.3% chord.&lt;br&gt;Max camber 2% at 41.8% chord&lt;br&gt;Source &lt;a rel=\"nofollow\" target=\"_blank\" onclick=\"_gaq.push(['_trackEvent','external','http://www.ae.illinois.edu/m-selig/ads/coord_database.html', '']);return true;\" href=\"/site/external?url=http%3A%2F%2Fwww.ae.illinois.edu%2Fm-selig%2Fads%2Fcoord_database.html\"&gt;UIUC Airfoil Coordinates Database&lt;\/a&gt;&lt;br&gt;&lt;a rel=\"nofollow\" target=\"_blank\" onclick=\"_gaq.push(['_trackEvent','external','http://www.ae.illinois.edu/m-selig/ads/coord/ag13.dat', '']);return true;\" href=\"/site/external?url=http%3A%2F%2Fwww.ae.illinois.edu%2Fm-selig%2Fads%2Fcoord%2Fag13.dat\"&gt;Source dat file&lt;\/a&gt;&lt;br&gt;The dat file is in Selig format&lt;br&gt;",
+   "image": "/resources/airfoil_img/ag13-il.png",
+   "shortName": "ag13-il",
+   "imgCsvName": [
+      "/resources/chartTemp/ag13-ilCl v Cd.png",
+      "/resources/chartTemp/ag13-ilCl v Alpha.png",
+      "/resources/chartTemp/ag13-ilCd v Alpha.png",
+      "/resources/chartTemp/ag13-ilCm v Alpha.png",
+      "/resources/chartTemp/ag13-ilCl div Cd v Alpha.png"
+   ],
+   "stlFilePath": "/resources/ag13-il_100.scad",
+   "coordinates": [
+      {
+         "coordinatesJson": "Xfoil polar. Reynolds number fixed. Mach  number fixed\nPolar key,xf-ag13-il-1000000-n5\nAirfoil,ag13-il\nReynolds number,1000000\nNcrit,5\nMach,0\nMax Cl/Cd,88.1888\nMax Cl/Cd alpha,5.25\nUrl,http://airfoiltools.com/polar/csv?polar=xf-ag13-il-1000000-n5\n\nAlpha,Cl,Cd,Cdp,Cm,Top_Xtr,Bot_Xtr\n-8.250,-0.5701,0.09626,0.09470,0.0184,1.0000,0.0044\n-7.500,-0.5655,0.07944,0.07793,0.0068,1.0000,0.0029\n-7.250,-0.5546,0.07318,0.07169,-0.0008,1.0000,0.0029\n-6.750,-0.5203,0.01975,0.01655,-0.0474,1.0000,0.0027\n-6.500,-0.4948,0.01672,0.01305,-0.0480,1.0000,0.0029\n-6.250,-0.4683,0.01539,0.01148,-0.0481,1.0000,0.0030\n-6.000,-0.4420,0.01303,0.00869,-0.0484,1.0000,0.0033\n-5.750,-0.4152,0.01221,0.00775,-0.0484,1.0000,0.0036\n-5.500,-0.3882,0.01166,0.00711,-0.0483,1.0000,0.0038\n,
+         "fileName": "xf-ag13-il-1000000-n5.csv",
+         "filePath": "/resources/tmpCsv/xf-ag13-il-1000000-n5.csv",
+         "renolgs": "1,000,000",
+         "nCrit": "5",
+         "maxClCd": "88.2 at α=5.25°"
+      },
+      {
+         "coordinatesJson": "Xfoil polar. Reynolds number fixed. Mach  number fixed\nPolar key,xf-ag13-il-50000\nAirfoil,ag13-il\nReynolds number,50000\nNcrit,9\nMach,0\nMax Cl/Cd,34.1528\nMax Cl/Cd alpha,4\nUrl,http://airfoiltools.com/polar/csv?polar=xf-ag13-il-50000\n\nAlpha,Cl,Cd,Cdp,Cm,Top_Xtr,Bot_Xtr\n-9.500,-0.5925,0.13338,0.12658,0.0214,1.0000,0.1438\n-9.250,-0.5675,0.12561,0.11877,0.0244,1.0000,0.1511\n-9.000,-0.5722,0.12399,0.11723,0.0214,1.0000,0.1565\n-8.750,-0.5612,0.11893,0.11220,0.0216,1.0000,0.1611\n-8.500,-0.5575,0.11594,0.10926,0.0204,1.0000,0.1687\n-8.250,-0.5582,0.11293,0.10634,0.0181,1.0000,0.1727\n-8.000,-0.5475,0.10889,0.10231,0.0185,1.0000,0.1819\n-7.750,-0.5457,0.10553,0.09903,0.0168,1.0000,0.1874\n-7.500,-0.5433,0.10283,0.09640,0.0153,1.0000,0.1972\n",
+         "fileName": "xf-ag13-il-50000.csv",
+         "filePath": "/resources/tmpCsv/xf-ag13-il-50000.csv",
+         "renolgs": "50,000",
+         "nCrit": "9",
+         "maxClCd": "34.2 at α=4°"
+      }
+   ],
+   "coordView": "1.000000,0.000474\n0.994186,0.001043\n0.982196,0.002244\n0.968716,0.003561\n..."
+}
+                            </pre>
+
+                            Получить список из n профилей начиная с k.<br>
+                            Запрос:
+                            <pre>
+Информация для представления.
+GET /rest/airfoilsDto/{startNumber}/{count}
+GET /rest/airfoilsDto/5/2
+Вся информация.
+GET /rest/airfoils/{startNumber}/{count}
+GET /rest/airfoils/5/2
+Вся информация.
+GET /rest/airfoils/{prefix}/{startNumber}/{count}
+GET /rest/airfoils/a/5/2
+Информация для представления.
+GET /rest/airfoilsDto/{prefix}/{startNumber}/{count}
+GET /rest/airfoilsDto/a/5/2
+                            </pre>
+                            Ответ:
+                            <pre>
+[
+   {
+      "name": "AG13 (ag13-il)",
+      "description": "(ag13-il) AG13&lt;br&gt;Drela AG13 airfoil&lt;br&gt;Max thickness 5.8% at 21.3% chord.&lt;br&gt;Max camber 2% at 41.8% chord&lt;br&gt;Source &lt;a rel=\"nofollow\" target=\"_blank\" onclick=\"_gaq.push(['_trackEvent','external','http://www.ae.illinois.edu/m-selig/ads/coord_database.html', '']);return true;\" href=\"/site/external?url=http%3A%2F%2Fwww.ae.illinois.edu%2Fm-selig%2Fads%2Fcoord_database.html\"&gt;UIUC Airfoil Coordinates Database&lt;\/a&gt;&lt;br&gt;&lt;a rel=\"nofollow\" target=\"_blank\" onclick=\"_gaq.push(['_trackEvent','external','http://www.ae.illinois.edu/m-selig/ads/coord/ag13.dat', '']);return true;\" href=\"/site/external?url=http%3A%2F%2Fwww.ae.illinois.edu%2Fm-selig%2Fads%2Fcoord%2Fag13.dat\"&gt;Source dat file&lt;\/a&gt;&lt;br&gt;The dat file is in Selig format&lt;br&gt;",
+      "image": "/resources/airfoil_img/ag13-il.png",
+      "shortName": "ag13-il"
+   },
+   {
+      "name": "AG14 (ag14-il)",
+      "description": "(ag14-il) AG14&lt;br&gt;Drela AG14 airfoil&lt;br&gt;Max thickness 5.4% at 19.9% chord.&lt;br&gt;Max camber 2% at 41.9% chord&lt;br&gt;Source &lt;a rel=\"nofollow\" target=\"_blank\" onclick=\"_gaq.push(['_trackEvent','external','http://www.ae.illinois.edu/m-selig/ads/coord_database.html', '']);return true;\" href=\"/site/external?url=http%3A%2F%2Fwww.ae.illinois.edu%2Fm-selig%2Fads%2Fcoord_database.html\"&gt;UIUC Airfoil Coordinates Database&lt;\/a&gt;&lt;br&gt;&lt;a rel=\"nofollow\" target=\"_blank\" onclick=\"_gaq.push(['_trackEvent','external','http://www.ae.illinois.edu/m-selig/ads/coord/ag14.dat', '']);return true;\" href=\"/site/external?url=http%3A%2F%2Fwww.ae.illinois.edu%2Fm-selig%2Fads%2Fcoord%2Fag14.dat\"&gt;Source dat file&lt;\/a&gt;&lt;br&gt;The dat file is in Selig format&lt;br&gt;",
+      "image": "/resources/airfoil_img/ag14-il.png",
+      "shortName": "ag14-il"
+   }
+]
+                            </pre>
+
+
+                            инфа про api
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.container -->
+<div class="container">
+    <hr>
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Copyright &copy; Your Website 2014</p>
+            </div>
+        </div>
+    </footer>
+</div>
+<!-- /.container -->
+<!-- jQuery -->
+<!--<script src="../js/jquery.js"></script>-->
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+<script>document.getElementById("search").onclick = search;</script>
+</body>
+</html>
