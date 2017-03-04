@@ -133,9 +133,14 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         if (conditions == null || conditions.isEmpty()) {
             return findByShortNameLike(shortName, startNumber, count);
         }
+        String shortNameTemplate;
         Filter filter = new Filter(conditions);
         List<Coordinates> coords = daoCoordinates.findAll(filter);
-        String shortNameTemplate = '%' + shortName + '%';
+        if ("null".equals(shortName)) {
+            shortNameTemplate = "%";
+        } else {
+            shortNameTemplate = '%' + shortName + '%';
+        }
         List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCoordinatesInAndShortNameLike(coords, shortNameTemplate, new PageRequest(startNumber, count));
         for (Airfoil airfoil : airfoils) {
             drawViewAirfoil(airfoil);
@@ -173,7 +178,12 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         }
         Filter filter = new Filter(conditions);
         List<Coordinates> coords = daoCoordinates.findAll(filter);
-        String shortNameTemplate = '%' + shortName + '%';
+        String shortNameTemplate;
+        if ("null".equals(shortName)) {
+            shortNameTemplate = "%";
+        } else {
+            shortNameTemplate = '%' + shortName + '%';
+        }
         return daoAirfoil.countDistinctAirfoilByCoordinatesInAndShortNameLike(coords, shortNameTemplate);
     }
 
