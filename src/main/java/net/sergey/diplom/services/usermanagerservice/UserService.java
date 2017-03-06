@@ -26,6 +26,12 @@ import static net.sergey.diplom.dto.messages.Message.SC_OK;
 @Component
 public class UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
+    private final static List<Authorities> allAuthorities;
+
+    static {
+        allAuthorities = Arrays.asList(new Authorities("", "ROLE_ADMIN"));
+    }
+
     private final Converter converter;
     private final DaoUser daoUser;
 
@@ -52,8 +58,9 @@ public class UserService {
     }
 
 
+
     public List<Authorities> getAllUserRoles() {
-        return daoUser.findAll();
+        return allAuthorities;
     }
 
     public UserDto getCurrentUserInfo() {
