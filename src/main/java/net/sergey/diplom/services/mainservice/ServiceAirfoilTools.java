@@ -133,8 +133,8 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         if (conditions == null || conditions.isEmpty()) {
             return findByShortNameLike(shortName, startNumber, count);
         }
-        Filter filter = new Filter(conditions);
-        List<Coordinates> coords = daoCoordinates.findAll(filter);
+        Filter filter = new Filter();
+        List<Coordinates> coords = daoCoordinates.findCoordsByTemplate(filter.toQuery(conditions));
         String shortNameTemplate = '%' + shortName + '%';
         List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCoordinatesInAndShortNameLike(coords, shortNameTemplate, new PageRequest(startNumber, count));
         for (Airfoil airfoil : airfoils) {
@@ -171,8 +171,8 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         if (conditions == null || conditions.isEmpty()) {
             return countByShortNameLike(shortName);
         }
-        Filter filter = new Filter(conditions);
-        List<Coordinates> coords = daoCoordinates.findAll(filter);
+        Filter filter = new Filter();
+        List<Coordinates> coords = daoCoordinates.findCoordsByTemplate(filter.toQuery(conditions));
         String shortNameTemplate = '%' + shortName + '%';
         return daoAirfoil.countDistinctAirfoilByCoordinatesInAndShortNameLike(coords, shortNameTemplate);
     }
@@ -230,9 +230,6 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @PostConstruct
     public void init() {
-//        List<Condition> conditions = Arrays.asList(new Condition(">", "maxClCd", "100"));
-//        List<AirfoilDTO> airfoilDTOs = searchAirfoils(conditions, "%a%");
-//        System.out.println(airfoilDTOs);
         try {
             if (!new File(configParserPath).exists()) {
                 propertiesHandler.load(companiesXml.getInputStream());

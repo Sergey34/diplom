@@ -1,61 +1,44 @@
 package net.sergey.diplom.dao;
 
 import net.sergey.diplom.dto.Condition;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Filter implements Specification {
-    private List<Condition> conditions;
-
-    public Filter(List<Condition> conditions) {
-        this.conditions = conditions;
-    }
-
-    @Override
-    public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
-        List<Predicate> predicates = buildPredicates(root, criteriaQuery, criteriaBuilder);
-        return predicates.size() > 1
-                ? criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]))
-                : predicates.get(0);
-    }
-
-    private List<Predicate> buildPredicates(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
-        List<Predicate> predicates = new ArrayList<>();
+public class Filter {
+    public Query toQuery(List<Condition> conditions) {
+        Criteria criteria = new Criteria();
         for (Condition condition : conditions) {
-            predicates.add(buildPredicate(condition, root, criteriaBuilder));
+            criteria.andOperator(buildCriteria(condition));
         }
-        return predicates;
+        return Query.query(criteria);
     }
 
-    private Predicate buildPredicate(Condition condition, Root root, CriteriaBuilder criteriaBuilder) {
+    private Criteria buildCriteria(Condition condition) {
         switch (condition.getAction()) {
             case "<":
-                return buildGqPredicateToCriteria(condition, root, criteriaBuilder);
+                return buildGqCriteriaToCriteria(condition);
             case ">":
-                return buildLqPredicateToCriteria(condition, root, criteriaBuilder);
+                return buildLqCriteriaToCriteria(condition);
             case "=":
-                return buildEqualsPredicateToCriteria(condition, root, criteriaBuilder);
-            case "=="://contains
-                return buildContainsPredicateToCriteria(condition, root, criteriaBuilder);
+                return buildEqualsCriteriaToCriteria(condition);
         }
         return null;
     }
 
-    private Predicate buildLqPredicateToCriteria(Condition condition, Root root, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.lessThanOrEqualTo(root.get(condition.getAttrName()), condition.getValue());
+    private Criteria buildLqCriteriaToCriteria(Condition condition) {
+        return Criteria.where(condition.getAttrName()).lte(condition.getValue());
+
     }
 
-    private Predicate buildGqPredicateToCriteria(Condition condition, Root root, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.greaterThanOrEqualTo(root.get(condition.getAttrName()), condition.getValue());
+    private Criteria buildGqCriteriaToCriteria(Condition condition) {
+        return Criteria.where(condition.getAttrName()).gte(condition.getValue());
+
     }
 
-    private Predicate buildContainsPredicateToCriteria(Condition condition, Root root, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.like(root.get(condition.getAttrName()), condition.getValue());
-    }
-
-    private Predicate buildEqualsPredicateToCriteria(Condition condition, Root root, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.equal(root.get(condition.getAttrName()), condition.getValue());
+    private Criteria buildEqualsCriteriaToCriteria(Condition condition) {
+        return Criteria.where(condition.getAttrName()).is(condition.getValue());
     }
 
 
