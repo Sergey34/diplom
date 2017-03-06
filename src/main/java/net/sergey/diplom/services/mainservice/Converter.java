@@ -80,7 +80,7 @@ public class Converter {
         return coordinatesDto;
     }
 
-    public UserDto userToUserDto(User userByName, List roleByUsername) {
+    public UserDto userToUserDto(User userByName) {
         UserDto userDto = new UserDto();
         userDto.setUserName(userByName.getUserName());
         userDto.setUserRoles(roleByUsername);

@@ -1,34 +1,19 @@
 package net.sergey.diplom.domain.airfoil;
 
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.Set;
 
-@Entity
-@Table(name = "airfoil", indexes = {
-        @Index(columnList = "shortName", name = "shortName", unique = true),
-        @Index(columnList = "prefix", name = "prefix")
-})
+@Document
 public class Airfoil {
-    @Column(name = "name")
-    private String name;
     @Id
-    @Column(name = "shortName", length = 128)
     private String shortName;
-    @Column(name = "coord", columnDefinition = "Text")
+    private String name;
     private String coordView;
-    @Column(name = "description", columnDefinition = "Text")
     private String description;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "prefix")
     private Prefix prefix;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "airfoil_coordinates",
-            joinColumns = {@JoinColumn(name = "id_airfoil")},
-            inverseJoinColumns = {@JoinColumn(name = "id_coordinates")})
     private Set<Coordinates> coordinates;
-
 
     public Airfoil(String name, String description, Prefix prefix, String shortName) {
         this.name = name;

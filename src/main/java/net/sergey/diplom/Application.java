@@ -1,23 +1,25 @@
 package net.sergey.diplom;
 
+import net.sergey.diplom.dao.user.DaoUser;
+import net.sergey.diplom.domain.user.User;
+import net.sergey.diplom.services.mainservice.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.orm.jpa.vendor.HibernateJpaSessionFactoryBean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import javax.sql.DataSource;
 
 @SpringBootApplication
 @ComponentScan
@@ -34,16 +36,13 @@ public class Application extends WebMvcConfigurerAdapter {
         registry.addViewController("/airfoilList.html").setViewName("airfoilList");
     }
 
-    @Bean
-    public HibernateJpaSessionFactoryBean sessionFactory() {
-        return new HibernateJpaSessionFactoryBean();
-    }
 
     @Configuration
     @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
     protected static class ApplicationSecurity extends WebSecurityConfigurerAdapter {
+
         @Autowired
-        DataSource dataSource;
+        DaoUser daoUser;
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
@@ -60,7 +59,17 @@ public class Application extends WebMvcConfigurerAdapter {
 
         @Override
         public void configure(AuthenticationManagerBuilder auth) throws Exception {
-            auth.jdbcAuthentication().dataSource(this.dataSource).passwordEncoder(new BCryptPasswordEncoder());
+//            auth.jdbcAuthentication().dataSource(this.dataSource).passwordEncoder(new BCryptPasswordEncoder());
+            auth.userDetailsService(new UserDetailsService() {
+                @Override
+                public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+                    User user = daoUser.findOneByUserName(username);
+                    if (user == null) {
+                        throw new UsernameNotFoundException("User not found");
+                    }
+                    return new UserDetailsImpl(user);
+                }
+            }).passwordEncoder(new BCryptPasswordEncoder());
 //             auth.inMemoryAuthentication().withUser("user").password("user").roles("USER");
         }
     }

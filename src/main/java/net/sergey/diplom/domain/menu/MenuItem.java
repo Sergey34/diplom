@@ -1,19 +1,14 @@
 package net.sergey.diplom.domain.menu;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "menuItem")
+
+@Document
 public class MenuItem {
     @Id
-    @Column(name = "id")
     private int id;
-    @Column(name = "name")
     private String name;
-    @Column(name = "url")
     private String urlCode;
 
     public MenuItem(String name, String urlCode) {

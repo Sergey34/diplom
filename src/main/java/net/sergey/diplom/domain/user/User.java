@@ -1,21 +1,18 @@
 package net.sergey.diplom.domain.user;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "users")
+import java.util.List;
+
+
+@Document
 public class User {
     @Id
-    @Column(name = "username", unique = true, length = 128)
     private String userName;
-    @Column(name = "password", columnDefinition = "Text")
     private String password;
-    @Column(name = "enabled")
     private boolean enabled;
-
+    private List<Authorities> authorities;
 
     public User() {
     }
@@ -42,6 +39,14 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public List<Authorities> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<Authorities> authorities) {
+        this.authorities = authorities;
     }
 
     @Override

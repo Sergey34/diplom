@@ -1,27 +1,17 @@
 package net.sergey.diplom.domain.airfoil;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "coordinates")
+@Document
 public class Coordinates {
     @Id
-    @Column(name = "id")
     private int id;
-    @Column(name = "coordinatesJson", columnDefinition = "Text")
     private String coordinatesJson;
-    @Column(name = "fileName")
     private String fileName;
-    @Column(name = "renolgs")
     private String renolgs;
-    @Column(name = "nCrit")
     private String nCrit;
-    @Column(name = "maxClCd")
     private String maxClCd;
-    @Column(name = "alpha")
     private String alpha;
 
 

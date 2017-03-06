@@ -1,17 +1,14 @@
 package net.sergey.diplom.domain.user;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
 
-@Entity
-@Table(name = "authorities")
-public class Authorities {
+
+@Document
+public class Authorities implements GrantedAuthority {
     @Id
-    @Column(name = "username", length = 128)
     private String username;
-    @Column(name = "authority")
     private String authority;
 
     public Authorities() {

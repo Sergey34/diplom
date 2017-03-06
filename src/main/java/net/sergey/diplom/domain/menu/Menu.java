@@ -1,24 +1,17 @@
 package net.sergey.diplom.domain.menu;
 
 
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.List;
 
-@Entity
-@Table(name = "menuHeader")
+@Document
 public class Menu {
     @Id
-    @Column(name = "id")
     private int id;
-    @Column(name = "header")
     private String header;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "menuHeader_menuItem",
-            joinColumns = {@JoinColumn(name = "headerId")},
-            inverseJoinColumns = {@JoinColumn(name = "ItemId")})
     private List<MenuItem> menuItems;
-
 
     public Menu() {
     }
