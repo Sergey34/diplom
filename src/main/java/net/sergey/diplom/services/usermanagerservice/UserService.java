@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static net.sergey.diplom.dto.messages.Message.SC_CONFLICT;
@@ -28,9 +29,16 @@ import static net.sergey.diplom.dto.messages.Message.SC_OK;
 @Component
 public class UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
+    private final static List<Authorities> allAuthorities;
+
+    static {
+        allAuthorities = Arrays.asList(new Authorities("", "ROLE_ADMIN"));
+    }
+
     private final Converter converter;
     private final DaoUser daoUser;
     private final DaoAuthorities daoAuthorities;
+
 
     @Autowired
     public UserService(Converter converter, DaoUser daoUser, DaoAuthorities daoAuthorities) {
@@ -64,7 +72,7 @@ public class UserService {
 
 
     public List<Authorities> getAllUserRoles() {
-        return daoAuthorities.findAll();
+        return allAuthorities;
     }
 
     public UserDto getCurrentUserInfo() {
