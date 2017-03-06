@@ -19,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 
 import static net.sergey.diplom.dto.messages.Message.SC_CONFLICT;
@@ -43,8 +44,13 @@ public class UserService {
         user.setEnabled(true);
         user.setPassword(userView.getPassword());
         user.setUserName(userView.getName());
+        List<Authorities> authorities = new ArrayList<>();
+        for (String role : userView.getRole()) {
+            authorities.add(new Authorities(role, user.getUserName()));
+        }
         try {
             daoUser.save(user);
+            daoAuthorities.save(authorities);
             LOGGER.trace("Пользователь успешно создан");
             return new Message("Пользователь успешно создан", SC_OK);
         } catch (ConstraintViolationException e) {
