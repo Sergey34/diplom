@@ -18,16 +18,10 @@ public class Airfoil {
     private String coordView;
     @Column(name = "description", columnDefinition = "Text")
     private String description;
-
     @ManyToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "prefix")
     private Prefix prefix;
-
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  /*  @JoinTable(name = "airfoil_coordinates",
-            joinColumns = {@JoinColumn(name = "id_airfoil")},
-            inverseJoinColumns = {@JoinColumn(name = "id_coordinates")})
-  */ private Set<Characteristics> characteristics;
+    private Set<Characteristics> characteristics;
 
 
     public Airfoil(String name, String description, Prefix prefix, String shortName) {
