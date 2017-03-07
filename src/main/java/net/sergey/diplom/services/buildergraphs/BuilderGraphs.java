@@ -3,7 +3,7 @@ package net.sergey.diplom.services.buildergraphs;
 import au.com.bytecode.opencsv.CSVParser;
 import au.com.bytecode.opencsv.CSVWriter;
 import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.domain.airfoil.Coordinates;
+import net.sergey.diplom.domain.airfoil.Characteristics;
 import net.sergey.diplom.services.buildergraphs.imagehandlers.ImageHandler;
 import net.sergey.diplom.services.buildergraphs.imagehandlers.Xy;
 import net.sergey.diplom.services.buildergraphs.imagehandlers.createxychartstyle.SimpleStyle;
@@ -66,41 +66,41 @@ public class BuilderGraphs {
     }
 
     private void fillXYChart(final Airfoil airfoil, List<String> checkedList, boolean updateFiles) {
-        for (Coordinates coordinates : airfoil.getCoordinates()) {
+        for (Characteristics characteristics : airfoil.getCharacteristics()) {
             Map<String, List<Double>> map;
-            if (updateFiles || !fileExist(coordinates.getFileName())) {
-                map = parseStrCSVtoMapSaveFile(coordinates.getCoordinatesJson(), coordinates.getFileName());
+            if (updateFiles || !fileExist(characteristics.getFileName())) {
+                map = parseStrCSVtoMapSaveFile(characteristics.getCoordinatesJson(), characteristics.getFileName());
             } else {
-                map = parseStrCSVtoMap(coordinates.getCoordinatesJson(), coordinates.getFileName());
+                map = parseStrCSVtoMap(characteristics.getCoordinatesJson(), characteristics.getFileName());
             }
             if (map == null) {
                 return;
             }
-            if (isChecked(checkedList, coordinates)) {
+            if (isChecked(checkedList, characteristics)) {
                 ImageHandler chartClCd = imageHandler.get("chartClCd");
                 if (chartClCd != null) {
-                    Xy ClCd = new Xy(map.get("Cd"), map.get("Cl"), coordinates.getFileName());
+                    Xy ClCd = new Xy(map.get("Cd"), map.get("Cl"), characteristics.getFileName());
                     chartClCd.add(ClCd);
                 }
                 ImageHandler chartClAlpha = imageHandler.get("chartClAlpha");
                 if (chartClAlpha != null) {
-                    Xy ClAlpha = new Xy(map.get("Alpha"), map.get("Cl"), coordinates.getFileName());
+                    Xy ClAlpha = new Xy(map.get("Alpha"), map.get("Cl"), characteristics.getFileName());
                     chartClAlpha.add(ClAlpha);
                 }
                 ImageHandler chartClCdAlpha = imageHandler.get("chartClCdAlpha");
                 if (chartClCdAlpha != null) {
                     List<Double> clDivCd = divListValue(map.get("Cl"), map.get("Cd"));
-                    Xy ClCdAlpha = new Xy(map.get("Alpha"), clDivCd, coordinates.getFileName());
+                    Xy ClCdAlpha = new Xy(map.get("Alpha"), clDivCd, characteristics.getFileName());
                     chartClCdAlpha.add(ClCdAlpha);
                 }
                 ImageHandler chartCdAlpha = imageHandler.get("chartCdAlpha");
                 if (chartCdAlpha != null) {
-                    Xy CdAlpha = new Xy(map.get("Alpha"), map.get("Cd"), coordinates.getFileName());
+                    Xy CdAlpha = new Xy(map.get("Alpha"), map.get("Cd"), characteristics.getFileName());
                     chartCdAlpha.add(CdAlpha);
                 }
                 ImageHandler chartCmAlpha = imageHandler.get("chartCmAlpha");
                 if (chartCmAlpha != null) {
-                    Xy CmAlpha = new Xy(map.get("Alpha"), map.get("Cm"), coordinates.getFileName());
+                    Xy CmAlpha = new Xy(map.get("Alpha"), map.get("Cm"), characteristics.getFileName());
                     chartCmAlpha.add(CmAlpha);
                 }
             }
@@ -133,12 +133,12 @@ public class BuilderGraphs {
         return coordinates;
     }
 
-    private boolean isChecked(List<String> checkedList, Coordinates coordinates) {
+    private boolean isChecked(List<String> checkedList, Characteristics characteristics) {
         if (checkedList == null) {
             return true;
         }
         for (String checked : checkedList) {
-            if (coordinates.getFileName().equals(checked)) {
+            if (characteristics.getFileName().equals(checked)) {
                 return true;
             }
         }

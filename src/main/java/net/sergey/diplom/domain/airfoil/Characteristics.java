@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "coordinates")
-public class Coordinates {
+public class Characteristics {
     @Id
     @Column(name = "id")
     private int id;
@@ -25,13 +25,13 @@ public class Coordinates {
     private String alpha;
 
 
-    public Coordinates(String coordinatesJson, String fileNameId) {
+    public Characteristics(String coordinatesJson, String fileNameId) {
         this.coordinatesJson = coordinatesJson;
         this.fileName = fileNameId;
         this.id = fileNameId.hashCode();
     }
 
-    public Coordinates() {
+    public Characteristics() {
     }
 
     @Override
@@ -39,7 +39,7 @@ public class Coordinates {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Coordinates that = (Coordinates) o;
+        Characteristics that = (Characteristics) o;
 
         return id == that.id;
     }

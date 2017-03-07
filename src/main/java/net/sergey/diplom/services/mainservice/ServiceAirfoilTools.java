@@ -7,7 +7,7 @@ import net.sergey.diplom.dao.airfoil.DaoCoordinates;
 import net.sergey.diplom.dao.menu.DaoMenu;
 import net.sergey.diplom.dao.menu.DaoMenuItem;
 import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.domain.airfoil.Coordinates;
+import net.sergey.diplom.domain.airfoil.Characteristics;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
@@ -197,9 +197,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             return findByShortNameLike(shortName, startNumber, count);
         }
         Filter filter = new Filter(conditions);
-        List<Coordinates> coords = daoCoordinates.findAll(filter);
+        List<Characteristics> coords = daoCoordinates.findAll(filter);
         String shortNameTemplate = '%' + shortName + '%';
-        List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCoordinatesInAndShortNameLike(coords, shortNameTemplate, new PageRequest(startNumber, count));
+        List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCharacteristicsInAndShortNameLike(coords, shortNameTemplate, new PageRequest(startNumber, count));
         for (Airfoil airfoil : airfoils) {
             drawViewAirfoil(airfoil);
             createDatFile(airfoil);
@@ -235,9 +235,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             return countByShortNameLike(shortName);
         }
         Filter filter = new Filter(conditions);
-        List<Coordinates> coords = daoCoordinates.findAll(filter);
+        List<Characteristics> coords = daoCoordinates.findAll(filter);
         String shortNameTemplate = '%' + shortName + '%';
-        return daoAirfoil.countDistinctAirfoilByCoordinatesInAndShortNameLike(coords, shortNameTemplate);
+        return daoAirfoil.countDistinctAirfoilByCharacteristicsInAndShortNameLike(coords, shortNameTemplate);
     }
 
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {
@@ -261,16 +261,16 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         airfoil.setCoordView(airfoilEdit.getViewCsv());
         airfoil.setDescription(airfoilEdit.getDetails());
         airfoil.setPrefix(new Prefix(airfoilEdit.getShortName().toUpperCase().charAt(0)));
-        Set<Coordinates> coordinates = new HashSet<>();
+        Set<Characteristics> coordinates = new HashSet<>();
         for (Data data : airfoilEdit.getData()) {
-            Coordinates coordinateItem = new Coordinates(data.getData(), data.getFileName());
+            Characteristics coordinateItem = new Characteristics(data.getData(), data.getFileName());
             coordinateItem.setRenolgs(data.getReynolds());
             coordinateItem.setNCrit(data.getnCrit());
             coordinateItem.setMaxClCd(data.getMaxClCd());
             coordinates.add(coordinateItem);
             coordinates.add(coordinateItem);
         }
-        airfoil.setCoordinates(coordinates);
+        airfoil.setCharacteristics(coordinates);
         return airfoil;
     }
 
@@ -417,9 +417,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
                 airfoil.setCoordView(parseFileScv.parseFileAirfoil(fileAirfoil));
             }
             if (files == null || files.size() == 1 && files.get(0).isEmpty()) {
-                airfoil.setCoordinates(daoAirfoil.findOneByShortName(airfoil.getShortName()).getCoordinates());
+                airfoil.setCharacteristics(daoAirfoil.findOneByShortName(airfoil.getShortName()).getCharacteristics());
             } else {
-                airfoil.setCoordinates(createCoordinateSet(files));
+                airfoil.setCharacteristics(createCoordinateSet(files));
             }
             addMenuItemForNewAirfoil(airfoil);
             daoAirfoil.save(airfoil);
@@ -436,10 +436,10 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         return daoAirfoil.countByPrefix(new Prefix(prefix));
     }
 
-    private Set<Coordinates> createCoordinateSet(List<MultipartFile> files) throws IOException {
-        Set<Coordinates> coordinates = new HashSet<>();
+    private Set<Characteristics> createCoordinateSet(List<MultipartFile> files) throws IOException {
+        Set<Characteristics> coordinates = new HashSet<>();
         for (MultipartFile file : files) {
-            coordinates.add(new Coordinates(parseFileScv.csvToString(file.getInputStream()), file.getOriginalFilename()));
+            coordinates.add(new Characteristics(parseFileScv.csvToString(file.getInputStream()), file.getOriginalFilename()));
         }
         return coordinates;
     }

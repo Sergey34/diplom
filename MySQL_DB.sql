@@ -85,7 +85,7 @@ CREATE TABLE airfoil (
   FOREIGN KEY (prefix) REFERENCES prefix (id_prefix)
 );
 
-CREATE TABLE coordinates (
+CREATE TABLE characteristics (
   id              INT NOT NULL PRIMARY KEY,
   coordinatesJson TEXT,
   fileName        VARCHAR(255),
@@ -98,7 +98,7 @@ CREATE TABLE airfoil_coordinates (
   id_airfoil     VARCHAR(60),
   id_coordinates INT UNIQUE,
   FOREIGN KEY (id_airfoil) REFERENCES airfoil (shortName),
-  FOREIGN KEY (id_coordinates) REFERENCES coordinates (id)
+  FOREIGN KEY (id_coordinates) REFERENCES characteristics (id)
 );
 
 SELECT count(*)

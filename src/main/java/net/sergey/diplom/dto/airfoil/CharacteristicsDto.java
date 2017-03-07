@@ -1,6 +1,6 @@
 package net.sergey.diplom.dto.airfoil;
 
-public class CoordinatesDto {
+public class CharacteristicsDto {
     private String coordinatesJson;
     private String fileName;
     private String filePath;
@@ -9,7 +9,7 @@ public class CoordinatesDto {
     private String maxClCd;
 
 
-    public CoordinatesDto() {
+    public CharacteristicsDto() {
     }
 
     public String getFilePath() {
