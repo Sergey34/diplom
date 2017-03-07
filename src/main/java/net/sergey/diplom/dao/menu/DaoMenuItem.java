@@ -9,5 +9,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface DaoMenuItem extends CrudRepository<MenuItem, Integer> {
 
-    MenuItem findOneByUrlCode(String url);
+    MenuItem findOneByUrl(String url);
 }

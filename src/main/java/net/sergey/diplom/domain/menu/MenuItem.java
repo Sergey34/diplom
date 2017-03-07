@@ -14,11 +14,11 @@ public class MenuItem {
     @Column(name = "name")
     private String name;
     @Column(name = "url")
-    private String urlCode;
+    private String url;
 
-    public MenuItem(String name, String urlCode) {
+    public MenuItem(String name, String url) {
         this.name = name;
-        this.urlCode = urlCode;
+        this.url = url;
         this.id = name.hashCode();
     }
 
@@ -42,12 +42,12 @@ public class MenuItem {
         this.name = name;
     }
 
-    public String getUrlCode() {
-        return urlCode;
+    public String getUrl() {
+        return url;
     }
 
-    public void setUrlCode(String url) {
-        this.urlCode = url;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     @Override
@@ -59,14 +59,14 @@ public class MenuItem {
 
         if (id != menuItem.id) return false;
         if (name != null ? !name.equals(menuItem.name) : menuItem.name != null) return false;
-        return urlCode != null ? urlCode.equals(menuItem.urlCode) : menuItem.urlCode == null;
+        return url != null ? url.equals(menuItem.url) : menuItem.url == null;
     }
 
     @Override
     public int hashCode() {
         int result = id;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (urlCode != null ? urlCode.hashCode() : 0);
+        result = 31 * result + (url != null ? url.hashCode() : 0);
         return result;
     }
 
@@ -75,7 +75,7 @@ public class MenuItem {
         return "MenuItem{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", url='" + urlCode + '\'' +
+                ", url='" + url + '\'' +
                 '}';
     }
 }

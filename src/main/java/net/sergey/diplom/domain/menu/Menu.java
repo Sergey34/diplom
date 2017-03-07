@@ -12,11 +12,7 @@ public class Menu {
     private int id;
     @Column(name = "header")
     private String header;
-
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "menuHeader_menuItem",
-            joinColumns = {@JoinColumn(name = "headerId")},
-            inverseJoinColumns = {@JoinColumn(name = "ItemId")})
     private List<MenuItem> menuItems;
 
 
