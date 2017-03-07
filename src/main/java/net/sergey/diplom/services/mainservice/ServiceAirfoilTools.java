@@ -78,20 +78,83 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         this.daoCoordinates = daoCoordinates;
     }
 
+
+    @Override
+    public Message updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
+        if (name == null || name.isEmpty()) {
+            LOGGER.debug("Имя не должно быть пустым");
+            return new Message("Имя не должно быть пустым", SC_NOT_ACCEPTABLE);
+        }
+        Airfoil airfoil = new Airfoil(name, details, shortName);
+        storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
+        return addUpdateAirfoil(fileAirfoil, files, airfoil);
+    }
+
+    @Override
+    public Message addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
+        if (name == null || name.isEmpty()) {
+            LOGGER.debug("Имя не должно быть пустым");
+            return new Message("Имя не должно быть пустым", SC_NOT_ACCEPTABLE);
+        }
+        Airfoil airfoil = new Airfoil(name, details, shortName);
+        if (daoAirfoil.findOneByShortName(shortName) != null) {
+            LOGGER.debug("Airfoil с таким именем уже существует, Выберите другое имя");
+            return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
+        }
+        return addUpdateAirfoil(fileAirfoil, files, airfoil);
+    }
+
+    @Override
+    public Message addAirfoil(AirfoilEdit airfoilEdit) {
+        if (airfoilEdit.getShortName() == null || airfoilEdit.getShortName().isEmpty()) {
+            LOGGER.debug("airfoil не добавлен - Короткое имя профиля не должно быть пустым");
+            return new Message("Ошибка при добавлении в базу нового airfoil. Короткое имя профиля не должно быть пустым", SC_NOT_ACCEPTABLE);
+        }
+        if (daoAirfoil.findOneByShortName(airfoilEdit.getShortName()) != null) {
+            LOGGER.debug("Airfoil с таким именем уже существует, Выберите другое имя");
+            return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
+        }
+        Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
+        addMenuItemForNewAirfoil(airfoil);
+        try {
+            daoAirfoil.save(airfoil);
+        } catch (Exception e) {
+            LOGGER.warn("ошибка при добавлении в базу нового airfoil", e);
+            return new Message("Ошибка при добавлении в базу нового airfoil", SC_CONFLICT);
+        }
+        return new Message("Airfoil успешно добавлен", SC_OK);
+    }
+
+    @Override
+    public Message addAirfoil(Airfoil airfoil) {
+        if (airfoil.getShortName() == null || airfoil.getShortName().isEmpty()) {
+            LOGGER.debug("airfoil не добавлен - Короткое имя профиля не должно быть пустым");
+            return new Message("Ошибка при добавлении в базу нового airfoil. Короткое имя профиля не должно быть пустым", SC_NOT_ACCEPTABLE);
+        }
+        try {
+            daoAirfoil.save(airfoil);
+        } catch (Exception e) {
+            LOGGER.warn("ошибка при добавлении в базу нового airfoil", e);
+            return new Message("Ошибка при добавлении в базу нового airfoil", SC_CONFLICT);
+        }
+        return new Message("Airfoil успешно добавлен", SC_OK);
+    }
+
     @Override
     public Message updateAirfoil(AirfoilEdit airfoilEdit) {
         if (airfoilEdit.getShortName() == null || airfoilEdit.getShortName().isEmpty()) {
+            LOGGER.debug("airfoil не обновлен - Короткое имя профиля не должно быть пустым");
             return new Message("Ошибка при добавлении в базу нового airfoil. Короткое имя профиля не должно быть пустым", SC_NOT_ACCEPTABLE);
         }
         Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
         addMenuItemForNewAirfoil(airfoil);
         try {
-            storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
             daoAirfoil.save(airfoil);
         } catch (Exception e) {
-            LOGGER.warn("Ошибка при обновлении airfoil ", e);
-            return new Message("Ошибка при добавлении в базу нового airfoil", SC_CONFLICT);
+            LOGGER.warn("Ошибка при обновлении airfoil {}", airfoil.getShortName(), e);
+            return new Message("Ошибка при обновлении airfoil " + airfoil.getShortName(), SC_CONFLICT);
         }
+        storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
         LOGGER.debug("Airfoil успешно обновлен {}", SC_OK);
         return new Message("Airfoil успешно обновлен", SC_OK);
     }
@@ -346,20 +409,6 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         }
     }
 
-    @Override
-    public Message addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
-        if (name.isEmpty()) {
-            LOGGER.debug("Имя не должно быть пустым");
-            return new Message("Имя не должно быть пустым", SC_NOT_ACCEPTABLE);
-        }
-        Airfoil airfoil = new Airfoil(name, details, shortName);
-        if (daoAirfoil.exists(shortName)) {
-            LOGGER.debug("Airfoil с таким именем уже существует, Выберите другое имя");
-            return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
-        }
-        return addUpdateAirfoil(fileAirfoil, files, airfoil);
-    }
-
     private Message addUpdateAirfoil(MultipartFile fileAirfoil, List<MultipartFile> files, Airfoil airfoil) {
         try {
             if (fileAirfoil == null || fileAirfoil.isEmpty()) {
@@ -380,37 +429,6 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         }
         LOGGER.debug("Airfoil успешно добален / обновлен");
         return new Message("Airfoil успешно добален / обновлен", SC_OK);
-    }
-
-    @Override
-    public Message updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
-        if (name.isEmpty()) {
-            return new Message("Имя не должно быть пустым", SC_NOT_ACCEPTABLE);
-        }
-        Airfoil airfoil = new Airfoil(name, details, shortName);
-        storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
-        return addUpdateAirfoil(fileAirfoil, files, airfoil);
-    }
-
-    @Override
-    public Message addAirfoil(AirfoilEdit airfoilEdit) {
-        if (airfoilEdit.getShortName() == null || airfoilEdit.getShortName().isEmpty()) {
-            LOGGER.debug("airfoil не добавлен - Короткое имя профиля не должно быть пустым");
-            return new Message("Ошибка при добавлении в базу нового airfoil. Короткое имя профиля не должно быть пустым", SC_NOT_ACCEPTABLE);
-        }
-        if (daoAirfoil.findOneByShortName(airfoilEdit.getShortName()) != null) {
-            LOGGER.debug("Airfoil с таким именем уже существует, Выберите другое имя");
-            return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
-        }
-        Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
-        addMenuItemForNewAirfoil(airfoil);
-        try {
-            daoAirfoil.save(airfoil);
-        } catch (Exception e) {
-            LOGGER.warn("ошибка при добавлении в базу нового airfoil", e);
-            return new Message("Ошибка при добавлении в базу нового airfoil", SC_CONFLICT);
-        }
-        return new Message("Airfoil успешно добавлен", SC_OK);
     }
 
     @Override
