@@ -15,7 +15,7 @@ public class DaoCharacteristics {
     @Autowired
     private MongoOperations mongoOperations;
 
-    public List<Characteristics> findCoordsByTemplate(Query query) {
+    public List<Characteristics> findCharacteristicsByTemplate(Query query) {
         return mongoOperations.find(query, Characteristics.class);
     }
 

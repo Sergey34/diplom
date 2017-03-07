@@ -4,13 +4,20 @@ import net.sergey.diplom.dto.Condition;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Filter {
     public Query toQuery(List<Condition> conditions) {
-        Criteria criteria = new Criteria();
+        List<Criteria> criteriaList = new ArrayList<>();
         for (Condition condition : conditions) {
-            criteria.andOperator(buildCriteria(condition));
+            criteriaList.add(buildCriteria(condition));
+        }
+        Criteria criteria;
+        if (criteriaList.size() > 1) {
+            criteria = new Criteria().andOperator((Criteria[]) criteriaList.toArray());
+        } else {
+            criteria = criteriaList.get(0);
         }
         return Query.query(criteria);
     }
