@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Characteristics {
     @Id
     private int id;
-    private String coordinatesJson;
+    private String coordinatesStl;
     private String fileName;
     private String renolgs;
     private String nCrit;
@@ -47,11 +47,11 @@ public class Characteristics {
         this.id = id;
     }
 
-    public String getcoordinatesStl() {
+    public String getCoordinatesStl() {
         return coordinatesStl;
     }
 
-    public void setcoordinatesStl(String coordinatesStl) {
+    public void setCoordinatesStl(String coordinatesStl) {
         this.coordinatesStl = coordinatesStl;
     }
 

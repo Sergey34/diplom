@@ -69,9 +69,9 @@ public class BuilderGraphs {
         for (Characteristics characteristics : airfoil.getCharacteristics()) {
             Map<String, List<Double>> map;
             if (updateFiles || !fileExist(characteristics.getFileName())) {
-                map = parseStrCSVtoMapSaveFile(characteristics.getcoordinatesStl(), characteristics.getFileName());
+                map = parseStrCSVtoMapSaveFile(characteristics.getCoordinatesStl(), characteristics.getFileName());
             } else {
-                map = parseStrCSVtoMap(characteristics.getcoordinatesStl(), characteristics.getFileName());
+                map = parseStrCSVtoMap(characteristics.getCoordinatesStl(), characteristics.getFileName());
             }
             if (map == null) {
                 return;

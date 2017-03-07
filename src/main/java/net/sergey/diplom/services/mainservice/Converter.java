@@ -72,7 +72,7 @@ public class Converter {
     public CharacteristicsDto characteristicsToCharacteristicsDto(Characteristics coordinate) {
         CharacteristicsDto characteristicsDto = new CharacteristicsDto();
         characteristicsDto.setFileName(coordinate.getFileName());
-        characteristicsDto.setcoordinatesStl(coordinate.getcoordinatesStl());
+        characteristicsDto.setcoordinatesStl(coordinate.getCoordinatesStl());
         characteristicsDto.setMaxClCd(coordinate.getMaxClCd());
         characteristicsDto.setNCrit(coordinate.getNCrit());
         characteristicsDto.setRenolgs(coordinate.getRenolgs());
