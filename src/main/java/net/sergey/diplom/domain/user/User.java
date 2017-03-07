@@ -1,9 +1,6 @@
 package net.sergey.diplom.domain.user;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -16,8 +13,8 @@ public class User {
     private String password;
     @Column(name = "enabled")
     private boolean enabled;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Authorities> authorities;
-
 
     public User() {
     }

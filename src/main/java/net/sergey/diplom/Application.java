@@ -1,8 +1,5 @@
 package net.sergey.diplom;
 
-import net.sergey.diplom.dao.user.DaoUser;
-import net.sergey.diplom.domain.user.User;
-import net.sergey.diplom.services.usermanagerservice.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,9 +12,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaSessionFactoryBean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -47,7 +42,7 @@ public class Application extends WebMvcConfigurerAdapter {
     @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
     protected static class ApplicationSecurity extends WebSecurityConfigurerAdapter {
         @Autowired
-        DaoUser daoUser;
+        UserDetailsService userDetailsService;
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
@@ -66,16 +61,7 @@ public class Application extends WebMvcConfigurerAdapter {
         public void configure(AuthenticationManagerBuilder auth) throws Exception {
 //            auth.jdbcAuthentication().dataSource(this.dataSource).passwordEncoder(new BCryptPasswordEncoder());
 //             auth.inMemoryAuthentication().withUser("user").password("user").roles("USER");
-            auth.userDetailsService(new UserDetailsService() {
-                @Override
-                public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                    User user = daoUser.findOneByUserName(username);
-                    if (user == null) {
-                        throw new UsernameNotFoundException("User not found");
-                    }
-                    return new UserDetailsImpl(user);
-                }
-            }).passwordEncoder(new BCryptPasswordEncoder());
+            auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
         }
     }
 }

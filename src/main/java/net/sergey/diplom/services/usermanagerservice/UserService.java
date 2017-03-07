@@ -57,7 +57,7 @@ public class UserService {
         for (String role : userView.getRole()) {
             authorities.add(new Authorities(role, user.getUserName()));
         }
-
+        user.setAuthorities(authorities);
         try {
             daoUser.save(user);
             LOGGER.trace("Пользователь успешно создан");
