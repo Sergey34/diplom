@@ -3,7 +3,7 @@ package net.sergey.diplom.services.mainservice;
 
 import net.sergey.diplom.dao.Filter;
 import net.sergey.diplom.dao.airfoil.DaoAirfoil;
-import net.sergey.diplom.dao.airfoil.DaoCoordinates;
+import net.sergey.diplom.dao.airfoil.DaoCharacteristics;
 import net.sergey.diplom.dao.menu.DaoMenu;
 import net.sergey.diplom.dao.menu.DaoMenuItem;
 import net.sergey.diplom.domain.airfoil.Airfoil;
@@ -56,7 +56,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     private final DaoMenu daoMenu;
     private final DaoMenuItem daoMenuItem;
     private final DaoAirfoil daoAirfoil;
-    private final DaoCoordinates daoCoordinates;
+    private final DaoCharacteristics daoCharacteristics;
     @Value("${config.parser.path}")
     private String configParserPath;
     @Value(value = "classpath:config.properties")
@@ -66,7 +66,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     public ServiceAirfoilTools(ParseFileScv parseFileScv, PropertiesHandler propertiesHandler,
                                Converter converter, FileSystemStorageService storageService,
                                AirfoilStlGenerator stlGenerator, DaoMenu daoMenu,
-                               DaoMenuItem daoMenuItem, DaoAirfoil daoAirfoil, DaoCoordinates daoCoordinates) {
+                               DaoMenuItem daoMenuItem, DaoAirfoil daoAirfoil, DaoCharacteristics daoCharacteristics) {
         this.parseFileScv = parseFileScv;
         this.propertiesHandler = propertiesHandler;
         this.converter = converter;
@@ -75,7 +75,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         this.daoMenu = daoMenu;
         this.daoMenuItem = daoMenuItem;
         this.daoAirfoil = daoAirfoil;
-        this.daoCoordinates = daoCoordinates;
+        this.daoCharacteristics = daoCharacteristics;
     }
 
 
@@ -197,7 +197,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             return findByShortNameLike(shortName, startNumber, count);
         }
         Filter filter = new Filter(conditions);
-        List<Characteristics> coords = daoCoordinates.findAll(filter);
+        List<Characteristics> coords = daoCharacteristics.findAll(filter);
         String shortNameTemplate = '%' + shortName + '%';
         List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCharacteristicsInAndShortNameLike(coords, shortNameTemplate, new PageRequest(startNumber, count));
         for (Airfoil airfoil : airfoils) {
@@ -235,7 +235,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             return countByShortNameLike(shortName);
         }
         Filter filter = new Filter(conditions);
-        List<Characteristics> coords = daoCoordinates.findAll(filter);
+        List<Characteristics> coords = daoCharacteristics.findAll(filter);
         String shortNameTemplate = '%' + shortName + '%';
         return daoAirfoil.countDistinctAirfoilByCharacteristicsInAndShortNameLike(coords, shortNameTemplate);
     }
