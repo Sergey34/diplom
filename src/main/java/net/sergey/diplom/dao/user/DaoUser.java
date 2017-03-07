@@ -15,4 +15,6 @@ public interface DaoUser extends CrudRepository<User, String> {
     <S extends User> Iterable<S> save(Iterable<S> iterable);
 
     User findOneByUserName(String username);
+
+    boolean existByUserName(String username);
 }
