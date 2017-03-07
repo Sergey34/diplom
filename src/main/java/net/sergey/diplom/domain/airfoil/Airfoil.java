@@ -23,7 +23,6 @@ public class Airfoil {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Characteristics> characteristics;
 
-
     public Airfoil(String name, String description, Prefix prefix, String shortName) {
         this.name = name;
         this.description = description;

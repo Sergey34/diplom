@@ -39,11 +39,12 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="/airfoilList.html">Airfoils</a>
-            <form class="navbar-form navbar-left" role="search">
+            <script>                 function sbm() {
+                search();
+            }             </script>
+            <form class="navbar-form navbar-left" role="search" onsubmit="sbm(); return false">
                 <div class="form-group"><input id="searchTemplate" type="text" class="form-control"
-                                               placeholder="shortName contains ...">
-                </div>
-                <button id="search" type="button" class="btn btn-default">Найти</button>
+                                               placeholder="shortName contains ..."></div>
             </form>
 
         </div>
@@ -103,6 +104,6 @@
 <!--<script src="../js/jquery.js"></script>-->
 <!-- Bootstrap Core JavaScript -->
 <script src="../js/bootstrap.min.js"></script>
-<script>document.getElementById("search").onclick = search;</script>
+
 </body>
 </html>

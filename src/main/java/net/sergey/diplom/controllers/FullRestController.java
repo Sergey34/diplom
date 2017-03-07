@@ -83,7 +83,7 @@ public class FullRestController {
         return service.updateGraf(airfoilId, checkedList);
     }
 
-    @RequestMapping(value = "/searchByShortNameLike/{shortName}/{startNumber}/{count}", method = RequestMethod.GET)
+    @RequestMapping(value = "/searchByShortNameLike/{shortName}/{startNumber}/{count}", method = RequestMethod.POST)
     public List<AirfoilDTO> searchByShortNameLike(@PathVariable String shortName, @PathVariable int startNumber, @PathVariable int count) {
         return service.findByShortNameLike(shortName, startNumber, count);
     }
