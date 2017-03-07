@@ -43,7 +43,7 @@ public class UserService {
     }
 
     public Message addUser(UserView userView) {
-        if (!daoUser.exists(userView.getName())) {
+        if (!daoUser.existByUserName(userView.getName())) {
             LOGGER.trace("Ошибка при добавлении пользователя {}", userView.getName());
             return new Message("Ошибка при добавлении пользователя. Пользователь с таким именем уже существует", SC_CONFLICT);
         }
