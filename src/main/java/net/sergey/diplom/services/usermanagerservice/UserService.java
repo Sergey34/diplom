@@ -9,7 +9,6 @@ import net.sergey.diplom.dto.user.UserDto;
 import net.sergey.diplom.dto.user.UserView;
 import net.sergey.diplom.services.mainservice.Converter;
 import net.sergey.diplom.services.utils.UtilsLogger;
-import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +47,10 @@ public class UserService {
     }
 
     public Message addUser(UserView userView) {
+        if (daoUser.findOneByUserName(userView.getName()) != null) {
+            LOGGER.trace("Ошибка при добавлении пользователя {}", userView.getName());
+            return new Message("Ошибка при добавлении пользователя. Пользователь с таким именем уже существует", SC_CONFLICT);
+        }
         User user = new User();
         user.setEnabled(true);
         user.setPassword(userView.getPassword());
@@ -61,9 +64,6 @@ public class UserService {
             daoAuthorities.save(authorities);
             LOGGER.trace("Пользователь успешно создан");
             return new Message("Пользователь успешно создан", SC_OK);
-        } catch (ConstraintViolationException e) {
-            LOGGER.trace("пользователь с именем {} уже существует в базе.", user.getUserName());
-            return new Message("Пользователь с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
         } catch (Exception e) {
             LOGGER.trace("Ошибка при добавлении пользователя {}, {}", user.getUserName(), e);
             return new Message("Ошибка при добавлении пользователя", SC_CONFLICT);
