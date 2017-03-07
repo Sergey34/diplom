@@ -17,12 +17,11 @@ function someFunc() {
                 timeout: 600000,
                 error: function (e) {
                     console.log("ERROR: ", e);
-                    alert(data.message);
-
+                    document.getElementById('error').style.display = "";
                 },
                 success: function (data) {
                     console.log("SUCCESS: ", data);
-                  alert(data.message);
+                    document.getElementById('success').style.display = "";
 
                     document.getElementById('name').style.backgroundColor = '';
                     document.getElementById('password').style.backgroundColor = '';

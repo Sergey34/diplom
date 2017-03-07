@@ -1,6 +1,5 @@
 package net.sergey.diplom.services.usermanagerservice;
 
-import net.sergey.diplom.dao.user.DaoAuthorities;
 import net.sergey.diplom.dao.user.DaoUser;
 import net.sergey.diplom.domain.user.Authorities;
 import net.sergey.diplom.domain.user.User;
@@ -36,14 +35,13 @@ public class UserService {
 
     private final Converter converter;
     private final DaoUser daoUser;
-    private final DaoAuthorities daoAuthorities;
 
 
     @Autowired
-    public UserService(Converter converter, DaoUser daoUser, DaoAuthorities daoAuthorities) {
+    public UserService(Converter converter, DaoUser daoUser) {
         this.converter = converter;
         this.daoUser = daoUser;
-        this.daoAuthorities = daoAuthorities;
+
     }
 
     public Message addUser(UserView userView) {
@@ -53,15 +51,15 @@ public class UserService {
         }
         User user = new User();
         user.setEnabled(true);
-        user.setPassword(userView.getPassword());
+        user.setPassword(new BCryptPasswordEncoder().encode(userView.getPassword()));
         user.setUserName(userView.getName());
         List<Authorities> authorities = new ArrayList<>();
         for (String role : userView.getRole()) {
             authorities.add(new Authorities(role, user.getUserName()));
         }
+
         try {
             daoUser.save(user);
-            daoAuthorities.save(authorities);
             LOGGER.trace("Пользователь успешно создан");
             return new Message("Пользователь успешно создан", SC_OK);
         } catch (Exception e) {
@@ -80,22 +78,22 @@ public class UserService {
         Boolean isLogin = authentication.isAuthenticated();
         String name = authentication.getName();
         if (!"anonymousUser".equals(name) && isLogin) {
-            return converter.userToUserDto(daoUser.findOneByUserName(name), daoAuthorities.findByUsername(name));
+            return converter.userToUserDto(daoUser.findOneByUserName(name));
         }
         return null;
     }
 
     @PostConstruct
     public void init() {
-        if (daoUser.findOneByUserName("admin") == null || daoAuthorities.findByUsername("admin").size() == 0) {
+        if (daoUser.findOneByUserName("admin") == null) {
             User user = new User();
             user.setEnabled(true);
             user.setUserName("admin");
             String password = new BCryptPasswordEncoder().encode("mex_mat");
             user.setPassword(password);
             Authorities adminRole = new Authorities("ROLE_ADMIN", "admin");
+            user.setAuthorities(Arrays.asList(adminRole));
             daoUser.save(user);
-            daoAuthorities.save(adminRole);
         }
     }
 }
