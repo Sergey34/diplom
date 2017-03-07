@@ -43,7 +43,7 @@ public class Converter {
         airfoilDetail.setImage("/files/airfoil_img/" + airfoil.getShortName() + ".png");
 
         airfoilDetail.setCoordView(airfoil.getCoordView());
-        airfoilDetail.setCharacteristics(coordinatesToCoordinatesDto(airfoil.getCharacteristics()));
+        airfoilDetail.setCharacteristics(characteristicsToCharacteristicsDto(airfoil.getCharacteristics()));
 
         List<String> imgCsvName = new ArrayList<>();
         for (String chartName : chartNames) {
@@ -61,18 +61,18 @@ public class Converter {
         return airfoilDetail;
     }
 
-    public List<CharacteristicsDto> coordinatesToCoordinatesDto(Set<Characteristics> coordinates) {
-        List<CharacteristicsDto> characteristicsDto = new ArrayList<>(coordinates.size());
-        for (Characteristics coordinate : coordinates) {
-            characteristicsDto.add(coordinatesToCoordinatesDto(coordinate));
+    public List<CharacteristicsDto> characteristicsToCharacteristicsDto(Set<Characteristics> characteristics) {
+        List<CharacteristicsDto> characteristicsDto = new ArrayList<>(characteristics.size());
+        for (Characteristics coordinate : characteristics) {
+            characteristicsDto.add(characteristicsToCharacteristicsDto(coordinate));
         }
         return characteristicsDto;
     }
 
-    public CharacteristicsDto coordinatesToCoordinatesDto(Characteristics coordinate) {
+    public CharacteristicsDto characteristicsToCharacteristicsDto(Characteristics coordinate) {
         CharacteristicsDto characteristicsDto = new CharacteristicsDto();
         characteristicsDto.setFileName(coordinate.getFileName());
-        characteristicsDto.setCoordinatesJson(coordinate.getCoordinatesJson());
+        characteristicsDto.setcoordinatesStl(coordinate.getcoordinatesStl());
         characteristicsDto.setMaxClCd(coordinate.getMaxClCd());
         characteristicsDto.setNCrit(coordinate.getNCrit());
         characteristicsDto.setRenolgs(coordinate.getRenolgs());

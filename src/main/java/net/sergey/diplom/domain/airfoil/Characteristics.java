@@ -6,13 +6,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "coordinates")
+@Table(name = "characteristics")
 public class Characteristics {
     @Id
     @Column(name = "id")
     private int id;
-    @Column(name = "coordinatesJson", columnDefinition = "Text")
-    private String coordinatesJson;
+    @Column(name = "coordinatesStl", columnDefinition = "Text")
+    private String coordinatesStl;
     @Column(name = "fileName")
     private String fileName;
     @Column(name = "renolgs")
@@ -25,8 +25,8 @@ public class Characteristics {
     private String alpha;
 
 
-    public Characteristics(String coordinatesJson, String fileNameId) {
-        this.coordinatesJson = coordinatesJson;
+    public Characteristics(String coordinatesStl, String fileNameId) {
+        this.coordinatesStl = coordinatesStl;
         this.fileName = fileNameId;
         this.id = fileNameId.hashCode();
     }
@@ -57,12 +57,12 @@ public class Characteristics {
         this.id = id;
     }
 
-    public String getCoordinatesJson() {
-        return coordinatesJson;
+    public String getcoordinatesStl() {
+        return coordinatesStl;
     }
 
-    public void setCoordinatesJson(String coordinatesJson) {
-        this.coordinatesJson = coordinatesJson;
+    public void setcoordinatesStl(String coordinatesStl) {
+        this.coordinatesStl = coordinatesStl;
     }
 
     public String getFileName() {

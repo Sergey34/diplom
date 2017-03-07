@@ -87,7 +87,7 @@ CREATE TABLE airfoil (
 
 CREATE TABLE characteristics (
   id              INT NOT NULL PRIMARY KEY,
-  coordinatesJson TEXT,
+  coordinatesStl TEXT,
   fileName        VARCHAR(255),
   renolgs         VARCHAR(25),
   nCrit           INT(11),

@@ -261,16 +261,16 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         airfoil.setCoordView(airfoilEdit.getViewCsv());
         airfoil.setDescription(airfoilEdit.getDetails());
         airfoil.setPrefix(new Prefix(airfoilEdit.getShortName().toUpperCase().charAt(0)));
-        Set<Characteristics> coordinates = new HashSet<>();
+        Set<Characteristics> characteristics = new HashSet<>();
         for (Data data : airfoilEdit.getData()) {
             Characteristics coordinateItem = new Characteristics(data.getData(), data.getFileName());
             coordinateItem.setRenolgs(data.getReynolds());
             coordinateItem.setNCrit(data.getnCrit());
             coordinateItem.setMaxClCd(data.getMaxClCd());
-            coordinates.add(coordinateItem);
-            coordinates.add(coordinateItem);
+            characteristics.add(coordinateItem);
+            characteristics.add(coordinateItem);
         }
-        airfoil.setCharacteristics(coordinates);
+        airfoil.setCharacteristics(characteristics);
         return airfoil;
     }
 
@@ -419,7 +419,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             if (files == null || files.size() == 1 && files.get(0).isEmpty()) {
                 airfoil.setCharacteristics(daoAirfoil.findOneByShortName(airfoil.getShortName()).getCharacteristics());
             } else {
-                airfoil.setCharacteristics(createCoordinateSet(files));
+                airfoil.setCharacteristics(createCharacteristicsSet(files));
             }
             addMenuItemForNewAirfoil(airfoil);
             daoAirfoil.save(airfoil);
@@ -436,11 +436,11 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         return daoAirfoil.countByPrefix(new Prefix(prefix));
     }
 
-    private Set<Characteristics> createCoordinateSet(List<MultipartFile> files) throws IOException {
-        Set<Characteristics> coordinates = new HashSet<>();
+    private Set<Characteristics> createCharacteristicsSet(List<MultipartFile> files) throws IOException {
+        Set<Characteristics> characteristics = new HashSet<>();
         for (MultipartFile file : files) {
-            coordinates.add(new Characteristics(parseFileScv.csvToString(file.getInputStream()), file.getOriginalFilename()));
+            characteristics.add(new Characteristics(parseFileScv.csvToString(file.getInputStream()), file.getOriginalFilename()));
         }
-        return coordinates;
+        return characteristics;
     }
 }

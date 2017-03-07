@@ -132,7 +132,7 @@ class ParserAirfoil implements Callable<Void> {
             return Collections.emptySet();
         }
         polar = polar.first().getElementsByTag(constants.TR);
-        Set<Characteristics> coordinates = new HashSet<>();
+        Set<Characteristics> characteristics = new HashSet<>();
         for (Element element : polar) {
             Element reynolds = element.getElementsByClass(constants.REYNOLDS).first();
             Element nCrit = element.getElementsByClass(constants.N_CRIT).first();
@@ -149,11 +149,11 @@ class ParserAirfoil implements Callable<Void> {
                     coordinateItem.setNCrit(nCrit.text());
                     coordinateItem.setMaxClCd(stringHandler.createStringByPattern(maxClCd.text(), constants.GET_MAXCLCD_PATTERN));
                     coordinateItem.setAlpha(stringHandler.createStringByPattern(maxClCd.text(), constants.GET_ALPHA_PATTERN));
-                    coordinates.add(coordinateItem);
+                    characteristics.add(coordinateItem);
                 }
             }
         }
-        return coordinates;
+        return characteristics;
     }
 
     private Airfoil parseAirfoilById(String airfoilId) throws IOException {
@@ -162,9 +162,9 @@ class ParserAirfoil implements Callable<Void> {
         String description = filterDescription(detail, airfoilId).html();
         String coordinateView = parseCoordinateView(airfoilId);
         Airfoil airfoil = new Airfoil(name, description, airfoilId);
-        Set<Characteristics> coordinates = downloadDetailInfo(detail);
+        Set<Characteristics> characteristics = downloadDetailInfo(detail);
         airfoil.setCoordView(coordinateView);
-        airfoil.setCharacteristics(coordinates);
+        airfoil.setCharacteristics(characteristics);
         return airfoil;
     }
 

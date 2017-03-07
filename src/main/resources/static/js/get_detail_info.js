@@ -325,12 +325,12 @@ function fillEditableContentDetailInfoEditableTable(data) {
                 document.getElementById('editableTables').appendChild(MaxClCd);
                 document.getElementById('editableTables').appendChild(MaxClCdalpha);
 
-                var coordinatesJson = characteristic.coordinatesJson.split('\n');
+                var coordinatesStl = characteristic.coordinatesStl.split('\n');
 
 
                 document.getElementById('editableTables').appendChild(tabular);
                 jQuery('#tabular' + i).tabularInput({
-                    'rows': coordinatesJson.length - 12,
+                    'rows': coordinatesStl.length - 12,
                     'columns': 7,
                     'minRows': 10,
                     'newRowOnTab': true,
@@ -338,11 +338,11 @@ function fillEditableContentDetailInfoEditableTable(data) {
                     'name': 'tabular' + i,
                     'animate': true
                 });
-                document.getElementById('input_Mach' + i).setAttribute('value', coordinatesJson[5].split(',')[1]);
-                document.getElementById('input_MaxClCdalpha' + i).setAttribute('value', coordinatesJson[7].split(',')[1]);
+                document.getElementById('input_Mach' + i).setAttribute('value', coordinatesStl[5].split(',')[1]);
+                document.getElementById('input_MaxClCdalpha' + i).setAttribute('value', coordinatesStl[7].split(',')[1]);
 
-                for (let j = 11, l = 1; j < coordinatesJson.length - 1; j++, l++) {
-                    var items = coordinatesJson[j].split(',');
+                for (let j = 11, l = 1; j < coordinatesStl.length - 1; j++, l++) {
+                    var items = coordinatesStl[j].split(',');
                     for (let k = 0; k < items.length; k++) {
                         document.getElementsByName('tabular' + i + '[' + k + '][' + l + ']')[0].setAttribute('value', items[k]);
                     }
