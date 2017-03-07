@@ -32,7 +32,7 @@ public class UserService {
     private final static List<Authorities> allAuthorities;
 
     static {
-        allAuthorities = Arrays.asList(new Authorities("", "ROLE_ADMIN"));
+        allAuthorities = Arrays.asList(new Authorities("ROLE_ADMIN",""));
     }
 
     private final Converter converter;
