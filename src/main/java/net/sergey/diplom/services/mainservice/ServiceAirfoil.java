@@ -31,6 +31,8 @@ public interface ServiceAirfoil {
 
     Message addAirfoil(AirfoilEdit airfoilEdit);
 
+    Message addAirfoil(Airfoil airfoil);
+
     Message updateAirfoil(AirfoilEdit airfoilEdit);
 
     List<AirfoilDTO> getAllAirfoilDto(int startNumber, int count);
@@ -48,4 +50,6 @@ public interface ServiceAirfoil {
     int countByShortNameLike(String shortName);
 
     int countSearchAirfoil(List<Condition> conditions, String shortName);
+
+
 }

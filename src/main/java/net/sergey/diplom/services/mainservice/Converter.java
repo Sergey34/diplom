@@ -1,13 +1,13 @@
 package net.sergey.diplom.services.mainservice;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.domain.airfoil.Coordinates;
+import net.sergey.diplom.domain.airfoil.Characteristics;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
-import net.sergey.diplom.dto.airfoil.CoordinatesDto;
+import net.sergey.diplom.dto.airfoil.CharacteristicsDto;
 import net.sergey.diplom.dto.user.UserDto;
 import org.springframework.stereotype.Component;
 
@@ -43,7 +43,7 @@ public class Converter {
         airfoilDetail.setImage("/files/airfoil_img/" + airfoil.getShortName() + ".png");
 
         airfoilDetail.setCoordView(airfoil.getCoordView());
-        airfoilDetail.setCoordinates(coordinatesToCoordinatesDto(airfoil.getCoordinates()));
+        airfoilDetail.setCharacteristics(characteristicsToCharacteristicsDto(airfoil.getCharacteristics()));
 
         List<String> imgCsvName = new ArrayList<>();
         for (String chartName : chartNames) {
@@ -61,23 +61,23 @@ public class Converter {
         return airfoilDetail;
     }
 
-    public List<CoordinatesDto> coordinatesToCoordinatesDto(Set<Coordinates> coordinates) {
-        List<CoordinatesDto> coordinatesDto = new ArrayList<>(coordinates.size());
-        for (Coordinates coordinate : coordinates) {
-            coordinatesDto.add(coordinatesToCoordinatesDto(coordinate));
+    public List<CharacteristicsDto> characteristicsToCharacteristicsDto(Set<Characteristics> characteristics) {
+        List<CharacteristicsDto> characteristicsDto = new ArrayList<>(characteristics.size());
+        for (Characteristics coordinate : characteristics) {
+            characteristicsDto.add(characteristicsToCharacteristicsDto(coordinate));
         }
-        return coordinatesDto;
+        return characteristicsDto;
     }
 
-    public CoordinatesDto coordinatesToCoordinatesDto(Coordinates coordinate) {
-        CoordinatesDto coordinatesDto = new CoordinatesDto();
-        coordinatesDto.setFileName(coordinate.getFileName());
-        coordinatesDto.setCoordinatesJson(coordinate.getCoordinatesJson());
-        coordinatesDto.setMaxClCd(coordinate.getMaxClCd());
-        coordinatesDto.setNCrit(coordinate.getNCrit());
-        coordinatesDto.setRenolgs(coordinate.getRenolgs());
-        coordinatesDto.setFilePath("/files/tmpCsv/" + coordinate.getFileName());
-        return coordinatesDto;
+    public CharacteristicsDto characteristicsToCharacteristicsDto(Characteristics coordinate) {
+        CharacteristicsDto characteristicsDto = new CharacteristicsDto();
+        characteristicsDto.setFileName(coordinate.getFileName());
+        characteristicsDto.setcoordinatesStl(coordinate.getcoordinatesStl());
+        characteristicsDto.setMaxClCd(coordinate.getMaxClCd());
+        characteristicsDto.setNCrit(coordinate.getNCrit());
+        characteristicsDto.setRenolgs(coordinate.getRenolgs());
+        characteristicsDto.setFilePath("/files/tmpCsv/" + coordinate.getFileName());
+        return characteristicsDto;
     }
 
     public UserDto userToUserDto(User userByName) {

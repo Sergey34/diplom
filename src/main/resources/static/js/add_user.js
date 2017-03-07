@@ -17,11 +17,10 @@ function someFunc() {
                 timeout: 600000,
                 error: function (e) {
                     console.log("ERROR: ", e);
-                    document.getElementById('error').style.display = "";
                 },
                 success: function (data) {
                     console.log("SUCCESS: ", data);
-                    document.getElementById('success').style.display = "";
+                    alert(data.message);
 
                     document.getElementById('name').style.backgroundColor = '';
                     document.getElementById('password').style.backgroundColor = '';
@@ -31,9 +30,6 @@ function someFunc() {
         });
     } else {
         console.log("некорректные данные");
-        document.getElementById('name').style.backgroundColor = 'FF0000';
-        document.getElementById('name').style.borderColor = 'FF0000';
-        document.getElementById('password').style.backgroundColor = 'FF0000';
-        document.getElementById('password2').style.backgroundColor = 'FF0000';
+        alert("некорректные данные! пароль должен быть > 4 символов")
     }
 }

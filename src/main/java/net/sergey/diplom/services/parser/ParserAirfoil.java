@@ -2,7 +2,7 @@ package net.sergey.diplom.services.parser;
 
 import net.sergey.diplom.dao.airfoil.DaoAirfoil;
 import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.domain.airfoil.Coordinates;
+import net.sergey.diplom.domain.airfoil.Characteristics;
 import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.services.mainservice.EventService;
 import net.sergey.diplom.services.parser.consts.Constant;
@@ -126,13 +126,13 @@ class ParserAirfoil implements Callable<Void> {
         return 0;
     }
 
-    private Set<Coordinates> downloadDetailInfo(Element detail) throws IOException {
+    private Set<Characteristics> downloadDetailInfo(Element detail) throws IOException {
         Elements polar = detail.getElementsByClass(constants.POLAR);
         if (polar.size() == 0) {
             return Collections.emptySet();
         }
         polar = polar.first().getElementsByTag(constants.TR);
-        Set<Coordinates> coordinates = new HashSet<>();
+        Set<Characteristics> characteristics = new HashSet<>();
         for (Element element : polar) {
             Element reynolds = element.getElementsByClass(constants.REYNOLDS).first();
             Element nCrit = element.getElementsByClass(constants.N_CRIT).first();
@@ -144,16 +144,16 @@ class ParserAirfoil implements Callable<Void> {
                     String fileName = stringHandler.createStringByPattern(a.attr(constants.HREF), constants.GET_FILE_NAME_BY_URL_PATTERN);
                     URL urlFile = new URL(ConstantApi.GET_FILE_CSV + fileName);
                     LOGGER.debug("url {}{}", ConstantApi.GET_FILE_CSV, fileName);
-                    Coordinates coordinateItem = new Coordinates(parseFileScv.csvToString(urlFile.openStream()), fileName + constants.FILE_TYPE);
+                    Characteristics coordinateItem = new Characteristics(parseFileScv.csvToString(urlFile.openStream()), fileName + constants.FILE_TYPE);
                     coordinateItem.setRenolgs(reynolds.text());
                     coordinateItem.setNCrit(nCrit.text());
                     coordinateItem.setMaxClCd(stringHandler.createStringByPattern(maxClCd.text(), constants.GET_MAXCLCD_PATTERN));
                     coordinateItem.setAlpha(stringHandler.createStringByPattern(maxClCd.text(), constants.GET_ALPHA_PATTERN));
-                    coordinates.add(coordinateItem);
+                    characteristics.add(coordinateItem);
                 }
             }
         }
-        return coordinates;
+        return characteristics;
     }
 
     private Airfoil parseAirfoilById(String airfoilId) throws IOException {
@@ -162,16 +162,16 @@ class ParserAirfoil implements Callable<Void> {
         String description = filterDescription(detail, airfoilId).html();
         String coordinateView = parseCoordinateView(airfoilId);
         Airfoil airfoil = new Airfoil(name, description, airfoilId);
-        Set<Coordinates> coordinates = downloadDetailInfo(detail);
+        Set<Characteristics> characteristics = downloadDetailInfo(detail);
         airfoil.setCoordView(coordinateView);
-        airfoil.setCoordinates(coordinates);
+        airfoil.setCharacteristics(characteristics);
         return airfoil;
     }
 
     private Element filterDescription(Element detail, String airfoilId) {
         Element descriptionFull = detail.getElementsByClass(constants.DESCRIPTION).get(0);
         for (Element a : descriptionFull.getElementsByTag("a")) {
-            if ("UIUC Airfoil Coordinates Database".equals(a.text())) {
+            if ("UIUC Airfoil Characteristics Database".equals(a.text())) {
                 replaceUrl(a, HTTP_M_SELIG_AE_ILLINOIS_EDU_ADS_COORD_DATABASE_HTML);
                 continue;
             }

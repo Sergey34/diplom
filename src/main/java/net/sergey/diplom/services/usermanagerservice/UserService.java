@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class UserService {
     private final static List<Authorities> allAuthorities;
 
     static {
-        allAuthorities = Arrays.asList(new Authorities("", "ROLE_ADMIN"));
+        allAuthorities = Arrays.asList(new Authorities("ROLE_ADMIN",""));
     }
 
     private final Converter converter;
@@ -40,17 +41,23 @@ public class UserService {
     public UserService(Converter converter, DaoUser daoUser) {
         this.converter = converter;
         this.daoUser = daoUser;
+
     }
 
     public Message addUser(UserView userView) {
-        if (!daoUser.existByUserName(userView.getName())) {
+        if (daoUser.findOneByUserName(userView.getName()) != null) {
             LOGGER.trace("Ошибка при добавлении пользователя {}", userView.getName());
             return new Message("Ошибка при добавлении пользователя. Пользователь с таким именем уже существует", SC_CONFLICT);
         }
         User user = new User();
         user.setEnabled(true);
-        user.setPassword(userView.getPassword());
+        user.setPassword(new BCryptPasswordEncoder().encode(userView.getPassword()));
         user.setUserName(userView.getName());
+        List<Authorities> authorities = new ArrayList<>();
+        for (String role : userView.getRole()) {
+            authorities.add(new Authorities(role, user.getUserName()));
+        }
+        user.setAuthorities(authorities);
         try {
             daoUser.save(user);
             LOGGER.trace("Пользователь успешно создан");
@@ -60,7 +67,6 @@ public class UserService {
             return new Message("Ошибка при добавлении пользователя", SC_CONFLICT);
         }
     }
-
 
 
     public List<Authorities> getAllUserRoles() {

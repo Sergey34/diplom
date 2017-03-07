@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class Coordinates {
+public class Characteristics {
     @Id
     private int id;
     private String coordinatesJson;
@@ -15,13 +15,13 @@ public class Coordinates {
     private String alpha;
 
 
-    public Coordinates(String coordinatesJson, String fileNameId) {
-        this.coordinatesJson = coordinatesJson;
+    public Characteristics(String coordinatesStl, String fileNameId) {
+        this.coordinatesStl = coordinatesStl;
         this.fileName = fileNameId;
         this.id = fileNameId.hashCode();
     }
 
-    public Coordinates() {
+    public Characteristics() {
     }
 
     @Override
@@ -29,7 +29,7 @@ public class Coordinates {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Coordinates that = (Coordinates) o;
+        Characteristics that = (Characteristics) o;
 
         return id == that.id;
     }
@@ -47,12 +47,12 @@ public class Coordinates {
         this.id = id;
     }
 
-    public String getCoordinatesJson() {
-        return coordinatesJson;
+    public String getcoordinatesStl() {
+        return coordinatesStl;
     }
 
-    public void setCoordinatesJson(String coordinatesJson) {
-        this.coordinatesJson = coordinatesJson;
+    public void setcoordinatesStl(String coordinatesStl) {
+        this.coordinatesStl = coordinatesStl;
     }
 
     public String getFileName() {

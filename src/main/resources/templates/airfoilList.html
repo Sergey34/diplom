@@ -45,11 +45,12 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="/airfoilList.html">Airfoils</a>
-            <form class="navbar-form navbar-left" role="search">
+            <script>                 function sbm() {
+                search();
+            }             </script>
+            <form class="navbar-form navbar-left" role="search" onsubmit="sbm(); return false">
                 <div class="form-group"><input id="searchTemplate" type="text" class="form-control"
-                                               placeholder="shortName contains ...">
-                </div>
-                <button id="search" type="button" class="btn btn-default">Найти</button>
+                                               placeholder="shortName contains ..."></div>
             </form>
 
         </div>
@@ -131,7 +132,7 @@
                         <p>Drela AG26 airfoil used on the Bubble Dancer R/C DLG
                             <br>Max thickness 6.8% at 23.3% chord
                             <br>Max camber 2.5% at 45.5% chord
-                            <br>Source <a rel="nofollow" target="_blank" onclick="_gaq.push(['_trackEvent','external','http://www.ae.illinois.edu/m-selig/ads/coord_database.html', '']);return true;" href="/site/external?url=http%3A%2F%2Fwww.ae.illinois.edu%2Fm-selig%2Fads%2Fcoord_database.html">UIUC Airfoil Coordinates Database</a>
+                            <br>Source <a rel="nofollow" target="_blank" onclick="_gaq.push(['_trackEvent','external','http://www.ae.illinois.edu/m-selig/ads/coord_database.html', '']);return true;" href="/site/external?url=http%3A%2F%2Fwww.ae.illinois.edu%2Fm-selig%2Fads%2Fcoord_database.html">UIUC Airfoil Characteristics Database</a>
                         </p>
                     </div>
                 </div>
@@ -167,7 +168,7 @@
 <!--<script src="js/jquery.js"></script>-->
 <!-- Bootstrap Core JavaScript -->
 <script src="js/bootstrap.min.js"></script>
-<script>document.getElementById("search").onclick = search;</script>
+
 <script>document.getElementById("find").onclick = searchFull;</script>
 </body>
 

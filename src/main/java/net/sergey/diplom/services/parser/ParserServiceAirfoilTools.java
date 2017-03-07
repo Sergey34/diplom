@@ -92,7 +92,7 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
         Collection<Callable<Void>> futureList = new ArrayList<>();
         for (MenuItem menuItem : menuItems) {
             ParserAirfoil parserAirfoil = applicationContext.getBean(ParserAirfoil.class);
-            parserAirfoil.setPrefix(menuItem.getUrlCode());
+            parserAirfoil.setPrefix(menuItem.getUrl());
             futureList.add(parserAirfoil);
         }
         for (Future<Void> voidFuture : executorService.invokeAll(futureList)) {

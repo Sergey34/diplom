@@ -5,7 +5,7 @@ import java.util.List;
 public class AirfoilDetail extends AirfoilDTO {
     private List<String> imgCsvName;
     private List<String> stlFilePath;
-    private List<CoordinatesDto> coordinates;
+    private List<CharacteristicsDto> characteristics;
     private String coordView;
 
     public AirfoilDetail() {
@@ -20,12 +20,12 @@ public class AirfoilDetail extends AirfoilDTO {
         this.imgCsvName = imgCsvName;
     }
 
-    public List<CoordinatesDto> getCoordinates() {
-        return coordinates;
+    public List<CharacteristicsDto> getCharacteristics() {
+        return characteristics;
     }
 
-    public void setCoordinates(List<CoordinatesDto> coordinates) {
-        this.coordinates = coordinates;
+    public void setCharacteristics(List<CharacteristicsDto> characteristics) {
+        this.characteristics = characteristics;
     }
 
     public String getCoordView() {

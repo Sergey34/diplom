@@ -57,11 +57,11 @@ function fillContentDetailInfo(data) {
     var Polars_for = document.getElementById('Polars_for');
     Polars_for.innerHTML = Polars_for.textContent + data.name;
 
-    var coordinates = data.coordinates;
+    var characteristics = data.characteristics;
 
 
     var table = document.getElementById('table1');
-    for (let i = 0, j = 1; i < coordinates.length; i++, j++) {
+    for (let i = 0, j = 1; i < characteristics.length; i++, j++) {
 
         var tr = document.createElement('tr');
         tr.id = j;
@@ -79,31 +79,31 @@ function fillContentDetailInfo(data) {
         checkbox.setAttribute('type', 'checkbox');
         checkbox.setAttribute('name', 'activ');
         checkbox.setAttribute('checked', 'checked');
-        checkbox.setAttribute('filename', coordinates[i].fileName);
+        checkbox.setAttribute('filename', characteristics[i].fileName);
         checkbox.id = 'checkbox' + j;
         td.appendChild(checkbox);
         tr.appendChild(td);
 
         td = document.createElement('td');
         td.id = "Renolds" + j;
-        td.innerHTML = coordinates[i].renolgs;
+        td.innerHTML = characteristics[i].renolgs;
         tr.appendChild(td);
 
         td = document.createElement('td');
         td.id = "NCrit" + j;
-        td.innerHTML = coordinates[i].nCrit;
+        td.innerHTML = characteristics[i].nCrit;
         tr.appendChild(td);
 
         td = document.createElement('td');
         td.id = "MaxClCd" + j;
-        td.innerHTML = coordinates[i].maxClCd;
+        td.innerHTML = characteristics[i].maxClCd;
         tr.appendChild(td);
 
         td = document.createElement('td');
         var link_file = document.createElement('a');
         link_file.id = "link_file" + j;
-        link_file.innerHTML = coordinates[i].fileName;
-        link_file.setAttribute('href', coordinates[i].filePath);
+        link_file.innerHTML = characteristics[i].fileName;
+        link_file.setAttribute('href', characteristics[i].filePath);
         td.appendChild(link_file);
         tr.appendChild(td);
 
@@ -153,12 +153,12 @@ function fillEditableContentDetailInfo(data) {
 
     fillEditableContentDetailInfoEditableTable(data);
 
-    var coordinates = data.coordinates;
+    var characteristics = data.characteristics;
     var links = document.getElementById('graf');
-    for (let i = 0; i < coordinates.length; i++) {
+    for (let i = 0; i < characteristics.length; i++) {
         var linkItem = document.createElement('a');
-        linkItem.setAttribute("href", coordinates[i].filePath);
-        linkItem.innerHTML = coordinates[i].fileName;
+        linkItem.setAttribute("href", characteristics[i].filePath);
+        linkItem.innerHTML = characteristics[i].fileName;
         links.appendChild(linkItem);
         links.appendChild(document.createElement('br'))
     }
@@ -285,8 +285,8 @@ function fillEditableContentDetailInfoEditableTable(data) {
         document.getElementsByName('view[0][' + (i + 1) + ']')[0].setAttribute('value', item[0]);
         document.getElementsByName('view[1][' + (i + 1) + ']')[0].setAttribute('value', item[1]);
     }
-    var coordinates = data.coordinates;
-    number = coordinates.length;
+    var characteristics = data.characteristics;
+    number = characteristics.length;
     for (let i = 0; i < number; i++) {
         (function (i) {
             setTimeout(function () {
@@ -306,17 +306,17 @@ function fillEditableContentDetailInfoEditableTable(data) {
                 btn2.setAttribute("onClick", 'javascript:$("#tabular' + i + '").tabularInput("deleteRow")');
                 document.getElementById('editableTables').appendChild(btn);
                 document.getElementById('editableTables').appendChild(btn2);
-                var coordinatesItem = coordinates[i];
+                var characteristic = characteristics[i];
 
 
                 var tableCsv = document.createElement('div');
                 tableCsv.id = 'tableCsv' + i;
 
 
-                var Reynolds_number = createLabel('Reynolds_number', "Reynolds number", i, coordinatesItem.renolgs);
-                var Ncrit = createLabel('Ncrit', "Ncrit", i, coordinatesItem.nCrit);
+                var Reynolds_number = createLabel('Reynolds_number', "Reynolds number", i, characteristic.renolgs);
+                var Ncrit = createLabel('Ncrit', "Ncrit", i, characteristic.nCrit);
                 var Mach = createLabel('Mach', "Mach", i, "Mach");
-                var MaxClCd = createLabel('MaxClCd', "Max Cl/Cd", i, coordinatesItem.maxClCd);
+                var MaxClCd = createLabel('MaxClCd', "Max Cl/Cd", i, characteristic.maxClCd);
                 var MaxClCdalpha = createLabel('MaxClCdalpha', "Max Cl/Cd alpha", i, "MaxClCdalpha");
 
                 document.getElementById('editableTables').appendChild(Reynolds_number);
@@ -325,12 +325,12 @@ function fillEditableContentDetailInfoEditableTable(data) {
                 document.getElementById('editableTables').appendChild(MaxClCd);
                 document.getElementById('editableTables').appendChild(MaxClCdalpha);
 
-                var coordinatesJson = coordinatesItem.coordinatesJson.split('\n');
+                var coordinatesStl = characteristic.coordinatesStl.split('\n');
 
 
                 document.getElementById('editableTables').appendChild(tabular);
                 jQuery('#tabular' + i).tabularInput({
-                    'rows': coordinatesJson.length - 12,
+                    'rows': coordinatesStl.length - 12,
                     'columns': 7,
                     'minRows': 10,
                     'newRowOnTab': true,
@@ -338,11 +338,11 @@ function fillEditableContentDetailInfoEditableTable(data) {
                     'name': 'tabular' + i,
                     'animate': true
                 });
-                document.getElementById('input_Mach' + i).setAttribute('value', coordinatesJson[5].split(',')[1]);
-                document.getElementById('input_MaxClCdalpha' + i).setAttribute('value', coordinatesJson[7].split(',')[1]);
+                document.getElementById('input_Mach' + i).setAttribute('value', coordinatesStl[5].split(',')[1]);
+                document.getElementById('input_MaxClCdalpha' + i).setAttribute('value', coordinatesStl[7].split(',')[1]);
 
-                for (let j = 11, l = 1; j < coordinatesJson.length - 1; j++, l++) {
-                    var items = coordinatesJson[j].split(',');
+                for (let j = 11, l = 1; j < coordinatesStl.length - 1; j++, l++) {
+                    var items = coordinatesStl[j].split(',');
                     for (let k = 0; k < items.length; k++) {
                         document.getElementsByName('tabular' + i + '[' + k + '][' + l + ']')[0].setAttribute('value', items[k]);
                     }

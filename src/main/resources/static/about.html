@@ -38,11 +38,15 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="/airfoilList.html">Airfoils</a>
-            <form class="navbar-form navbar-left" role="search">
+            <script>
+                function sbm() {
+                    search();
+                }
+            </script>
+            <form class="navbar-form navbar-left" role="search" onsubmit="sbm(); return false">
                 <div class="form-group"><input id="searchTemplate" type="text" class="form-control"
                                                placeholder="shortName contains ...">
                 </div>
-                <button id="search" type="button" class="btn btn-default">Найти</button>
             </form>
 
         </div>
@@ -89,12 +93,12 @@ GET /rest/menu
          {
             "id": -625623784,
             "name": "A a18 to avistar",
-            "urlCode": "A"
+            "url": "A"
          },
          {
             "id": 610183724,
             "name": "B b29root to bw3",
-            "urlCode": "B"
+            "url": "B"
          }
       ]
    },
@@ -105,7 +109,7 @@ GET /rest/menu
          {
             "id": -456465,
             "name": "name B",
-            "urlCode": "BB"
+            "url": "BB"
          }
       ]
    }
@@ -177,9 +181,9 @@ GET /updateGraf/{airfoilId}"
       "/resources/chartTemp/ag13-ilCl div Cd v Alpha.png"
    ],
    "stlFilePath": "/resources/ag13-il_100.scad",
-   "coordinates": [
+   "characteristics": [
       {
-         "coordinatesJson": "Xfoil polar. Reynolds number fixed. Mach  number fixed\nPolar key,xf-ag13-il-1000000-n5\nAirfoil,ag13-il\nReynolds number,1000000\nNcrit,5\nMach,0\nMax Cl/Cd,88.1888\nMax Cl/Cd alpha,5.25\nUrl,http://airfoiltools.com/polar/csv?polar=xf-ag13-il-1000000-n5\n\nAlpha,Cl,Cd,Cdp,Cm,Top_Xtr,Bot_Xtr\n-8.250,-0.5701,0.09626,0.09470,0.0184,1.0000,0.0044\n-7.500,-0.5655,0.07944,0.07793,0.0068,1.0000,0.0029\n-7.250,-0.5546,0.07318,0.07169,-0.0008,1.0000,0.0029\n-6.750,-0.5203,0.01975,0.01655,-0.0474,1.0000,0.0027\n-6.500,-0.4948,0.01672,0.01305,-0.0480,1.0000,0.0029\n-6.250,-0.4683,0.01539,0.01148,-0.0481,1.0000,0.0030\n-6.000,-0.4420,0.01303,0.00869,-0.0484,1.0000,0.0033\n-5.750,-0.4152,0.01221,0.00775,-0.0484,1.0000,0.0036\n-5.500,-0.3882,0.01166,0.00711,-0.0483,1.0000,0.0038\n,
+         "coordinatesStl": "Xfoil polar. Reynolds number fixed. Mach  number fixed\nPolar key,xf-ag13-il-1000000-n5\nAirfoil,ag13-il\nReynolds number,1000000\nNcrit,5\nMach,0\nMax Cl/Cd,88.1888\nMax Cl/Cd alpha,5.25\nUrl,http://airfoiltools.com/polar/csv?polar=xf-ag13-il-1000000-n5\n\nAlpha,Cl,Cd,Cdp,Cm,Top_Xtr,Bot_Xtr\n-8.250,-0.5701,0.09626,0.09470,0.0184,1.0000,0.0044\n-7.500,-0.5655,0.07944,0.07793,0.0068,1.0000,0.0029\n-7.250,-0.5546,0.07318,0.07169,-0.0008,1.0000,0.0029\n-6.750,-0.5203,0.01975,0.01655,-0.0474,1.0000,0.0027\n-6.500,-0.4948,0.01672,0.01305,-0.0480,1.0000,0.0029\n-6.250,-0.4683,0.01539,0.01148,-0.0481,1.0000,0.0030\n-6.000,-0.4420,0.01303,0.00869,-0.0484,1.0000,0.0033\n-5.750,-0.4152,0.01221,0.00775,-0.0484,1.0000,0.0036\n-5.500,-0.3882,0.01166,0.00711,-0.0483,1.0000,0.0038\n,
          "fileName": "xf-ag13-il-1000000-n5.csv",
          "filePath": "/resources/tmpCsv/xf-ag13-il-1000000-n5.csv",
          "renolgs": "1,000,000",
@@ -187,7 +191,7 @@ GET /updateGraf/{airfoilId}"
          "maxClCd": "88.2 at α=5.25°"
       },
       {
-         "coordinatesJson": "Xfoil polar. Reynolds number fixed. Mach  number fixed\nPolar key,xf-ag13-il-50000\nAirfoil,ag13-il\nReynolds number,50000\nNcrit,9\nMach,0\nMax Cl/Cd,34.1528\nMax Cl/Cd alpha,4\nUrl,http://airfoiltools.com/polar/csv?polar=xf-ag13-il-50000\n\nAlpha,Cl,Cd,Cdp,Cm,Top_Xtr,Bot_Xtr\n-9.500,-0.5925,0.13338,0.12658,0.0214,1.0000,0.1438\n-9.250,-0.5675,0.12561,0.11877,0.0244,1.0000,0.1511\n-9.000,-0.5722,0.12399,0.11723,0.0214,1.0000,0.1565\n-8.750,-0.5612,0.11893,0.11220,0.0216,1.0000,0.1611\n-8.500,-0.5575,0.11594,0.10926,0.0204,1.0000,0.1687\n-8.250,-0.5582,0.11293,0.10634,0.0181,1.0000,0.1727\n-8.000,-0.5475,0.10889,0.10231,0.0185,1.0000,0.1819\n-7.750,-0.5457,0.10553,0.09903,0.0168,1.0000,0.1874\n-7.500,-0.5433,0.10283,0.09640,0.0153,1.0000,0.1972\n",
+         "coordinatesStl": "Xfoil polar. Reynolds number fixed. Mach  number fixed\nPolar key,xf-ag13-il-50000\nAirfoil,ag13-il\nReynolds number,50000\nNcrit,9\nMach,0\nMax Cl/Cd,34.1528\nMax Cl/Cd alpha,4\nUrl,http://airfoiltools.com/polar/csv?polar=xf-ag13-il-50000\n\nAlpha,Cl,Cd,Cdp,Cm,Top_Xtr,Bot_Xtr\n-9.500,-0.5925,0.13338,0.12658,0.0214,1.0000,0.1438\n-9.250,-0.5675,0.12561,0.11877,0.0244,1.0000,0.1511\n-9.000,-0.5722,0.12399,0.11723,0.0214,1.0000,0.1565\n-8.750,-0.5612,0.11893,0.11220,0.0216,1.0000,0.1611\n-8.500,-0.5575,0.11594,0.10926,0.0204,1.0000,0.1687\n-8.250,-0.5582,0.11293,0.10634,0.0181,1.0000,0.1727\n-8.000,-0.5475,0.10889,0.10231,0.0185,1.0000,0.1819\n-7.750,-0.5457,0.10553,0.09903,0.0168,1.0000,0.1874\n-7.500,-0.5433,0.10283,0.09640,0.0153,1.0000,0.1972\n",
          "fileName": "xf-ag13-il-50000.csv",
          "filePath": "/resources/tmpCsv/xf-ag13-il-50000.csv",
          "renolgs": "50,000",
@@ -259,6 +263,6 @@ GET /rest/airfoilsDto/a/5/2
 <!--<script src="../js/jquery.js"></script>-->
 <!-- Bootstrap Core JavaScript -->
 <script src="js/bootstrap.min.js"></script>
-<script>document.getElementById("search").onclick = search;</script>
+<!-- -->
 </body>
 </html>

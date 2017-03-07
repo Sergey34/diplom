@@ -16,5 +16,4 @@ public interface DaoUser extends CrudRepository<User, String> {
 
     User findOneByUserName(String username);
 
-    boolean existByUserName(String username);
 }

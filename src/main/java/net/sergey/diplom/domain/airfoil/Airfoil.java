@@ -13,7 +13,7 @@ public class Airfoil {
     private String coordView;
     private String description;
     private Prefix prefix;
-    private Set<Coordinates> coordinates;
+    private Set<Characteristics> characteristics;
 
     public Airfoil(String name, String description, Prefix prefix, String shortName) {
         this.name = name;
@@ -32,12 +32,12 @@ public class Airfoil {
         this.description = details;
     }
 
-    public Set<Coordinates> getCoordinates() {
-        return coordinates;
+    public Set<Characteristics> getCharacteristics() {
+        return characteristics;
     }
 
-    public void setCoordinates(Set<Coordinates> coordinates) {
-        this.coordinates = coordinates;
+    public void setCharacteristics(Set<Characteristics> characteristics) {
+        this.characteristics = characteristics;
     }
 
     public Prefix getPrefix() {
@@ -76,7 +76,7 @@ public class Airfoil {
         if (coordView != null ? !coordView.equals(airfoil.coordView) : airfoil.coordView != null) return false;
         if (description != null ? !description.equals(airfoil.description) : airfoil.description != null) return false;
         if (prefix != null ? !prefix.equals(airfoil.prefix) : airfoil.prefix != null) return false;
-        return coordinates != null ? coordinates.equals(airfoil.coordinates) : airfoil.coordinates == null;
+        return characteristics != null ? characteristics.equals(airfoil.characteristics) : airfoil.characteristics == null;
     }
 
     @Override
@@ -86,7 +86,7 @@ public class Airfoil {
         result = 31 * result + (coordView != null ? coordView.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (prefix != null ? prefix.hashCode() : 0);
-        result = 31 * result + (coordinates != null ? coordinates.hashCode() : 0);
+        result = 31 * result + (characteristics != null ? characteristics.hashCode() : 0);
         return result;
     }
 

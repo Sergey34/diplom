@@ -1,7 +1,7 @@
 package net.sergey.diplom.dto.airfoil;
 
-public class CoordinatesDto {
-    private String coordinatesJson;
+public class CharacteristicsDto {
+    private String coordinatesStl;
     private String fileName;
     private String filePath;
     private String renolgs;
@@ -9,7 +9,7 @@ public class CoordinatesDto {
     private String maxClCd;
 
 
-    public CoordinatesDto() {
+    public CharacteristicsDto() {
     }
 
     public String getFilePath() {
@@ -20,12 +20,12 @@ public class CoordinatesDto {
         this.filePath = filePath;
     }
 
-    public String getCoordinatesJson() {
-        return coordinatesJson;
+    public String getcoordinatesStl() {
+        return coordinatesStl;
     }
 
-    public void setCoordinatesJson(String coordinatesJson) {
-        this.coordinatesJson = coordinatesJson;
+    public void setcoordinatesStl(String coordinatesStl) {
+        this.coordinatesStl = coordinatesStl;
     }
 
     public String getFileName() {
