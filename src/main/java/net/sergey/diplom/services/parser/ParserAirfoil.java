@@ -1,6 +1,7 @@
 package net.sergey.diplom.services.parser;
 
 import net.sergey.diplom.dao.airfoil.DaoAirfoil;
+import net.sergey.diplom.dao.airfoil.DaoCharacteristics;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Characteristics;
 import net.sergey.diplom.domain.airfoil.Prefix;
@@ -43,18 +44,20 @@ class ParserAirfoil implements Callable<Void> {
     private final ConnectionManager connectionManager;
     private final StringHandler stringHandler;
     private final DaoAirfoil daoAirfoil;
+    private final DaoCharacteristics daoCharacteristics;
     private String prefix;
 
     @Autowired
     public ParserAirfoil(EventService eventService,
                          Constant constants, ParseFileScv parseFileScv,
-                         ConnectionManager connectionManager, StringHandler stringHandler, DaoAirfoil daoAirfoil) {
+                         ConnectionManager connectionManager, StringHandler stringHandler, DaoAirfoil daoAirfoil, DaoCharacteristics daoCharacteristics) {
         this.eventService = eventService;
         this.constants = constants;
         this.parseFileScv = parseFileScv;
         this.connectionManager = connectionManager;
         this.stringHandler = stringHandler;
         this.daoAirfoil = daoAirfoil;
+        this.daoCharacteristics = daoCharacteristics;
         ParserAirfoil.finish = new AtomicBoolean(false);
     }
 
@@ -79,11 +82,13 @@ class ParserAirfoil implements Callable<Void> {
             Elements airfoilList = connectionManager.getJsoupConnect(url + i, constants.TIMEOUT).get().body().getElementsByClass(constants.AFSEARCHRESULT).
                     first().getElementsByTag(constants.TR);
             List<Airfoil> airfoils = parsePage(prefix1, airfoilList, countPages);
+            for (Airfoil airfoil : airfoils) {
+                daoCharacteristics.save(airfoil.getCharacteristics());
+            }
             daoAirfoil.save(airfoils);
         }
         eventService.updateProgress(prefix, 100.0);
     }
-
 
     private List<Airfoil> parsePage(Prefix prefix1, Elements airfoilList, int countPages) throws IOException {
         List<Airfoil> airfoils = new ArrayList<>();

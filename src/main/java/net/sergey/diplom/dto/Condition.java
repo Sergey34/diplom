@@ -3,9 +3,9 @@ package net.sergey.diplom.dto;
 public class Condition {
     private String action;
     private String attrName;
-    private String value;
+    private double value;
 
-    public Condition(String action, String attrName, String value) {
+    public Condition(String action, String attrName, double value) {
         this.action = action;
         this.attrName = attrName;
         this.value = value;
@@ -30,11 +30,11 @@ public class Condition {
         this.attrName = attrName;
     }
 
-    public String getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(double value) {
         this.value = value;
     }
 }

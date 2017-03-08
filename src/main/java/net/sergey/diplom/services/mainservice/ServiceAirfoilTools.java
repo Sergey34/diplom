@@ -117,6 +117,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
         addMenuItemForNewAirfoil(airfoil);
         try {
+            daoCharacteristics.save(airfoil.getCharacteristics());
             daoAirfoil.save(airfoil);
         } catch (Exception e) {
             LOGGER.warn("ошибка при добавлении в базу нового airfoil", e);
@@ -132,6 +133,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             return new Message("Ошибка при добавлении в базу нового airfoil. Короткое имя профиля не должно быть пустым", SC_NOT_ACCEPTABLE);
         }
         try {
+            daoCharacteristics.save(airfoil.getCharacteristics());
             daoAirfoil.save(airfoil);
         } catch (Exception e) {
             LOGGER.warn("ошибка при добавлении в базу нового airfoil", e);
@@ -149,6 +151,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
         addMenuItemForNewAirfoil(airfoil);
         try {
+            daoCharacteristics.save(airfoil.getCharacteristics());
             daoAirfoil.save(airfoil);
         } catch (Exception e) {
             LOGGER.warn("Ошибка при обновлении airfoil {}", airfoil.getShortName(), e);
@@ -434,6 +437,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
                 airfoil.setCharacteristics(createCharacteristicsSet(files));
             }
             addMenuItemForNewAirfoil(airfoil);
+            daoCharacteristics.save(airfoil.getCharacteristics());
             daoAirfoil.save(airfoil);
         } catch (Exception e) {
             LOGGER.warn("Один из файлов имеет не верный формат", e);

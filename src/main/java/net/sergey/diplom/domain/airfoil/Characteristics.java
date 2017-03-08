@@ -3,7 +3,7 @@ package net.sergey.diplom.domain.airfoil;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
+@Document(collection = "characteristics")
 public class Characteristics {
     @Id
     private int id;

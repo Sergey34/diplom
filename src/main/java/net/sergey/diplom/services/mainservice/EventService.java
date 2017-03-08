@@ -8,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,7 +41,7 @@ public class EventService {
         for (SseEmitter emitter : emitters) {
             try {
                 emitter.send(progressMap, MediaType.APPLICATION_JSON);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 emitter.complete();
                 emitters.remove(emitter);
                 LOGGER.warn("Ошибка отправки увеомления о работе парсера", e);

@@ -1,11 +1,12 @@
 package net.sergey.diplom.domain.airfoil;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Set;
 
-@Document
+@Document(collection = "airfoils")
 public class Airfoil {
     @Id
     private String shortName;
@@ -13,6 +14,7 @@ public class Airfoil {
     private String coordView;
     private String description;
     private Prefix prefix;
+    @DBRef
     private Set<Characteristics> characteristics;
 
     public Airfoil(String name, String description, Prefix prefix, String shortName) {
