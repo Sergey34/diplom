@@ -62,6 +62,9 @@ class ParserMenu {
                         if (!prefix.equals(constants.FILTER_ITEM)) {
                             eventService.addKey(prefix);
                             airfoilMenu.add(prefix);
+                            if (menuItems.contains(menuItem)) {
+                                menuItems.remove(menuItem);
+                            }
                             menuItems.add(menuItem);
                             eventService.updateProgress("menu", eventService.getProgressValueByKey("menu") + 70.0 / links.size());
                         }

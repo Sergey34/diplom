@@ -9,9 +9,9 @@ public class Characteristics {
     private int id;
     private String coordinatesStl;
     private String fileName;
-    private String renolgs;
-    private String nCrit;
-    private String maxClCd;
+    private double renolgs;
+    private double nCrit;
+    private double maxClCd;
     private String alpha;
 
 
@@ -63,27 +63,27 @@ public class Characteristics {
         this.fileName = fileName;
     }
 
-    public String getRenolgs() {
+    public double getRenolgs() {
         return renolgs;
     }
 
-    public void setRenolgs(String renolgs) {
+    public void setRenolgs(double renolgs) {
         this.renolgs = renolgs;
     }
 
-    public String getMaxClCd() {
+    public double getMaxClCd() {
         return maxClCd;
     }
 
-    public void setMaxClCd(String maxClCd) {
+    public void setMaxClCd(double maxClCd) {
         this.maxClCd = maxClCd;
     }
 
-    public String getNCrit() {
+    public double getNCrit() {
         return nCrit;
     }
 
-    public void setNCrit(String NCrit) {
+    public void setNCrit(double NCrit) {
         this.nCrit = NCrit;
     }
 

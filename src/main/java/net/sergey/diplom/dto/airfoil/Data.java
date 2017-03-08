@@ -3,9 +3,9 @@ package net.sergey.diplom.dto.airfoil;
 public class Data {
     private String fileName;
     private String data;
-    private String reynolds;
-    private String nCrit;
-    private String maxClCd;
+    private double reynolds;
+    private double nCrit;
+    private double maxClCd;
 
     public String getFileName() {
         return fileName;
@@ -23,15 +23,15 @@ public class Data {
         this.data = data;
     }
 
-    public String getReynolds() {
+    public double getReynolds() {
         return reynolds;
     }
 
-    public String getnCrit() {
+    public double getnCrit() {
         return nCrit;
     }
 
-    public String getMaxClCd() {
+    public double getMaxClCd() {
         return maxClCd;
     }
 }

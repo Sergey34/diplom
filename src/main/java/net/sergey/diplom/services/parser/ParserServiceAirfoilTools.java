@@ -148,7 +148,7 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
         return parsingIsStarting;
     }
 
-    @Async("executor")
+    @Async
     public Future<Message> startParsing() {
         parsingIsStarting = true;
         try {

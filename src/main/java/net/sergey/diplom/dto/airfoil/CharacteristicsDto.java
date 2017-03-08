@@ -4,8 +4,8 @@ public class CharacteristicsDto {
     private String coordinatesStl;
     private String fileName;
     private String filePath;
-    private String renolgs;
-    private String nCrit;
+    private double renolgs;
+    private double nCrit;
     private String maxClCd;
 
 
@@ -36,23 +36,23 @@ public class CharacteristicsDto {
         this.fileName = fileName;
     }
 
-    public void setNCrit(String NCrit) {
+    public void setNCrit(double NCrit) {
         this.nCrit = NCrit;
     }
 
-    public String getRenolgs() {
+    public double getRenolgs() {
         return renolgs;
     }
 
-    public void setRenolgs(String renolgs) {
+    public void setRenolgs(double renolgs) {
         this.renolgs = renolgs;
     }
 
-    public String getnCrit() {
+    public double getnCrit() {
         return nCrit;
     }
 
-    public void setnCrit(String nCrit) {
+    public void setnCrit(double nCrit) {
         this.nCrit = nCrit;
     }
 
