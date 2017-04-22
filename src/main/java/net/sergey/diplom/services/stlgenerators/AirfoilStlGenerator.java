@@ -15,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Component
 public class AirfoilStlGenerator {
@@ -81,8 +82,8 @@ public class AirfoilStlGenerator {
             try (BufferedWriter scadWriter = new BufferedWriter(new FileWriter(stlFileName))) {
                 scadWriter.write(FILE_HEADER.toString());
                 for (Point2D point2D : spline) {
-                    scadWriter.write("\t\t\t\t[" + String.format("%.6e", point2D.getX()) + ", " +
-                            String.format("%.6e", point2D.getY()) + "]\n");
+                    scadWriter.write("\t\t\t\t[" + String.format(Locale.ENGLISH, "%.6e", point2D.getX()) + ", " +
+                            String.format(Locale.ENGLISH, "%.6e", point2D.getY()) + "],\n");
                 }
                 scadWriter.write(FILE_FOOTER.toString());
             } catch (IOException e) {
