@@ -24,9 +24,9 @@ public class Filter {
 
     private Criteria buildCriteria(Condition condition) {
         switch (condition.getAction()) {
-            case "<":
-                return buildGqCriteriaToCriteria(condition);
             case ">":
+                return buildGqCriteriaToCriteria(condition);
+            case "<":
                 return buildLqCriteriaToCriteria(condition);
             case "=":
                 return buildEqualsCriteriaToCriteria(condition);
