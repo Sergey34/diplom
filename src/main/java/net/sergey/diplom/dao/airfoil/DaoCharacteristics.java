@@ -15,8 +15,12 @@ import java.util.Set;
 @Repository
 @Transactional
 public class DaoCharacteristics {
-    @Autowired
     private MongoOperations mongoOperations;
+
+    @Autowired
+    public DaoCharacteristics(MongoOperations mongoOperations) {
+        this.mongoOperations = mongoOperations;
+    }
 
     public Set<Integer> findCharacteristicsByTemplate(Query query) {
         List<Characteristics> characteristicsList = mongoOperations.find(query, Characteristics.class);
