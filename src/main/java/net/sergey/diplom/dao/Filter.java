@@ -21,13 +21,7 @@ public class Filter {
         }
 
         Query query = Query.query(criteria);
-        query.fields()
-                .exclude("coordinatesStl")
-                .exclude("fileName")
-                .exclude("renolgs")
-                .exclude("nCrit")
-                .exclude("maxClCd")
-                .exclude("alpha");
+        query.fields().include("id");
         return query;
     }
 
