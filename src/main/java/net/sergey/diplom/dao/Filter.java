@@ -19,7 +19,16 @@ public class Filter {
         } else {
             criteria = criteriaList.get(0);
         }
-        return Query.query(criteria);
+
+        Query query = Query.query(criteria);
+        query.fields()
+                .exclude("coordinatesStl")
+                .exclude("fileName")
+                .exclude("renolgs")
+                .exclude("nCrit")
+                .exclude("maxClCd")
+                .exclude("alpha");
+        return query;
     }
 
     private Criteria buildCriteria(Condition condition) {

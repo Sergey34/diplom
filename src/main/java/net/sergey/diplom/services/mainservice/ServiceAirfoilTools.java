@@ -200,14 +200,14 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             return findByShortNameLike(shortName, startNumber, count);
         }
         Filter filter = new Filter();
-        List<Characteristics> characteristics = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
+        Set<Integer> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
         String shortNameTemplate;
         if (!"null".equals(shortName)) {
             shortNameTemplate = shortName;
         } else {
             shortNameTemplate = "";
         }
-        List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCharacteristicsInAndShortNameRegex(characteristics, shortNameTemplate, new PageRequest(startNumber, count));
+        List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCharacteristics_idInAndShortNameRegex(ids, shortNameTemplate, new PageRequest(startNumber, count));
         for (Airfoil airfoil : airfoils) {
             drawViewAirfoil(airfoil);
             createDatFile(airfoil);
@@ -248,14 +248,14 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             return countByShortNameLike(shortName);
         }
         Filter filter = new Filter();
-        List<Characteristics> coords = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
+        Set<Integer> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
         String shortNameTemplate;
         if (!"null".equals(shortName)) {
             shortNameTemplate = shortName;
         } else {
             shortNameTemplate = "";
         }
-        return daoAirfoil.countDistinctAirfoilByCharacteristicsInAndShortNameRegex(coords, shortNameTemplate);
+        return daoAirfoil.countDistinctAirfoilByCharacteristics_idInAndShortNameRegex(ids, shortNameTemplate);
     }
 
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {
