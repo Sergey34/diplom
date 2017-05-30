@@ -73,23 +73,13 @@ public class Airfoil {
 
         Airfoil airfoil = (Airfoil) o;
 
-        if (name != null ? !name.equals(airfoil.name) : airfoil.name != null) return false;
-        if (shortName != null ? !shortName.equals(airfoil.shortName) : airfoil.shortName != null) return false;
-        if (coordView != null ? !coordView.equals(airfoil.coordView) : airfoil.coordView != null) return false;
-        if (description != null ? !description.equals(airfoil.description) : airfoil.description != null) return false;
-        if (prefix != null ? !prefix.equals(airfoil.prefix) : airfoil.prefix != null) return false;
-        return characteristics != null ? characteristics.equals(airfoil.characteristics) : airfoil.characteristics == null;
+        return shortName != null ? shortName.equals(airfoil.shortName) : airfoil.shortName == null;
+
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (shortName != null ? shortName.hashCode() : 0);
-        result = 31 * result + (coordView != null ? coordView.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (prefix != null ? prefix.hashCode() : 0);
-        result = 31 * result + (characteristics != null ? characteristics.hashCode() : 0);
-        return result;
+        return shortName != null ? shortName.hashCode() : 0;
     }
 
     public String getShortName() {

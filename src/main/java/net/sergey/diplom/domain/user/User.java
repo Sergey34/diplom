@@ -65,17 +65,12 @@ public class User {
 
         User user = (User) o;
 
-        if (enabled != user.enabled) return false;
-        if (userName != null ? !userName.equals(user.userName) : user.userName != null) return false;
-        return password != null ? password.equals(user.password) : user.password == null;
+        return userName != null ? userName.equals(user.userName) : user.userName == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = userName != null ? userName.hashCode() : 0;
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (enabled ? 1 : 0);
-        return result;
+        return userName != null ? userName.hashCode() : 0;
     }
 }

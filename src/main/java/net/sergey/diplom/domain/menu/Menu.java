@@ -53,18 +53,13 @@ public class Menu {
 
         Menu menu = (Menu) o;
 
-        if (id != menu.id) return false;
-        if (header != null ? !header.equals(menu.header) : menu.header != null) return false;
-        return menuItems != null ? menuItems.equals(menu.menuItems) : menu.menuItems == null;
+        return id == menu.id;
 
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (header != null ? header.hashCode() : 0);
-        result = 31 * result + (menuItems != null ? menuItems.hashCode() : 0);
-        return result;
+        return id;
     }
 
     @Override

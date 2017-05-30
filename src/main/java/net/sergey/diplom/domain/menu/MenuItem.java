@@ -52,17 +52,13 @@ public class MenuItem {
 
         MenuItem menuItem = (MenuItem) o;
 
-        if (id != menuItem.id) return false;
-        if (name != null ? !name.equals(menuItem.name) : menuItem.name != null) return false;
-        return url != null ? url.equals(menuItem.url) : menuItem.url == null;
+        return id == menuItem.id;
+
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (url != null ? url.hashCode() : 0);
-        return result;
+        return id;
     }
 
     @Override

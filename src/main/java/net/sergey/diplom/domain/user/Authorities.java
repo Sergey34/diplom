@@ -42,16 +42,13 @@ public class Authorities implements GrantedAuthority {
 
         Authorities that = (Authorities) o;
 
-        if (username != null ? !username.equals(that.username) : that.username != null) return false;
-        return authority != null ? authority.equals(that.authority) : that.authority == null;
+        return username != null ? username.equals(that.username) : that.username == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = username != null ? username.hashCode() : 0;
-        result = 31 * result + (authority != null ? authority.hashCode() : 0);
-        return result;
+        return username != null ? username.hashCode() : 0;
     }
 
     @Override

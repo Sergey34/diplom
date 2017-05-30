@@ -40,17 +40,15 @@ public class Prefix {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Prefix prefix1 = (Prefix) o;
+        Prefix prefix = (Prefix) o;
 
-        if (id != prefix1.id) return false;
-        return prefix == prefix1.prefix;
+        return id == prefix.id;
+
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (int) prefix;
-        return result;
+        return id;
     }
 
     @Override

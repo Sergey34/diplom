@@ -38,7 +38,7 @@ class ParserMenu {
     List<Menu> parse(Collection<MenuItem> menuItemsInDB) throws IOException {
         eventService.clearProgressMap();
         eventService.updateProgress("menu", 0.0);
-        final List<String> airfoilMenu = new ArrayList<>();
+//        final List<String> airfoilMenu = new ArrayList<>();
         Element mmenu = connectionManager.getJsoupConnect(constants.HTTP_AIRFOIL_TOOLS_COM, constants.TIMEOUT).get().body().getElementsByClass(constants.MENU_CLASS_NAME).first();
         Elements menuList = mmenu.getElementsByTag(constants.MENU_LIST);
         Elements headerMenu = mmenu.getElementsByTag(constants.HEADER_MENU);
@@ -61,7 +61,7 @@ class ParserMenu {
 
                         if (!prefix.equals(constants.FILTER_ITEM)) {
                             eventService.addKey(prefix);
-                            airfoilMenu.add(prefix);
+//                            airfoilMenu.add(prefix);
                             if (menuItems.contains(menuItem)) {
                                 menuItems.remove(menuItem);
                             }
