@@ -82,43 +82,54 @@
                         <div class="caption">
                             <div class="content" id="contentid">
                                 <div id="airfoilDetailInfo">
-                                    <form action="/rest/write/updateAirfoil" method="post" enctype="multipart/form-data"
-                                          id="updateAirfoil">
-                                        <label>
-                                            Название профиля
-                                            <input type="text" value="" name="name" id="airfoilName"/>
-                                        </label>
-                                        <label>
-                                            Короткое название профиля (изменение повлечет создание нового профиля)
-                                            <input type="text" value="" name="ShortName" id="shortName"/>
-                                        </label>
-                                        </Br>
-                                        <label>
-                                            Детали
-                                            <input type="text" value="" name="Details" id="description"/>
-                                        </label>
-                                        </Br>
-                                        <div class="img_detail" id="img_detail">
-                                            <label>
-                                                Выберите файл для построения графика профиля
-                                                <input class="fileInput btn btn-default" type="file"
-                                                       name="fileAirfoil"/>
-                                            </label>
-                                            </Br>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Обновление профиля с использованием готовых .csv
+                                            файлов
                                         </div>
+                                        <div class="panel-body">
 
-                                        <div id="graf">
-                                            <label>
-                                                Выберите файлы построения графиков
-                                                <input class="fileInput btn btn-default" type="file" name="files"
-                                                       multiple="multiple"
-                                                       value="Выбрать файлы"/>
-                                            </label>
-                                            </Br>
+                                            <form action="/rest/write/updateAirfoil" method="post"
+                                                  enctype="multipart/form-data"
+                                                  id="updateAirfoil">
+                                                <label>
+                                                    Название профиля
+                                                    <input type="text" value="" name="name" id="airfoilName"/>
+                                                </label>
+                                                <label>
+                                                    Короткое название профиля (изменение повлечет создание нового
+                                                    профиля)
+                                                    <input type="text" value="" name="ShortName" id="shortName"/>
+                                                </label>
+                                                </Br>
+                                                <label>
+                                                    Детали
+                                                    <input type="text" value="" name="Details" id="description"/>
+                                                </label>
+                                                </Br>
+                                                <div class="img_detail" id="img_detail">
+                                                    <label>
+                                                        Выберите файл для построения графика профиля
+                                                        <input class="fileInput btn btn-default" type="file"
+                                                               name="fileAirfoil"/>
+                                                    </label>
+                                                    </Br>
+                                                </div>
+
+                                                <div id="graf">
+                                                    <label>
+                                                        Выберите файлы построения графиков
+                                                        <input class="fileInput btn btn-default" type="file"
+                                                               name="files"
+                                                               multiple="multiple"
+                                                               value="Выбрать файлы"/>
+                                                    </label>
+                                                    </Br>
+                                                </div>
+
+                                                <input class="btn btn-default" type="submit"/>
+                                            </form>
                                         </div>
-
-                                        <input class="btn btn-default" type="submit"/>
-                                    </form>
+                                    </div>
                                     <div id="editableTables">
                                         <input type="button" value="Add New Row" class="btn btn-default"
                                                onclick='javascript:$("#viewTab").tabularInput("addRow")'>

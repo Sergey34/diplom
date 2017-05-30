@@ -80,39 +80,48 @@
                         <div class="caption">
                             <div class="content" id="contentid">
                                 <div id="airfoilDetailInfo">
-                                    <form action="/rest/write/addAirfoilForFileCsv" method="post"
-                                          enctype="multipart/form-data"
-                                          id="addAirfoil">
-                                        <label>
-                                            Название профиля
-                                            <input type="text" value="" name="name"/>
-                                        </label>
-                                        </Br>
-                                        <label>
-                                            Короткое название профиля
-                                            <input type="text" value="" name="ShortName"/>
-                                        </label>
-                                        </Br>
-                                        <label>
-                                            Детали
-                                            <input type="text" value="" name="Details"/>
-                                        </label>
-                                        </Br>
-                                        <label>
-                                            Выберите файл для построения графика профиля
-                                            <input class="fileInput btn btn-default" type="file" name="fileAirfoil"/>
-                                        </label>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Добавление профиля с использованием готовых .csv
+                                            файлов
+                                        </div>
+                                        <div class="panel-body">
+                                            <form action="/rest/write/addAirfoilForFileCsv" method="post"
+                                                  enctype="multipart/form-data"
+                                                  id="addAirfoil">
+                                                <label>
+                                                    Название профиля
+                                                    <input type="text" value="" name="name"/>
+                                                </label>
+                                                </Br>
+                                                <label>
+                                                    Короткое название профиля
+                                                    <input type="text" value="" name="ShortName"/>
+                                                </label>
+                                                </Br>
+                                                <label>
+                                                    Детали
+                                                    <input type="text" value="" name="Details"/>
+                                                </label>
+                                                </Br>
+                                                <label>
+                                                    Выберите файл для построения графика профиля
+                                                    <input class="fileInput btn btn-default" type="file"
+                                                           name="fileAirfoil"/>
+                                                </label>
 
-                                        </Br>
-                                        <label>
-                                            Выберите файлы построения графиков
-                                            <input class="fileInput btn btn-default" name="files" multiple="multiple"
-                                                   value="Выбрать файлы"/>
-                                        </label>
-                                        </Br>
-                                        <input class="btn btn-default" type="submit"/>
+                                                </Br>
+                                                <label>
+                                                    Выберите файлы построения графиков
+                                                    <input class="fileInput btn btn-default" name="files"
+                                                           multiple="multiple"
+                                                           value="Выбрать файлы"/>
+                                                </label>
+                                                </Br>
+                                                <input class="btn btn-default" type="submit"/>
 
-                                    </form>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div id="addAirfoilWeb">
