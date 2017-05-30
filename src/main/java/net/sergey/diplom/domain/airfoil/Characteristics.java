@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "characteristics")
 public class Characteristics {
     @Id
-    private int id;
+    private Integer id;
     private String coordinatesStl;
     private String fileName;
     private double renolgs;
@@ -39,11 +39,11 @@ public class Characteristics {
         return id;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
