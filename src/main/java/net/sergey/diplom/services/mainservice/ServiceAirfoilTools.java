@@ -85,7 +85,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             LOGGER.debug("Имя не должно быть пустым");
             return new Message("Имя не должно быть пустым", SC_NOT_ACCEPTABLE);
         }
-        Airfoil airfoil = new Airfoil(name, details, shortName);
+        Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).build();
         storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
         return addUpdateAirfoil(fileAirfoil, files, airfoil);
     }
@@ -96,7 +96,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             LOGGER.debug("Имя не должно быть пустым");
             return new Message("Имя не должно быть пустым", SC_NOT_ACCEPTABLE);
         }
-        Airfoil airfoil = new Airfoil(name, details, shortName);
+        Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).build();
         if (daoAirfoil.findOneByShortName(shortName) != null) {
             LOGGER.debug("Airfoil с таким именем уже существует, Выберите другое имя");
             return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
@@ -281,9 +281,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         airfoil.setPrefix(new Prefix(airfoilEdit.getShortName().toUpperCase().charAt(0)));
         Set<Characteristics> characteristics = new HashSet<>();
         for (Data data : airfoilEdit.getData()) {
-            Characteristics coordinateItem = new Characteristics(data.getData(), data.getFileName());
+            Characteristics coordinateItem = Characteristics.builder().coordinatesStl(data.getData()).fileName(data.getFileName()).build();
             coordinateItem.setRenolgs(data.getReynolds());
-            coordinateItem.setNCrit(data.getnCrit());
+            coordinateItem.setNCrit(data.getNCrit());
             coordinateItem.setMaxClCd(data.getMaxClCd());
             characteristics.add(coordinateItem);
             characteristics.add(coordinateItem);
@@ -455,7 +455,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     private Set<Characteristics> createCharacteristicsSet(List<MultipartFile> files) throws IOException {
         Set<Characteristics> characteristics = new HashSet<>();
         for (MultipartFile file : files) {
-            characteristics.add(new Characteristics(parseFileScv.csvToString(file.getInputStream()), file.getOriginalFilename()));
+            characteristics.add(Characteristics.builder().coordinatesStl(parseFileScv.csvToString(file.getInputStream())).fileName(file.getOriginalFilename()).build());
         }
         return characteristics;
     }

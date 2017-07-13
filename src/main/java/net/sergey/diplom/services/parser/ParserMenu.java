@@ -48,7 +48,7 @@ class ParserMenu {
             Element menuElement = menuList.get(i);
             Element element = headerMenu.get(i);
             if (constants.MENU_HEADER.equals(element.text())) {
-                Menu menu1 = new Menu(element.text());
+                Menu menu1 = Menu.builder().header(element.text()).build();
                 List<MenuItem> menuItems = new ArrayList<>();
                 menuItems.addAll(menuItemsInDB);
                 Elements links = menuElement.getElementsByTag(constants.LINKS);
@@ -57,7 +57,7 @@ class ParserMenu {
                     if (menu1.getHeader().equals(constants.MENU_HEADER)) {
                         String text = stringHandler.createStringByPattern(a.text().trim(), constants.GET_MENU_TITLE_PATTERN);
                         String prefix = createPrefix(text);
-                        MenuItem menuItem = new MenuItem(text, prefix);
+                        MenuItem menuItem = MenuItem.builder().name(text).url(prefix).build();
 
                         if (!prefix.equals(constants.FILTER_ITEM)) {
                             eventService.addKey(prefix);

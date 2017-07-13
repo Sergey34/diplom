@@ -73,7 +73,7 @@ class ParserAirfoil implements Callable<Void> {
 
     private void parseAirfoilByUrl(String prefix) throws IOException {
         String url = ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX + prefix + constants.NO;
-        Prefix prefix1 = new Prefix(prefix.charAt(0));
+        Prefix prefix1 = Prefix.builder().prefix(prefix.charAt(0)).build();
         int countPages = createIntByPattern(connectionManager.getJsoupConnect(url, constants.TIMEOUT).get().html(), constants.GET_COUNT_PAGES_PATTERN);
         for (int i = 0; i < countPages; i++) {
             if (finish.get()) {
@@ -149,7 +149,7 @@ class ParserAirfoil implements Callable<Void> {
                     String fileName = stringHandler.createStringByPattern(a.attr(constants.HREF), constants.GET_FILE_NAME_BY_URL_PATTERN);
                     URL urlFile = new URL(ConstantApi.GET_FILE_CSV + fileName);
                     LOGGER.debug("url {}{}", ConstantApi.GET_FILE_CSV, fileName);
-                    Characteristics coordinateItem = new Characteristics(parseFileScv.csvToString(urlFile.openStream()), fileName + constants.FILE_TYPE);
+                    Characteristics coordinateItem = Characteristics.builder().coordinatesStl(parseFileScv.csvToString(urlFile.openStream())).fileName(fileName + constants.FILE_TYPE).build();
                     coordinateItem.setRenolgs(Double.parseDouble(reynolds.text().replace(",", "")));
                     coordinateItem.setNCrit(Double.parseDouble(nCrit.text()));
                     coordinateItem.setMaxClCd(Double.parseDouble(stringHandler.createStringByPattern(maxClCd.text(), constants.GET_MAXCLCD_PATTERN)));
@@ -166,7 +166,7 @@ class ParserAirfoil implements Callable<Void> {
         String name = detail.getElementsByTag("h1").get(0).text();
         String description = filterDescription(detail, airfoilId).html();
         String coordinateView = parseCoordinateView(airfoilId);
-        Airfoil airfoil = new Airfoil(name, description, airfoilId);
+        Airfoil airfoil = Airfoil.builder().name(name).description(description).shortName(airfoilId).build();
         Set<Characteristics> characteristics = downloadDetailInfo(detail);
         airfoil.setCoordView(coordinateView);
         airfoil.setCharacteristics(characteristics);

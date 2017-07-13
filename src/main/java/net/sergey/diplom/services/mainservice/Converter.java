@@ -72,7 +72,7 @@ public class Converter {
     public CharacteristicsDto characteristicsToCharacteristicsDto(Characteristics coordinate) {
         CharacteristicsDto characteristicsDto = new CharacteristicsDto();
         characteristicsDto.setFileName(coordinate.getFileName());
-        characteristicsDto.setcoordinatesStl(coordinate.getCoordinatesStl());
+        characteristicsDto.setCoordinatesStl(coordinate.getCoordinatesStl());
         characteristicsDto.setMaxClCd(coordinate.getMaxClCd() + " " + coordinate.getAlpha());
         characteristicsDto.setNCrit(coordinate.getNCrit());
         characteristicsDto.setRenolgs(coordinate.getRenolgs());
@@ -88,6 +88,6 @@ public class Converter {
     }
 
     public MenuItem prefixToMenuItem(Prefix prefix) {
-        return new MenuItem(String.valueOf(prefix.getPrefix()), String.valueOf(prefix.getPrefix()));
+        return MenuItem.builder().name(String.valueOf(prefix.getPrefix())).url(String.valueOf(prefix.getPrefix())).build();
     }
 }

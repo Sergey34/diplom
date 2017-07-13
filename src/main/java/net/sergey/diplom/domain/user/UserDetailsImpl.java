@@ -1,6 +1,5 @@
-package net.sergey.diplom.services.mainservice;
+package net.sergey.diplom.domain.user;
 
-import net.sergey.diplom.domain.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

@@ -2,7 +2,7 @@ package net.sergey.diplom;
 
 import net.sergey.diplom.dao.user.DaoUser;
 import net.sergey.diplom.domain.user.User;
-import net.sergey.diplom.services.mainservice.UserDetailsImpl;
+import net.sergey.diplom.domain.user.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

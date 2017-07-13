@@ -41,7 +41,6 @@ public class UserService {
     public UserService(Converter converter, DaoUser daoUser) {
         this.converter = converter;
         this.daoUser = daoUser;
-
     }
 
     public Message addUser(UserView userView) {
