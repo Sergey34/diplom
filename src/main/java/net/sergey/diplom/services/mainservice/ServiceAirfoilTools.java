@@ -89,7 +89,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             LOGGER.debug("Имя не должно быть пустым");
             return EMPTY_AIRFOIL_SHORT_NAME;
         }
-        Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).build();
+        Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).prefix(new Prefix(shortName.toUpperCase().charAt(0))).build();
         storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
         return addUpdateAirfoil(fileAirfoil, files, airfoil);
     }
@@ -100,7 +100,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             LOGGER.debug("Имя не должно быть пустым");
             return EMPTY_AIRFOIL_SHORT_NAME;
         }
-        Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).build();
+        Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).prefix(new Prefix(shortName.toUpperCase().charAt(0))).build();
         return addUpdateAirfoil(fileAirfoil, files, airfoil);
     }
 
