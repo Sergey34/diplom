@@ -22,11 +22,11 @@ public interface DaoAirfoil extends CrudRepository<Airfoil, String> {
 
     List<Airfoil> findAll(Pageable pageRequest);
 
-    List<Airfoil> findDistinctAirfoilByCharacteristics_idInAndShortNameRegex(Set<Integer> characteristics, String shortName, Pageable pageRequest);
+    List<Airfoil> findDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(Set<String> characteristics, String shortName, Pageable pageRequest);
 
     List<Airfoil> findByShortNameRegex(String shortName, Pageable pageRequest);
 
     int countByShortNameRegex(String shortNameTemplate);
 
-    int countDistinctAirfoilByCharacteristics_idInAndShortNameRegex(Set<Integer> characteristics, String shortNameTemplate);
+    int countDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(Set<String> characteristics, String shortNameTemplate);
 }

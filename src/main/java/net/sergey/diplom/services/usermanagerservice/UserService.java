@@ -90,7 +90,7 @@ public class UserService {
             user.setUserName("admin");
             String password = new BCryptPasswordEncoder().encode("mex_mat");
             user.setPassword(password);
-            Authorities adminRole = new Authorities("ROLE_ADMIN", "admin");
+            Authorities adminRole = new Authorities("ROLE_ADMIN", "ROLE_ADMIN");
             user.setAuthorities(Arrays.asList(adminRole));
             daoUser.save(user);
         }

@@ -7,8 +7,6 @@ import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Objects;
-
 @lombok.Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,9 +14,8 @@ import java.util.Objects;
 @Builder
 @Document(collection = "characteristics")
 public class Characteristics {
-    @Id
-    private Integer id;
     private String coordinatesStl;
+    @Id
     private String fileName;
     private double renolgs;
     private double nCrit;
@@ -27,9 +24,17 @@ public class Characteristics {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
+        if (!super.equals(o)) { return false; }
         Characteristics that = (Characteristics) o;
-        return Objects.equals(id, that.id);
+        return fileName != null ? fileName.equals(that.fileName) : that.fileName == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (fileName != null ? fileName.hashCode() : 0);
+        return result;
     }
 }

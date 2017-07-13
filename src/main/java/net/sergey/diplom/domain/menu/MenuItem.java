@@ -7,6 +7,8 @@ import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Objects;
+
 @lombok.Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,21 +17,20 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class MenuItem {
     @Id
-    private int id;
     private String name;
     private String url;
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
         MenuItem menuItem = (MenuItem) o;
-        return id == menuItem.id;
+        return Objects.equals(name, menuItem.name);
     }
 
     @Override
     public int hashCode() {
-        return id;
+        return name.hashCode();
     }
 
 }

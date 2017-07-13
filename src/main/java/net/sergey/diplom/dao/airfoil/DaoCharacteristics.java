@@ -22,11 +22,11 @@ public class DaoCharacteristics {
         this.mongoOperations = mongoOperations;
     }
 
-    public Set<Integer> findCharacteristicsByTemplate(Query query) {
+    public Set<String> findCharacteristicsByTemplate(Query query) {
         List<Characteristics> characteristicsList = mongoOperations.find(query, Characteristics.class);
-        Set<Integer> ids = new HashSet<>();
+        Set<String> ids = new HashSet<>();
         for (Characteristics characteristics : characteristicsList) {
-            ids.add(characteristics.getId());
+            ids.add(characteristics.getFileName());
         }
         return ids;
     }

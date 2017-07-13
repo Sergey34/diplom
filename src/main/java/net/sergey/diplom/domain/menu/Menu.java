@@ -17,7 +17,6 @@ import java.util.List;
 @Document
 public class Menu {
     @Id
-    private int id;
     private String header;
     private List<MenuItem> menuItems;
 
@@ -26,11 +25,11 @@ public class Menu {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Menu menu = (Menu) o;
-        return id == menu.id;
+        return header == menu.header;
     }
 
     @Override
     public int hashCode() {
-        return id;
+        return header.hashCode();
     }
 }

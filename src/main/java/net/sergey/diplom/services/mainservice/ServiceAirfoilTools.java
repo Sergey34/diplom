@@ -196,9 +196,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             return findByShortNameLike(shortName, startNumber, count);
         }
         Filter filter = new Filter();
-        Set<Integer> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
+        Set<String> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
         String shortNameTemplate = !"null".equals(shortName) ? shortName : "";
-        List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCharacteristics_idInAndShortNameRegex(ids, shortNameTemplate, new PageRequest(startNumber, count));
+        List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(ids, shortNameTemplate, new PageRequest(startNumber, count));
         for (Airfoil airfoil : airfoils) {
             drawViewAirfoil(airfoil);
             createDatFile(airfoil);
@@ -233,9 +233,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             return countByShortNameLike(shortName);
         }
         Filter filter = new Filter();
-        Set<Integer> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
+        Set<String> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
         String shortNameTemplate = !"null".equals(shortName) ? shortName : "";
-        return daoAirfoil.countDistinctAirfoilByCharacteristics_idInAndShortNameRegex(ids, shortNameTemplate);
+        return daoAirfoil.countDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(ids, shortNameTemplate);
     }
 
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {
