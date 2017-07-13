@@ -166,7 +166,7 @@ class ParserAirfoil implements Callable<Void> {
         String name = detail.getElementsByTag("h1").get(0).text();
         String description = filterDescription(detail, airfoilId).html();
         String coordinateView = parseCoordinateView(airfoilId);
-        Airfoil airfoil = Airfoil.builder().name(name).description(description).shortName(airfoilId).build();
+        Airfoil airfoil = Airfoil.builder().name(name).description(description).shortName(airfoilId).prefix(new Prefix(airfoilId.toUpperCase().charAt(0))).build();
         Set<Characteristics> characteristics = downloadDetailInfo(detail);
         airfoil.setCoordView(coordinateView);
         airfoil.setCharacteristics(characteristics);
