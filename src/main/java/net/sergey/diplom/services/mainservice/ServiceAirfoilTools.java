@@ -45,6 +45,10 @@ import static net.sergey.diplom.dto.messages.Message.*;
 
 @Service
 public class ServiceAirfoilTools implements ServiceAirfoil {
+    public static final Message ADD_AIRFOIL_CONFLICT = new Message("Ошибка при сохранени информации о профиле, возможно Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
+    public static final Message EMPTY_AIRFOIL_SHORT_NAME = new Message("Ошибка при добавлении в базу нового airfoil. Короткое имя профиля не должно быть пустым", SC_NOT_ACCEPTABLE);
+    public static final Message ASS_SUCCESS = new Message("Airfoil успешно добален / обновлен", SC_OK);
+    public static final Message DONE = new Message("done", SC_OK);
     private static final List<String> CHART_NAMES =
             Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
@@ -81,9 +85,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public Message updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
-        if (name == null || name.isEmpty()) {
+        if (shortName == null || shortName.isEmpty()) {
             LOGGER.debug("Имя не должно быть пустым");
-            return new Message("Имя не должно быть пустым", SC_NOT_ACCEPTABLE);
+            return EMPTY_AIRFOIL_SHORT_NAME;
         }
         Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).build();
         storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
@@ -92,15 +96,11 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public Message addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
-        if (name == null || name.isEmpty()) {
+        if (shortName == null || shortName.isEmpty()) {
             LOGGER.debug("Имя не должно быть пустым");
-            return new Message("Имя не должно быть пустым", SC_NOT_ACCEPTABLE);
+            return EMPTY_AIRFOIL_SHORT_NAME;
         }
         Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).build();
-        if (daoAirfoil.findOneByShortName(shortName) != null) {
-            LOGGER.debug("Airfoil с таким именем уже существует, Выберите другое имя");
-            return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
-        }
         return addUpdateAirfoil(fileAirfoil, files, airfoil);
     }
 
@@ -108,11 +108,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     public Message addAirfoil(AirfoilEdit airfoilEdit) {
         if (airfoilEdit.getShortName() == null || airfoilEdit.getShortName().isEmpty()) {
             LOGGER.debug("airfoil не добавлен - Короткое имя профиля не должно быть пустым");
-            return new Message("Ошибка при добавлении в базу нового airfoil. Короткое имя профиля не должно быть пустым", SC_NOT_ACCEPTABLE);
-        }
-        if (daoAirfoil.findOneByShortName(airfoilEdit.getShortName()) != null) {
-            LOGGER.debug("Airfoil с таким именем уже существует, Выберите другое имя");
-            return new Message("Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
+            return EMPTY_AIRFOIL_SHORT_NAME;
         }
         Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
         addMenuItemForNewAirfoil(airfoil);
@@ -121,32 +117,32 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             daoAirfoil.save(airfoil);
         } catch (Exception e) {
             LOGGER.warn("ошибка при добавлении в базу нового airfoil", e);
-            return new Message("Ошибка при добавлении в базу нового airfoil", SC_CONFLICT);
+            return ADD_AIRFOIL_CONFLICT;
         }
-        return new Message("Airfoil успешно добавлен", SC_OK);
+        return ASS_SUCCESS;
     }
 
     @Override
     public Message addAirfoil(Airfoil airfoil) {
         if (airfoil.getShortName() == null || airfoil.getShortName().isEmpty()) {
             LOGGER.debug("airfoil не добавлен - Короткое имя профиля не должно быть пустым");
-            return new Message("Ошибка при добавлении в базу нового airfoil. Короткое имя профиля не должно быть пустым", SC_NOT_ACCEPTABLE);
+            return EMPTY_AIRFOIL_SHORT_NAME;
         }
         try {
             daoCharacteristics.save(airfoil.getCharacteristics());
             daoAirfoil.save(airfoil);
         } catch (Exception e) {
             LOGGER.warn("ошибка при добавлении в базу нового airfoil", e);
-            return new Message("Ошибка при добавлении в базу нового airfoil", SC_CONFLICT);
+            return ADD_AIRFOIL_CONFLICT;
         }
-        return new Message("Airfoil успешно добавлен", SC_OK);
+        return ASS_SUCCESS;
     }
 
     @Override
     public Message updateAirfoil(AirfoilEdit airfoilEdit) {
         if (airfoilEdit.getShortName() == null || airfoilEdit.getShortName().isEmpty()) {
             LOGGER.debug("airfoil не обновлен - Короткое имя профиля не должно быть пустым");
-            return new Message("Ошибка при добавлении в базу нового airfoil. Короткое имя профиля не должно быть пустым", SC_NOT_ACCEPTABLE);
+            return EMPTY_AIRFOIL_SHORT_NAME;
         }
         Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
         addMenuItemForNewAirfoil(airfoil);
@@ -155,11 +151,11 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             daoAirfoil.save(airfoil);
         } catch (Exception e) {
             LOGGER.warn("Ошибка при обновлении airfoil {}", airfoil.getShortName(), e);
-            return new Message("Ошибка при обновлении airfoil " + airfoil.getShortName(), SC_CONFLICT);
+            return ADD_AIRFOIL_CONFLICT;
         }
         storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
         LOGGER.debug("Airfoil успешно обновлен {}", SC_OK);
-        return new Message("Airfoil успешно обновлен", SC_OK);
+        return ASS_SUCCESS;
     }
 
     @Override
@@ -191,7 +187,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     public Message clearAll() {
         System.gc();
         storageService.init();
-        return new Message("done", SC_OK);
+        return DONE;
     }
 
     @Override
@@ -201,12 +197,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         }
         Filter filter = new Filter();
         Set<Integer> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
-        String shortNameTemplate;
-        if (!"null".equals(shortName)) {
-            shortNameTemplate = shortName;
-        } else {
-            shortNameTemplate = "";
-        }
+        String shortNameTemplate = !"null".equals(shortName) ? shortName : "";
         List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCharacteristics_idInAndShortNameRegex(ids, shortNameTemplate, new PageRequest(startNumber, count));
         for (Airfoil airfoil : airfoils) {
             drawViewAirfoil(airfoil);
@@ -217,12 +208,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public List<AirfoilDTO> findByShortNameLike(String shortName, int startNumber, int count) {
-        String shortNameTemplate;
-        if ("null".equals(shortName)) {
-            shortNameTemplate = "";
-        } else {
-            shortNameTemplate = shortName;
-        }
+        String shortNameTemplate = !"null".equals(shortName) ? shortName : "";
         List<Airfoil> airfoils = daoAirfoil.findByShortNameRegex(shortNameTemplate, new PageRequest(startNumber, count));
         for (Airfoil airfoil : airfoils) {
             drawViewAirfoil(airfoil);
@@ -233,13 +219,12 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public int countByShortNameLike(String shortName) {
-        String shortNameTemplate;
-        if (!"null".equals(shortName)) {
-            shortNameTemplate = shortName;
-        } else {
-            shortNameTemplate = "";
-        }
+        String shortNameTemplate = getShortNameTemplate(shortName);
         return daoAirfoil.countByShortNameRegex(shortNameTemplate);
+    }
+
+    private String getShortNameTemplate(String shortName) {
+        return !"null".equals(shortName) ? shortName : "";
     }
 
     @Override
@@ -249,12 +234,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         }
         Filter filter = new Filter();
         Set<Integer> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
-        String shortNameTemplate;
-        if (!"null".equals(shortName)) {
-            shortNameTemplate = shortName;
-        } else {
-            shortNameTemplate = "";
-        }
+        String shortNameTemplate = !"null".equals(shortName) ? shortName : "";
         return daoAirfoil.countDistinctAirfoilByCharacteristics_idInAndShortNameRegex(ids, shortNameTemplate);
     }
 
@@ -440,11 +420,11 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             daoCharacteristics.save(airfoil.getCharacteristics());
             daoAirfoil.save(airfoil);
         } catch (Exception e) {
-            LOGGER.warn("Один из файлов имеет не верный формат", e);
-            return new Message("Один из файлов имеет не верный формат", SC_NOT_ACCEPTABLE);
+            LOGGER.warn("Ошибка при добалении профиля", e);
+            return ADD_AIRFOIL_CONFLICT;
         }
         LOGGER.debug("Airfoil успешно добален / обновлен");
-        return new Message("Airfoil успешно добален / обновлен", SC_OK);
+        return ASS_SUCCESS;
     }
 
     @Override
