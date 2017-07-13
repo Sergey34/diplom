@@ -1,18 +1,16 @@
 package net.sergey.diplom.services.buildergraphs.imagehandlers;
 
-import net.sergey.diplom.services.utils.UtilsLogger;
+import lombok.extern.slf4j.Slf4j;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.style.markers.SeriesMarkers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+@Slf4j
 public class ImageHandler implements Callable<Void> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static String CATALOG;
     private final List<Xy> xyList;
     private final String title;
@@ -64,7 +62,7 @@ public class ImageHandler implements Callable<Void> {
             BitmapEncoder.saveBitmapWithDPI(chart, CATALOG + fileName,
                     BitmapEncoder.BitmapFormat.PNG, 80);
         } catch (Exception e) {
-            LOGGER.warn("не удалось сохранить график {}", chart.getTitle(), e);
+            log.warn("не удалось сохранить график {}", chart.getTitle(), e);
         }
         return null;
     }

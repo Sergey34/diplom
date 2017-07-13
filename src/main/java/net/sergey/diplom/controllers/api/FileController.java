@@ -1,4 +1,4 @@
-package net.sergey.diplom.controllers;
+package net.sergey.diplom.controllers.api;
 
 import net.sergey.diplom.services.storageservice.FileSystemStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class FileController {
+    private final FileSystemStorageService storageService;
+
     @Autowired
-    private FileSystemStorageService storageService;
+    public FileController(FileSystemStorageService storageService) {this.storageService = storageService;}
 
     //    http://localhost:8081/files/airfoil_img/a18-il.dat
     @RequestMapping("/files/{dir}/{filename:.+}")

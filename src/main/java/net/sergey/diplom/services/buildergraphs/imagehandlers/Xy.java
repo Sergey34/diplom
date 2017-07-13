@@ -1,8 +1,13 @@
 package net.sergey.diplom.services.buildergraphs.imagehandlers;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 import java.util.List;
 
-
+@lombok.Data
+@AllArgsConstructor
+@Builder
 public class Xy {
     private final String legend;
     private List<Double> x;
@@ -12,25 +17,5 @@ public class Xy {
         this.legend = legend;
         this.x = x;
         this.y = y;
-    }
-
-    public List<Double> getX() {
-        return x;
-    }
-
-    public void setX(List<Double> x) {
-        this.x = x;
-    }
-
-    public List<Double> getY() {
-        return y;
-    }
-
-    public void setY(List<Double> y) {
-        this.y = y;
-    }
-
-    public String getLegend() {
-        return legend;
     }
 }

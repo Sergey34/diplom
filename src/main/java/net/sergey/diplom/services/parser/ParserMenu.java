@@ -5,11 +5,8 @@ import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.services.mainservice.EventService;
 import net.sergey.diplom.services.parser.consts.Constant;
 import net.sergey.diplom.services.parser.siteconnection.ConnectionManager;
-import net.sergey.diplom.services.utils.UtilsLogger;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +17,6 @@ import java.util.List;
 
 @Component
 class ParserMenu {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final Constant constants;
     private final ConnectionManager connectionManager;
     private final EventService eventService;

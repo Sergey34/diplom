@@ -1,4 +1,4 @@
-package net.sergey.diplom.controllers;
+package net.sergey.diplom.controllers.api;
 
 import net.sergey.diplom.services.mainservice.EventService;
 import org.springframework.beans.factory.annotation.Autowired;

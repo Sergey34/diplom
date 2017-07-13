@@ -1,5 +1,6 @@
 package net.sergey.diplom.services.usermanagerservice;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sergey.diplom.dao.user.DaoUser;
 import net.sergey.diplom.domain.user.Authorities;
 import net.sergey.diplom.domain.user.User;
@@ -7,9 +8,6 @@ import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.dto.user.UserDto;
 import net.sergey.diplom.dto.user.UserView;
 import net.sergey.diplom.services.mainservice.Converter;
-import net.sergey.diplom.services.utils.UtilsLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,19 +16,19 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static net.sergey.diplom.dto.messages.Message.SC_CONFLICT;
 import static net.sergey.diplom.dto.messages.Message.SC_OK;
 
 @Component
+@Slf4j
 public class UserService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final static List<Authorities> allAuthorities;
 
     static {
-        allAuthorities = Arrays.asList(new Authorities("ROLE_ADMIN",""));
+        allAuthorities = Collections.singletonList(new Authorities("ROLE_ADMIN", ""));
     }
 
     private final Converter converter;
@@ -45,7 +43,7 @@ public class UserService {
 
     public Message addUser(UserView userView) {
         if (daoUser.findOneByUserName(userView.getName()) != null) {
-            LOGGER.trace("Ошибка при добавлении пользователя {}", userView.getName());
+            log.trace("Ошибка при добавлении пользователя {}", userView.getName());
             return new Message("Ошибка при добавлении пользователя. Пользователь с таким именем уже существует", SC_CONFLICT);
         }
         User user = new User();
@@ -59,10 +57,10 @@ public class UserService {
         user.setAuthorities(authorities);
         try {
             daoUser.save(user);
-            LOGGER.trace("Пользователь успешно создан");
+            log.trace("Пользователь успешно создан");
             return new Message("Пользователь успешно создан", SC_OK);
         } catch (Exception e) {
-            LOGGER.trace("Ошибка при добавлении пользователя {}, {}", user.getUserName(), e);
+            log.trace("Ошибка при добавлении пользователя {}, {}", user.getUserName(), e);
             return new Message("Ошибка при добавлении пользователя", SC_CONFLICT);
         }
     }
@@ -91,7 +89,7 @@ public class UserService {
             String password = new BCryptPasswordEncoder().encode("mex_mat");
             user.setPassword(password);
             Authorities adminRole = new Authorities("ROLE_ADMIN", "ROLE_ADMIN");
-            user.setAuthorities(Arrays.asList(adminRole));
+            user.setAuthorities(Collections.singletonList(adminRole));
             daoUser.save(user);
         }
     }

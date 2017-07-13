@@ -2,15 +2,13 @@ package net.sergey.diplom.services.buildergraphs;
 
 import au.com.bytecode.opencsv.CSVParser;
 import au.com.bytecode.opencsv.CSVWriter;
+import lombok.extern.slf4j.Slf4j;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Characteristics;
 import net.sergey.diplom.services.buildergraphs.imagehandlers.ImageHandler;
 import net.sergey.diplom.services.buildergraphs.imagehandlers.Xy;
 import net.sergey.diplom.services.buildergraphs.imagehandlers.createxychartstyle.SimpleStyle;
 import net.sergey.diplom.services.storageservice.FileSystemStorageService;
-import net.sergey.diplom.services.utils.UtilsLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -23,8 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Slf4j
 public class BuilderGraphs {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final ExecutorService executorService;
     private final FileSystemStorageService storageService;
     private Map<String, ImageHandler> imageHandler = new ConcurrentHashMap<>();
@@ -127,7 +125,7 @@ public class BuilderGraphs {
                 }
             }
         } catch (NumberFormatException | IOException e) {
-            LOGGER.warn("невалидный файл!!! {}", fileName, e);
+            log.warn("невалидный файл!!! {}", fileName, e);
             return null;
         }
         return coordinates;
@@ -170,7 +168,7 @@ public class BuilderGraphs {
                 }
             }
         } catch (NumberFormatException | IOException e) {
-            LOGGER.warn("невалидный файл!!! {}", fileName, e);
+            log.warn("невалидный файл!!! {}", fileName, e);
             return null;
         }
         return coordinates;

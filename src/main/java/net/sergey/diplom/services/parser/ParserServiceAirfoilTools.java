@@ -1,6 +1,7 @@
 package net.sergey.diplom.services.parser;
 
 
+import lombok.extern.slf4j.Slf4j;
 import net.sergey.diplom.dao.menu.DaoMenu;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
@@ -8,9 +9,6 @@ import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.dto.messages.MessageError;
 import net.sergey.diplom.services.parser.consts.Constant;
 import net.sergey.diplom.services.properties.PropertiesHandler;
-import net.sergey.diplom.services.utils.UtilsLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -30,10 +28,9 @@ import java.util.concurrent.*;
 import static net.sergey.diplom.dto.messages.Message.SC_NOT_IMPLEMENTED;
 import static net.sergey.diplom.dto.messages.Message.SC_OK;
 
-
+@Slf4j
 @Component
 public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private final Constant constants;
     private final ApplicationContext applicationContext;
@@ -69,7 +66,7 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
                 propertiesHandler.load(configParserPath);
             }
         } catch (IOException e) {
-            LOGGER.warn("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties", e);
+            log.warn("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties", e);
             throw new IllegalStateException("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties", e);
         }
         constants.initConst();
@@ -139,7 +136,7 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
         try {
             executorService.awaitTermination(60, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            LOGGER.warn("stop Error", e);
+            log.warn("stop Error", e);
         }
         executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
@@ -155,7 +152,7 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
             parse();
             return new AsyncResult<>(new Message("Данные успешно загружены", SC_OK));
         } catch (Exception e) {
-            LOGGER.warn("ошибка инициализации базы", e);
+            log.warn("ошибка инициализации базы", e);
             e.printStackTrace();
             return new AsyncResult<Message>(new MessageError("Произошла ошибка при загрузке данных", SC_NOT_IMPLEMENTED, e.getStackTrace()));
         } finally {

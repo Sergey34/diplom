@@ -1,4 +1,4 @@
-package net.sergey.diplom.controllers;
+package net.sergey.diplom.controllers.api;
 
 import net.sergey.diplom.dto.airfoil.AirfoilEdit;
 import net.sergey.diplom.dto.messages.Message;

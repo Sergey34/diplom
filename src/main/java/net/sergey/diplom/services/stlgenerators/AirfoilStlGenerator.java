@@ -1,10 +1,8 @@
 package net.sergey.diplom.services.stlgenerators;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sergey.diplom.services.stlgenerators.bezierinterpolation.Point2D;
 import net.sergey.diplom.services.storageservice.FileSystemStorageService;
-import net.sergey.diplom.services.utils.UtilsLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -17,13 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+@Slf4j
 @Component
 public class AirfoilStlGenerator {
     private static final String REGEX = ",";
     private static final int b = 100;
     private static final StringBuilder FILE_HEADER = new StringBuilder();
     private static final StringBuilder FILE_FOOTER = new StringBuilder();
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
+
 
     static {
         FILE_HEADER.append("module airfoil(h) {\n\tlinear_extrude(height = h, convexity = 10, $fn = 200) {\n")
@@ -64,7 +63,7 @@ public class AirfoilStlGenerator {
                 x.add(Double.parseDouble(strings[0]) * b);
                 y.add(Double.parseDouble(strings[strings.length - 1]) * b);
             } catch (Exception e) {
-                LOGGER.warn("Ошибка генерации STL файлв", e);
+                log.warn("Ошибка генерации STL файлв", e);
                 throw e;
             }
         }
@@ -87,7 +86,7 @@ public class AirfoilStlGenerator {
                 }
                 scadWriter.write(FILE_FOOTER.toString());
             } catch (IOException e) {
-                LOGGER.warn("Ошибка генерации STL файлв", e);
+                log.warn("Ошибка генерации STL файлв", e);
                 throw e;
             }
             fileNames.add(fileName);

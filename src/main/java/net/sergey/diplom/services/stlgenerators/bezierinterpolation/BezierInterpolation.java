@@ -58,15 +58,9 @@ public class BezierInterpolation implements Interpolation {
                             - values.get(i).getY() + tgL.getY() / tgL.getX() * values.get(i).getX()) / tmp;
                     if (x > values.get(i).getX() && x < values.get(i + 1).getX()) {
                         if (tgL.getY() > 0.0) {
-                            if (l1 > l2)
-                                l1 = 0.0;
-                            else
-                                l2 = 0.0;
+                            if (l1 > l2) { l1 = 0.0; } else { l2 = 0.0; }
                         } else {
-                            if (l1 < l2)
-                                l1 = 0.0;
-                            else
-                                l2 = 0.0;
+                            if (l1 < l2) { l1 = 0.0; } else { l2 = 0.0; }
                         }
                     }
                 }

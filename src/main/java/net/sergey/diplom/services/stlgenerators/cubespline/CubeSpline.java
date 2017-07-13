@@ -41,8 +41,9 @@ public class CubeSpline implements Interpolation {
         }
 
         // Нахождение решения - обратный ход метода прогонки
-        for (int i = coord.size() - 2; i > 0; --i)
+        for (int i = coord.size() - 2; i > 0; --i) {
             splines.get(i).c = alpha.get(i) * splines.get(i + 1).c + beta.get(i);
+        }
 
         // По известным коэффициентам c[i] находим значения b[i] и d[i]
         for (int i = coord.size() - 1; i > 0; --i) {

@@ -21,8 +21,8 @@ public class Authorities implements GrantedAuthority {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
         Authorities that = (Authorities) o;
         return username != null ? username.equals(that.username) : that.username == null;
     }

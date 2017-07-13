@@ -28,8 +28,8 @@ public class Airfoil {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
         Airfoil airfoil = (Airfoil) o;
         return shortName != null ? shortName.equals(airfoil.shortName) : airfoil.shortName == null;
     }

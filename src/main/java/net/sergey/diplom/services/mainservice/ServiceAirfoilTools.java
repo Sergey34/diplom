@@ -1,6 +1,7 @@
 package net.sergey.diplom.services.mainservice;
 
 
+import lombok.extern.slf4j.Slf4j;
 import net.sergey.diplom.dao.Filter;
 import net.sergey.diplom.dao.airfoil.DaoAirfoil;
 import net.sergey.diplom.dao.airfoil.DaoCharacteristics;
@@ -25,9 +26,6 @@ import net.sergey.diplom.services.parser.ParseFileScv;
 import net.sergey.diplom.services.properties.PropertiesHandler;
 import net.sergey.diplom.services.stlgenerators.AirfoilStlGenerator;
 import net.sergey.diplom.services.storageservice.FileSystemStorageService;
-import net.sergey.diplom.services.utils.UtilsLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -43,15 +41,15 @@ import java.util.*;
 
 import static net.sergey.diplom.dto.messages.Message.*;
 
+@Slf4j
 @Service
 public class ServiceAirfoilTools implements ServiceAirfoil {
-    public static final Message ADD_AIRFOIL_CONFLICT = new Message("Ошибка при сохранени информации о профиле, возможно Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
-    public static final Message EMPTY_AIRFOIL_SHORT_NAME = new Message("Ошибка при добавлении в базу нового airfoil. Короткое имя профиля не должно быть пустым", SC_NOT_ACCEPTABLE);
-    public static final Message ASS_SUCCESS = new Message("Airfoil успешно добален / обновлен", SC_OK);
-    public static final Message DONE = new Message("done", SC_OK);
+    private static final Message ADD_AIRFOIL_CONFLICT = new Message("Ошибка при сохранени информации о профиле, возможно Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
+    private static final Message EMPTY_AIRFOIL_SHORT_NAME = new Message("Ошибка при добавлении в базу нового airfoil. Короткое имя профиля не должно быть пустым", SC_NOT_ACCEPTABLE);
+    private static final Message ASS_SUCCESS = new Message("Airfoil успешно добален / обновлен", SC_OK);
+    private static final Message DONE = new Message("done", SC_OK);
     private static final List<String> CHART_NAMES =
             Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final ParseFileScv parseFileScv;
     private final PropertiesHandler propertiesHandler;
     private final Converter converter;
@@ -86,7 +84,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     @Override
     public Message updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
         if (shortName == null || shortName.isEmpty()) {
-            LOGGER.debug("Имя не должно быть пустым");
+            log.debug("Имя не должно быть пустым");
             return EMPTY_AIRFOIL_SHORT_NAME;
         }
         Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).prefix(new Prefix(shortName.toUpperCase().charAt(0))).build();
@@ -97,7 +95,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     @Override
     public Message addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
         if (shortName == null || shortName.isEmpty()) {
-            LOGGER.debug("Имя не должно быть пустым");
+            log.debug("Имя не должно быть пустым");
             return EMPTY_AIRFOIL_SHORT_NAME;
         }
         Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).prefix(new Prefix(shortName.toUpperCase().charAt(0))).build();
@@ -107,41 +105,40 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     @Override
     public Message addAirfoil(AirfoilEdit airfoilEdit) {
         if (airfoilEdit.getShortName() == null || airfoilEdit.getShortName().isEmpty()) {
-            LOGGER.debug("airfoil не добавлен - Короткое имя профиля не должно быть пустым");
+            log.debug("airfoil не добавлен - Короткое имя профиля не должно быть пустым");
             return EMPTY_AIRFOIL_SHORT_NAME;
         }
         Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
         addMenuItemForNewAirfoil(airfoil);
-        try {
-            daoCharacteristics.save(airfoil.getCharacteristics());
-            daoAirfoil.save(airfoil);
-        } catch (Exception e) {
-            LOGGER.warn("ошибка при добавлении в базу нового airfoil", e);
-            return ADD_AIRFOIL_CONFLICT;
-        }
+        if (add(airfoil)) { return ADD_AIRFOIL_CONFLICT; }
         return ASS_SUCCESS;
     }
 
     @Override
     public Message addAirfoil(Airfoil airfoil) {
         if (airfoil.getShortName() == null || airfoil.getShortName().isEmpty()) {
-            LOGGER.debug("airfoil не добавлен - Короткое имя профиля не должно быть пустым");
+            log.debug("airfoil не добавлен - Короткое имя профиля не должно быть пустым");
             return EMPTY_AIRFOIL_SHORT_NAME;
         }
+        if (add(airfoil)) { return ADD_AIRFOIL_CONFLICT; }
+        return ASS_SUCCESS;
+    }
+
+    private boolean add(Airfoil airfoil) {
         try {
             daoCharacteristics.save(airfoil.getCharacteristics());
             daoAirfoil.save(airfoil);
         } catch (Exception e) {
-            LOGGER.warn("ошибка при добавлении в базу нового airfoil", e);
-            return ADD_AIRFOIL_CONFLICT;
+            log.warn("ошибка при добавлении в базу нового airfoil", e);
+            return true;
         }
-        return ASS_SUCCESS;
+        return false;
     }
 
     @Override
     public Message updateAirfoil(AirfoilEdit airfoilEdit) {
         if (airfoilEdit.getShortName() == null || airfoilEdit.getShortName().isEmpty()) {
-            LOGGER.debug("airfoil не обновлен - Короткое имя профиля не должно быть пустым");
+            log.debug("airfoil не обновлен - Короткое имя профиля не должно быть пустым");
             return EMPTY_AIRFOIL_SHORT_NAME;
         }
         Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
@@ -150,11 +147,11 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             daoCharacteristics.save(airfoil.getCharacteristics());
             daoAirfoil.save(airfoil);
         } catch (Exception e) {
-            LOGGER.warn("Ошибка при обновлении airfoil {}", airfoil.getShortName(), e);
+            log.warn("Ошибка при обновлении airfoil {}", airfoil.getShortName(), e);
             return ADD_AIRFOIL_CONFLICT;
         }
         storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
-        LOGGER.debug("Airfoil успешно обновлен {}", SC_OK);
+        log.debug("Airfoil успешно обновлен {}", SC_OK);
         return ASS_SUCCESS;
     }
 
@@ -298,7 +295,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
                 propertiesHandler.load(configParserPath);
             }
         } catch (IOException e) {
-            LOGGER.warn("Ошибка при попытке инициализировать настройки парсера", e);
+            log.warn("Ошибка при попытке инициализировать настройки парсера", e);
         }
     }
 
@@ -317,10 +314,13 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         File file = new File(s);
         if (!file.exists()) {
             try {
-                file.createNewFile();
-                Files.write(file.toPath(), airfoil.getCoordView().getBytes());
+                if (file.createNewFile()) {
+                    Files.write(file.toPath(), airfoil.getCoordView().getBytes());
+                } else {
+                    log.warn("Ошибка записи файла");
+                }
             } catch (IOException e) {
-                LOGGER.warn("Ошибка записи файла", e);
+                log.warn("Ошибка записи файла", e);
             }
         }
     }
@@ -335,7 +335,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
                 x.add(Double.parseDouble(strings[0]));
                 y.add(Double.parseDouble(strings[strings.length - 1]));
             } catch (Exception e) {
-                LOGGER.warn("Оштбка чтения файла", e);
+                log.warn("Оштбка чтения файла", e);
                 break;
             }
         }
@@ -357,7 +357,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             try {
                 new BuilderGraphs(storageService).draw(airfoil, checkedList, true);
             } catch (Exception e) {
-                LOGGER.warn("Ошибка при обработке файловк с координатами", e);
+                log.warn("Ошибка при обработке файловк с координатами", e);
             }
         }
         List<String> imgCsvName = new ArrayList<>();
@@ -378,7 +378,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             new BuilderGraphs(storageService).draw(airfoil, null, false);
             stlFileNames = stlGenerator.generate(airfoil.getShortName(), airfoil.getCoordView(), storageService);
         } catch (Exception e) {
-            LOGGER.warn("Ошибка при обработке файлов с координатами", e);
+            log.warn("Ошибка при обработке файлов с координатами", e);
         }
         drawViewAirfoil(airfoil);
         return converter.airfoilToAirfoilDetail(airfoil, ServiceAirfoilTools.CHART_NAMES, stlFileNames);
@@ -389,7 +389,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             return;
         }
         if (airfoil.getCoordView() == null || airfoil.getCoordView().isEmpty()) {
-            LOGGER.warn("отсутствубт координаты для airfoil {}", airfoil.getShortName());
+            log.warn("отсутствубт координаты для airfoil {}", airfoil.getShortName());
             return;
         }
         List<Double> x = new ArrayList<>();
@@ -400,7 +400,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         try {
             imageHandler.draw();
         } catch (Exception e) {
-            LOGGER.warn("Ошибка при рисовании графиков", e);
+            log.warn("Ошибка при рисовании графиков", e);
         }
     }
 
@@ -420,10 +420,10 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             daoCharacteristics.save(airfoil.getCharacteristics());
             daoAirfoil.save(airfoil);
         } catch (Exception e) {
-            LOGGER.warn("Ошибка при добалении профиля", e);
+            log.warn("Ошибка при добалении профиля", e);
             return ADD_AIRFOIL_CONFLICT;
         }
-        LOGGER.debug("Airfoil успешно добален / обновлен");
+        log.debug("Airfoil успешно добален / обновлен");
         return ASS_SUCCESS;
     }
 

@@ -1,4 +1,4 @@
-package net.sergey.diplom.controllers;
+package net.sergey.diplom.controllers.api;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
@@ -20,12 +20,12 @@ import java.util.List;
 @RestController
 public class FullRestController {
     private final ServiceAirfoil service;
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
-    public FullRestController(ServiceAirfoil service) {
+    public FullRestController(ServiceAirfoil service, UserService userService) {
         this.service = service;
+        this.userService = userService;
     }
 
     @RequestMapping(value = "/menu", method = RequestMethod.GET)

@@ -1,5 +1,6 @@
 package net.sergey.diplom.services.parser;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sergey.diplom.dao.airfoil.DaoAirfoil;
 import net.sergey.diplom.dao.airfoil.DaoCharacteristics;
 import net.sergey.diplom.domain.airfoil.Airfoil;
@@ -9,11 +10,8 @@ import net.sergey.diplom.services.mainservice.EventService;
 import net.sergey.diplom.services.parser.consts.Constant;
 import net.sergey.diplom.services.parser.consts.ConstantApi;
 import net.sergey.diplom.services.parser.siteconnection.ConnectionManager;
-import net.sergey.diplom.services.utils.UtilsLogger;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -32,8 +30,8 @@ import static net.sergey.diplom.services.parser.consts.ConstantApi.GET_COORDINAT
 
 @Scope("prototype")
 @Component
+@Slf4j
 class ParserAirfoil implements Callable<Void> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static final String ONCLICK = "onclick";
     private static final String HTTP_M_SELIG_AE_ILLINOIS_EDU_ADS_COORD_DATABASE_HTML = "http://m-selig.ae.illinois.edu/ads/coord_database.html";
     private static volatile AtomicBoolean finish;
@@ -148,7 +146,7 @@ class ParserAirfoil implements Callable<Void> {
                 if (a.size() != 0) {
                     String fileName = stringHandler.createStringByPattern(a.attr(constants.HREF), constants.GET_FILE_NAME_BY_URL_PATTERN);
                     URL urlFile = new URL(ConstantApi.GET_FILE_CSV + fileName);
-                    LOGGER.debug("url {}{}", ConstantApi.GET_FILE_CSV, fileName);
+                    log.debug("url {}{}", ConstantApi.GET_FILE_CSV, fileName);
                     Characteristics coordinateItem = Characteristics.builder().coordinatesStl(parseFileScv.csvToString(urlFile.openStream())).fileName(fileName + constants.FILE_TYPE).build();
                     coordinateItem.setRenolgs(Double.parseDouble(reynolds.text().replace(",", "")));
                     coordinateItem.setNCrit(Double.parseDouble(nCrit.text()));
