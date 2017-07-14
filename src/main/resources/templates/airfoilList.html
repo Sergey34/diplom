@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -9,15 +9,15 @@
     <meta name="author" content="">
     <title>Airfoil tolls - Airfoils</title>
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="css/shop-homepage.css" rel="stylesheet">
+    <link href="/css/shop-homepage.css" rel="stylesheet">
 
-    <script src="js/jquery-3.1.1.min.js"></script>
-    <script src="js/get_user.js"></script>
-    <script src="js/get_content.js"></script>
-    <script src="js/get_params_url.js"></script>
-    <script src="js/searcher.js"></script>
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <!--<script src="/js/get_user.js"></script>-->
+    <!--<script src="/js/get_content.js"></script>-->
+    <!--<script src="/js/get_params_url.js"></script>-->
+    <script src="/js/searcher.js"></script>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -27,11 +27,8 @@
 </head>
 
 <body>
-<script>
-    getContent();
 
-</script>
-<script src="js/get_menu.js"></script>
+<!--<script src="/js/get_menu.js"></script>-->
 <!-- Navigation -->
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
@@ -76,7 +73,16 @@
                 <a class="list-group-item" id="addAirf" href="/adminka/addAirfoil.html">Добавить новый профиль</a>
                 <a class="list-group-item" id="adm" href="/adminka/adminka.html">Админка</a>
             </div>
+            <span th:each="menuI : ${menu}">
+                <p class="lead" th:text="${menuI.header}">Навигация</p>
+                <div class="list-group">
+                    <a th:each="menuItem : ${menuI.menuItems}" class="list-group-item"
+                       th:href="${'/airfoils/'+menuItem.url}"
+                       th:text="${menuItem.name}">menuItem</a>
+                </div>
+            </span>
         </div>
+
         <div class="col-md-9">
             <form class="well form-horizontal col-sm-6 col-lg-6 col-md-6">
                 <div class="form-group">
@@ -123,26 +129,34 @@
 
             </form>
             <div id="airfoil_list">
-                <!--<div class="col-sm-6 col-lg-6 col-md-6">
-                <div class="thumbnail">
-                    <img src="img/a18-il.png" alt="">
-                    <div class="caption">
-                         <h4><a href="#">(a18-il) A18 (original)</a>
-               </h4>
-                        <p>Drela AG26 airfoil used on the Bubble Dancer R/C DLG
-                            <br>Max thickness 6.8% at 23.3% chord
-                            <br>Max camber 2.5% at 45.5% chord
-                            <br>Source <a rel="nofollow" target="_blank" onclick="_gaq.push(['_trackEvent','external','http://www.ae.illinois.edu/m-selig/ads/coord_database.html', '']);return true;" href="/site/external?url=http%3A%2F%2Fwww.ae.illinois.edu%2Fm-selig%2Fads%2Fcoord_database.html">UIUC Airfoil Characteristics Database</a>
-                        </p>
+                <div th:each="airfoil : ${airfoils}" class="col-sm-6 col-lg-6 col-md-6">
+                    <div class="thumbnail">
+                        <img th:src="${airfoil.image}" alt="">
+                        <div class="caption">
+                            <h4><a th:href="'/airfoil/'+${airfoil.shortName}" th:text="${airfoil.shortName}">(a18-il)
+                                A18 (original)</a>
+                            </h4>
+                            <p><span th:utext="${airfoil.description}">description</span>
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>-->
             </div>
 
             <nav aria-label="...">
-                <ul class="pagination" id="cursor">
+                <ul class="pagination">
+                    <li th:class="${0==currentPage} ? 'disabled' : 'a'">
+                        <a th:href=" ${1==currentPage} ? '#' : '/airfoils/'+${prefix}+'/'+${currentPage-1}">&laquo;</a>
+                    </li>
 
-                    <br>
+                    <li th:each="i : ${#numbers.sequence(1, pageCount, 1)}"
+                        th:class="${currentPage==i} ? 'active' : 'a'">
+                        <a th:href="'/airfoils/'+${prefix}+'/'+${i-1}" th:text="${i}"> <span class="sr-only"></span></a>
+                    </li>
+
+                    <li th:class="${pageCount==currentPage+1} ? 'disabled' : 'a'">
+                        <a th:href="${pageCount==currentPage} ? '#': '/airfoils/'+${prefix}+'/'+${currentPage+1}">&raquo;</a>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -167,7 +181,7 @@
 <!-- jQuery -->
 <!--<script src="js/jquery.js"></script>-->
 <!-- Bootstrap Core JavaScript -->
-<script src="js/bootstrap.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 
 <script>document.getElementById("find").onclick = searchFull;</script>
 </body>
