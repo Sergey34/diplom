@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 //@CrossOrigin
 @RequestMapping(value = "/rest")
@@ -70,7 +69,7 @@ public class FullRestController {
     }
 
     @RequestMapping(value = "/airfoil/{airfoilId}", method = RequestMethod.GET)
-    public Optional<Airfoil> getAirfoilById(@PathVariable String airfoilId) {
+    public Airfoil getAirfoilById(@PathVariable String airfoilId) {
         return service.getAirfoilById(airfoilId);
     }
 

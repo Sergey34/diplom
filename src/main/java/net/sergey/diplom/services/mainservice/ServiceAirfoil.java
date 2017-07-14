@@ -10,7 +10,6 @@ import net.sergey.diplom.dto.messages.Message;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ServiceAirfoil {
 
@@ -40,7 +39,7 @@ public interface ServiceAirfoil {
 
     List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count);
 
-    Optional<Airfoil> getAirfoilById(String airfoilId);
+    Airfoil getAirfoilById(String airfoilId);
 
     Message clearAll();
 

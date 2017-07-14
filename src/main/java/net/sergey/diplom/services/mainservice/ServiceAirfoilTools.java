@@ -180,9 +180,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
-    public Optional<Airfoil> getAirfoilById(String airfoilId) {
-        Optional<Airfoil> airfoilById = daoAirfoil.findOneByShortName(airfoilId);
-        airfoilById.ifPresent(this::createDatFile);
+    public Airfoil getAirfoilById(String airfoilId) {
+        Airfoil airfoilById = daoAirfoil.findOneByShortName(airfoilId);
+        Optional.ofNullable(airfoilById).ifPresent(this::createDatFile);
         return airfoilById;
     }
 
@@ -353,8 +353,8 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public List<String> updateGraph(String shortName, List<String> checkedList) {
-        Optional<Airfoil> airfoilResult = daoAirfoil.findOneByShortName(shortName);
-        airfoilResult.ifPresent(airfoil1 -> drawGraphs(checkedList, airfoil1));
+        Airfoil airfoilResult = daoAirfoil.findOneByShortName(shortName);
+        Optional.ofNullable(airfoilResult).ifPresent(airfoil1 -> drawGraphs(checkedList, airfoil1));
         return CHART_NAMES.stream().map(chartName -> "/files/chartTemp/" + shortName + chartName + ".png").collect(Collectors.toList());
     }
 
@@ -404,8 +404,8 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     private Message addUpdateAirfoil(MultipartFile fileAirfoil, List<MultipartFile> files, Airfoil airfoil) {
-        Optional<Airfoil> airfoilResult = daoAirfoil.findOneByShortName(airfoil.getShortName());
-        airfoilResult.ifPresent(airfoil1 -> fillEmptyFieldsOldValue(fileAirfoil, files, airfoil, airfoil1));
+        Airfoil airfoilResult = daoAirfoil.findOneByShortName(airfoil.getShortName());
+        Optional.ofNullable(airfoilResult).ifPresent(airfoil1 -> fillEmptyFieldsOldValue(fileAirfoil, files, airfoil, airfoil1));
         try {
             addMenuItemForNewAirfoil(airfoil);
             daoCharacteristics.save(airfoil.getCharacteristics());
