@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
@@ -38,6 +39,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static net.sergey.diplom.dto.messages.Message.*;
 
@@ -110,7 +112,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         }
         Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
         addMenuItemForNewAirfoil(airfoil);
-        if (add(airfoil)) { return ADD_AIRFOIL_CONFLICT; }
+        if (add(airfoil)) {
+            return ADD_AIRFOIL_CONFLICT;
+        }
         return ASS_SUCCESS;
     }
 
@@ -120,7 +124,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             log.debug("airfoil не добавлен - Короткое имя профиля не должно быть пустым");
             return EMPTY_AIRFOIL_SHORT_NAME;
         }
-        if (add(airfoil)) { return ADD_AIRFOIL_CONFLICT; }
+        if (add(airfoil)) {
+            return ADD_AIRFOIL_CONFLICT;
+        }
         return ASS_SUCCESS;
     }
 
@@ -174,9 +180,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
-    public Airfoil getAirfoilById(String airfoilId) {
-        Airfoil airfoilById = daoAirfoil.findOneByShortName(airfoilId);
-        createDatFile(airfoilById);
+    public Optional<Airfoil> getAirfoilById(String airfoilId) {
+        Optional<Airfoil> airfoilById = daoAirfoil.findOneByShortName(airfoilId);
+        airfoilById.ifPresent(this::createDatFile);
         return airfoilById;
     }
 
@@ -275,12 +281,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         for (Menu menu : allMenu) {
             List<MenuItem> MenuItemsSorting = new ArrayList<>();
             MenuItemsSorting.addAll(menu.getMenuItems());
-            Collections.sort(MenuItemsSorting, new Comparator<MenuItem>() {
-                @Override
-                public int compare(MenuItem o1, MenuItem o2) {
-                    return o1.getUrl().charAt(0) - o2.getUrl().charAt(0);
-                }
-            });
+            MenuItemsSorting.sort(Comparator.comparingInt(o -> o.getUrl().charAt(0)));
             menu.setMenuItems(MenuItemsSorting);
         }
         return allMenu;
@@ -351,20 +352,18 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
-    public List<String> updateGraf(String shortName, List<String> checkedList) {
-        Airfoil airfoil = daoAirfoil.findOneByShortName(shortName);
-        if (airfoil != null) {
-            try {
-                new BuilderGraphs(storageService).draw(airfoil, checkedList, true);
-            } catch (Exception e) {
-                log.warn("Ошибка при обработке файловк с координатами", e);
-            }
+    public List<String> updateGraph(String shortName, List<String> checkedList) {
+        Optional<Airfoil> airfoilResult = daoAirfoil.findOneByShortName(shortName);
+        airfoilResult.ifPresent(airfoil1 -> drawGraphs(checkedList, airfoil1));
+        return CHART_NAMES.stream().map(chartName -> "/files/chartTemp/" + shortName + chartName + ".png").collect(Collectors.toList());
+    }
+
+    private void drawGraphs(List<String> checkedList, Airfoil airfoil1) {
+        try {
+            new BuilderGraphs(storageService).draw(airfoil1, checkedList, true);
+        } catch (Exception e) {
+            log.warn("Ошибка при обработке файловк с координатами", e);
         }
-        List<String> imgCsvName = new ArrayList<>();
-        for (String chartName : CHART_NAMES) {
-            imgCsvName.add("/files/chartTemp/" + shortName + chartName + ".png");
-        }
-        return imgCsvName;
     }
 
     @Override
@@ -388,7 +387,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         if (new File(storageService.getRootLocation() + "/airfoil_img/" + airfoil.getShortName() + ".png").exists()) {
             return;
         }
-        if (airfoil.getCoordView() == null || airfoil.getCoordView().isEmpty()) {
+        if (StringUtils.isEmpty(airfoil.getCoordView())) {
             log.warn("отсутствубт координаты для airfoil {}", airfoil.getShortName());
             return;
         }
@@ -405,17 +404,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     private Message addUpdateAirfoil(MultipartFile fileAirfoil, List<MultipartFile> files, Airfoil airfoil) {
+        Optional<Airfoil> airfoilResult = daoAirfoil.findOneByShortName(airfoil.getShortName());
+        airfoilResult.ifPresent(airfoil1 -> fillEmptyFieldsOldValue(fileAirfoil, files, airfoil, airfoil1));
         try {
-            if (fileAirfoil == null || fileAirfoil.isEmpty()) {
-                airfoil.setCoordView(daoAirfoil.findOneByShortName(airfoil.getShortName()).getCoordView());
-            } else {
-                airfoil.setCoordView(parseFileScv.parseFileAirfoil(fileAirfoil));
-            }
-            if (files == null || files.size() == 1 && files.get(0).isEmpty()) {
-                airfoil.setCharacteristics(daoAirfoil.findOneByShortName(airfoil.getShortName()).getCharacteristics());
-            } else {
-                airfoil.setCharacteristics(createCharacteristicsSet(files));
-            }
             addMenuItemForNewAirfoil(airfoil);
             daoCharacteristics.save(airfoil.getCharacteristics());
             daoAirfoil.save(airfoil);
@@ -425,6 +416,24 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         }
         log.debug("Airfoil успешно добален / обновлен");
         return ASS_SUCCESS;
+    }
+
+
+    private void fillEmptyFieldsOldValue(MultipartFile fileAirfoil, List<MultipartFile> files, Airfoil airfoil, Airfoil airfoil1) {
+        try {
+            if (fileAirfoil == null || fileAirfoil.isEmpty()) {
+                airfoil.setCoordView(airfoil1.getCoordView());
+            } else {
+                airfoil.setCoordView(parseFileScv.parseFileAirfoil(fileAirfoil));
+            }
+            if (files == null || files.size() == 1 && files.get(0).isEmpty()) {
+                airfoil.setCharacteristics(airfoil1.getCharacteristics());
+            } else {
+                airfoil.setCharacteristics(createCharacteristicsSet(files));
+            }
+        } catch (Exception e) {
+            log.warn("Ошибка чтения файла", e);
+        }
     }
 
     @Override

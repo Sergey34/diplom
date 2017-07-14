@@ -10,6 +10,7 @@ import net.sergey.diplom.dto.messages.Message;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ServiceAirfoil {
 
@@ -25,7 +26,7 @@ public interface ServiceAirfoil {
 
     int getCountAirfoilByPrefix(char prefix);
 
-    List<String> updateGraf(String airfoilId, List<String> checkedList);
+    List<String> updateGraph(String airfoilId, List<String> checkedList);
 
     Message updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
 
@@ -39,7 +40,7 @@ public interface ServiceAirfoil {
 
     List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count);
 
-    Airfoil getAirfoilById(String airfoilId);
+    Optional<Airfoil> getAirfoilById(String airfoilId);
 
     Message clearAll();
 

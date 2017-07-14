@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -16,7 +17,7 @@ public interface DaoAirfoil extends CrudRepository<Airfoil, String> {
 
     List<Airfoil> findByPrefixOrderByShortName(Prefix prefix, Pageable pageable);
 
-    Airfoil findOneByShortName(String shortName);
+    Optional<Airfoil> findOneByShortName(String shortName);
 
     int countByPrefix(Prefix prefix);
 

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 //@CrossOrigin
 @RequestMapping(value = "/rest")
@@ -69,7 +70,7 @@ public class FullRestController {
     }
 
     @RequestMapping(value = "/airfoil/{airfoilId}", method = RequestMethod.GET)
-    public Airfoil getAirfoilById(@PathVariable String airfoilId) {
+    public Optional<Airfoil> getAirfoilById(@PathVariable String airfoilId) {
         return service.getAirfoilById(airfoilId);
     }
 
@@ -78,9 +79,9 @@ public class FullRestController {
         return service.getCountAirfoilByPrefix(prefix);
     }
 
-    @RequestMapping(value = "/updateGraf/{airfoilId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/updateGraph/{airfoilId}", method = RequestMethod.POST)
     public List<String> updateGraf(@PathVariable String airfoilId, @RequestBody List<String> checkedList) {
-        return service.updateGraf(airfoilId, checkedList);
+        return service.updateGraph(airfoilId, checkedList);
     }
 
     @RequestMapping(value = "/searchByShortNameLike/{shortName}/{startNumber}/{count}", method = RequestMethod.POST)
