@@ -2,6 +2,7 @@ package net.sergey.diplom.controllers.viewcontrollers;
 
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
+import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.services.mainservice.ServiceAirfoil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,7 +34,16 @@ public class ViewController {
         int count = serviceAirfoil.getCountAirfoilByPrefix(prefix.charAt(0));
         if (count < COUNT_ON_PAGE) {count = COUNT_ON_PAGE;}
         model.put("pageCount", (int) Math.ceil(count * 1.0 / COUNT_ON_PAGE));
-        return "airfoilList";
+        return "airfoils";
+    }
+
+    @GetMapping("/airfoil/{shortName}")
+    public String airfoil(Map<String, Object> model, @PathVariable(value = "shortName") String shortName) {
+        AirfoilDetail airfoil = serviceAirfoil.getDetailInfo(shortName);
+        List<Menu> menu = serviceAirfoil.getMenu();
+        model.put("airfoil", airfoil);
+        model.put("menu", menu);
+        return "airfoil";
     }
 
 }

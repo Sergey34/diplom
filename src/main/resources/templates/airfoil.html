@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Airfoil tolls - Detail info</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/shop-homepage.css" rel="stylesheet">
+    <script src="/js/get_detail_info.js"></script>
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <!--<script src="/js/get_user.js"></script>-->
+    <!--<script src="/js/get_params_url.js"></script>-->
+    <script src="/js/searcher.js"></script>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/airfoilList.html">Airfoils</a>
+            <script>                 function sbm() {
+                search();
+            }             </script>
+            <form class="navbar-form navbar-left" role="search" onsubmit="sbm(); return false">
+                <div class="form-group"><input id="searchTemplate" type="text" class="form-control"
+                                               placeholder="shortName contains ..."></div>
+            </form>
+
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav" id="navbar-nav">
+                <li><a href="/about.html" id="about">About</a></li>
+            </ul>
+        </div>
+
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<!-- Page Content -->
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3" id="list_menu">
+            <p class="lead">Навигация</p>
+            <div class="list-group">
+                <a class="list-group-item" id="addAirf" href="/adminka/addAirfoil.html">Добавить новый профиль</a>
+                <a class="list-group-item" id="adm" href="/adminka/adminka.html">Админка</a>
+            </div>
+            <span th:each="menuI : ${menu}">
+                <p class="lead" th:text="${menuI.header}">Навигация</p>
+                <div class="list-group">
+                    <a th:each="menuItem : ${menuI.menuItems}" class="list-group-item"
+                       th:href="${'/airfoils/'+menuItem.url}"
+                       th:text="${menuItem.name}">menuItem</a>
+                </div>
+            </span>
+
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-sm-12 col-lg-12 col-md-12">
+                    <div class="thumbnail">
+                        <div class="caption">
+                            <span id="id" hidden th:text="${airfoil.shortName}"></span>
+                            <h4>
+                                <a id="airfoil_name" th:text="${airfoil.name}"
+                                   th:href="'/airfoil/'+${airfoil.shortName}"></a>
+                            </h4>
+                        </div>
+                        <div class="ratings" id="bottoms">
+                            <p class="pull-right">
+                                <a id="edit_link" class="list-group-item"
+                                   th:href="'/airfoil/edit/'+${airfoil.shortName}">Редактировать</a>
+                            </p>
+                            <p class="pull-left">
+                                <a id="downloadStl" class="pull-left list-group-item"
+                                   th:each="path : ${airfoil.stlFilePath}" th:href="${path}">Скачать STL</a></p>
+                        </div>
+                        <img id="imgDetail" th:src="${airfoil.image}" alt="">
+                        <div class="caption">
+                            <p id="descr_detail" th:utext="${airfoil.description}"></p>
+                        </div>
+                        <div id="table" class="col-md-12">
+                            <br>
+                            <div class="thumbnail">
+                                <div class="caption">
+                                    <h4><a href="#">Polars for (a18-il) A18 (original)</a></h4>
+                                </div>
+                            </div>
+                            <table id="table1" class="table table-hover table-condensed">
+                                <tbody>
+                                <tr id="0">
+                                    <td id="checkbox0">checkbox</td>
+                                    <td id="Renolds0">Renolds</td>
+                                    <td id="NCrit0">NCrit</td>
+                                    <td id="MaxClCd0">MaxClCd</td>
+                                    <td id="">&nbsp;</td>
+                                </tr>
+                                <tr th:each="characteristic, iter : ${airfoil.characteristics}" id="${iter.index}">
+                                    <td><input type="checkbox" id="checkbox1" class="csvItemChBox" name="activ"
+                                               checked="checked" th:attr="filename=${characteristic.fileName}"></td>
+                                    <td id="Renolds1" th:text="${characteristic.renolgs}">50,000</td>
+                                    <td id="NCrit1" th:text="${characteristic.nCrit}">5</td>
+                                    <td id="MaxClCd1" th:text="${characteristic.maxClCd}">44.6 at α=4.75°</td>
+                                    <td id="fileName1">
+                                        <a th:text="${characteristic.fileName}"
+                                           th:href="${characteristic.filePath}"
+                                           id="link_file1">xf-a18-il-50000-n5.csv</a>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                            <input type="button" value="Обновить" onclick="refreshiframe();">
+                        </div>
+                        &nbsp;
+                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                            <ol class="carousel-indicators">
+                                <li th:each="imgCsvName, iter : ${airfoil.imgCsvName}"
+                                    data-target="#carousel-example-generic" th:attr="data-slide-to=${iter.index}"
+                                    class=""></li>
+                                <!-- <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
+                                 <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
+                                 <li data-target="#carousel-example-generic" data-slide-to="3" class="active"></li>
+                                 <li data-target="#carousel-example-generic" data-slide-to="4" class=""></li>-->
+                            </ol>
+                            <div class="carousel-inner">
+                                <div th:each="imgCsvName, iter : ${airfoil.imgCsvName}"
+                                     th:class="${iter.index==1} ?'item active':'item'">
+                                    <img class="slide-image" th:src="${imgCsvName}" alt="">
+                                </div>
+                                <!-- <div class="item">
+                                     <img class="slide-image" src="./detailInfo_files/-1470972216Cl v Alpha.png"
+                                          alt="">
+                                 </div>-->
+                            </div>
+                            <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                            <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </div>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('.carousel').each(function () {
+                                    $(this).carousel("pause");
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.container -->
+<div class="container">
+    <hr>
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Copyright &copy; Your Website 2014</p>
+            </div>
+        </div>
+    </footer>
+</div>
+<!-- /.container -->
+<!-- jQuery -->
+<!--<script src="/js/jquery.js"></script>-->
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+<!-- -->
+</body>
+</html>

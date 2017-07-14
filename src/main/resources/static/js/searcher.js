@@ -1,6 +1,6 @@
 function search() {
     var searchTemplate = $("#searchTemplate").val();
-    window.location.replace("/airfoilList.html?st=" + searchTemplate);
+    window.location.replace("/airfoils.html?st=" + searchTemplate);
 }
 function searchFull() {
     var renolds = $("#value0").val();
@@ -33,7 +33,7 @@ function searchFull() {
             n--;
         }
     }
-    window.location.replace("/airfoilList.html?sf=" + short_name + "&data=" + encodeURIComponent(JSON.stringify(array)));
+    window.location.replace("/airfoils.html?sf=" + short_name + "&data=" + encodeURIComponent(JSON.stringify(array)));
 
 
     console.log(array);

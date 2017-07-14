@@ -33,7 +33,7 @@ public class Application extends WebMvcConfigurerAdapter {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/").setViewName("airfoilList");
-        registry.addViewController("/airfoilList.html").setViewName("airfoilList");
+        registry.addViewController("/airfoils.html").setViewName("airfoilList");
     }
 
 
@@ -51,7 +51,7 @@ public class Application extends WebMvcConfigurerAdapter {
                     .antMatchers("/rest/*", "/**").permitAll().anyRequest()
                     .fullyAuthenticated().and().formLogin().loginPage("/login")
                     .failureUrl("/login?error").permitAll()
-                    .defaultSuccessUrl("/airfoilList.html")
+                    .defaultSuccessUrl("/airfoils.html")
                     .and()
                     .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login")
                     .permitAll();
