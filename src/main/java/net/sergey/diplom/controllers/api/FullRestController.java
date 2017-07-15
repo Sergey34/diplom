@@ -78,11 +78,6 @@ public class FullRestController {
         return service.getCountAirfoilByPrefix(prefix);
     }
 
-    @RequestMapping(value = "/updateGraph/{airfoilId}", method = RequestMethod.POST)
-    public List<String> updateGraf(@PathVariable String airfoilId, @RequestBody List<String> checkedList) {
-        return service.updateGraph(airfoilId, checkedList);
-    }
-
     @RequestMapping(value = "/searchByShortNameLike/{shortName}/{startNumber}/{count}", method = RequestMethod.POST)
     public List<AirfoilDTO> searchByShortNameLike(@PathVariable String shortName, @PathVariable int startNumber, @PathVariable int count) {
         return service.findByShortNameLike(shortName, startNumber, count);

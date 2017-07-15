@@ -6,8 +6,7 @@ import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.services.mainservice.ServiceAirfoil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -44,6 +43,11 @@ public class ViewController {
         model.put("airfoil", airfoil);
         model.put("menu", menu);
         return "airfoil";
+    }
+
+    @RequestMapping(value = "/rest/updateGraph/{airfoilId}", method = RequestMethod.POST)
+    public List<String> updateGraph(@PathVariable String airfoilId, @RequestBody List<String> checkedList) {
+        return serviceAirfoil.updateGraph(airfoilId, checkedList);
     }
 
 }
