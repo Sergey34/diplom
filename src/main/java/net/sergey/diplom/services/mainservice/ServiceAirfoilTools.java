@@ -335,11 +335,11 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         Airfoil airfoilResult = daoAirfoil.findOneByShortName(shortName);
         String dir = getDirectory();
         Optional.ofNullable(airfoilResult).ifPresent(airfoil1 -> drawGraphs(checkedList, airfoil1, dir));
-        return CHART_NAMES.stream().map(chartName -> dir + shortName + chartName + ".png").collect(Collectors.toList());
+        return CHART_NAMES.stream().map(chartName -> "/files/chartTemp/" + dir + shortName + chartName + ".png").collect(Collectors.toList());
     }
 
     private String getDirectory() {
-        return System.currentTimeMillis() + "/";
+        return "/" + System.currentTimeMillis() + "/";
     }
 
     private void drawGraphs(List<String> checkedList, Airfoil airfoil1, String dir) {
