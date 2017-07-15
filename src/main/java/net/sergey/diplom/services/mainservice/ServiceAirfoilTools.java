@@ -16,7 +16,6 @@ import net.sergey.diplom.dto.Condition;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.dto.airfoil.AirfoilEdit;
-import net.sergey.diplom.dto.airfoil.Data;
 import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.services.buildergraphs.BuilderGraphs;
 import net.sergey.diplom.services.buildergraphs.imagehandlers.ImageHandler;
@@ -120,7 +119,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public Message addAirfoil(Airfoil airfoil) {
-        if (airfoil.getShortName() == null || airfoil.getShortName().isEmpty()) {
+        if (StringUtils.isEmpty(airfoil.getShortName())) {
             log.debug("airfoil не добавлен - Короткое имя профиля не должно быть пустым");
             return EMPTY_AIRFOIL_SHORT_NAME;
         }
@@ -143,7 +142,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public Message updateAirfoil(AirfoilEdit airfoilEdit) {
-        if (airfoilEdit.getShortName() == null || airfoilEdit.getShortName().isEmpty()) {
+        if (StringUtils.isEmpty(airfoilEdit.getShortName())) {
             log.debug("airfoil не обновлен - Короткое имя профиля не должно быть пустым");
             return EMPTY_AIRFOIL_SHORT_NAME;
         }
@@ -256,34 +255,22 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     private Airfoil getAirfoilByAirfoilEdit(AirfoilEdit airfoilEdit) {
-        Airfoil airfoil = new Airfoil();
-        airfoil.setName(airfoilEdit.getAirfoilName());
-        airfoil.setShortName(airfoilEdit.getShortName());
-        airfoil.setCoordView(airfoilEdit.getViewCsv());
-        airfoil.setDescription(airfoilEdit.getDetails());
-        airfoil.setPrefix(new Prefix(airfoilEdit.getShortName().toUpperCase().charAt(0)));
-        Set<Characteristics> characteristics = new HashSet<>();
-        for (Data data : airfoilEdit.getData()) {
-            Characteristics coordinateItem = Characteristics.builder().coordinatesStl(data.getData()).fileName(data.getFileName()).build();
-            coordinateItem.setRenolgs(data.getReynolds());
-            coordinateItem.setNCrit(data.getNCrit());
-            coordinateItem.setMaxClCd(data.getMaxClCd());
-            characteristics.add(coordinateItem);
-            characteristics.add(coordinateItem);
-        }
-        airfoil.setCharacteristics(characteristics);
-        return airfoil;
+        Set<Characteristics> characteristicsSet = airfoilEdit.getData().stream().map(data
+                -> Characteristics.builder().coordinatesStl(data.getData()).fileName(data.getFileName())
+                .renolgs(data.getReynolds()).nCrit(data.getNCrit()).maxClCd(data.getMaxClCd()).build()).collect(Collectors.toSet());
+        return Airfoil.builder()
+                .name(airfoilEdit.getAirfoilName())
+                .shortName(airfoilEdit.getShortName())
+                .coordView(airfoilEdit.getViewCsv())
+                .description(airfoilEdit.getDetails())
+                .prefix(new Prefix(airfoilEdit.getShortName().toUpperCase().charAt(0)))
+                .characteristics(characteristicsSet).build();
     }
 
     @Override
     public List<Menu> getMenu() {
-        List<Menu> allMenu = daoMenu.findAll();
-        for (Menu menu : allMenu) {
-            List<MenuItem> MenuItemsSorting = new ArrayList<>();
-            MenuItemsSorting.addAll(menu.getMenuItems());
-            MenuItemsSorting.sort(Comparator.comparingInt(o -> o.getUrl().charAt(0)));
-            menu.setMenuItems(MenuItemsSorting);
-        }
+        List<Menu> allMenu = daoMenu.findAll();//// TODO: 15.07.17 сортировать в базе
+        allMenu.forEach(menu -> menu.getMenuItems().sort(Comparator.comparingInt(o -> o.getUrl().charAt(0))));
         return allMenu;
     }
 
@@ -335,7 +322,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
                 }
                 x.add(Double.parseDouble(strings[0]));
                 y.add(Double.parseDouble(strings[strings.length - 1]));
-            } catch (Exception e) {
+            } catch (NumberFormatException | IndexOutOfBoundsException e) {
                 log.warn("Оштбка чтения файла", e);
                 break;
             }
@@ -345,9 +332,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     @Override
     public List<Airfoil> getAllAirfoils(int startNumber, int count) {
         List<Airfoil> allAirfoils = daoAirfoil.findAll(new PageRequest(startNumber, count));
-        for (Airfoil airfoil : allAirfoils) {
-            createDatFile(airfoil);
-        }
+        allAirfoils.forEach(this::createDatFile);
         return allAirfoils;
     }
 
