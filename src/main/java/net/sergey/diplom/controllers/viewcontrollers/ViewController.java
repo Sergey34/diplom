@@ -45,6 +45,7 @@ public class ViewController {
         return "airfoil";
     }
 
+    @ResponseBody
     @RequestMapping(value = "/rest/updateGraph/{airfoilId}", method = RequestMethod.POST)
     public List<String> updateGraph(@PathVariable String airfoilId, @RequestBody List<String> checkedList) {
         return serviceAirfoil.updateGraph(airfoilId, checkedList);
