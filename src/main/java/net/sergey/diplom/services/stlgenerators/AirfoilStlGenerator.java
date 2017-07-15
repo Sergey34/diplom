@@ -53,7 +53,7 @@ public class AirfoilStlGenerator {
         return true;
     }
 
-    public List<String> generate(String airfoilName, String coordView, FileSystemStorageService storageService) throws Exception {
+    public List<String> generate(String airfoilName, String coordView, FileSystemStorageService storageService) {
         String[] split1 = coordView.split("\n");
         List<Double> x = new ArrayList<>();
         List<Double> y = new ArrayList<>();
@@ -87,7 +87,6 @@ public class AirfoilStlGenerator {
                 scadWriter.write(FILE_FOOTER.toString());
             } catch (IOException e) {
                 log.warn("Ошибка генерации STL файлв", e);
-                throw e;
             }
             fileNames.add(fileName);
         }

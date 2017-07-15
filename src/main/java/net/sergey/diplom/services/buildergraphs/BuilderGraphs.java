@@ -10,9 +10,10 @@ import net.sergey.diplom.services.buildergraphs.imagehandlers.Xy;
 import net.sergey.diplom.services.buildergraphs.imagehandlers.createxychartstyle.SimpleStyle;
 import net.sergey.diplom.services.storageservice.FileSystemStorageService;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,39 +39,25 @@ public class BuilderGraphs {
 
     public BuilderGraphs(FileSystemStorageService storageService) {
         this.storageService = storageService;
-        ImageHandler.setSavePath(this.storageService.getRootLocation() + "/chartTemp/");
+
     }
 
-    public void draw(final Airfoil airfoil, List<String> checkedList, boolean updateFiles) throws Exception {
-        imageHandler.put("chartClCd", new ImageHandler("Cl", "Cd", airfoil.getShortName(), new SimpleStyle()));
-        imageHandler.put("chartClAlpha", new ImageHandler("Cl", "Alpha", airfoil.getShortName(), new SimpleStyle()));
-        imageHandler.put("chartClCdAlpha", new ImageHandler("Cl div Cd", "Alpha", airfoil.getShortName(), new SimpleStyle()));
-        imageHandler.put("chartCdAlpha", new ImageHandler("Cd", "Alpha", airfoil.getShortName(), new SimpleStyle()));
-        imageHandler.put("chartCmAlpha", new ImageHandler("Cm", "Alpha", airfoil.getShortName(), new SimpleStyle()));
-        if (!updateFiles) {
-            filterHandler(imageHandler);
-        }
-        fillXYChart(airfoil, checkedList, updateFiles);
+    public void draw(final Airfoil airfoil, List<String> checkedList, String dir) throws Exception {
+        String directory = this.storageService.getRootLocation() + "/chartTemp/" + dir;
+        Files.createDirectory(Paths.get(directory));
+        imageHandler.put("chartClCd", new ImageHandler("Cl", "Cd", airfoil.getShortName(), new SimpleStyle(), directory));
+        imageHandler.put("chartClAlpha", new ImageHandler("Cl", "Alpha", airfoil.getShortName(), new SimpleStyle(), directory));
+        imageHandler.put("chartClCdAlpha", new ImageHandler("Cl div Cd", "Alpha", airfoil.getShortName(), new SimpleStyle(), directory));
+        imageHandler.put("chartCdAlpha", new ImageHandler("Cd", "Alpha", airfoil.getShortName(), new SimpleStyle(), directory));
+        imageHandler.put("chartCmAlpha", new ImageHandler("Cm", "Alpha", airfoil.getShortName(), new SimpleStyle(), directory));
+
+        fillXYChart(airfoil, checkedList);
         executorService.invokeAll(imageHandler.values());
     }
 
-    private void filterHandler(Map<String, ImageHandler> imageHandler) {
-        for (Map.Entry<String, ImageHandler> item : imageHandler.entrySet()) {
-            File file = new File(storageService.getRootLocation() + "/chartTemp/" + item.getValue().getFileName() + ".png");
-            if (file.exists()) {
-                imageHandler.remove(item.getKey());
-            }
-        }
-    }
-
-    private void fillXYChart(final Airfoil airfoil, List<String> checkedList, boolean updateFiles) {
+    private void fillXYChart(final Airfoil airfoil, List<String> checkedList) {
         for (Characteristics characteristics : airfoil.getCharacteristics()) {
-            Map<String, List<Double>> map;
-            if (updateFiles || !fileExist(characteristics.getFileName())) {
-                map = parseStrCSVtoMapSaveFile(characteristics.getCoordinatesStl(), characteristics.getFileName());
-            } else {
-                map = parseStrCSVtoMap(characteristics.getCoordinatesStl(), characteristics.getFileName());
-            }
+            Map<String, List<Double>> map = parseStrCSVtoMapSaveFile(characteristics.getCoordinatesStl(), characteristics.getFileName());
             if (map == null) {
                 return;
             }
@@ -103,32 +90,6 @@ public class BuilderGraphs {
                 }
             }
         }
-    }
-
-    private boolean fileExist(String fileName) {
-        return new File(storageService.getRootLocation() + "/tmpCsv/" + fileName).exists();
-    }
-
-    private Map<String, List<Double>> parseStrCSVtoMap(String coordinateStr, String fileName) {
-        Map<String, List<Double>> coordinates;
-        try {
-            CSVParser csvParser = new CSVParser();
-            String[] csvLines = coordinateStr.split("\n");
-            String[] keys = csvParser.parseLine(csvLines[10]);
-            coordinates = generateMapping(keys);
-            for (int j = 0; j < csvLines.length; j++) {
-                String[] strings = csvParser.parseLine(csvLines[j]);
-                if (j > 10) {
-                    for (int i = 0; i < strings.length; i++) {
-                        coordinates.get(keys[i]).add(Double.parseDouble(strings[i]));
-                    }
-                }
-            }
-        } catch (NumberFormatException | IOException e) {
-            log.warn("невалидный файл!!! {}", fileName, e);
-            return null;
-        }
-        return coordinates;
     }
 
     private boolean isChecked(List<String> checkedList, Characteristics characteristics) {
@@ -177,7 +138,7 @@ public class BuilderGraphs {
     private Map<String, List<Double>> generateMapping(String[] keys) {
         HashMap<String, List<Double>> coordinates = new HashMap<>();
         for (String key : keys) {
-            coordinates.put(key, new ArrayList<Double>());
+            coordinates.put(key, new ArrayList<>());
         }
         return coordinates;
     }

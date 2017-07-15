@@ -354,33 +354,33 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     @Override
     public List<String> updateGraph(String shortName, List<String> checkedList) {
         Airfoil airfoilResult = daoAirfoil.findOneByShortName(shortName);
-        Optional.ofNullable(airfoilResult).ifPresent(airfoil1 -> drawGraphs(checkedList, airfoil1));
-        return CHART_NAMES.stream().map(chartName -> "/files/chartTemp/" + shortName + chartName + ".png").collect(Collectors.toList());
+        String dir = getDirectory();
+        Optional.ofNullable(airfoilResult).ifPresent(airfoil1 -> drawGraphs(checkedList, airfoil1, dir));
+        return CHART_NAMES.stream().map(chartName -> dir + shortName + chartName + ".png").collect(Collectors.toList());
     }
 
-    private void drawGraphs(List<String> checkedList, Airfoil airfoil1) {
+    private String getDirectory() {
+        return System.currentTimeMillis() + "/";
+    }
+
+    private void drawGraphs(List<String> checkedList, Airfoil airfoil1, String dir) {
         try {
-            new BuilderGraphs(storageService).draw(airfoil1, checkedList, true);
+            new BuilderGraphs(storageService).draw(airfoil1, checkedList, dir);
         } catch (Exception e) {
             log.warn("Ошибка при обработке файловк с координатами", e);
         }
     }
 
-    @Override
     public AirfoilDetail getDetailInfo(String airfoilId) {
         Airfoil airfoil = daoAirfoil.findOne(airfoilId);
         if (null == airfoil) {
             return null;
         }
-        List<String> stlFileNames = null;
-        try {
-            new BuilderGraphs(storageService).draw(airfoil, null, false);
-            stlFileNames = stlGenerator.generate(airfoil.getShortName(), airfoil.getCoordView(), storageService);
-        } catch (Exception e) {
-            log.warn("Ошибка при обработке файлов с координатами", e);
-        }
+        String directory = getDirectory();
+        drawGraphs(null, airfoil, directory);
+        List<String> stlFileNames = stlGenerator.generate(airfoil.getShortName(), airfoil.getCoordView(), storageService);
         drawViewAirfoil(airfoil);
-        return converter.airfoilToAirfoilDetail(airfoil, ServiceAirfoilTools.CHART_NAMES, stlFileNames);
+        return converter.airfoilToAirfoilDetail(airfoil, ServiceAirfoilTools.CHART_NAMES, stlFileNames, directory);
     }
 
     private void drawViewAirfoil(Airfoil airfoil) {
@@ -394,8 +394,8 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         List<Double> x = new ArrayList<>();
         List<Double> y = new ArrayList<>();
         fillListXListY(x, y, airfoil.getCoordView().split("\n"));
-        ImageHandler.setSavePath(storageService.getRootLocation() + "/airfoil_img/");
-        ImageHandler imageHandler = new ImageHandler(airfoil.getShortName(), new Xy(x, y, " "), new MinimalStyle());
+        String directory = storageService.getRootLocation() + "/airfoil_img/";
+        ImageHandler imageHandler = new ImageHandler(airfoil.getShortName(), new Xy(x, y, " "), new MinimalStyle(), directory);
         try {
             imageHandler.draw();
         } catch (Exception e) {

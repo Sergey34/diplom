@@ -11,25 +11,26 @@ import java.util.concurrent.Callable;
 
 @Slf4j
 public class ImageHandler implements Callable<Void> {
-    private static String CATALOG;
     private final List<Xy> xyList;
     private final String title;
     private final String xAlisa;
     private final String yAlisa;
     private final String fileName;
     private StyleXYChart style;
+    private String dir;
 
-    public ImageHandler(String xAlisa, String yAlisa, String id, StyleXYChart style) {
+    public ImageHandler(String xAlisa, String yAlisa, String id, StyleXYChart style, String dir) {
         xyList = new ArrayList<>();
         this.xAlisa = xAlisa;
         this.yAlisa = yAlisa;
         this.title = xAlisa + " v " + yAlisa;
         this.fileName = id + title;
         this.style = style;
+        this.dir = dir;
     }
 
 
-    public ImageHandler(String shortName, Xy xy, StyleXYChart style) {
+    public ImageHandler(String shortName, Xy xy, StyleXYChart style, String directory) {
         this.xyList = new ArrayList<>();
         this.xAlisa = " ";
         this.yAlisa = " ";
@@ -37,10 +38,7 @@ public class ImageHandler implements Callable<Void> {
         this.fileName = shortName;
         this.xyList.add(xy);
         this.style = style;
-    }
-
-    public static void setSavePath(String catalog) {
-        CATALOG = catalog;
+        this.dir = directory;
     }
 
     public String getFileName() {
@@ -59,7 +57,7 @@ public class ImageHandler implements Callable<Void> {
             chart.addSeries(xy.getLegend(), x, y).setMarker(SeriesMarkers.NONE);
         }
         try {
-            BitmapEncoder.saveBitmapWithDPI(chart, CATALOG + fileName,
+            BitmapEncoder.saveBitmapWithDPI(chart, dir + fileName,
                     BitmapEncoder.BitmapFormat.PNG, 80);
         } catch (Exception e) {
             log.warn("не удалось сохранить график {}", chart.getTitle(), e);
