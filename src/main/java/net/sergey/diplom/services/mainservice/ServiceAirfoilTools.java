@@ -84,7 +84,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public Message updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
-        if (shortName == null || shortName.isEmpty()) {
+        if (StringUtils.isEmpty(shortName)) {
             log.debug("Имя не должно быть пустым");
             return EMPTY_AIRFOIL_SHORT_NAME;
         }
@@ -95,7 +95,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public Message addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
-        if (shortName == null || shortName.isEmpty()) {
+        if (StringUtils.isEmpty(shortName)) {
             log.debug("Имя не должно быть пустым");
             return EMPTY_AIRFOIL_SHORT_NAME;
         }
@@ -105,7 +105,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public Message addAirfoil(AirfoilEdit airfoilEdit) {
-        if (airfoilEdit.getShortName() == null || airfoilEdit.getShortName().isEmpty()) {
+        if (StringUtils.isEmpty(airfoilEdit.getShortName())) {
             log.debug("airfoil не добавлен - Короткое имя профиля не должно быть пустым");
             return EMPTY_AIRFOIL_SHORT_NAME;
         }
@@ -163,18 +163,14 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     @Override
     public List<AirfoilDTO> getAllAirfoilDto(int startNumber, int count) {
         List<Airfoil> allAirfoils = daoAirfoil.findAll(new PageRequest(startNumber, count));
-        for (Airfoil airfoil : allAirfoils) {
-            createDatFile(airfoil);
-        }
+        allAirfoils.forEach(this::createDatFile);
         return converter.airfoilToAirfoilDto(allAirfoils);
     }
 
     @Override
     public List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
         List<Airfoil> airfoilsByPrefix = daoAirfoil.findByPrefixOrderByShortName(new Prefix(prefix), new PageRequest(startNumber, count));
-        for (Airfoil airfoil : airfoilsByPrefix) {
-            createDatFile(airfoil);
-        }
+        airfoilsByPrefix.forEach(this::createDatFile);
         return airfoilsByPrefix;
     }
 
@@ -201,10 +197,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         Set<String> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
         String shortNameTemplate = getShortNameTemplate(shortName);
         List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(ids, shortNameTemplate, new PageRequest(startNumber, count));
-        for (Airfoil airfoil : airfoils) {
-            drawViewAirfoil(airfoil);
-            createDatFile(airfoil);
-        }
+        generateFiles(airfoils);
         return converter.airfoilToAirfoilDto(airfoils);
     }
 
@@ -212,11 +205,15 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     public List<AirfoilDTO> findByShortNameLike(String shortName, int startNumber, int count) {
         String shortNameTemplate = getShortNameTemplate(shortName);
         List<Airfoil> airfoils = daoAirfoil.findByShortNameRegex(shortNameTemplate, new PageRequest(startNumber, count));
-        for (Airfoil airfoil : airfoils) {
+        generateFiles(airfoils);
+        return converter.airfoilToAirfoilDto(airfoils);
+    }
+
+    private void generateFiles(List<Airfoil> airfoils) {
+        airfoils.forEach(airfoil -> {
             drawViewAirfoil(airfoil);
             createDatFile(airfoil);
-        }
-        return converter.airfoilToAirfoilDto(airfoils);
+        });
     }
 
     @Override
@@ -290,10 +287,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     @Override
     public List<AirfoilDTO> getAirfoilsDtoByPrefix(char prefix, int startNumber, int count) {
         List<Airfoil> airfoilsByPrefix = daoAirfoil.findByPrefixOrderByShortName(new Prefix(prefix), new PageRequest(startNumber, count));
-        for (Airfoil airfoil : airfoilsByPrefix) {
-            drawViewAirfoil(airfoil);
-            createDatFile(airfoil);
-        }
+        generateFiles(airfoilsByPrefix);
         return converter.airfoilToAirfoilDto(airfoilsByPrefix);
     }
 
