@@ -5,7 +5,6 @@ import net.sergey.diplom.dao.airfoil.DaoAirfoil;
 import net.sergey.diplom.dao.airfoil.DaoCharacteristics;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Characteristics;
-import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.services.mainservice.EventService;
 import net.sergey.diplom.services.parser.consts.Constant;
 import net.sergey.diplom.services.parser.consts.ConstantApi;
@@ -59,8 +58,8 @@ class ParserAirfoil implements Callable<Void> {
         ParserAirfoil.finish = new AtomicBoolean(false);
     }
 
-    static void setFinish(boolean finish) {
-        ParserAirfoil.finish = new AtomicBoolean(finish);
+    static void setFinish() {
+        ParserAirfoil.finish = new AtomicBoolean(true);
     }
 
     @Override
@@ -71,7 +70,7 @@ class ParserAirfoil implements Callable<Void> {
 
     private void parseAirfoilByUrl(String prefix) throws IOException {
         String url = ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX + prefix + constants.NO;
-        Prefix prefix1 = Prefix.builder().prefix(prefix.charAt(0)).build();
+        char prefix1 = prefix.charAt(0);
         int countPages = createIntByPattern(connectionManager.getJsoupConnect(url, constants.TIMEOUT).get().html(), constants.GET_COUNT_PAGES_PATTERN);
         for (int i = 0; i < countPages; i++) {
             if (finish.get()) {
@@ -88,7 +87,7 @@ class ParserAirfoil implements Callable<Void> {
         eventService.updateProgress(prefix, 100.0);
     }
 
-    private List<Airfoil> parsePage(Prefix prefix1, Elements airfoilList, int countPages) throws IOException {
+    private List<Airfoil> parsePage(char prefix, Elements airfoilList, int countPages) throws IOException {
         List<Airfoil> airfoils = new ArrayList<>();
         for (int j = 0; j < airfoilList.size(); j += 2) {
             Elements cell12 = airfoilList.get(j).getElementsByClass(constants.CELL12);
@@ -99,7 +98,7 @@ class ParserAirfoil implements Callable<Void> {
                 String idAirfoil = stringHandler.createStringByPattern(name, constants.GET_ID_BY_FULL_NAME_PATTERN);
                 Airfoil airfoil = parseAirfoilById(idAirfoil);
                 airfoils.add(airfoil);
-                String key = String.valueOf(prefix1.getPrefix());
+                String key = String.valueOf(prefix);
                 double value = eventService.getProgressValueByKey(key) + (90.0 / countPages / airfoilList.size());
                 eventService.updateProgress(key, value);
             }
@@ -164,7 +163,7 @@ class ParserAirfoil implements Callable<Void> {
         String name = detail.getElementsByTag("h1").get(0).text();
         String description = filterDescription(detail, airfoilId).html();
         String coordinateView = parseCoordinateView(airfoilId);
-        Airfoil airfoil = Airfoil.builder().name(name).description(description).shortName(airfoilId).prefix(new Prefix(airfoilId.toUpperCase().charAt(0))).build();
+        Airfoil airfoil = Airfoil.builder().name(name).description(description).shortName(airfoilId).prefix(airfoilId.toUpperCase().charAt(0)).build();
         Set<Characteristics> characteristics = downloadDetailInfo(detail);
         airfoil.setCoordView(coordinateView);
         airfoil.setCharacteristics(characteristics);

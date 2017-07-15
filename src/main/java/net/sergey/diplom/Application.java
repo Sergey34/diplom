@@ -32,7 +32,6 @@ public class Application extends WebMvcConfigurerAdapter {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");
-        registry.addViewController("/").setViewName("airfoilList");
         registry.addViewController("/airfoils.html").setViewName("airfoilList");
     }
 

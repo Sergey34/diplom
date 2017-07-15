@@ -21,7 +21,7 @@ public class ViewController {
     public ViewController(ServiceAirfoil serviceAirfoil) {this.serviceAirfoil = serviceAirfoil;}
 
 
-    @GetMapping({"/airfoils/{prefix}/{page}", "/airfoils", "/airfoils/{prefix}"})
+    @GetMapping({"/airfoils/{prefix}/{page}", "/airfoils", "/airfoils/{prefix}", "/"})
     public String airfoils(Map<String, Object> model, @PathVariable(value = "prefix", required = false) String prefix,
                            @PathVariable(value = "page", required = false) Integer page) {
         prefix = Optional.ofNullable(prefix).orElse("A");

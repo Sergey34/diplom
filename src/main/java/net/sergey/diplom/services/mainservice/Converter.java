@@ -2,7 +2,6 @@ package net.sergey.diplom.services.mainservice;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Characteristics;
-import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
@@ -88,7 +87,7 @@ public class Converter {
         return userDto;
     }
 
-    public MenuItem prefixToMenuItem(Prefix prefix) {
-        return MenuItem.builder().name(String.valueOf(prefix.getPrefix())).url(String.valueOf(prefix.getPrefix())).build();
+    public MenuItem prefixToMenuItem(char prefix) {
+        return MenuItem.builder().name(String.valueOf(prefix)).url(String.valueOf(prefix)).build();
     }
 }

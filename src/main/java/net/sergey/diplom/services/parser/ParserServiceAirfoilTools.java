@@ -132,7 +132,7 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
 
     private void stop() {
         executorService.shutdownNow();
-        ParserAirfoil.setFinish(true);
+        ParserAirfoil.setFinish();
         try {
             executorService.awaitTermination(60, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
@@ -154,7 +154,7 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
         } catch (Exception e) {
             log.warn("ошибка инициализации базы", e);
             e.printStackTrace();
-            return new AsyncResult<Message>(new MessageError("Произошла ошибка при загрузке данных", SC_NOT_IMPLEMENTED, e.getStackTrace()));
+            return new AsyncResult<>(new MessageError("Произошла ошибка при загрузке данных", SC_NOT_IMPLEMENTED, e.getStackTrace()));
         } finally {
             parsingIsStarting = false;
         }

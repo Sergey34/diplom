@@ -1,7 +1,6 @@
 package net.sergey.diplom.dao.airfoil;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.domain.airfoil.Prefix;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -14,11 +13,11 @@ import java.util.Set;
 @Transactional
 public interface DaoAirfoil extends CrudRepository<Airfoil, String> {
 
-    List<Airfoil> findByPrefixOrderByShortName(Prefix prefix, Pageable pageable);
+    List<Airfoil> findByPrefixOrderByShortName(char prefix, Pageable pageable);
 
     Airfoil findOneByShortName(String shortName);
 
-    int countByPrefix(Prefix prefix);
+    int countByPrefix(char prefix);
 
     List<Airfoil> findAll(Pageable pageRequest);
 

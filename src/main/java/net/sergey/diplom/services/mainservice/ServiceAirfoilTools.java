@@ -9,7 +9,6 @@ import net.sergey.diplom.dao.menu.DaoMenu;
 import net.sergey.diplom.dao.menu.DaoMenuItem;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Characteristics;
-import net.sergey.diplom.domain.airfoil.Prefix;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.dto.Condition;
@@ -88,7 +87,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             log.debug("Имя не должно быть пустым");
             return EMPTY_AIRFOIL_SHORT_NAME;
         }
-        Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).prefix(new Prefix(shortName.toUpperCase().charAt(0))).build();
+        Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).prefix(shortName.toUpperCase().charAt(0)).build();
         storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
         return addUpdateAirfoil(fileAirfoil, files, airfoil);
     }
@@ -99,7 +98,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             log.debug("Имя не должно быть пустым");
             return EMPTY_AIRFOIL_SHORT_NAME;
         }
-        Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).prefix(new Prefix(shortName.toUpperCase().charAt(0))).build();
+        Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).prefix(shortName.toUpperCase().charAt(0)).build();
         return addUpdateAirfoil(fileAirfoil, files, airfoil);
     }
 
@@ -169,7 +168,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
-        List<Airfoil> airfoilsByPrefix = daoAirfoil.findByPrefixOrderByShortName(new Prefix(prefix), new PageRequest(startNumber, count));
+        List<Airfoil> airfoilsByPrefix = daoAirfoil.findByPrefixOrderByShortName(prefix, new PageRequest(startNumber, count));
         airfoilsByPrefix.forEach(this::createDatFile);
         return airfoilsByPrefix;
     }
@@ -238,7 +237,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {
-        if (daoMenuItem.findOneByUrl(String.valueOf(airfoil.getPrefix().getPrefix())) == null) {
+        if (daoMenuItem.findOneByUrl(String.valueOf(airfoil.getPrefix())) == null) {
             List<Menu> allMenu = daoMenu.findAll();
             for (Menu menu : allMenu) {
                 if (menu.getHeader().equals(propertiesHandler.getProperty("menu_Header"))) {
@@ -260,7 +259,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
                 .shortName(airfoilEdit.getShortName())
                 .coordView(airfoilEdit.getViewCsv())
                 .description(airfoilEdit.getDetails())
-                .prefix(new Prefix(airfoilEdit.getShortName().toUpperCase().charAt(0)))
+                .prefix(airfoilEdit.getShortName().toUpperCase().charAt(0))
                 .characteristics(characteristicsSet).build();
     }
 
@@ -286,7 +285,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public List<AirfoilDTO> getAirfoilsDtoByPrefix(char prefix, int startNumber, int count) {
-        List<Airfoil> airfoilsByPrefix = daoAirfoil.findByPrefixOrderByShortName(new Prefix(prefix), new PageRequest(startNumber, count));
+        List<Airfoil> airfoilsByPrefix = daoAirfoil.findByPrefixOrderByShortName(prefix, new PageRequest(startNumber, count));
         generateFiles(airfoilsByPrefix);
         return converter.airfoilToAirfoilDto(airfoilsByPrefix);
     }
@@ -417,7 +416,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public int getCountAirfoilByPrefix(char prefix) {
-        return daoAirfoil.countByPrefix(new Prefix(prefix));
+        return daoAirfoil.countByPrefix(prefix);
     }
 
     private Set<Characteristics> createCharacteristicsSet(List<MultipartFile> files) throws IOException {

@@ -22,7 +22,7 @@ public class Airfoil {
     private String name;
     private String coordView;
     private String description;
-    private Prefix prefix;
+    private char prefix;
     @DBRef
     private Set<Characteristics> characteristics;
 
