@@ -26,6 +26,15 @@ public class ViewController {
         this.userService = userService;
     }
 
+    @GetMapping("/login")
+    public String login(Map<String, Object> model) {
+        UserDto currentUser = userService.getCurrentUserInfo();
+        List<Menu> menu = serviceAirfoil.getMenu();
+        model.put("user", currentUser);
+        model.put("menu", menu);
+        return "login";
+    }
+
 
     @GetMapping({"/airfoils/{prefix}/{page}", "/airfoils", "/airfoils/{prefix}", "/"})
     public String airfoils(Map<String, Object> model, @PathVariable(value = "prefix", required = false) String prefix,
