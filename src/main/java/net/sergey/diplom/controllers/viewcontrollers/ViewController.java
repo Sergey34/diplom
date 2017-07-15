@@ -14,9 +14,11 @@ import java.util.Optional;
 
 @Controller
 public class ViewController {
-    public static final int COUNT_ON_PAGE = 21;
+    private static final int COUNT_ON_PAGE = 21;
+    private final ServiceAirfoil serviceAirfoil;
+
     @Autowired
-    ServiceAirfoil serviceAirfoil;
+    public ViewController(ServiceAirfoil serviceAirfoil) {this.serviceAirfoil = serviceAirfoil;}
 
 
     @GetMapping({"/airfoils/{prefix}/{page}", "/airfoils", "/airfoils/{prefix}"})
