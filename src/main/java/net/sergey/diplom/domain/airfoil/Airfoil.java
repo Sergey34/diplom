@@ -4,11 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Column;
 import java.util.Set;
 
 @lombok.Data
@@ -18,8 +17,7 @@ import java.util.Set;
 @Builder
 @Document(collection = "airfoils")
 public class Airfoil {
-    @Id
-    @Column(nullable = false, unique = true)
+    @Indexed(unique = true)
     private String shortName;
     private String name;
     private String coordView;

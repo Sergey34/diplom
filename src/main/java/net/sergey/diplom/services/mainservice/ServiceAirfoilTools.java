@@ -229,6 +229,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {
         if (daoMenu.findMenuByItemsContains(converter.prefixToMenuItem(airfoil.getPrefix())) == null) {
             List<Menu> allMenu = daoMenu.findAll();
+            if (allMenu.isEmpty()) {
+                allMenu.add(Menu.builder().header(propertiesHandler.getProperty("menu_Header")).items(new ArrayList<>()).build());
+            }
             for (Menu menu : allMenu) {
                 if (menu.getHeader().equals(propertiesHandler.getProperty("menu_Header"))) {
                     MenuItem menuItem = converter.prefixToMenuItem(airfoil.getPrefix());
@@ -345,7 +348,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     public AirfoilDetail getDetailInfo(String airfoilId) {
-        Airfoil airfoil = daoAirfoil.findOne(airfoilId);
+        Airfoil airfoil = daoAirfoil.findOneByShortName(airfoilId);
         if (null == airfoil) {
             return null;
         }
