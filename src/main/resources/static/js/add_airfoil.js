@@ -74,8 +74,8 @@ function store(url_for_store) {
 
     var data = {};
     data["airfoilName"] = $("#airfoilName").val();
-    data["shortName"] = $("#ShortName").val();
-    data["details"] = $("#Details").val();
+    data["shortName"] = $("#shortName").val();
+    data["details"] = $("#description").val();
     data["data"] = resultCSVList;
     data["viewCsv"] = viewCsv;
     console.log(data);

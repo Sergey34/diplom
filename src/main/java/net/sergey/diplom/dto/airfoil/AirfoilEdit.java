@@ -17,6 +17,4 @@ public class AirfoilEdit {
     private String details;
     private String viewCsv;
     private List<Data> data;
-
-
 }
