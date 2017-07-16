@@ -68,7 +68,8 @@ function fillEditableContentDetailInfoEditabvarable(data) {
 
 
                 var Reynolds_number = createLabel('Reynolds_number', "Reynolds number", i, characteristic.renolgs);
-                var Ncrit = createLabel('Ncrit', "Ncrit", i, characteristic.nCrit);
+                console.log('Ncrit ' + characteristic);
+                var Ncrit = createLabel('Ncrit', "Ncrit", i, characteristic.ncrit);
                 var Mach = createLabel('Mach', "Mach", i, "Mach");
                 var MaxClCd = createLabel('MaxClCd', "Max Cl/Cd", i, characteristic.maxClCd);
                 var MaxClCdalpha = createLabel('MaxClCdalpha', "Max Cl/Cd alpha", i, "MaxClCdalpha");
