@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class Data {
     private String fileName;
     private String data;
+    private String alpha;
     private double reynolds;
     private double nCrit;
     private double maxClCd;

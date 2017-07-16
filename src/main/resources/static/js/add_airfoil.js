@@ -49,9 +49,10 @@ function store(url_for_store) {
         resultCsvObj["reynolds"] = Reynolds_number;
         resultCsvObj["nCrit"] = document.getElementById('input_Ncrit' + i).value;
         resultCsvObj["maxClCd"] = document.getElementById('input_MaxClCd' + i).value;
+        resultCsvObj["alpha"] = document.getElementById('input_MaxClCdalpha' + i).value;
 
 
-        console.log(resultCSV);
+        // console.log(resultCSV);
         resultCSVList[i] = resultCsvObj;
     }
     var tableView = document.getElementById('viewTab').getElementsByTagName('*');
@@ -94,8 +95,8 @@ function store(url_for_store) {
 }
 
 function getTableItem(name, i, j, table) {
-    console.log(name);
-    console.log(table);
+    // console.log(name);
+    // console.log(table);
     return table[name + '[' + i + '][' + j + ']'].value;
 }
 

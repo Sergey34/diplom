@@ -13,7 +13,8 @@ public class CharacteristicsDto {
     private String coordinatesStl;
     private String fileName;
     private String filePath;
+    private String alpha;
     private double renolgs;
     private double nCrit;
-    private String maxClCd;
+    private double maxClCd;
 }

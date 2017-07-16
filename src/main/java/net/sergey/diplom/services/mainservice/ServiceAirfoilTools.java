@@ -201,7 +201,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         Airfoil airfoilById = getAirfoilByShortName(airfoilEdit.getShortName());
         Set<Characteristics> characteristicsSet = airfoilEdit.getData().stream().map(data
                 -> Characteristics.builder().coordinatesStl(data.getData()).fileName(data.getFileName())
-                .renolgs(data.getReynolds()).nCrit(data.getNCrit()).maxClCd(data.getMaxClCd()).build()).collect(Collectors.toSet());
+                .renolgs(data.getReynolds()).nCrit(data.getNCrit()).maxClCd(data.getMaxClCd()).alpha(data.getAlpha()).build()).collect(Collectors.toSet());
         return Airfoil.builder()
                 .id(airfoilById != null ? airfoilById.getId() : null)
                 .name(airfoilEdit.getAirfoilName())

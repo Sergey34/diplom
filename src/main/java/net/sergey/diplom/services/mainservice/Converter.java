@@ -75,7 +75,8 @@ public class Converter {
         CharacteristicsDto characteristicsDto = new CharacteristicsDto();
         characteristicsDto.setFileName(coordinate.getFileName());
         characteristicsDto.setCoordinatesStl(coordinate.getCoordinatesStl());
-        characteristicsDto.setMaxClCd(coordinate.getMaxClCd() + " " + coordinate.getAlpha());
+        characteristicsDto.setMaxClCd(coordinate.getMaxClCd());
+        characteristicsDto.setAlpha(coordinate.getAlpha());
         characteristicsDto.setNCrit(coordinate.getNCrit());
         characteristicsDto.setRenolgs(coordinate.getRenolgs());
         characteristicsDto.setFilePath("/files/tmpCsv/" + coordinate.getFileName());
