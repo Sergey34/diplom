@@ -4,6 +4,8 @@ import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
+import net.sergey.diplom.dto.airfoil.AirfoilEdit;
+import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.dto.user.UserDto;
 import net.sergey.diplom.services.mainservice.ServiceAirfoil;
 import net.sergey.diplom.services.usermanagerservice.UserService;
@@ -59,6 +61,12 @@ public class AirfoilViewController {
         return serviceAirfoil.updateGraph(airfoilId, checkedList);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/rest/airfoilDto/{airfoilId}", method = RequestMethod.GET)
+    public AirfoilDetail getDetailInfo(@PathVariable String airfoilId) {
+        return serviceAirfoil.getDetailInfo(airfoilId);
+    }
+
     @GetMapping("/add_airfoil")
     public String airfoil(Map<String, Object> model) {
         fillMandatoryData(model);
@@ -97,6 +105,11 @@ public class AirfoilViewController {
         fillMandatoryData(model);
         model.put("added", false);
         return "add_airfoil";
+    }
+
+    @RequestMapping(value = "/updateAirfoilStringCsv", method = RequestMethod.POST)
+    public Message updateAirfoilStringCsv(@RequestBody AirfoilEdit airfoilEdit) {
+        return serviceAirfoil.updateAirfoil(airfoilEdit);
     }
 
 

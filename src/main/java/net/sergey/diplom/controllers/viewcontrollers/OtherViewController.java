@@ -2,28 +2,34 @@ package net.sergey.diplom.controllers.viewcontrollers;
 
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.User;
+import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.dto.user.UserDto;
 import net.sergey.diplom.dto.user.UserView;
 import net.sergey.diplom.services.mainservice.ServiceAirfoil;
+import net.sergey.diplom.services.parser.ParserServiceAirfoilTools;
 import net.sergey.diplom.services.usermanagerservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
+
+import static net.sergey.diplom.dto.messages.Message.SC_FORBIDDEN;
 
 @Controller
 public class OtherViewController {
     private final ServiceAirfoil serviceAirfoil;
     private final UserService userService;
+    private final ParserServiceAirfoilTools parserService;
 
     @Autowired
-    public OtherViewController(ServiceAirfoil serviceAirfoil, UserService userService) {
+    public OtherViewController(ServiceAirfoil serviceAirfoil, UserService userService, ParserServiceAirfoilTools parserService) {
         this.serviceAirfoil = serviceAirfoil;
         this.userService = userService;
+        this.parserService = parserService;
     }
 
     @GetMapping("/about")
@@ -74,6 +80,27 @@ public class OtherViewController {
         List<Menu> menu = serviceAirfoil.getMenu();
         model.put("user", currentUser);
         model.put("menu", menu);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/init", method = RequestMethod.GET)
+    public Future<Message> init() {
+        if (parserService.parsingIsStarting()) {
+            return new AsyncResult<>(new Message("В данный момент данные уже кем-то обновляются. Необходимо дождаться завершения обновления", SC_FORBIDDEN));
+        }
+        return parserService.startParsing();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/stop", method = RequestMethod.GET)
+    public Message stop() {
+        return parserService.stopParsing();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/clearAll", method = RequestMethod.GET)
+    public Message clearAll() {
+        return serviceAirfoil.clearAll();
     }
 
 }

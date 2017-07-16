@@ -24,12 +24,7 @@ public class RealTime {
     public SseEmitter getRealTimeMessageAction() throws IOException {
         final SseEmitter emitter = new SseEmitter();
         eventService.addEmitter(emitter);
-        emitter.onCompletion(new Runnable() {
-            @Override
-            public void run() {
-                eventService.removeEmitter(emitter);
-            }
-        });
+        emitter.onCompletion(() -> eventService.removeEmitter(emitter));
         return emitter;
     }
 
