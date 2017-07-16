@@ -31,7 +31,7 @@ function store(url_for_store) {
         var table = document.getElementById('tabular' + i).getElementsByTagName('*');
         for (var j = 1; j <= tableLength('tabular' + i); j++) {
             for (var k = 0; k < 7; k++) {
-                var value = getTableItem(k, j, table);
+                var value = getTableItem('tabular' + i, k, j, table);
                 if (value == '') {
                     alert("Ошибка! таблица заполнена не корректно");
                     return;
@@ -58,7 +58,7 @@ function store(url_for_store) {
     var viewCsv = "";
     for (var j = 1; j <= tableLength('viewTab'); j++) {
         for (var k = 0; k < 2; k++) {
-            var value = getTableItem(k, j, tableView);
+            var value = getTableItem('view', k, j, tableView);
             if (value == '') {
                 alert("Ошибка! таблица заполнена не корректно");
                 return;
@@ -94,8 +94,10 @@ function store(url_for_store) {
     });
 }
 
-function getTableItem(i, j, table) {
-    return table['[' + i + '][' + j + ']'].value;
+function getTableItem(name, i, j, table) {
+    console.log(table);
+    console.log(name);
+    return table[name + '[' + i + '][' + j + ']'].value;
 }
 function tableLength(i) {
     return document.getElementById(i).getElementsByTagName('tbody')[0].childElementCount

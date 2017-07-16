@@ -108,13 +108,13 @@ public class AirfoilViewController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/updateAirfoilStringCsv", method = RequestMethod.POST)
+    @PostMapping(value = "/updateAirfoilStringCsv")
     public Message updateAirfoilStringCsv(@RequestBody AirfoilEdit airfoilEdit) {
         return serviceAirfoil.updateAirfoil(airfoilEdit);
     }
 
     @ResponseBody
-    @RequestMapping(value = "/addAirfoilForStringCsv", method = RequestMethod.POST)
+    @PostMapping(value = "/addAirfoilForStringCsv")
     public Message addAirfoilForStringCsv(@RequestBody AirfoilEdit airfoilEdit) {
         return serviceAirfoil.addAirfoil(airfoilEdit);
     }
