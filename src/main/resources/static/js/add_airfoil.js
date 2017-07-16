@@ -84,7 +84,7 @@ function store(url_for_store) {
             contentType: "application/json",
             url: url_for_store,
             data: JSON.stringify(data),
-            // dataType: 'json',
+            dataType: 'json',
             timeout: 600000
         }).then(function (data) {
             console.log(data);
@@ -94,6 +94,8 @@ function store(url_for_store) {
 }
 
 function getTableItem(name, i, j, table) {
+    console.log(name);
+    console.log(table);
     return table[name + '[' + i + '][' + j + ']'].value;
 }
 
@@ -157,7 +159,7 @@ function addTable() {
         'minRows': 10,
         'newRowOnTab': true,
         'columnHeads': ['alpha', 'CL', 'CD', 'CDp', 'CM', 'Top_Xtr', 'Bot_Xtr'],
-        'name': '',
+        'name': 'tabular' + number,
         'animate': true
     });
     number++;
