@@ -12,9 +12,10 @@
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="/css/homepage.css" rel="stylesheet">
-    <link type='text/css' rel='stylesheet' href='/css/tabular-input.css'/>
-    <link rel="stylesheet" type="text/css" href="/css/css_login.css">
+    <script src="/js/jquery-3.1.1.min.js"></script>
     <script src="/js/add_airfoil.js"></script>
+    <script src='/js/tabular-input.min.js'></script>
+    <link type='text/css' rel='stylesheet' href='/css/tabular-input.css'/>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -98,31 +99,25 @@
                                     <div id="addAirfoilWeb">
                                         <label>
                                             Название профиля
-                                            <input type="text" value="" name="airfoilName" id="airfoilName"/>
+                                            <input th:value="${airfoil.name}" id="airfoilName" name="airfoilName"
+                                                   type="text" value="">
                                         </label>
-                                        </Br>
+
                                         <label>
                                             Короткое название профиля
-                                            <input type="text" value="" name="ShortName" id="ShortName"/>
+                                            <input th:value="${airfoil.shortName}" id="ShortName" name="ShortName"
+                                                   type="text" value="">
                                         </label>
-                                        </Br>
+
                                         <label>
                                             Детали
-                                            <input type="text" value="" name="Details" id="Details"/>
+                                            <input th:value="${airfoil.description}" id="Details" name="Details"
+                                                   type="text" value="">
                                         </label>
-                                        </Br>
-                                        <div id="view">
-                                            <input type="button" class="btn btn-default" value="Add New Row"
-                                                   onclick="javascript:$('#viewTab').tabularInput('addRow')">
-                                            <input type="button" class="btn btn-default" value="Delete Last Row"
-                                                   onclick="javascript:$('#viewTab').tabularInput('deleteRow')">
-                                            <div id="viewTab">
-                                            </div>
-                                        </div>
-                                        </Br>
-                                        <input type="button" id="addTable" class="btn btn-default" value="add table">
+
+
                                     </div>
-                                    <input type="button" id="saveWab" class="btn btn-default" value="add airfoil">
+                                    <input class="btn btn-default" id="saveWab" type="button" value="add airfoil">
 
                                 </div>
                                 <script>
