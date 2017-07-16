@@ -63,6 +63,12 @@ public class OtherViewController {
         return "login";
     }
 
+    @GetMapping("/update_database")
+    public String updateDatabase(Map<String, Object> model) {
+        fillMandatoryData(model);
+        return "update_database";
+    }
+
     private void fillMandatoryData(Map<String, Object> model) {
         UserDto currentUser = userService.getCurrentUserInfo();
         List<Menu> menu = serviceAirfoil.getMenu();

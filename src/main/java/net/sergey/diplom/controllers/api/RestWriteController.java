@@ -9,7 +9,9 @@ import net.sergey.diplom.services.mainservice.ServiceAirfoil;
 import net.sergey.diplom.services.parser.Parser;
 import net.sergey.diplom.services.usermanagerservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +20,7 @@ import java.util.concurrent.Future;
 
 import static net.sergey.diplom.dto.messages.Message.SC_FORBIDDEN;
 
+@EnableAsync
 @RequestMapping(value = "/rest/write")
 @RestController(value = "write")
 public class RestWriteController {
@@ -66,6 +69,7 @@ public class RestWriteController {
     }
 
 
+    @Async
     @RequestMapping(value = "/init", method = RequestMethod.GET)
     public Future<Message> init() {
         if (parserService.parsingIsStarting()) {
@@ -74,6 +78,7 @@ public class RestWriteController {
         return parserService.startParsing();
     }
 
+    @Async
     @RequestMapping(value = "/stop", method = RequestMethod.GET)
     public Message stop() {
         return parserService.stopParsing();

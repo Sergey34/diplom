@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,18 +9,18 @@
     <meta name="author" content="">
     <title>Airfoil tolls - Edit airfoil</title>
     <!-- Bootstrap Core CSS -->
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="../css/homepage.css" rel="stylesheet">
-    <script src="../js/jquery-3.1.1.min.js"></script>
-    <script src="../js/get_user.js"></script>
-    <script src="../js/get_content.js"></script>
-    <script src="../js/get_params_url.js"></script>
-    <script src="../js/get_detail_info.js"></script>
-    <script src="../js/searcher.js"></script>
-    <script src='../js/tabular-input.min.js'></script>
-    <link type='text/css' rel='stylesheet' href='../css/tabular-input.css'/>
-    <link rel="stylesheet" type="text/css" href="../css/css_login.css">
+    <link href="../static/css/homepage.css" rel="stylesheet">
+    <script src="../static/js/jquery-3.1.1.min.js"></script>
+    <script src="../static/js/get_user.js"></script>
+    <script src="../static/js/get_content.js"></script>
+    <script src="../static/js/get_params_url.js"></script>
+    <script src="../static/js/get_detail_info.js"></script>
+    <script src="../static/js/searcher.js"></script>
+    <script src='../static/js/tabular-input.min.js'></script>
+    <link type='text/css' rel='stylesheet' href='../static/css/tabular-input.css'/>
+    <link rel="stylesheet" type="text/css" href="../static/css/css_login.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -30,51 +30,13 @@
 </head>
 <body>
 <!-- Navigation -->
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/airfoilList.html">Airfoils</a>
-            <script>                 function sbm() {
-                search();
-            }             </script>
-            <form class="navbar-form navbar-left" role="search" onsubmit="sbm(); return false">
-                <div class="form-group"><input id="searchTemplate" type="text" class="form-control"
-                                               placeholder="shortName contains ..."></div>
-            </form>
-
-        </div>
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav" id="navbar-nav">
-                <li><a href="/about.html" id="about">About</a></li>
-            </ul>
-        </div>
-
-        <!-- /.navbar-collapse -->
-    </div>
-    <!-- /.container -->
-</nav>
+<div th:replace="fragments/header :: header"></div>
 <!-- Page Content -->
-<script src="../js/get_menu.js"></script>
+
 
 <div class="container">
     <div class="row">
-        <div class="col-md-3" id="list_menu">
-            <p class="lead">Навигация</p>
-            <div class="list-group">
-                <a class="list-group-item" id="addAirf" href="/adminka/addAirfoil.html">Добавить новый профиль</a>
-                <a class="list-group-item" id="adm" href="/adminka/adminka.html">Админка</a>
-            </div>
-
-        </div>
+        <div th:replace="fragments/menu :: list_menu"></div>
         <div class="col-md-9">
             <div class="row">
                 <div class="col-sm-12 col-lg-12 col-md-12">
@@ -156,22 +118,12 @@
     </div>
 </div>
 <!-- /.container -->
-<div class="container">
-    <hr>
-    <!-- Footer -->
-    <footer>
-        <div class="row">
-            <div class="col-lg-12">
-                <p>Copyright &copy; Your Website 2014</p>
-            </div>
-        </div>
-    </footer>
-</div>
+<div th:replace="fragments/footer :: footer"></div>
 <!-- /.container -->
 <!-- jQuery -->
 <!--<script src="../js/jquery.js"></script>-->
 <!-- Bootstrap Core JavaScript -->
-<script src="../js/bootstrap.min.js"></script>
+<script src="../static/js/bootstrap.min.js"></script>
 
 </body>
 </html>
