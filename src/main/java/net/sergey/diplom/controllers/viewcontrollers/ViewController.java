@@ -32,11 +32,10 @@ public class ViewController {
         return "about";
     }
 
-    private void fillMandatoryData(Map<String, Object> model) {
-        UserDto currentUser = userService.getCurrentUserInfo();
-        List<Menu> menu = serviceAirfoil.getMenu();
-        model.put("user", currentUser);
-        model.put("menu", menu);
+    @GetMapping("/adminka")
+    public String adminka(Map<String, Object> model) {
+        fillMandatoryData(model);
+        return "adminka";
     }
 
     @GetMapping("/login")
@@ -44,7 +43,6 @@ public class ViewController {
         fillMandatoryData(model);
         return "login";
     }
-
 
     @GetMapping({"/airfoils/{prefix}/{page}", "/airfoils", "/airfoils/{prefix}", "/"})
     public String airfoils(Map<String, Object> model, @PathVariable(value = "prefix", required = false) String prefix,
@@ -62,6 +60,7 @@ public class ViewController {
         return "airfoils";
     }
 
+
     @GetMapping("/airfoil/{shortName}")
     public String airfoil(Map<String, Object> model, @PathVariable(value = "shortName") String shortName) {
         AirfoilDetail airfoil = serviceAirfoil.getDetailInfo(shortName);
@@ -74,6 +73,13 @@ public class ViewController {
     @RequestMapping(value = "/rest/updateGraph/{airfoilId}", method = RequestMethod.POST)
     public List<String> updateGraph(@PathVariable String airfoilId, @RequestBody List<String> checkedList) {
         return serviceAirfoil.updateGraph(airfoilId, checkedList);
+    }
+
+    private void fillMandatoryData(Map<String, Object> model) {
+        UserDto currentUser = userService.getCurrentUserInfo();
+        List<Menu> menu = serviceAirfoil.getMenu();
+        model.put("user", currentUser);
+        model.put("menu", menu);
     }
 
 }
