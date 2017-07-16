@@ -57,7 +57,7 @@ public class AirfoilViewController {
         return serviceAirfoil.updateGraph(airfoilId, checkedList);
     }
 
-    @GetMapping("/airfoil")
+    @GetMapping("/add_airfoil")
     public String airfoil(Map<String, Object> model) {
         fillMandatoryData(model);
         return "add_airfoil";

@@ -124,7 +124,7 @@ function addTable() {
     btn2.setAttribute("type", 'button');
     btn2.setAttribute("class", 'btn btn-default');
     btn2.setAttribute("value", 'Devare Last Row');
-    btn2.setAttribute("onClick", 'javascript:$("#tabular' + number + '").tabularInput("devareRow")');
+    btn2.setAttribute("onClick", "javascript:$('#tabular" + number + "').tabularInput('deleteRow')");
 
     var table = document.createElement('div');
     table.id = 'tabular' + number;
