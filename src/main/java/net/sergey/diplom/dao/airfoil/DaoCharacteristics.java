@@ -32,6 +32,7 @@ public class DaoCharacteristics {
     }
 
     public void save(Collection<Characteristics> characteristics) {
+        if (characteristics == null) {return;}
         for (Characteristics characteristic : characteristics) {
             mongoOperations.save(characteristic);
         }
