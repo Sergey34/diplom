@@ -108,15 +108,9 @@ public class AirfoilViewController {
     }
 
     @ResponseBody
-    @PostMapping(value = "/updateAirfoilStringCsv")
+    @PostMapping(value = "/store_airfoil")
     public Message updateAirfoilStringCsv(@RequestBody AirfoilEdit airfoilEdit) {
-        return serviceAirfoil.updateAirfoil(airfoilEdit);
-    }
-
-    @ResponseBody
-    @PostMapping(value = "/addAirfoilForStringCsv")
-    public Message addAirfoilForStringCsv(@RequestBody AirfoilEdit airfoilEdit) {
-        return serviceAirfoil.addAirfoil(airfoilEdit);
+        return serviceAirfoil.saveAirfoil(airfoilEdit);
     }
 
     private void fillMandatoryData(Map<String, Object> model) {

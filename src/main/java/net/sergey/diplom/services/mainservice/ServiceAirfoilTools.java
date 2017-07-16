@@ -93,25 +93,13 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
-    public Message addAirfoil(AirfoilEdit airfoilEdit) {
+    public Message saveAirfoil(AirfoilEdit airfoilEdit) {
         if (StringUtils.isEmpty(airfoilEdit.getShortName())) {
-            log.debug("airfoil не добавлен - Короткое имя профиля не должно быть пустым");
+            log.debug("airfoil не добавлен/обновлен - Короткое имя профиля не должно быть пустым");
             return EMPTY_AIRFOIL_SHORT_NAME;
         }
         Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
         addMenuItemForNewAirfoil(airfoil);
-        if (add(airfoil)) {
-            return ADD_AIRFOIL_CONFLICT;
-        }
-        return ASS_SUCCESS;
-    }
-
-    @Override
-    public Message addAirfoil(Airfoil airfoil) {
-        if (StringUtils.isEmpty(airfoil.getShortName())) {
-            log.debug("airfoil не добавлен - Короткое имя профиля не должно быть пустым");
-            return EMPTY_AIRFOIL_SHORT_NAME;
-        }
         if (add(airfoil)) {
             return ADD_AIRFOIL_CONFLICT;
         }
@@ -130,41 +118,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
-    public Message updateAirfoil(AirfoilEdit airfoilEdit) {
-        if (StringUtils.isEmpty(airfoilEdit.getShortName())) {
-            log.debug("airfoil не обновлен - Короткое имя профиля не должно быть пустым");
-            return EMPTY_AIRFOIL_SHORT_NAME;
-        }
-        Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
-        addMenuItemForNewAirfoil(airfoil);
-        try {
-            daoCharacteristics.save(airfoil.getCharacteristics());
-            daoAirfoil.save(airfoil);
-        } catch (Exception e) {
-            log.warn("Ошибка при обновлении airfoil {}", airfoil.getShortName(), e);
-            return ADD_AIRFOIL_CONFLICT;
-        }
-        storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
-        log.debug("Airfoil успешно обновлен {}", SC_OK);
-        return ASS_SUCCESS;
-    }
-
-    @Override
-    public List<AirfoilDTO> getAllAirfoilDto(int startNumber, int count) {
-        List<Airfoil> allAirfoils = daoAirfoil.findAll(new PageRequest(startNumber, count));
-        allAirfoils.forEach(this::createDatFile);
-        return converter.airfoilToAirfoilDto(allAirfoils);
-    }
-
-    @Override
-    public List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count) {
-        List<Airfoil> airfoilsByPrefix = daoAirfoil.findByPrefixOrderByShortName(prefix, new PageRequest(startNumber, count));
-        airfoilsByPrefix.forEach(this::createDatFile);
-        return airfoilsByPrefix;
-    }
-
-    @Override
-    public Airfoil getAirfoilById(String airfoilId) {
+    public Airfoil getAirfoilByShortName(String airfoilId) {
         Airfoil airfoilById = daoAirfoil.findOneByShortName(airfoilId);
         Optional.ofNullable(airfoilById).ifPresent(this::createDatFile);
         return airfoilById;
@@ -244,7 +198,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     private Airfoil getAirfoilByAirfoilEdit(AirfoilEdit airfoilEdit) {
-        Airfoil airfoilById = getAirfoilById(airfoilEdit.getShortName());
+        Airfoil airfoilById = getAirfoilByShortName(airfoilEdit.getShortName());
         Set<Characteristics> characteristicsSet = airfoilEdit.getData().stream().map(data
                 -> Characteristics.builder().coordinatesStl(data.getData()).fileName(data.getFileName())
                 .renolgs(data.getReynolds()).nCrit(data.getNCrit()).maxClCd(data.getMaxClCd()).build()).collect(Collectors.toSet());
@@ -315,13 +269,6 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
                 break;
             }
         }
-    }
-
-    @Override
-    public List<Airfoil> getAllAirfoils(int startNumber, int count) {
-        List<Airfoil> allAirfoils = daoAirfoil.findAll(new PageRequest(startNumber, count));
-        allAirfoils.forEach(this::createDatFile);
-        return allAirfoils;
     }
 
     @Override

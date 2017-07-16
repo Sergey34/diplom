@@ -2,11 +2,11 @@ var number = 0;
 
 
 function updateWab() {
-    store("/updateAirfoilStringCsv")
+    store("/store_airfoil")
 }
 
 function saveWab() {
-    store("/addAirfoilForStringCsv")
+    store("/store_airfoil")
 }
 
 function store(url_for_store) {
