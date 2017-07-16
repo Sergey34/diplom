@@ -109,13 +109,13 @@ public class AirfoilViewController {
 
     @ResponseBody
     @PostMapping(value = "/updateAirfoilStringCsv")
-    public Message updateAirfoilStringCsv(@RequestBody AirfoilEdit airfoilEdit) {
+    public Message updateAirfoilStringCsv(AirfoilEdit airfoilEdit) {
         return serviceAirfoil.updateAirfoil(airfoilEdit);
     }
 
     @ResponseBody
     @PostMapping(value = "/addAirfoilForStringCsv")
-    public Message addAirfoilForStringCsv(@RequestBody AirfoilEdit airfoilEdit) {
+    public Message addAirfoilForStringCsv(AirfoilEdit airfoilEdit) {
         return serviceAirfoil.addAirfoil(airfoilEdit);
     }
 

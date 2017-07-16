@@ -71,7 +71,6 @@ function store(url_for_store) {
         viewCsv += '\n';
     }
 
-
     var data = {};
     data["airfoilName"] = $("#airfoilName").val();
     data["shortName"] = $("#shortName").val();
@@ -85,7 +84,7 @@ function store(url_for_store) {
             contentType: "application/json",
             url: url_for_store,
             data: JSON.stringify(data),
-            dataType: 'json',
+            // dataType: 'json',
             timeout: 600000
         }).then(function (data) {
             console.log(data);
@@ -95,14 +94,12 @@ function store(url_for_store) {
 }
 
 function getTableItem(name, i, j, table) {
-    console.log(table);
-    console.log(name);
     return table[name + '[' + i + '][' + j + ']'].value;
 }
+
 function tableLength(i) {
     return document.getElementById(i).getElementsByTagName('tbody')[0].childElementCount
 }
-
 
 //создание таблиц
 
