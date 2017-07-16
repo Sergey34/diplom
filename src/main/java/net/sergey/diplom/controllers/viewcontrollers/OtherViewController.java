@@ -1,7 +1,7 @@
 package net.sergey.diplom.controllers.viewcontrollers;
 
 import net.sergey.diplom.domain.menu.Menu;
-import net.sergey.diplom.dto.messages.Message;
+import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.dto.user.UserDto;
 import net.sergey.diplom.dto.user.UserView;
 import net.sergey.diplom.services.mainservice.ServiceAirfoil;
@@ -49,7 +49,7 @@ public class OtherViewController {
 
     @PostMapping("/add_user")
     public String addUser(Map<String, Object> model, @ModelAttribute UserView user) {
-        Message message = userService.addUser(user);
+        User userResult = userService.addUser(user);
         fillMandatoryData(model);
         model.put("userView", new UserView());
         return "add_user";

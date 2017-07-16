@@ -49,18 +49,13 @@ public class UserService {
                 .userName(userView.getName())
                 .authorities(userView.getRoles().stream().map(s -> new Authorities(s, userView.getName())).collect(Collectors.toList()))
                 .build();
-
-        if (daoUser.findOneByUserName(userView.getName()) != null) {
-            log.trace("Ошибка при добавлении пользователя {}", userView.getName());
-            return user;
-        }
         try {
             daoUser.save(user);
             log.trace("Пользователь успешно создан");
             return user;
         } catch (Exception e) {
             log.trace("Ошибка при добавлении пользователя {}", user.getUserName(), e);
-            return user;
+            return null;
         }
     }
 
