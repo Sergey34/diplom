@@ -15,6 +15,6 @@ public class UserView {
 
     private String password;
 
-    private List<String> role;
+    private List<String> roles;
 }
 

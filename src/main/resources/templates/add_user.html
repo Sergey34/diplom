@@ -42,7 +42,7 @@
                                 <div class="form-group">
                                     <label class="control-label col-xs-3" for="login">Логин:</label>
                                     <div class="col-xs-9">
-                                        <input th:field="${userView.userName}" type="text" class="form-control"
+                                        <input th:field="${userView.name}" type="text" class="form-control"
                                                pattern=".{4,10}" required minlength="4"
                                                id="login"
                                                name="login"
@@ -54,7 +54,9 @@
                                     <div class="col-xs-9">
                                         <select th:field="${userView.roles}" multiple class="form-control" name="roles"
                                                 id="exampleSelect2">
-                                            <option th:each="role : ${roles}" th:text="${role}">1</option>
+                                            <option th:each="role, iter : ${roles}" th:text="${role}"
+                                                    th:value="${role}">1
+                                            </option>
                                         </select>
                                     </div>
                                 </div>

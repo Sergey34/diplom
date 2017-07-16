@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.sergey.diplom.dao.user.DaoUser;
 import net.sergey.diplom.domain.user.Authorities;
 import net.sergey.diplom.domain.user.User;
-import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.dto.user.UserDto;
 import net.sergey.diplom.dto.user.UserView;
 import net.sergey.diplom.services.mainservice.Converter;
@@ -15,12 +14,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static net.sergey.diplom.dto.messages.Message.SC_CONFLICT;
-import static net.sergey.diplom.dto.messages.Message.SC_OK;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -41,33 +37,31 @@ public class UserService {
         this.daoUser = daoUser;
     }
 
-    public Message addUser(UserView userView) {
-        if (daoUser.findOneByUserName(userView.getName()) != null) {
-            log.trace("Ошибка при добавлении пользователя {}", userView.getName());
-            return new Message("Ошибка при добавлении пользователя. Пользователь с таким именем уже существует", SC_CONFLICT);
-        }
-        User user = new User();
-        user.setEnabled(true);
-        user.setPassword(new BCryptPasswordEncoder().encode(userView.getPassword()));
-        user.setUserName(userView.getName());
-        List<Authorities> authorities = new ArrayList<>();
-        for (String role : userView.getRole()) {
-            authorities.add(new Authorities(role, user.getUserName()));
-        }
-        user.setAuthorities(authorities);
-        try {
-            daoUser.save(user);
-            log.trace("Пользователь успешно создан");
-            return new Message("Пользователь успешно создан", SC_OK);
-        } catch (Exception e) {
-            log.trace("Ошибка при добавлении пользователя {}, {}", user.getUserName(), e);
-            return new Message("Ошибка при добавлении пользователя", SC_CONFLICT);
-        }
+    public List<String> getAllUserRoles() {
+        return allAuthorities;
     }
 
 
-    public List<String> getAllUserRoles() {
-        return allAuthorities;
+    public User addUser(UserView userView) {
+        User user = User.builder()
+                .enabled(true)
+                .password(new BCryptPasswordEncoder().encode(userView.getPassword()))
+                .userName(userView.getName())
+                .authorities(userView.getRoles().stream().map(s -> new Authorities(s, userView.getName())).collect(Collectors.toList()))
+                .build();
+
+        if (daoUser.findOneByUserName(userView.getName()) != null) {
+            log.trace("Ошибка при добавлении пользователя {}", userView.getName());
+            return user;
+        }
+        try {
+            daoUser.save(user);
+            log.trace("Пользователь успешно создан");
+            return user;
+        } catch (Exception e) {
+            log.trace("Ошибка при добавлении пользователя {}", user.getUserName(), e);
+            return user;
+        }
     }
 
     public UserDto getCurrentUserInfo() {
