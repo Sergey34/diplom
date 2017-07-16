@@ -60,6 +60,7 @@
                                     <td id="Renolds0">Renolds</td>
                                     <td id="NCrit0">NCrit</td>
                                     <td id="MaxClCd0">MaxClCd</td>
+                                    <td id="alpha">α</td>
                                     <td id="">&nbsp;</td>
                                 </tr>
                                 <tr th:each="characteristic, iter : ${airfoil.characteristics}" id="${iter.index}">
@@ -67,7 +68,8 @@
                                                checked="checked" th:attr="filename=${characteristic.fileName}"></td>
                                     <td id="Renolds1" th:text="${characteristic.renolgs}">50,000</td>
                                     <td id="NCrit1" th:text="${characteristic.nCrit}">5</td>
-                                    <td id="MaxClCd1" th:text="${characteristic.maxClCd}">44.6 at α=4.75°</td>
+                                    <td id="MaxClCd1" th:text="${characteristic.maxClCd}">44.6</td>
+                                    <td id="alpha1" th:text="${'α='+characteristic.maxClCd+'°'}">α=4.75°</td>
                                     <td id="fileName1">
                                         <a th:text="${characteristic.fileName}"
                                            th:href="${characteristic.filePath}"
