@@ -52,7 +52,7 @@ public class OtherViewController {
         User userResult = userService.addUser(user);
         fillMandatoryData(model);
         model.put("userView", new UserView());
-        model.put("userResult", userResult);
+        model.put("userResult", userResult != null);
         return "add_user";
     }
 

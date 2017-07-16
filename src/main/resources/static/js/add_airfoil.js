@@ -1,7 +1,7 @@
 var number = 0;
 function saveWab() {
     var resultCSVList = [];
-    for (let i = 0; i < number; i++) {
+    for (var i = 0; i < number; i++) {
         var resultCSV = "Xfoil polar. Reynolds number fixed. Mach  number fixed\n";
         var airfoilName = document.getElementById('ShortName').value;
         var Reynolds_number = document.getElementById('input_Reynolds_number' + i).value;
@@ -19,8 +19,8 @@ function saveWab() {
 
 
         var table = document.getElementById('tabular' + i).getElementsByTagName('*');
-        for (let j = 1; j <= tableLength('tabular' + i); j++) {
-            for (let k = 0; k < 7; k++) {
+        for (var j = 1; j <= tableLength('tabular' + i); j++) {
+            for (var k = 0; k < 7; k++) {
                 var value = getTableItem(k, j, table);
                 if (value == '') {
                     alert("Ошибка! таблица заполнена не корректно");
@@ -46,8 +46,8 @@ function saveWab() {
     }
     var tableView = document.getElementById('viewTab').getElementsByTagName('*');
     var viewCsv = "";
-    for (let j = 1; j <= tableLength('viewTab'); j++) {
-        for (let k = 0; k < 2; k++) {
+    for (var j = 1; j <= tableLength('viewTab'); j++) {
+        for (var k = 0; k < 2; k++) {
             var value = getTableItem(k, j, tableView);
             if (value == '') {
                 alert("Ошибка! таблица заполнена не корректно");
@@ -123,8 +123,8 @@ function addTable() {
     var btn2 = document.createElement('input');
     btn2.setAttribute("type", 'button');
     btn2.setAttribute("class", 'btn btn-default');
-    btn2.setAttribute("value", 'Delete Last Row');
-    btn2.setAttribute("onClick", 'javascript:$("#tabular' + number + '").tabularInput("deleteRow")');
+    btn2.setAttribute("value", 'Devare Last Row');
+    btn2.setAttribute("onClick", 'javascript:$("#tabular' + number + '").tabularInput("devareRow")');
 
     var table = document.createElement('div');
     table.id = 'tabular' + number;

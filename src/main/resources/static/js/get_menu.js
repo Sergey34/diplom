@@ -2,7 +2,7 @@ $(document).ready(function () {
     $.ajax({
         url: "/rest/menu"
     }).then(function (data) {
-        document.getElementById('addAirf').setAttribute('href', "/adminka/addAirfoil.html");
+        document.getElementById('addAirf').setAttribute('href', "/adminka/add_airfoil.html");
         document.getElementById('adm').setAttribute('href', "/adminka/adminka.html");
         data.forEach(logArrayElements);
         function logArrayElements(element, index, array) {

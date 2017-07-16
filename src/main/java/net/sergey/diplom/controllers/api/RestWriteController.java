@@ -1,5 +1,6 @@
 package net.sergey.diplom.controllers.api;
 
+import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.dto.airfoil.AirfoilEdit;
 import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.dto.user.UserView;
@@ -31,7 +32,7 @@ public class RestWriteController {
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
-    public Message addUser(@RequestBody UserView userView) {
+    public User addUser(@RequestBody UserView userView) {
         return userService.addUser(userView);
     }
 
