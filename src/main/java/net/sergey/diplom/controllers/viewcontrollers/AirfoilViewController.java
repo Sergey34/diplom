@@ -15,33 +15,15 @@ import java.util.Map;
 import java.util.Optional;
 
 @Controller
-public class ViewController {
+public class AirfoilViewController {
     private static final int COUNT_ON_PAGE = 21;
     private final ServiceAirfoil serviceAirfoil;
     private final UserService userService;
 
     @Autowired
-    public ViewController(ServiceAirfoil serviceAirfoil, UserService userService) {
+    public AirfoilViewController(ServiceAirfoil serviceAirfoil, UserService userService) {
         this.serviceAirfoil = serviceAirfoil;
         this.userService = userService;
-    }
-
-    @GetMapping("/about")
-    public String about(Map<String, Object> model) {
-        fillMandatoryData(model);
-        return "about";
-    }
-
-    @GetMapping("/adminka")
-    public String adminka(Map<String, Object> model) {
-        fillMandatoryData(model);
-        return "adminka";
-    }
-
-    @GetMapping("/login")
-    public String login(Map<String, Object> model) {
-        fillMandatoryData(model);
-        return "login";
     }
 
     @GetMapping({"/airfoils/{prefix}/{page}", "/airfoils", "/airfoils/{prefix}", "/"})

@@ -25,10 +25,10 @@ import static net.sergey.diplom.dto.messages.Message.SC_OK;
 @Component
 @Slf4j
 public class UserService {
-    private final static List<Authorities> allAuthorities;
+    private final static List<String> allAuthorities;
 
     static {
-        allAuthorities = Collections.singletonList(new Authorities("ROLE_ADMIN", ""));
+        allAuthorities = Collections.singletonList("ROLE_ADMIN");
     }
 
     private final Converter converter;
@@ -66,7 +66,7 @@ public class UserService {
     }
 
 
-    public List<Authorities> getAllUserRoles() {
+    public List<String> getAllUserRoles() {
         return allAuthorities;
     }
 
