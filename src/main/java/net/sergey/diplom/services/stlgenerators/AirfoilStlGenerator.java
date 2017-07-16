@@ -32,10 +32,12 @@ public class AirfoilStlGenerator {
 
     private final List<String> beanNames;
     private final ApplicationContext context;
+    private final FileSystemStorageService storageService;
 
     @Autowired
-    public AirfoilStlGenerator(ApplicationContext context, @Value("#{'${interpolation}'.split(', ?')}") List<String> beanNames) {
+    public AirfoilStlGenerator(ApplicationContext context, @Value("#{'${interpolation}'.split(', ?')}") List<String> beanNames, FileSystemStorageService storageService) {
         this.context = context;
+        this.storageService = storageService;
         if (!allBeanNameExist(context, beanNames)) {
             beanNames.clear();
             beanNames.add("cube");
@@ -53,7 +55,8 @@ public class AirfoilStlGenerator {
         return true;
     }
 
-    public List<String> generate(String airfoilName, String coordView, FileSystemStorageService storageService) {
+    public List<String> generate(String airfoilName, String coordView) {
+        if (coordView == null) {return new ArrayList<>();}
         String[] split1 = coordView.split("\n");
         List<Double> x = new ArrayList<>();
         List<Double> y = new ArrayList<>();

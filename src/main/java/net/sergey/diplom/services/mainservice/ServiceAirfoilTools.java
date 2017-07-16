@@ -25,6 +25,7 @@ import net.sergey.diplom.services.properties.PropertiesHandler;
 import net.sergey.diplom.services.stlgenerators.AirfoilStlGenerator;
 import net.sergey.diplom.services.storageservice.FileSystemStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
@@ -335,10 +336,15 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     private void drawGraphs(List<String> checkedList, Airfoil airfoil1, String dir) {
         try {
-            new BuilderGraphs(storageService).draw(airfoil1, checkedList, dir);
+            getBuilderGraphs().draw(airfoil1, checkedList, dir);
         } catch (Exception e) {
             log.warn("Ошибка при обработке файловк с координатами", e);
         }
+    }
+
+    @Lookup
+    BuilderGraphs getBuilderGraphs() {
+        return null;//proxy return new instance bean BuilderGraphs
     }
 
     public AirfoilDetail getDetailInfo(String airfoilId) {
@@ -348,7 +354,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         }
         String directory = getDirectory();
         drawGraphs(null, airfoil, directory);
-        List<String> stlFileNames = stlGenerator.generate(airfoil.getShortName(), airfoil.getCoordView(), storageService);
+        List<String> stlFileNames = stlGenerator.generate(airfoil.getShortName(), airfoil.getCoordView());
         drawViewAirfoil(airfoil);
         return converter.airfoilToAirfoilDetail(airfoil, ServiceAirfoilTools.CHART_NAMES, stlFileNames, directory);
     }

@@ -62,6 +62,7 @@ public class Converter {
     }
 
     public List<CharacteristicsDto> characteristicsToCharacteristicsDto(Set<Characteristics> characteristics) {
+        if (characteristics == null) {return new ArrayList<>();}
         List<CharacteristicsDto> characteristicsDto = new ArrayList<>(characteristics.size());
         for (Characteristics coordinate : characteristics) {
             characteristicsDto.add(characteristicsToCharacteristicsDto(coordinate));

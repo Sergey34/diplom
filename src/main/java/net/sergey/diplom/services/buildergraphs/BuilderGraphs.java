@@ -9,6 +9,9 @@ import net.sergey.diplom.services.buildergraphs.imagehandlers.ImageHandler;
 import net.sergey.diplom.services.buildergraphs.imagehandlers.Xy;
 import net.sergey.diplom.services.buildergraphs.imagehandlers.createxychartstyle.SimpleStyle;
 import net.sergey.diplom.services.storageservice.FileSystemStorageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,6 +26,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Slf4j
+@Scope("prototype")
+@Component
 public class BuilderGraphs {
     private final ExecutorService executorService;
     private final FileSystemStorageService storageService;
@@ -37,6 +42,7 @@ public class BuilderGraphs {
         }
     }
 
+    @Autowired
     public BuilderGraphs(FileSystemStorageService storageService) {
         this.storageService = storageService;
 
@@ -56,6 +62,7 @@ public class BuilderGraphs {
     }
 
     private void fillXYChart(final Airfoil airfoil, List<String> checkedList) {
+        if (airfoil.getCharacteristics() == null) {return;}
         for (Characteristics characteristics : airfoil.getCharacteristics()) {
             Map<String, List<Double>> map = parseStrCSVtoMapSaveFile(characteristics.getCoordinatesStl(), characteristics.getFileName());
             if (map == null) {
