@@ -16,6 +16,7 @@ public class AirfoilDetail extends AirfoilDTO {
     private List<String> stlFilePath;
     private List<CharacteristicsDto> characteristics;
     private String coordView;
+    private String coordViewPath;
 
     public void addStlFilePath(String filePath) {
         if (stlFilePath == null) {

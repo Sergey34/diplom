@@ -14,6 +14,7 @@
     <link href="/css/homepage.css" rel="stylesheet">
     <script src="/js/jquery-3.1.1.min.js"></script>
     <script src="/js/add_airfoil.js"></script>
+    <script src="/js/get_dateil_info.js"></script>
     <script src='/js/tabular-input.min.js'></script>
     <link type='text/css' rel='stylesheet' href='/css/tabular-input.css'/>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -67,7 +68,7 @@
                                                     <input th:value="${airfoil.description}" type="text" value=""
                                                            name="Details"/>
                                                 </label>
-                                                <a th:href="${airfoil.coordView}"
+                                                <a th:href="${airfoil.coordViewPath}"
                                                    th:text="${airfoil.shortName}+'.dat'"></a>
                                                 </Br>
                                                 <label>
@@ -95,44 +96,42 @@
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">Добавление профиля с заполением таблиц вручную</div>
-                                    <div id="addAirfoilWeb">
-                                        <label>
-                                            Название профиля
-                                            <input th:value="${airfoil.name}" id="airfoilName" name="airfoilName"
-                                                   type="text" value="">
-                                        </label>
+                                    <div class="panel-heading">Обновление профиля с заполением таблиц вручную</div>
+                                    <div class="panel-body">
 
-                                        <label>
-                                            Короткое название профиля
-                                            <input th:value="${airfoil.shortName}" id="ShortName" name="ShortName"
-                                                   type="text" value="">
-                                        </label>
+                                        <form enctype="multipart/form-data"
+                                              id="updateAirfoil">
+                                            <label>
+                                                Название профиля
+                                                <input th:value="${airfoil.name}" type="text" value="" name="name"
+                                                       id="airfoilName"/>
+                                            </label>
+                                            <label>
+                                                Короткое название профиля (изменение повлечет создание нового
+                                                профиля)
+                                                <input th:value="${airfoil.shortName}" type="text" value=""
+                                                       name="ShortName" id="shortName"/>
+                                            </label>
+                                            </Br>
+                                            <label>
+                                                Детали
+                                                <input th:value="${airfoil.description}" type="text" value=""
+                                                       name="Details" id="description"/>
+                                            </label>
+                                            </Br>
 
-                                        <label>
-                                            Детали
-                                            <input th:value="${airfoil.description}" id="Details" name="Details"
-                                                   type="text" value="">
-                                        </label>
-
-
+                                        </form>
+                                        <div id="editableTables">
+                                            <input type="button" value="Add New Row" class="btn btn-default"
+                                                   onclick='javascript:$("#viewTab").tabularInput("addRow")'>
+                                            <input type="button" value="Delete Last Row" class="btn btn-default"
+                                                   onclick="javascript:$('#viewTab').tabularInput('deleteRow')">
+                                            <div id="viewTab"></div>
+                                        </div>
+                                        <input type="button" id="saveWab" class="btn btn-default" value="add airfoil">
                                     </div>
-                                    <input class="btn btn-default" id="saveWab" type="button" value="add airfoil">
-
                                 </div>
-                                <script>
-                                    jQuery('#viewTab').tabularInput({
-                                        'rows': 10,
-                                        'columns': 2,
-                                        'minRows': 10,
-                                        'newRowOnTab': true,
-                                        'columnHeads': ['x', 'y'],
-                                        'name': '',
-                                        'animate': true
-                                    });
-                                    document.getElementById("addTable").onclick = addTable;
-                                    document.getElementById("saveWab").onclick = saveWab;
-                                </script>
+
                             </div>
 
                         </div>
@@ -149,6 +148,9 @@
 <!--<script src="../js/jquery.js"></script>-->
 <!-- Bootstrap Core JavaScript -->
 <script src="/js/bootstrap.min.js"></script>
+<script>
+    getDetailInfo(true);
+</script>
 
 </body>
 </html>
