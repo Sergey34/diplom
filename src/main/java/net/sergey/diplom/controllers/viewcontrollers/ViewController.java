@@ -26,12 +26,22 @@ public class ViewController {
         this.userService = userService;
     }
 
-    @GetMapping("/login")
-    public String login(Map<String, Object> model) {
+    @GetMapping("/about")
+    public String about(Map<String, Object> model) {
+        fillMandatoryData(model);
+        return "about";
+    }
+
+    private void fillMandatoryData(Map<String, Object> model) {
         UserDto currentUser = userService.getCurrentUserInfo();
         List<Menu> menu = serviceAirfoil.getMenu();
         model.put("user", currentUser);
         model.put("menu", menu);
+    }
+
+    @GetMapping("/login")
+    public String login(Map<String, Object> model) {
+        fillMandatoryData(model);
         return "login";
     }
 
@@ -42,11 +52,8 @@ public class ViewController {
         prefix = Optional.ofNullable(prefix).orElse("A");
         page = Optional.ofNullable(page).orElse(0);
         List<AirfoilDTO> airfoils = serviceAirfoil.getAirfoilsDtoByPrefix(prefix.charAt(0), page, COUNT_ON_PAGE);
-        List<Menu> menu = serviceAirfoil.getMenu();
-        UserDto currentUser = userService.getCurrentUserInfo();
-        model.put("user", currentUser);
+        fillMandatoryData(model);
         model.put("airfoils", airfoils);
-        model.put("menu", menu);
         model.put("prefix", prefix);
         model.put("currentPage", page);
         int count = serviceAirfoil.getCountAirfoilByPrefix(prefix.charAt(0));
@@ -58,11 +65,8 @@ public class ViewController {
     @GetMapping("/airfoil/{shortName}")
     public String airfoil(Map<String, Object> model, @PathVariable(value = "shortName") String shortName) {
         AirfoilDetail airfoil = serviceAirfoil.getDetailInfo(shortName);
-        List<Menu> menu = serviceAirfoil.getMenu();
-        UserDto currentUser = userService.getCurrentUserInfo();
         model.put("airfoil", airfoil);
-        model.put("menu", menu);
-        model.put("user", currentUser);
+        fillMandatoryData(model);
         return "airfoil";
     }
 
