@@ -9,7 +9,6 @@ import net.sergey.diplom.services.mainservice.ServiceAirfoil;
 import net.sergey.diplom.services.parser.Parser;
 import net.sergey.diplom.services.usermanagerservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.*;
@@ -69,7 +68,6 @@ public class RestWriteController {
     }
 
 
-    @Async
     @RequestMapping(value = "/init", method = RequestMethod.GET)
     public Future<Message> init() {
         if (parserService.parsingIsStarting()) {
@@ -78,7 +76,6 @@ public class RestWriteController {
         return parserService.startParsing();
     }
 
-    @Async
     @RequestMapping(value = "/stop", method = RequestMethod.GET)
     public Message stop() {
         return parserService.stopParsing();

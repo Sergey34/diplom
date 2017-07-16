@@ -13,6 +13,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -82,7 +83,11 @@ class ParserAirfoil implements Callable<Void> {
             for (Airfoil airfoil : airfoils) {
                 daoCharacteristics.save(airfoil.getCharacteristics());
             }
-            daoAirfoil.save(airfoils);
+            try {
+                daoAirfoil.save(airfoils);
+            } catch (DuplicateKeyException e) {
+                log.info("уже существует");
+            }
         }
         eventService.updateProgress(prefix, 100.0);
     }
