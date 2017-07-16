@@ -72,14 +72,14 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
         constants.initConst();
         List<Menu> menu = parseMenu.parse(getMenuItemsInDB());
         daoMenu.save(menu);
-        getAirfoilsByMenuList(menu.get(0).getMenuItems());
+        getAirfoilsByMenuList(menu.get(0).getItems());
     }
 
     private Collection<MenuItem> getMenuItemsInDB() {
         List<Menu> allMenu = daoMenu.findAll();
         for (Menu menu : allMenu) {
             if (menu.getHeader().equals(propertiesHandler.getProperty("menu_Header"))) {
-                return menu.getMenuItems();
+                return menu.getItems();
             }
         }
         return Collections.emptyList();

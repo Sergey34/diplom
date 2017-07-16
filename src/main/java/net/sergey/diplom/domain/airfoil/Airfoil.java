@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.Column;
 import java.util.Set;
 
 @lombok.Data
@@ -18,6 +19,7 @@ import java.util.Set;
 @Document(collection = "airfoils")
 public class Airfoil {
     @Id
+    @Column(nullable = false, unique = true)
     private String shortName;
     private String name;
     private String coordView;

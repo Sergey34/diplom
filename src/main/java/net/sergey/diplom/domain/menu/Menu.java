@@ -18,14 +18,14 @@ import java.util.List;
 public class Menu {
     @Id
     private String header;
-    private List<MenuItem> menuItems;
+    private List<MenuItem> items;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) { return true; }
         if (o == null || getClass() != o.getClass()) { return false; }
         Menu menu = (Menu) o;
-        return header == menu.header;
+        return header.equals(menu.header);
     }
 
     @Override

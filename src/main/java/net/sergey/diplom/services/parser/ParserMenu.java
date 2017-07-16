@@ -66,7 +66,7 @@ class ParserMenu {
                         }
                     }
                 }
-                menu1.setMenuItems(menuItems);
+                menu1.setItems(menuItems);
                 menus.add(menu1);
                 break;
             }

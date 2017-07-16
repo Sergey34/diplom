@@ -17,7 +17,7 @@
     <span th:each="menuI : ${menu}">
                 <p class="lead" th:text="${menuI.header}">Навигация</p>
                 <div class="list-group">
-                    <a th:each="menuItem : ${menuI.menuItems}" class="list-group-item"
+                    <a th:each="menuItem : ${menuI.items}" class="list-group-item"
                        th:href="${'/airfoils/'+menuItem.url}"
                        th:text="${menuItem.name}">menuItem</a>
                 </div>

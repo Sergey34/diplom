@@ -6,7 +6,6 @@ import net.sergey.diplom.dao.Filter;
 import net.sergey.diplom.dao.airfoil.DaoAirfoil;
 import net.sergey.diplom.dao.airfoil.DaoCharacteristics;
 import net.sergey.diplom.dao.menu.DaoMenu;
-import net.sergey.diplom.dao.menu.DaoMenuItem;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Characteristics;
 import net.sergey.diplom.domain.menu.Menu;
@@ -57,7 +56,6 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     private final FileSystemStorageService storageService;
     private final AirfoilStlGenerator stlGenerator;
     private final DaoMenu daoMenu;
-    private final DaoMenuItem daoMenuItem;
     private final DaoAirfoil daoAirfoil;
     private final DaoCharacteristics daoCharacteristics;
     @Value("${config.parser.path}")
@@ -69,14 +67,13 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     public ServiceAirfoilTools(ParseFileScv parseFileScv, PropertiesHandler propertiesHandler,
                                Converter converter, FileSystemStorageService storageService,
                                AirfoilStlGenerator stlGenerator, DaoMenu daoMenu,
-                               DaoMenuItem daoMenuItem, DaoAirfoil daoAirfoil, DaoCharacteristics daoCharacteristics) {
+                               DaoAirfoil daoAirfoil, DaoCharacteristics daoCharacteristics) {
         this.parseFileScv = parseFileScv;
         this.propertiesHandler = propertiesHandler;
         this.converter = converter;
         this.storageService = storageService;
         this.stlGenerator = stlGenerator;
         this.daoMenu = daoMenu;
-        this.daoMenuItem = daoMenuItem;
         this.daoAirfoil = daoAirfoil;
         this.daoCharacteristics = daoCharacteristics;
     }
@@ -230,12 +227,12 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {
-        if (daoMenuItem.findOneByUrl(String.valueOf(airfoil.getPrefix())) == null) {
+        if (daoMenu.findMenuByItemsContains(converter.prefixToMenuItem(airfoil.getPrefix())) == null) {
             List<Menu> allMenu = daoMenu.findAll();
             for (Menu menu : allMenu) {
                 if (menu.getHeader().equals(propertiesHandler.getProperty("menu_Header"))) {
                     MenuItem menuItem = converter.prefixToMenuItem(airfoil.getPrefix());
-                    menu.getMenuItems().add(menuItem);
+                    menu.getItems().add(menuItem);
                     break;
                 }
             }
@@ -259,7 +256,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     @Override
     public List<Menu> getMenu() {
         List<Menu> allMenu = daoMenu.findAll();//// TODO: 15.07.17 сортировать в базе
-        allMenu.forEach(menu -> menu.getMenuItems().sort(Comparator.comparingInt(o -> o.getUrl().charAt(0))));
+        allMenu.forEach(menu -> menu.getItems().sort(Comparator.comparingInt(o -> o.getUrl().charAt(0))));
         return allMenu;
     }
 
@@ -288,7 +285,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         File file = new File(s);
         if (!file.exists()) {
             try {
-                if (file.createNewFile()) {
+                if (file.createNewFile() && airfoil.getCoordView() != null) {
                     Files.write(file.toPath(), airfoil.getCoordView().getBytes());
                 } else {
                     log.warn("Ошибка записи файла");

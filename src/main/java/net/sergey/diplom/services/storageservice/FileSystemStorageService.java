@@ -54,6 +54,8 @@ public class FileSystemStorageService {
             } else {
                 throw new IllegalArgumentException("Could not read file: " + filename);
             }
+        } catch (IllegalArgumentException e) {
+            return null;//todo return default file
         } catch (Exception e) {
             log.warn("Could not read file: {}", filename, e);
             return null;
