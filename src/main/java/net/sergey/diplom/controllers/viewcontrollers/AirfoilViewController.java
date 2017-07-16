@@ -107,11 +107,17 @@ public class AirfoilViewController {
         return "add_airfoil";
     }
 
+    @ResponseBody
     @RequestMapping(value = "/updateAirfoilStringCsv", method = RequestMethod.POST)
     public Message updateAirfoilStringCsv(@RequestBody AirfoilEdit airfoilEdit) {
         return serviceAirfoil.updateAirfoil(airfoilEdit);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/addAirfoilForStringCsv", method = RequestMethod.POST)
+    public Message addAirfoilForStringCsv(@RequestBody AirfoilEdit airfoilEdit) {
+        return serviceAirfoil.addAirfoil(airfoilEdit);
+    }
 
     private void fillMandatoryData(Map<String, Object> model) {
         UserDto currentUser = userService.getCurrentUserInfo();

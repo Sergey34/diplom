@@ -1,9 +1,19 @@
 var number = 0;
+
+
+function updateWab() {
+    store("/updateAirfoilStringCsv")
+}
+
 function saveWab() {
+    store("/addAirfoilForStringCsv")
+}
+
+function store(url_for_store) {
     var resultCSVList = [];
     for (var i = 0; i < number; i++) {
         var resultCSV = "Xfoil polar. Reynolds number fixed. Mach  number fixed\n";
-        var airfoilName = document.getElementById('ShortName').value;
+        var airfoilName = document.getElementById('shortName').value;
         var Reynolds_number = document.getElementById('input_Reynolds_number' + i).value;
         var fileName = "xf-" + airfoilName + "-" + Reynolds_number;
         resultCSV += "Polar key," + fileName + "\n";
@@ -73,7 +83,7 @@ function saveWab() {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "/rest/write/addAirfoilForStringCsv",
+            url: url_for_store,
             data: JSON.stringify(data),
             dataType: 'json',
             timeout: 600000
@@ -83,6 +93,7 @@ function saveWab() {
         });
     });
 }
+
 function getTableItem(i, j, table) {
     return table['[' + i + '][' + j + ']'].value;
 }

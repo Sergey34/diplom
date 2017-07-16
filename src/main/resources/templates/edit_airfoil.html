@@ -59,8 +59,8 @@
                                                 </Br>
                                                 <label>
                                                     Короткое название профиля
-                                                    <input th:value="${airfoil.shortName}" type="text" value=""
-                                                           name="ShortName"/>
+                                                    <input th:value="${airfoil.shortName}" type="text" value="" disabled
+                                                           name="shortName"/>
                                                 </label>
                                                 </Br>
                                                 <label>
@@ -109,8 +109,8 @@
                                             <label>
                                                 Короткое название профиля (изменение повлечет создание нового
                                                 профиля)
-                                                <input th:value="${airfoil.shortName}" type="text" value=""
-                                                       name="ShortName" id="shortName"/>
+                                                <input th:value="${airfoil.shortName}" type="text" value="" disabled
+                                                       name="shortName" id="shortName"/>
                                             </label>
                                             </Br>
                                             <label>
@@ -150,6 +150,7 @@
 <script src="/js/bootstrap.min.js"></script>
 <script>
     getDetailInfo(true);
+    document.getElementById("saveWab").onclick = updateWab;
 </script>
 
 </body>
