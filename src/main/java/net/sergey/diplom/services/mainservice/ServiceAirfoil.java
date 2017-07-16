@@ -21,13 +21,13 @@ public interface ServiceAirfoil {
 
     AirfoilDetail getDetailInfo(String airfoilId);
 
-    Message addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
+    Airfoil addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
 
     int getCountAirfoilByPrefix(char prefix);
 
     List<String> updateGraph(String airfoilId, List<String> checkedList);
 
-    Message updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
+    Airfoil updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
 
     Message addAirfoil(AirfoilEdit airfoilEdit);
 

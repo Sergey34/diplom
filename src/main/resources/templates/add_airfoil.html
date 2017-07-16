@@ -40,11 +40,15 @@
                             <div class="content" id="contentid">
                                 <div id="airfoilDetailInfo">
                                     <div class="panel panel-default">
+                                        <div th:if="${added==false}" id="error">
+                                            Профиль с таким именем уже существует
+                                        </div>
+
                                         <div class="panel-heading">Добавление профиля с использованием готовых .csv
                                             файлов
                                         </div>
                                         <div class="panel-body">
-                                            <form action="/rest/write/addAirfoilForFileCsv" method="post"
+                                            <form th:action="@{add_airfoil}" method="post"
                                                   enctype="multipart/form-data"
                                                   id="addAirfoil">
                                                 <label>

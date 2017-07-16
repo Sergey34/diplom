@@ -1,5 +1,6 @@
 package net.sergey.diplom.controllers.viewcontrollers;
 
+import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
@@ -9,6 +10,7 @@ import net.sergey.diplom.services.usermanagerservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -52,7 +54,7 @@ public class AirfoilViewController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/rest/updateGraph/{airfoilId}", method = RequestMethod.POST)
+    @PostMapping(value = "/rest/updateGraph/{airfoilId}")
     public List<String> updateGraph(@PathVariable String airfoilId, @RequestBody List<String> checkedList) {
         return serviceAirfoil.updateGraph(airfoilId, checkedList);
     }
@@ -60,6 +62,21 @@ public class AirfoilViewController {
     @GetMapping("/add_airfoil")
     public String airfoil(Map<String, Object> model) {
         fillMandatoryData(model);
+        return "add_airfoil";
+    }
+
+    @PostMapping(value = "/add_airfoil")
+    public String addAirfoilForFileCsv(Map<String, Object> model, @RequestParam("files") List<MultipartFile> files,
+                                       @RequestParam("name") String name,
+                                       @RequestParam("ShortName") String shortName,
+                                       @RequestParam("Details") String details,
+                                       @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
+        Airfoil airfoil = serviceAirfoil.addAirfoil(shortName, name, details, fileAirfoil, files);
+        if (airfoil != null) {
+            return "redirect:/airfoil/" + airfoil.getShortName();
+        }
+        fillMandatoryData(model);
+        model.put("added", false);
         return "add_airfoil";
     }
 

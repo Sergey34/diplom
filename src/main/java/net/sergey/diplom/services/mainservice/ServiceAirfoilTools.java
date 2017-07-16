@@ -82,22 +82,14 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
 
     @Override
-    public Message updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
-        if (StringUtils.isEmpty(shortName)) {
-            log.debug("Имя не должно быть пустым");
-            return EMPTY_AIRFOIL_SHORT_NAME;
-        }
+    public Airfoil updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
         Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).prefix(shortName.toUpperCase().charAt(0)).build();
         storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
         return addUpdateAirfoil(fileAirfoil, files, airfoil);
     }
 
     @Override
-    public Message addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
-        if (StringUtils.isEmpty(shortName)) {
-            log.debug("Имя не должно быть пустым");
-            return EMPTY_AIRFOIL_SHORT_NAME;
-        }
+    public Airfoil addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
         Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).prefix(shortName.toUpperCase().charAt(0)).build();
         return addUpdateAirfoil(fileAirfoil, files, airfoil);
     }
@@ -381,19 +373,19 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         }
     }
 
-    private Message addUpdateAirfoil(MultipartFile fileAirfoil, List<MultipartFile> files, Airfoil airfoil) {
+    private Airfoil addUpdateAirfoil(MultipartFile fileAirfoil, List<MultipartFile> files, Airfoil airfoil) {
         Airfoil airfoilResult = daoAirfoil.findOneByShortName(airfoil.getShortName());
         Optional.ofNullable(airfoilResult).ifPresent(airfoil1 -> fillEmptyFieldsOldValue(fileAirfoil, files, airfoil, airfoil1));
         try {
             addMenuItemForNewAirfoil(airfoil);
             daoCharacteristics.save(airfoil.getCharacteristics());
             daoAirfoil.save(airfoil);
+            log.debug("Airfoil успешно добален / обновлен");
+            return airfoil;
         } catch (Exception e) {
             log.warn("Ошибка при добалении профиля", e);
-            return ADD_AIRFOIL_CONFLICT;
+            return null;
         }
-        log.debug("Airfoil успешно добален / обновлен");
-        return ASS_SUCCESS;
     }
 
 

@@ -36,7 +36,7 @@
                     <div class="thumbnail">
                         <div class="caption">
                             <form id="add_User" method="post" th:action="@{/add_user}" th:object="${userView}">
-                                <div th:if="${userResult=false}" id="error">
+                                <div th:if="${userResult==false}" id="error">
                                     Пльзователь с таким логином уже существует
                                 </div>
                                 <div th:if="${userResult==true}" id="success">Пользователь успешно довавлен</div>

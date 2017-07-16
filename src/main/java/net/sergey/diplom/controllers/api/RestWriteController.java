@@ -1,5 +1,6 @@
 package net.sergey.diplom.controllers.api;
 
+import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.dto.airfoil.AirfoilEdit;
 import net.sergey.diplom.dto.messages.Message;
@@ -37,7 +38,7 @@ public class RestWriteController {
     }
 
     @RequestMapping(value = "/addAirfoilForFileCsv", method = RequestMethod.POST)
-    public Message addAirfoilForFileCsv(@RequestParam("files") List<MultipartFile> files,
+    public Airfoil addAirfoilForFileCsv(@RequestParam("files") List<MultipartFile> files,
                                         @RequestParam("name") String name,
                                         @RequestParam("ShortName") String shortName,
                                         @RequestParam("Details") String details,
@@ -51,7 +52,7 @@ public class RestWriteController {
     }
 
     @RequestMapping(value = "/updateAirfoil", method = RequestMethod.POST)
-    public Message updateAirfoil(@RequestParam("files") List<MultipartFile> files,
+    public Airfoil updateAirfoil(@RequestParam("files") List<MultipartFile> files,
                                  @RequestParam("name") String name,
                                  @RequestParam("ShortName") String shortName,
                                  @RequestParam("Details") String details,
