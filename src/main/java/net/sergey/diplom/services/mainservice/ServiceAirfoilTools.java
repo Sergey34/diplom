@@ -367,6 +367,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             log.warn("отсутствубт координаты для airfoil {}", airfoil.getShortName());
             return;
         }
+
         List<Double> x = new ArrayList<>();
         List<Double> y = new ArrayList<>();
         fillListXListY(x, y, airfoil.getCoordView().split("\n"));

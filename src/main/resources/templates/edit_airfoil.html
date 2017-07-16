@@ -9,14 +9,12 @@
     <meta name="author" content="">
     <title>Airfoil tolls - Edit airfoil</title>
     <!-- Bootstrap Core CSS -->
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="../static/css/homepage.css" rel="stylesheet">
-    <script src="../static/js/jquery-3.1.1.min.js"></script>
-    <script src="../static/js/refresh_graph.js"></script>
-    <script src='../static/js/tabular-input.min.js'></script>
-    <link type='text/css' rel='stylesheet' href='../static/css/tabular-input.css'/>
-    <link rel="stylesheet" type="text/css" href="../static/css/css_login.css">
+    <link href="/css/homepage.css" rel="stylesheet">
+    <link type='text/css' rel='stylesheet' href='/css/tabular-input.css'/>
+    <link rel="stylesheet" type="text/css" href="/css/css_login.css">
+    <script src="/js/add_airfoil.js"></script>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -41,70 +39,106 @@
                             <div class="content" id="contentid">
                                 <div id="airfoilDetailInfo">
                                     <div class="panel panel-default">
-                                        <div class="panel-heading">Обновление профиля с использованием готовых .csv
+                                        <div th:if="${added==false}" id="error">
+                                            Профиль с таким именем уже существует
+                                        </div>
+
+                                        <div class="panel-heading">Добавление профиля с использованием готовых .csv
                                             файлов
                                         </div>
                                         <div class="panel-body">
-
-                                            <form action="/rest/write/updateAirfoil" method="post"
+                                            <form th:action="@{/update_airfoil}" method="post"
                                                   enctype="multipart/form-data"
-                                                  id="updateAirfoil">
+                                                  id="addAirfoil">
                                                 <label>
                                                     Название профиля
-                                                    <input type="text" value="" name="name" id="airfoilName"/>
+                                                    <input th:value="${airfoil.name}" type="text" value="" name="name"/>
                                                 </label>
+                                                </Br>
                                                 <label>
-                                                    Короткое название профиля (изменение повлечет создание нового
-                                                    профиля)
-                                                    <input type="text" value="" name="ShortName" id="shortName"/>
+                                                    Короткое название профиля
+                                                    <input th:value="${airfoil.shortName}" type="text" value=""
+                                                           name="ShortName"/>
                                                 </label>
                                                 </Br>
                                                 <label>
                                                     Детали
-                                                    <input type="text" value="" name="Details" id="description"/>
+                                                    <input th:value="${airfoil.description}" type="text" value=""
+                                                           name="Details"/>
+                                                </label>
+                                                <a th:href="${airfoil.coordView}"
+                                                   th:text="${airfoil.shortName}+'.dat'"></a>
+                                                </Br>
+                                                <label>
+                                                    Выберите файл для построения графика профиля
+                                                    <input class="fileInput btn btn-default" type="file"
+                                                           name="fileAirfoil"/>
+                                                </label>
+
+                                                </Br>
+                                                <label>
+                                                    Выберите файлы построения графиков
+                                                    <input class="fileInput btn btn-default" name="files"
+                                                           multiple="multiple"
+                                                           value="Выбрать файлы"/>
                                                 </label>
                                                 </Br>
-                                                <div class="img_detail" id="img_detail">
-                                                    <label>
-                                                        Выберите файл для построения графика профиля
-                                                        <input class="fileInput btn btn-default" type="file"
-                                                               name="fileAirfoil"/>
-                                                    </label>
-                                                    </Br>
-                                                </div>
-
-                                                <div id="graf">
-                                                    <label>
-                                                        Выберите файлы построения графиков
-                                                        <input class="fileInput btn btn-default" type="file"
-                                                               name="files"
-                                                               multiple="multiple"
-                                                               value="Выбрать файлы"/>
-                                                    </label>
-                                                    </Br>
-                                                </div>
-
                                                 <input class="btn btn-default" type="submit"/>
+
                                             </form>
+                                            <p th:each="characteristic, iter : ${airfoil.characteristics}">
+                                                <a th:text="${characteristic.fileName}"
+                                                   th:href="${characteristic.filePath}"></a>
+                                            </p>
                                         </div>
                                     </div>
-                                    <div id="editableTables">
-                                        <input type="button" value="Add New Row" class="btn btn-default"
-                                               onclick='javascript:$("#viewTab").tabularInput("addRow")'>
-                                        <input type="button" value="Delete Last Row" class="btn btn-default"
-                                               onclick="javascript:$('#viewTab').tabularInput('deleteRow')">
-                                        <div id="viewTab"></div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">Добавление профиля с заполением таблиц вручную</div>
+                                    <div id="addAirfoilWeb">
+                                        <label>
+                                            Название профиля
+                                            <input type="text" value="" name="airfoilName" id="airfoilName"/>
+                                        </label>
+                                        </Br>
+                                        <label>
+                                            Короткое название профиля
+                                            <input type="text" value="" name="ShortName" id="ShortName"/>
+                                        </label>
+                                        </Br>
+                                        <label>
+                                            Детали
+                                            <input type="text" value="" name="Details" id="Details"/>
+                                        </label>
+                                        </Br>
+                                        <div id="view">
+                                            <input type="button" class="btn btn-default" value="Add New Row"
+                                                   onclick="javascript:$('#viewTab').tabularInput('addRow')">
+                                            <input type="button" class="btn btn-default" value="Delete Last Row"
+                                                   onclick="javascript:$('#viewTab').tabularInput('deleteRow')">
+                                            <div id="viewTab">
+                                            </div>
+                                        </div>
+                                        </Br>
+                                        <input type="button" id="addTable" class="btn btn-default" value="add table">
                                     </div>
                                     <input type="button" id="saveWab" class="btn btn-default" value="add airfoil">
+
                                 </div>
+                                <script>
+                                    jQuery('#viewTab').tabularInput({
+                                        'rows': 10,
+                                        'columns': 2,
+                                        'minRows': 10,
+                                        'newRowOnTab': true,
+                                        'columnHeads': ['x', 'y'],
+                                        'name': '',
+                                        'animate': true
+                                    });
+                                    document.getElementById("addTable").onclick = addTable;
+                                    document.getElementById("saveWab").onclick = saveWab;
+                                </script>
                             </div>
-
-
-                            <script>
-                                document.getElementById('updateAirfoil').setAttribute('action', "/rest/write/updateAirfoil");
-                                document.getElementById("saveWab").onclick = updateWab;
-                                getDetailInfo(true);
-                            </script>
 
                         </div>
                     </div>
@@ -119,7 +153,7 @@
 <!-- jQuery -->
 <!--<script src="../js/jquery.js"></script>-->
 <!-- Bootstrap Core JavaScript -->
-<script src="../static/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 
 </body>
 </html>

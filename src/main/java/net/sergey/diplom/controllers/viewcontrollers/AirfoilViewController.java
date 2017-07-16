@@ -65,12 +65,18 @@ public class AirfoilViewController {
         return "add_airfoil";
     }
 
+    @GetMapping("/update_airfoil/{shortName}")
+    public String updateAirfoil(Map<String, Object> model, @PathVariable("shortName") String shortName) {
+        fillMandatoryData(model);
+        AirfoilDetail airfoil = serviceAirfoil.getDetailInfo(shortName);
+        model.put("airfoil", airfoil);
+        return "edit_airfoil";
+    }
+
     @PostMapping(value = "/add_airfoil")
     public String addAirfoilForFileCsv(Map<String, Object> model, @RequestParam("files") List<MultipartFile> files,
-                                       @RequestParam("name") String name,
-                                       @RequestParam("ShortName") String shortName,
-                                       @RequestParam("Details") String details,
-                                       @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
+                                       @RequestParam("name") String name, @RequestParam("ShortName") String shortName,
+                                       @RequestParam("Details") String details, @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
         Airfoil airfoil = serviceAirfoil.addAirfoil(shortName, name, details, fileAirfoil, files);
         if (airfoil != null) {
             return "redirect:/airfoil/" + airfoil.getShortName();

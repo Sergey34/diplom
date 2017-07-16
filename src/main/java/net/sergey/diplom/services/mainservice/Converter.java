@@ -42,7 +42,7 @@ public class Converter {
         airfoilDetail.setShortName(airfoil.getShortName());
         airfoilDetail.setImage("/files/airfoil_img/" + airfoil.getShortName() + ".png");
 
-        airfoilDetail.setCoordView(airfoil.getCoordView());
+        airfoilDetail.setCoordView("/files/airfoil_img/" + airfoil.getShortName() + ".dat");
         airfoilDetail.setCharacteristics(characteristicsToCharacteristicsDto(airfoil.getCharacteristics()));
 
         List<String> imgCsvName = new ArrayList<>();
