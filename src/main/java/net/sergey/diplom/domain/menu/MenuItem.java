@@ -7,8 +7,6 @@ import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Objects;
-
 @lombok.Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,7 +23,7 @@ public class MenuItem {
         if (this == o) { return true; }
         if (o == null || getClass() != o.getClass()) { return false; }
         MenuItem menuItem = (MenuItem) o;
-        return Objects.equals(name, menuItem.name);
+        return name.equals(menuItem.name);
     }
 
     @Override
