@@ -38,7 +38,7 @@ public class AirfoilViewController {
         List<AirfoilDTO> airfoils = serviceAirfoil.getAirfoilsDtoByPrefix(prefix.charAt(0), page, COUNT_ON_PAGE);
         fillMandatoryData(model);
         model.put("airfoils", airfoils);
-        model.put("prefix", prefix);
+        model.put("url", "/airfoils/" + prefix);
         model.put("currentPage", page);
         int count = serviceAirfoil.getCountAirfoilByPrefix(prefix.charAt(0));
         if (count < COUNT_ON_PAGE) {count = COUNT_ON_PAGE;}
@@ -94,17 +94,18 @@ public class AirfoilViewController {
         return "edit_airfoil";
     }
 
-    @PostMapping(value = "/update_airfoil")
-    public String updateAirfoil(Map<String, Object> model, @RequestParam("files") List<MultipartFile> files,
-                                @RequestParam("name") String name, @RequestParam("ShortName") String shortName,
-                                @RequestParam("Details") String details, @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
-        Airfoil airfoil = serviceAirfoil.saveAirfoil(shortName, name, details, fileAirfoil, files);
-        if (airfoil != null) {
-            return "redirect:/airfoil/" + airfoil.getShortName();
-        }
+    @PostMapping({"/search", "/search/{page}"})
+    public String searchAirfoil(Map<String, Object> model, @RequestParam("template") String template,
+                                @PathVariable(value = "page", required = false) Integer page) {
         fillMandatoryData(model);
-        model.put("added", false);
-        return "add_airfoil";
+        page = Optional.ofNullable(page).orElse(0);
+        List<AirfoilDTO> airfoils = serviceAirfoil.searchAirfoils(null, template, page, COUNT_ON_PAGE);
+        int pageCount = serviceAirfoil.countSearchAirfoil(null, template);
+        model.put("airfoils", airfoils);
+        model.put("url", "/search/");
+        model.put("currentPage", page);
+        model.put("pageCount", pageCount);
+        return "airfoils";
     }
 
     @ResponseBody

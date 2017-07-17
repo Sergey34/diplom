@@ -22,8 +22,8 @@
             <script>                 function sbm() {
                 search();
             }             </script>
-            <form class="navbar-form navbar-left" role="search" onsubmit="sbm(); return false">
-                <div class="form-group"><input id="searchTemplate" type="text" class="form-control"
+            <form class="navbar-form navbar-left" method="post" th:action="@{/search}">
+                <div class="form-group"><input id="template" type="text" class="form-control" name="template"
                                                placeholder="shortName contains ..."></div>
             </form>
 

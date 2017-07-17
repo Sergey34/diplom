@@ -84,8 +84,8 @@
                     <div class="thumbnail">
                         <img th:src="${airfoil.image}" alt="">
                         <div class="caption">
-                            <h4><a th:href="'/airfoil/'+${airfoil.shortName}" th:text="${airfoil.shortName}">(a18-il)
-                                A18 (original)</a>
+                            <h4><a th:href="'/airfoil/'+${airfoil.shortName}"
+                                   th:text="${airfoil.shortName}">(a18-il) A18 (original)</a>
                             </h4>
                             <p><span th:utext="${airfoil.description}">description</span>
                             </p>
@@ -97,16 +97,16 @@
             <nav aria-label="...">
                 <ul class="pagination">
                     <li th:class="${0==currentPage} ? 'disabled' : 'a'">
-                        <a th:href=" ${1==currentPage} ? '#' : '/airfoils/'+${prefix}+'/'+${currentPage-1}">&laquo;</a>
+                        <a th:href=" ${1==currentPage} ? '#' : ${url}+'/'+${currentPage-1}">&laquo;</a>
                     </li>
 
                     <li th:each="i : ${#numbers.sequence(1, pageCount, 1)}"
                         th:class="${currentPage==i-1} ? 'active' : 'a'">
-                        <a th:href="'/airfoils/'+${prefix}+'/'+${i-1}" th:text="${i}"> <span class="sr-only"></span></a>
+                        <a th:href="${url}+'/'+${i-1}" th:text="${i}"> <span class="sr-only"></span></a>
                     </li>
 
                     <li th:class="${pageCount==currentPage+1} ? 'disabled' : 'a'">
-                        <a th:href="${pageCount==currentPage} ? '#': '/airfoils/'+${prefix}+'/'+${currentPage+1}">&raquo;</a>
+                        <a th:href="${pageCount==currentPage} ? '#': ${url}+'/'+${currentPage+1}">&raquo;</a>
                     </li>
                 </ul>
             </nav>
