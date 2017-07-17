@@ -82,16 +82,16 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
 
     @Override
-    public Airfoil updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
+    public Airfoil saveAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
         Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).prefix(shortName.toUpperCase().charAt(0)).build();
         storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
         return addUpdateAirfoil(fileAirfoil, files, airfoil);
     }
 
-    @Override
-    public Airfoil addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
-        Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).prefix(shortName.toUpperCase().charAt(0)).build();
-        return addUpdateAirfoil(fileAirfoil, files, airfoil);
+    private Airfoil addUpdateAirfoil(MultipartFile fileAirfoil, List<MultipartFile> files, Airfoil airfoil) {
+        Airfoil airfoilResult = daoAirfoil.findOneByShortName(airfoil.getShortName());
+        Optional.ofNullable(airfoilResult).ifPresent(airfoil1 -> fillEmptyFieldsOldValue(fileAirfoil, files, airfoil, airfoil1));
+        return add(airfoil);
     }
 
     @Override
@@ -101,22 +101,24 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             return EMPTY_AIRFOIL_SHORT_NAME;
         }
         Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
-        addMenuItemForNewAirfoil(airfoil);
-        if (add(airfoil)) {
+        if (add(airfoil) != null) {
+            storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
             return ADD_AIRFOIL_CONFLICT;
         }
         return ASS_SUCCESS;
     }
 
-    private boolean add(Airfoil airfoil) {
+    private Airfoil add(Airfoil airfoil) {
         try {
+            addMenuItemForNewAirfoil(airfoil);
             daoCharacteristics.save(airfoil.getCharacteristics());
             daoAirfoil.save(airfoil);
+            log.debug("Airfoil успешно добален / обновлен");
+            return airfoil;
         } catch (Exception e) {
-            log.warn("ошибка при добавлении в базу нового airfoil", e);
-            return true;
+            log.warn("ошибка при добавлении / обновлении в базу нового airfoil", e);
+            return null;
         }
-        return false;
     }
 
     @Override
@@ -327,21 +329,6 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             imageHandler.draw();
         } catch (Exception e) {
             log.warn("Ошибка при рисовании графиков", e);
-        }
-    }
-
-    private Airfoil addUpdateAirfoil(MultipartFile fileAirfoil, List<MultipartFile> files, Airfoil airfoil) {
-        Airfoil airfoilResult = daoAirfoil.findOneByShortName(airfoil.getShortName());
-        Optional.ofNullable(airfoilResult).ifPresent(airfoil1 -> fillEmptyFieldsOldValue(fileAirfoil, files, airfoil, airfoil1));
-        try {
-            addMenuItemForNewAirfoil(airfoil);
-            daoCharacteristics.save(airfoil.getCharacteristics());
-            daoAirfoil.save(airfoil);
-            log.debug("Airfoil успешно добален / обновлен");
-            return airfoil;
-        } catch (Exception e) {
-            log.warn("Ошибка при добалении профиля", e);
-            return null;
         }
     }
 

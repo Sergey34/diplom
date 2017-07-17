@@ -19,13 +19,11 @@ public interface ServiceAirfoil {
 
     AirfoilDetail getDetailInfo(String airfoilId);
 
-    Airfoil addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
-
     int getCountAirfoilByPrefix(char prefix);
 
     List<String> updateGraph(String airfoilId, List<String> checkedList);
 
-    Airfoil updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
+    Airfoil saveAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
 
     Message saveAirfoil(AirfoilEdit airfoilEdit);
 

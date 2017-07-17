@@ -77,7 +77,7 @@ public class AirfoilViewController {
     public String addAirfoil(Map<String, Object> model, @RequestParam("files") List<MultipartFile> files,
                              @RequestParam("name") String name, @RequestParam("ShortName") String shortName,
                              @RequestParam("Details") String details, @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
-        Airfoil airfoil = serviceAirfoil.addAirfoil(shortName, name, details, fileAirfoil, files);
+        Airfoil airfoil = serviceAirfoil.saveAirfoil(shortName, name, details, fileAirfoil, files);
         if (airfoil != null) {
             return "redirect:/airfoil/" + airfoil.getShortName();
         }
@@ -98,7 +98,7 @@ public class AirfoilViewController {
     public String updateAirfoil(Map<String, Object> model, @RequestParam("files") List<MultipartFile> files,
                                 @RequestParam("name") String name, @RequestParam("ShortName") String shortName,
                                 @RequestParam("Details") String details, @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
-        Airfoil airfoil = serviceAirfoil.updateAirfoil(shortName, name, details, fileAirfoil, files);
+        Airfoil airfoil = serviceAirfoil.saveAirfoil(shortName, name, details, fileAirfoil, files);
         if (airfoil != null) {
             return "redirect:/airfoil/" + airfoil.getShortName();
         }
