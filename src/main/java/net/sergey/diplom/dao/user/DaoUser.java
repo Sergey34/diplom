@@ -1,13 +1,14 @@
 package net.sergey.diplom.dao.user;
 
 import net.sergey.diplom.domain.user.User;
+import org.bson.types.ObjectId;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public interface DaoUser extends CrudRepository<User, String> {
+public interface DaoUser extends CrudRepository<User, ObjectId> {
     @Override
     <S extends User> S save(S s);
 
