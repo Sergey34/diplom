@@ -3,11 +3,13 @@ package net.sergey.diplom.dto.airfoil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @lombok.Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@ToString
 public class Data {
     private String fileName;
     private String data;

@@ -1,13 +1,12 @@
 package net.sergey.diplom.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@lombok.Data
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@ToString
 public class Condition {
     private String action;
     private String attrName;

@@ -10,11 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class UserView {
-
     private String name;
-
     private String password;
-
     private List<String> roles;
 }
 
