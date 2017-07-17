@@ -186,7 +186,14 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     public List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String template) {
-        return null;
+        if (conditions == null || conditions.isEmpty()) {
+            return findByShortNameLike(template, 0, Integer.MAX_VALUE);
+        }
+        Set<String> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
+        String shortNameTemplate = getShortNameTemplate(template);
+        List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(ids, shortNameTemplate);
+        generateFiles(airfoils);
+        return converter.airfoilToAirfoilDto(airfoils);
     }
 
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {

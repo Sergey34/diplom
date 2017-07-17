@@ -36,47 +36,55 @@
         <div th:replace="fragments/menu :: list_menu"></div>
 
         <div class="col-md-9">
-            <form class="well form-horizontal col-sm-6 col-lg-6 col-md-6">
+            <form class="well form-horizontal col-sm-6 col-lg-6 col-md-6" th:action="@{/search_condition}"
+                  method="post">
                 <div class="form-group">
                     <label class="control-label" for="select01">ShortName</label>
                     <select id="select01">
                         <option>Содержит</option>
                     </select>
-                    <input id="short_name" class="control-input" for="select01">
+                    <input name="short_name" id="short_name" class="control-input" for="select01">
                 </div>
                 </br>
                 <div class="form-group">
-                    <label attrName="nCrit" id="label0" class="control-label" for="select0">nCrit</label>
-                    <select id="select0">
+                    <!--<label name="label" attrName="nCrit" id="label0" class="control-label" for="select0">nCrit</label>-->
+                    <select name="label">
+                        <option>nCrit</option>
+                    </select>
+                    <select name="action" id="select0">
                         <option>=</option>
                         <option><</option>
                         <option>></option>
                     </select>
-                    <input id="value0" class="control-input" for="select0">
+                    <input name="value" id="value0" class="control-input" for="select0">
                 </div>
                 </br>
                 <div class="form-group">
-                    <label attrName="maxClCd" id="label1" class="control-label" for="select1">maxCL/CD</label>
-                    <select id="select1">
+                    <select name="label">
+                        <option>maxCL/CD</option>
+                    </select>
+                    <select name="action" id="select1">
                         <option>=</option>
                         <option><</option>
                         <option>></option>
                     </select>
-                    <input id="value1" class="control-input" for="select1">
+                    <input name="value" id="value1" class="control-input" for="select0">
                 </div>
                 </br>
                 <div class="form-group">
-                    <label attrName="renolgs" id="label2" class="control-label" for="select2">Renolds</label>
-                    <select id="select2">
+                    <select name="label">
+                        <option>Renolds</option>
+                    </select>
+                    <select name="action" id="select2">
                         <option>=</option>
                         <option><</option>
                         <option>></option>
                     </select>
-                    <input id="value2" class="control-input" for="select2">
+                    <input name="value" id="value2" class="control-input" for="select2">
                 </div>
                 </br>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-primary" id="find">Найти</button>
+                    <input type="submit" class="btn btn-primary" value="Найти">
                 </div>
 
             </form>
@@ -121,7 +129,7 @@
 
 <div th:replace="fragments/footer :: footer"></div>
 <script src="/js/bootstrap.min.js"></script>
-<script>document.getElementById("find").onclick = searchFull;</script>
+<!--<script>document.getElementById("find").onclick = searchFull;</script>-->
 </body>
 
 </html>

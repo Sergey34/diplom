@@ -10,8 +10,10 @@ import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.dto.user.UserDto;
 import net.sergey.diplom.services.mainservice.ServiceAirfoil;
 import net.sergey.diplom.services.usermanagerservice.UserService;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -112,15 +114,30 @@ public class AirfoilViewController {
     }
 
     @PostMapping({"/search_condition/{template}", "/search_condition"})
-    public String searchCondition(Map<String, Object> model, @RequestBody List<Condition> conditions, @PathVariable(required = false) String template) {
+    public String searchCondition(Map<String, Object> model, HttpServletRequest request) {
         fillMandatoryData(model);
+        List<Condition> conditions = getCondition(request.getParameterMap());
+        String template = request.getParameterMap().get("short_name")[0];
+
         List<AirfoilDTO> airfoils = serviceAirfoil.searchAirfoils(conditions, template);
-        int pageCount = serviceAirfoil.countSearchAirfoil(null, template);
         model.put("airfoils", airfoils);
-        model.put("url", "/search/");
-        model.put("pageCount", pageCount);
-        model.put("conditions", new ArrayList<Condition>());
+        model.put("url", "#");
+        model.put("currentPage", 0);
+        model.put("pageCount", 1);
         return "airfoils";
+    }
+
+    private List<Condition> getCondition(Map<String, String[]> parameterMap) {
+        String[] values = parameterMap.get("value");
+        String[] labels = parameterMap.get("label");
+        String[] actions = parameterMap.get("action");
+        List<Condition> conditions = new ArrayList<>();
+        for (int i = 0; i < labels.length; i++) {
+            if (!StringUtils.isEmpty(values[i])) {
+                conditions.add(Condition.builder().action(actions[i]).label(labels[i]).value(Double.parseDouble(values[i])).build());
+            }
+        }
+        return conditions;
     }
 
     @ResponseBody

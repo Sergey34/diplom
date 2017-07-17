@@ -37,15 +37,15 @@ public class Filter {
     }
 
     private Criteria buildLqCriteriaToCriteria(Condition condition) {
-        return Criteria.where(condition.getAttrName()).lte(condition.getValue());
+        return Criteria.where(condition.getLabel()).lte(condition.getValue());
     }
 
     private Criteria buildGqCriteriaToCriteria(Condition condition) {
-        return Criteria.where(condition.getAttrName()).gte(condition.getValue());
+        return Criteria.where(condition.getLabel()).gte(condition.getValue());
     }
 
     private Criteria buildEqualsCriteriaToCriteria(Condition condition) {
-        return Criteria.where(condition.getAttrName()).is(condition.getValue());
+        return Criteria.where(condition.getLabel()).is(condition.getValue());
     }
 
 }

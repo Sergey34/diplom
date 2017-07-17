@@ -9,6 +9,6 @@ import lombok.*;
 @ToString
 public class Condition {
     private String action;
-    private String attrName;
+    private String label;
     private double value;
 }

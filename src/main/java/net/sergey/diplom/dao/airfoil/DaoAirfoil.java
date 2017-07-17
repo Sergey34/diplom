@@ -27,4 +27,6 @@ public interface DaoAirfoil extends CrudRepository<Airfoil, String>, QueryByExam
     int countByShortNameRegex(String shortNameTemplate);
 
     int countDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(Set<String> characteristics, String shortNameTemplate);
+
+    List<Airfoil> findDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(Set<String> ids, String shortNameTemplate);
 }
