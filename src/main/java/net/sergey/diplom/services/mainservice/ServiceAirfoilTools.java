@@ -56,6 +56,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     private final FileSystemStorageService storageService;
     private final AirfoilStlGenerator stlGenerator;
     private final DaoMenu daoMenu;
+    private final Filter filter;
     private final DaoAirfoil daoAirfoil;
     private final DaoCharacteristics daoCharacteristics;
     @Value("${config.parser.path}")
@@ -67,13 +68,14 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     public ServiceAirfoilTools(ParseFileScv parseFileScv, PropertiesHandler propertiesHandler,
                                Converter converter, FileSystemStorageService storageService,
                                AirfoilStlGenerator stlGenerator, DaoMenu daoMenu,
-                               DaoAirfoil daoAirfoil, DaoCharacteristics daoCharacteristics) {
+                               Filter filter, DaoAirfoil daoAirfoil, DaoCharacteristics daoCharacteristics) {
         this.parseFileScv = parseFileScv;
         this.propertiesHandler = propertiesHandler;
         this.converter = converter;
         this.storageService = storageService;
         this.stlGenerator = stlGenerator;
         this.daoMenu = daoMenu;
+        this.filter = filter;
         this.daoAirfoil = daoAirfoil;
         this.daoCharacteristics = daoCharacteristics;
     }
@@ -136,7 +138,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         if (conditions == null || conditions.isEmpty()) {
             return findByShortNameLike(shortName, startNumber, count);
         }
-        Filter filter = new Filter();
+
         Set<String> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
         String shortNameTemplate = getShortNameTemplate(shortName);
         List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(ids, shortNameTemplate, new PageRequest(startNumber, count));
@@ -174,7 +176,6 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         if (conditions == null || conditions.isEmpty()) {
             return countByShortNameLike(shortName);
         }
-        Filter filter = new Filter();
         Set<String> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
         String shortNameTemplate = getShortNameTemplate(shortName);
         return daoAirfoil.countDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(ids, shortNameTemplate);
