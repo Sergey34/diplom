@@ -184,6 +184,11 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         return daoAirfoil.countDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(ids, shortNameTemplate);
     }
 
+    @Override
+    public List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String template) {
+        return null;
+    }
+
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {
         if (daoMenu.findMenuByItemsContains(converter.prefixToMenuItem(airfoil.getPrefix())) == null) {
             List<Menu> allMenu = daoMenu.findAll();

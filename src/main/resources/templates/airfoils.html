@@ -14,6 +14,7 @@
     <link href="/css/homepage.css" rel="stylesheet">
 
     <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/search.js"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -120,6 +121,7 @@
 
 <div th:replace="fragments/footer :: footer"></div>
 <script src="/js/bootstrap.min.js"></script>
+<script>document.getElementById("find").onclick = searchFull;</script>
 </body>
 
 </html>

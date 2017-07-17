@@ -38,4 +38,6 @@ public interface ServiceAirfoil {
     int countByShortNameLike(String shortName);
 
     int countSearchAirfoil(List<Condition> conditions, String shortName);
+
+    List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String template);
 }

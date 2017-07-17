@@ -2,6 +2,7 @@ package net.sergey.diplom.controllers.viewcontrollers;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.menu.Menu;
+import net.sergey.diplom.dto.Condition;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.dto.airfoil.AirfoilEdit;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -95,8 +97,9 @@ public class AirfoilViewController {
     }
 
     @PostMapping({"/search", "/search/{page}"})
-    public String searchAirfoil(Map<String, Object> model, @RequestParam("template") String template,
-                                @PathVariable(value = "page", required = false) Integer page) {
+    public String searchAirfoils(Map<String, Object> model,
+                                 @RequestParam(value = "template", required = false) String template,
+                                 @PathVariable(value = "page", required = false) Integer page) {
         fillMandatoryData(model);
         page = Optional.ofNullable(page).orElse(0);
         List<AirfoilDTO> airfoils = serviceAirfoil.searchAirfoils(null, template, page, COUNT_ON_PAGE);
@@ -105,6 +108,19 @@ public class AirfoilViewController {
         model.put("url", "/search/");
         model.put("currentPage", page);
         model.put("pageCount", pageCount);
+        return "airfoils";
+    }
+
+    @GetMapping({"/search_condition/{shortName}"})
+    public String searchCondition(Map<String, Object> model, @PathVariable(value = "shortName", required = false) String template,
+                                  @RequestParam("data") List<Condition> conditions) {
+        fillMandatoryData(model);
+        List<AirfoilDTO> airfoils = serviceAirfoil.searchAirfoils(conditions, template);
+        int pageCount = serviceAirfoil.countSearchAirfoil(null, template);
+        model.put("airfoils", airfoils);
+        model.put("url", "/search/");
+        model.put("pageCount", pageCount);
+        model.put("conditions", new ArrayList<Condition>());
         return "airfoils";
     }
 
