@@ -1,6 +1,7 @@
 package net.sergey.diplom.services.mainservice;
 
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.sergey.diplom.dao.Filter;
 import net.sergey.diplom.dao.airfoil.DaoAirfoil;
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -301,7 +303,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     public AirfoilDetail getDetailInfo(String airfoilId) {
         Airfoil airfoil = daoAirfoil.findOneByShortName(airfoilId);
         if (null == airfoil) {
-            return null;
+            throw new EmptyResultDataAccessException("не найден профиль " + airfoilId, 1);
         }
         String directory = getDirectory();
         drawGraphs(null, airfoil, directory);
@@ -332,7 +334,6 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         }
     }
 
-
     private void fillEmptyFieldsOldValue(MultipartFile fileAirfoil, List<MultipartFile> files, Airfoil airfoil, Airfoil airfoil1) {
         try {
             if (fileAirfoil == null || fileAirfoil.isEmpty()) {
@@ -356,10 +357,12 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     private Set<Characteristics> createCharacteristicsSet(List<MultipartFile> files) throws IOException {
-        Set<Characteristics> characteristics = new HashSet<>();
-        for (MultipartFile file : files) {
-            characteristics.add(Characteristics.builder().coordinatesStl(parseFileScv.csvToString(file.getInputStream())).fileName(file.getOriginalFilename()).build());
-        }
-        return characteristics;
+        return files.stream().map(file -> Characteristics.builder().coordinatesStl(getCoordinatesStl(file))
+                .fileName(file.getOriginalFilename()).build()).collect(Collectors.toSet());
+    }
+
+    @SneakyThrows
+    private String getCoordinatesStl(MultipartFile file) {
+        return parseFileScv.csvToString(file.getInputStream());
     }
 }
