@@ -8,6 +8,7 @@ import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.dto.airfoil.CharacteristicsDto;
 import net.sergey.diplom.dto.user.UserDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -17,6 +18,18 @@ import java.util.Set;
 @SuppressWarnings("WeakerAccess")
 @Component
 public class Converter {
+    @Value("${fileformat.source}")
+    private String sourceFileFormat;
+    @Value("${fileformat.img}")
+    private String imgFileFormat;
+    @Value("${dir.tmpCsv}")
+    private String tmpCsvFilePath;
+    @Value("${dir.scadFiles}")
+    private String scadFilePath;
+    @Value("${dir.chartTemp}")
+    private String chartTempFilePath;
+    @Value("${dir.airfoil_img}")
+    private String airfoil_imgFilePath;
 
     public List<AirfoilDTO> airfoilToAirfoilDto(List<Airfoil> allAirfoils) {
         List<AirfoilDTO> airfoilsDTO = new ArrayList<>(allAirfoils.size());
@@ -31,7 +44,7 @@ public class Converter {
         airfoilDTO.setName(airfoil.getName());
         airfoilDTO.setDescription(airfoil.getDescription());
         airfoilDTO.setShortName(airfoil.getShortName());
-        airfoilDTO.setImage("/files/airfoil_img/" + airfoil.getShortName() + ".png");
+        airfoilDTO.setImage(airfoil_imgFilePath + airfoil.getShortName() + imgFileFormat);
         return airfoilDTO;
     }
 
@@ -40,22 +53,22 @@ public class Converter {
         airfoilDetail.setName(airfoil.getName());
         airfoilDetail.setDescription(airfoil.getDescription());
         airfoilDetail.setShortName(airfoil.getShortName());
-        airfoilDetail.setImage("/files/airfoil_img/" + airfoil.getShortName() + ".png");
+        airfoilDetail.setImage(airfoil_imgFilePath + airfoil.getShortName() + imgFileFormat);
 
         airfoilDetail.setCoordView(airfoil.getCoordView());
-        airfoilDetail.setCoordViewPath("/files/airfoil_img/" + airfoil.getShortName() + ".dat");
+        airfoilDetail.setCoordViewPath(airfoil_imgFilePath + airfoil.getShortName() + sourceFileFormat);
         airfoilDetail.setCharacteristics(characteristicsToCharacteristicsDto(airfoil.getCharacteristics()));
 
         List<String> imgCsvName = new ArrayList<>();
         for (String chartName : chartNames) {
-            imgCsvName.add("/files/chartTemp/" + directory + airfoil.getShortName() + chartName + ".png");
+            imgCsvName.add(chartTempFilePath + directory + airfoil.getShortName() + chartName + imgFileFormat);
         }
         airfoilDetail.setImgCsvName(imgCsvName);
 
         airfoilDetail.setStlFilePath(new ArrayList<>());
         if (stlFileNames != null) {
             for (String stlFileName : stlFileNames) {
-                airfoilDetail.addStlFilePath("/files/scadFiles/" + stlFileName);
+                airfoilDetail.addStlFilePath(scadFilePath + stlFileName);
             }
         }
 
@@ -63,7 +76,9 @@ public class Converter {
     }
 
     public List<CharacteristicsDto> characteristicsToCharacteristicsDto(Set<Characteristics> characteristics) {
-        if (characteristics == null) {return new ArrayList<>();}
+        if (characteristics == null) {
+            return new ArrayList<>();
+        }
         List<CharacteristicsDto> characteristicsDto = new ArrayList<>(characteristics.size());
         for (Characteristics coordinate : characteristics) {
             characteristicsDto.add(characteristicsToCharacteristicsDto(coordinate));
@@ -79,7 +94,7 @@ public class Converter {
         characteristicsDto.setAlpha(coordinate.getAlpha());
         characteristicsDto.setNCrit(coordinate.getNCrit());
         characteristicsDto.setRenolgs(coordinate.getRenolgs());
-        characteristicsDto.setFilePath("/files/tmpCsv/" + coordinate.getFileName());
+        characteristicsDto.setFilePath(tmpCsvFilePath + coordinate.getFileName());
         return characteristicsDto;
     }
 
