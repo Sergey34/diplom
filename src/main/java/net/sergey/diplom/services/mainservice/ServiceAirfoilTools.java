@@ -140,7 +140,6 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         if (conditions == null || conditions.isEmpty()) {
             return findByShortNameLike(shortName, startNumber, count);
         }
-
         Set<String> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
         String shortNameTemplate = getShortNameTemplate(shortName);
         List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(ids, shortNameTemplate, new PageRequest(startNumber, count));
@@ -313,10 +312,11 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     private void drawViewAirfoil(Airfoil airfoil) {
         if (new File(storageService.getRootLocation() + "/airfoil_img/" + airfoil.getShortName() + ".png").exists()) {
+            log.info("изображение профиля airfoil {} уже существует", airfoil.getShortName());
             return;
         }
         if (StringUtils.isEmpty(airfoil.getCoordView())) {
-            log.warn("отсутствубт координаты для airfoil {}", airfoil.getShortName());
+            log.info("отсутствубт координаты для airfoil {}", airfoil.getShortName());
             return;
         }
 
