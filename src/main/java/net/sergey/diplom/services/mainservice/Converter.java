@@ -93,7 +93,7 @@ public class Converter {
         characteristicsDto.setMaxClCd(coordinate.getMaxClCd());
         characteristicsDto.setAlpha(coordinate.getAlpha());
         characteristicsDto.setNCrit(coordinate.getNCrit());
-        characteristicsDto.setRenolgs(coordinate.getRenolgs());
+        characteristicsDto.setRenolgs(coordinate.getRenolds());
         characteristicsDto.setFilePath(tmpCsvFilePath + coordinate.getFileName());
         return characteristicsDto;
     }

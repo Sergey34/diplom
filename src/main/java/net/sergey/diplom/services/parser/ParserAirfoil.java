@@ -152,7 +152,7 @@ class ParserAirfoil implements Callable<Void> {
                     URL urlFile = new URL(ConstantApi.GET_FILE_CSV + fileName);
                     log.debug("url {}{}", ConstantApi.GET_FILE_CSV, fileName);
                     Characteristics coordinateItem = Characteristics.builder().coordinatesStl(parseFileScv.csvToString(urlFile.openStream())).fileName(fileName + constants.FILE_TYPE).build();
-                    coordinateItem.setRenolgs(Double.parseDouble(reynolds.text().replace(",", "")));
+                    coordinateItem.setRenolds(Double.parseDouble(reynolds.text().replace(",", "")));
                     coordinateItem.setNCrit(Double.parseDouble(nCrit.text()));
                     coordinateItem.setMaxClCd(Double.parseDouble(stringHandler.createStringByPattern(maxClCd.text(), constants.GET_MAXCLCD_PATTERN)));
                     coordinateItem.setAlpha(stringHandler.createStringByPattern(maxClCd.text(), constants.GET_ALPHA_PATTERN));

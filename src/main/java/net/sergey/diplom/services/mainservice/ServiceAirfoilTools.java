@@ -191,6 +191,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         }
         Set<String> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
         String shortNameTemplate = getShortNameTemplate(template);
+        if (ids.isEmpty() || ids.contains(null)) {return Collections.emptyList();}
         List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(ids, shortNameTemplate);
         generateFiles(airfoils);
         return converter.airfoilToAirfoilDto(airfoils);
@@ -217,7 +218,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         Airfoil airfoilById = getAirfoilByShortName(airfoilEdit.getShortName());
         Set<Characteristics> characteristicsSet = airfoilEdit.getData().stream().map(data
                 -> Characteristics.builder().coordinatesStl(data.getData()).fileName(data.getFileName())
-                .renolgs(data.getReynolds()).nCrit(data.getNCrit()).maxClCd(data.getMaxClCd()).alpha(data.getAlpha()).build()).collect(Collectors.toSet());
+                .renolds(data.getReynolds()).nCrit(data.getNCrit()).maxClCd(data.getMaxClCd()).alpha(data.getAlpha()).build()).collect(Collectors.toSet());
         return Airfoil.builder()
                 .id(airfoilById != null ? airfoilById.getId() : null)
                 .name(airfoilEdit.getAirfoilName())

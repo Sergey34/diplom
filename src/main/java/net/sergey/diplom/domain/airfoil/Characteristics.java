@@ -21,7 +21,7 @@ public class Characteristics {
     @Indexed(unique = true)
     private String fileName;
     private String coordinatesStl;
-    private double renolgs;
+    private double renolds;
     private double nCrit;
     private double maxClCd;
     private String alpha;
