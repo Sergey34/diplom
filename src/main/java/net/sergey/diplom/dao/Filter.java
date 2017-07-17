@@ -5,16 +5,13 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class Filter {
     public Query toQuery(List<Condition> conditions) {
-        List<Criteria> criteriaList = new ArrayList<>();
-        for (Condition condition : conditions) {
-            criteriaList.add(buildCriteria(condition));
-        }
+        List<Criteria> criteriaList = conditions.stream().map(this::buildCriteria).collect(Collectors.toList());
         Criteria criteria;
         if (criteriaList.size() > 1) {
             criteria = new Criteria().andOperator((Criteria[]) criteriaList.toArray());
@@ -41,17 +38,14 @@ public class Filter {
 
     private Criteria buildLqCriteriaToCriteria(Condition condition) {
         return Criteria.where(condition.getAttrName()).lte(condition.getValue());
-
     }
 
     private Criteria buildGqCriteriaToCriteria(Condition condition) {
         return Criteria.where(condition.getAttrName()).gte(condition.getValue());
-
     }
 
     private Criteria buildEqualsCriteriaToCriteria(Condition condition) {
         return Criteria.where(condition.getAttrName()).is(condition.getValue());
     }
-
 
 }
