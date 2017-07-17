@@ -111,9 +111,8 @@ public class AirfoilViewController {
         return "airfoils";
     }
 
-    @GetMapping({"/search_condition/{shortName}"})
-    public String searchCondition(Map<String, Object> model, @PathVariable(value = "shortName", required = false) String template,
-                                  @RequestParam("data") List<Condition> conditions) {
+    @PostMapping({"/search_condition/{template}", "/search_condition"})
+    public String searchCondition(Map<String, Object> model, @RequestBody List<Condition> conditions, @PathVariable(required = false) String template) {
         fillMandatoryData(model);
         List<AirfoilDTO> airfoils = serviceAirfoil.searchAirfoils(conditions, template);
         int pageCount = serviceAirfoil.countSearchAirfoil(null, template);
