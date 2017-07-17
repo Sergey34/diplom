@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -15,7 +14,6 @@ import org.springframework.security.core.GrantedAuthority;
 @Builder
 @Document
 public class Authorities implements GrantedAuthority {
-    @Id
     private String username;
     private String authority;
 
