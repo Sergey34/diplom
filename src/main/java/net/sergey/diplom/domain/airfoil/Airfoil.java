@@ -27,7 +27,7 @@ public class Airfoil {
     private String coordView;
     private String description;
     private char prefix;
-    @DBRef
+    @DBRef(lazy = true)
     private Set<Characteristics> characteristics;
 
     @Override
