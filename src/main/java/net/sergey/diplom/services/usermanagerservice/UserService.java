@@ -47,7 +47,7 @@ public class UserService {
                 .enabled(true)
                 .password(new BCryptPasswordEncoder().encode(userView.getPassword()))
                 .userName(userView.getName())
-                .authorities(userView.getRoles().stream().map(s -> new Authorities(s, userView.getName())).collect(Collectors.toList()))
+                .authorities(userView.getRoles().stream().map(s -> Authorities.builder().authority(s).username(userView.getName()).build()).collect(Collectors.toList()))
                 .build();
         try {
             daoUser.save(user);
