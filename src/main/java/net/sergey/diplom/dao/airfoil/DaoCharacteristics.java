@@ -1,6 +1,7 @@
 package net.sergey.diplom.dao.airfoil;
 
 import net.sergey.diplom.domain.airfoil.Characteristics;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
@@ -22,11 +23,11 @@ public class DaoCharacteristics {
         this.mongoOperations = mongoOperations;
     }
 
-    public Set<String> findCharacteristicsByTemplate(Query query) {
+    public Set<ObjectId> findCharacteristicsByTemplate(Query query) {
         List<Characteristics> characteristicsList = mongoOperations.find(query, Characteristics.class);
-        Set<String> ids = new HashSet<>();
+        Set<ObjectId> ids = new HashSet<>();
         for (Characteristics characteristics : characteristicsList) {
-            ids.add(characteristics.getFileName());
+            ids.add(characteristics.getId());
         }
         return ids;
     }

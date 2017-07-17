@@ -1,6 +1,7 @@
 package net.sergey.diplom.dao.airfoil;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.QueryByExampleExecutor;
@@ -20,13 +21,13 @@ public interface DaoAirfoil extends CrudRepository<Airfoil, String>, QueryByExam
 
     int countByPrefix(char prefix);
 
-    List<Airfoil> findDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(Set<String> characteristics, String shortName, Pageable pageRequest);
+    List<Airfoil> findDistinctAirfoilByCharacteristics_idInAndShortNameRegex(Set<ObjectId> characteristics, String shortName, Pageable pageRequest);
 
     List<Airfoil> findByShortNameRegex(String shortName, Pageable pageRequest);
 
     int countByShortNameRegex(String shortNameTemplate);
 
-    int countDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(Set<String> characteristics, String shortNameTemplate);
+    int countDistinctAirfoilByCharacteristics_idInAndShortNameRegex(Set<ObjectId> characteristics, String shortNameTemplate);
 
-    List<Airfoil> findDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(Set<String> ids, String shortNameTemplate);
+    List<Airfoil> findDistinctAirfoilByCharacteristics_idInAndShortNameRegex(Set<ObjectId> ids, String shortNameTemplate);
 }

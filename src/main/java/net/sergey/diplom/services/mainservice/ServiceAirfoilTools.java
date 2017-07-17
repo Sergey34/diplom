@@ -24,6 +24,7 @@ import net.sergey.diplom.services.parser.ParseFileScv;
 import net.sergey.diplom.services.properties.PropertiesHandler;
 import net.sergey.diplom.services.stlgenerators.AirfoilStlGenerator;
 import net.sergey.diplom.services.storageservice.FileSystemStorageService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.beans.factory.annotation.Value;
@@ -142,9 +143,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         if (conditions == null || conditions.isEmpty()) {
             return findByShortNameLike(shortName, startNumber, count);
         }
-        Set<String> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
+        Set<ObjectId> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
         String shortNameTemplate = getShortNameTemplate(shortName);
-        List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(ids, shortNameTemplate, new PageRequest(startNumber, count));
+        List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCharacteristics_idInAndShortNameRegex(ids, shortNameTemplate, new PageRequest(startNumber, count));
         generateFiles(airfoils);
         return converter.airfoilToAirfoilDto(airfoils);
     }
@@ -179,9 +180,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         if (conditions == null || conditions.isEmpty()) {
             return countByShortNameLike(shortName);
         }
-        Set<String> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
+        Set<ObjectId> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
         String shortNameTemplate = getShortNameTemplate(shortName);
-        return daoAirfoil.countDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(ids, shortNameTemplate);
+        return daoAirfoil.countDistinctAirfoilByCharacteristics_idInAndShortNameRegex(ids, shortNameTemplate);
     }
 
     @Override
@@ -189,10 +190,10 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         if (conditions == null || conditions.isEmpty()) {
             return findByShortNameLike(template, 0, Integer.MAX_VALUE);
         }
-        Set<String> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
+        Set<ObjectId> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
         String shortNameTemplate = getShortNameTemplate(template);
-        if (ids.isEmpty() || ids.contains(null)) {return Collections.emptyList();}
-        List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCharacteristics_fileNameInAndShortNameRegex(ids, shortNameTemplate);
+        if (ids.isEmpty()) {return Collections.emptyList();}
+        List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCharacteristics_idInAndShortNameRegex(ids, shortNameTemplate);
         generateFiles(airfoils);
         return converter.airfoilToAirfoilDto(airfoils);
     }
