@@ -11,11 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface DaoUser extends CrudRepository<User, ObjectId>, PagingAndSortingRepository<User, ObjectId> {
-    @Override
-    <S extends User> S save(S s);
 
     @Override
-    <S extends User> Iterable<S> save(Iterable<S> iterable);
+    <S extends User> S save(S s);
 
     @RestResource(path = "/username")
     User findOneByUserName(String username);
