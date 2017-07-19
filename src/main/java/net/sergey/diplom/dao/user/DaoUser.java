@@ -4,6 +4,7 @@ import net.sergey.diplom.domain.user.User;
 import org.bson.types.ObjectId;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ public interface DaoUser extends CrudRepository<User, ObjectId>, PagingAndSortin
     @Override
     <S extends User> Iterable<S> save(Iterable<S> iterable);
 
+    @RestResource(path = "/username")
     User findOneByUserName(String username);
 
 }
