@@ -1,6 +1,5 @@
 package net.sergey.diplom;
 
-import net.sergey.diplom.dao.user.DaoUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,17 +26,17 @@ public class Application {
     @Configuration
     @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
     protected static class ApplicationSecurity extends WebSecurityConfigurerAdapter {
+        private final UserDetailsService userDetailsService;
 
         @Autowired
-        DaoUser daoUser;
-        @Autowired
-        UserDetailsService userDetailsService;
+        public ApplicationSecurity(UserDetailsService userDetailsService) {this.userDetailsService = userDetailsService;}
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http.csrf().disable().authorizeRequests()
-                    .antMatchers("/rest/write/*", "/adminka", "api").hasRole("ADMIN")
-                    .antMatchers("/rest/*", "/**").permitAll().anyRequest()
+                    .antMatchers("/add_airfoil", "/update_airfoil/**", "/store_airfoil", "/add_user",
+                            "update_database", "/init", "/stop", "clearAll", "/adminka", "api").hasRole("ADMIN")
+                    .antMatchers("/**").permitAll().anyRequest()
                     .fullyAuthenticated().and().formLogin().loginPage("/login")
                     .failureUrl("/login?error").permitAll()
                     .defaultSuccessUrl("/")
