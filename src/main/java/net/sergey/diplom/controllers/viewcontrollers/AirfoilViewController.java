@@ -12,11 +12,9 @@ import net.sergey.diplom.services.usermanagerservice.UserService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -124,19 +122,6 @@ public class AirfoilViewController extends AbstractController {
         model.put("currentPage", 0);
         model.put("pageCount", 1);
         return "airfoils";
-    }
-
-    private List<Condition> getCondition(Map<String, String[]> parameterMap) {
-        String[] values = parameterMap.get("value");
-        String[] labels = parameterMap.get("label");
-        String[] actions = parameterMap.get("action");
-        List<Condition> conditions = new ArrayList<>();
-        for (int i = 0; i < labels.length; i++) {
-            if (!StringUtils.isEmpty(values[i])) {
-                conditions.add(Condition.builder().action(actions[i]).label(labels[i]).value(Double.parseDouble(values[i])).build());
-            }
-        }
-        return conditions;
     }
 
     @ResponseBody

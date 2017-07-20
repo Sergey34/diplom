@@ -1,9 +1,6 @@
 package net.sergey.diplom.domain.airfoil;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -17,6 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString
 @Builder
+@EqualsAndHashCode(of = "shortName")
 @Document(collection = "airfoils")
 public class Airfoil {
     @Id
@@ -29,17 +27,4 @@ public class Airfoil {
     private char prefix;
     @DBRef(lazy = true)
     private Set<Characteristics> characteristics;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
-        Airfoil airfoil = (Airfoil) o;
-        return shortName != null ? shortName.equals(airfoil.shortName) : airfoil.shortName == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return shortName != null ? shortName.hashCode() : 0;
-    }
 }
