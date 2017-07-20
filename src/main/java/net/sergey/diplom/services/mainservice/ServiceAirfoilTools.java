@@ -288,6 +288,8 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         return null;//proxy return new instance bean BuilderGraphs
     }
 
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public AirfoilDetail getDetailInfo(String airfoilId) {
         Airfoil airfoil = daoAirfoil.findOneByShortName(airfoilId);
         if (null == airfoil) {
@@ -301,12 +303,12 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     private void drawViewAirfoil(Airfoil airfoil) {
-        if (new File(storageService.getRootLocation() + "/airfoil_img/" + airfoil.getShortName() + ".png").exists()) {
-            log.info("изображение профиля airfoil {} уже существует", airfoil.getShortName());
-            return;
-        }
         if (StringUtils.isEmpty(airfoil.getCoordView())) {
             log.info("отсутствубт координаты для airfoil {}", airfoil.getShortName());
+            return;
+        }
+        if (new File(storageService.getRootLocation() + "/airfoil_img/" + airfoil.getShortName() + ".png").exists()) {
+            log.info("изображение профиля airfoil {} уже существует", airfoil.getShortName());
             return;
         }
 
