@@ -112,16 +112,11 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     private Airfoil add(Airfoil airfoil) {
-        try {
-            menuService.addMenuItemForNewAirfoil(airfoil);
-            daoCharacteristics.save(airfoil.getCharacteristics());
-            daoAirfoil.save(airfoil);
-            log.debug("Airfoil успешно добален / обновлен");
-            return airfoil;
-        } catch (Exception e) {
-            log.warn("ошибка при добавлении / обновлении в базу нового airfoil", e);
-            return null;
-        }
+        menuService.addMenuItemForNewAirfoil(airfoil);
+        daoCharacteristics.save(airfoil.getCharacteristics());
+        daoAirfoil.save(airfoil);
+        log.debug("Airfoil успешно добален / обновлен");
+        return airfoil;
     }
 
     @Override
