@@ -1,9 +1,19 @@
 var number = 0;
+
+
+function updateWab() {
+    store("/store_airfoil")
+}
+
 function saveWab() {
+    store("/store_airfoil")
+}
+
+function store(url_for_store) {
     var resultCSVList = [];
-    for (let i = 0; i < number; i++) {
+    for (var i = 0; i < number; i++) {
         var resultCSV = "Xfoil polar. Reynolds number fixed. Mach  number fixed\n";
-        var airfoilName = document.getElementById('ShortName').value;
+        var airfoilName = document.getElementById('shortName').value;
         var Reynolds_number = document.getElementById('input_Reynolds_number' + i).value;
         var fileName = "xf-" + airfoilName + "-" + Reynolds_number;
         resultCSV += "Polar key," + fileName + "\n";
@@ -19,9 +29,9 @@ function saveWab() {
 
 
         var table = document.getElementById('tabular' + i).getElementsByTagName('*');
-        for (let j = 1; j <= tableLength('tabular' + i); j++) {
-            for (let k = 0; k < 7; k++) {
-                var value = getTableItem(k, j, table);
+        for (var j = 1; j <= tableLength('tabular' + i); j++) {
+            for (var k = 0; k < 7; k++) {
+                var value = getTableItem('tabular' + i, k, j, table);
                 if (value == '') {
                     alert("Ошибка! таблица заполнена не корректно");
                     return;
@@ -39,16 +49,17 @@ function saveWab() {
         resultCsvObj["reynolds"] = Reynolds_number;
         resultCsvObj["nCrit"] = document.getElementById('input_Ncrit' + i).value;
         resultCsvObj["maxClCd"] = document.getElementById('input_MaxClCd' + i).value;
+        resultCsvObj["alpha"] = document.getElementById('input_MaxClCdalpha' + i).value;
 
 
-        console.log(resultCSV);
+        // console.log(resultCSV);
         resultCSVList[i] = resultCsvObj;
     }
     var tableView = document.getElementById('viewTab').getElementsByTagName('*');
     var viewCsv = "";
-    for (let j = 1; j <= tableLength('viewTab'); j++) {
-        for (let k = 0; k < 2; k++) {
-            var value = getTableItem(k, j, tableView);
+    for (var j = 1; j <= tableLength('viewTab'); j++) {
+        for (var k = 0; k < 2; k++) {
+            var value = getTableItem('view', k, j, tableView);
             if (value == '') {
                 alert("Ошибка! таблица заполнена не корректно");
                 return;
@@ -61,11 +72,10 @@ function saveWab() {
         viewCsv += '\n';
     }
 
-
     var data = {};
     data["airfoilName"] = $("#airfoilName").val();
-    data["shortName"] = $("#ShortName").val();
-    data["details"] = $("#Details").val();
+    data["shortName"] = $("#shortName").val();
+    data["details"] = $("#description").val();
     data["data"] = resultCSVList;
     data["viewCsv"] = viewCsv;
     console.log(data);
@@ -73,7 +83,7 @@ function saveWab() {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "/rest/write/addAirfoilForStringCsv",
+            url: url_for_store,
             data: JSON.stringify(data),
             dataType: 'json',
             timeout: 600000
@@ -83,13 +93,16 @@ function saveWab() {
         });
     });
 }
-function getTableItem(i, j, table) {
-    return table['[' + i + '][' + j + ']'].value;
+
+function getTableItem(name, i, j, table) {
+    // console.log(name);
+    // console.log(table);
+    return table[name + '[' + i + '][' + j + ']'].value;
 }
+
 function tableLength(i) {
     return document.getElementById(i).getElementsByTagName('tbody')[0].childElementCount
 }
-
 
 //создание таблиц
 
@@ -123,8 +136,8 @@ function addTable() {
     var btn2 = document.createElement('input');
     btn2.setAttribute("type", 'button');
     btn2.setAttribute("class", 'btn btn-default');
-    btn2.setAttribute("value", 'Delete Last Row');
-    btn2.setAttribute("onClick", 'javascript:$("#tabular' + number + '").tabularInput("deleteRow")');
+    btn2.setAttribute("value", 'Devare Last Row');
+    btn2.setAttribute("onClick", "javascript:$('#tabular" + number + "').tabularInput('deleteRow')");
 
     var table = document.createElement('div');
     table.id = 'tabular' + number;
@@ -147,7 +160,7 @@ function addTable() {
         'minRows': 10,
         'newRowOnTab': true,
         'columnHeads': ['alpha', 'CL', 'CD', 'CDp', 'CM', 'Top_Xtr', 'Bot_Xtr'],
-        'name': '',
+        'name': 'tabular' + number,
         'animate': true
     });
     number++;

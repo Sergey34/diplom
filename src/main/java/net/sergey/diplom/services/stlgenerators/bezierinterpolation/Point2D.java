@@ -12,7 +12,7 @@ public class Point2D {
         this.y = y;
     }
 
-    public Point2D(Point2D point2D) {
+    Point2D(Point2D point2D) {
         this.x = point2D.x;
         this.y = point2D.y;
     }
@@ -39,11 +39,11 @@ public class Point2D {
         this.y = y;
     }
 
-    public Point2D subtraction(Point2D point2D) {
+    Point2D subtraction(Point2D point2D) {
         return plus(-point2D.getX(), -point2D.getY());
     }
 
-    public Point2D plus(Point2D point2D) {
+    Point2D plus(Point2D point2D) {
         return plus(point2D.getX(), point2D.getY());
     }
 
@@ -54,7 +54,7 @@ public class Point2D {
     }
 
 
-    public Point2D multiplication(double value) {
+    Point2D multiplication(double value) {
         return new Point2D(x * value, y * value);
     }
 }

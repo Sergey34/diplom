@@ -17,27 +17,17 @@ public interface ServiceAirfoil {
 
     List<AirfoilDTO> getAirfoilsDtoByPrefix(char prefix, int startNumber, int count);
 
-    List<Airfoil> getAllAirfoils(int startNumber, int count);
-
     AirfoilDetail getDetailInfo(String airfoilId);
-
-    Message addAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
 
     int getCountAirfoilByPrefix(char prefix);
 
-    List<String> updateGraf(String airfoilId, List<String> checkedList);
+    List<String> updateGraph(String airfoilId, List<String> checkedList);
 
-    Message updateAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
+    Airfoil saveAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files);
 
-    Message addAirfoil(AirfoilEdit airfoilEdit);
+    Message saveAirfoil(AirfoilEdit airfoilEdit);
 
-    Message updateAirfoil(AirfoilEdit airfoilEdit);
-
-    List<AirfoilDTO> getAllAirfoilDto(int startNumber, int count);
-
-    List<Airfoil> getAirfoilsByPrefix(char prefix, int startNumber, int count);
-
-    Airfoil getAirfoilById(String airfoilId);
+    Airfoil getAirfoilByShortName(String airfoilId);
 
     Message clearAll();
 
@@ -48,4 +38,6 @@ public interface ServiceAirfoil {
     int countByShortNameLike(String shortName);
 
     int countSearchAirfoil(List<Condition> conditions, String shortName);
+
+    List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String template);
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
+
+<head>
+
+</head>
+
+<body>
+
+
+<div th:fragment="list_menu" class="col-md-3" id="list_menu">
+    <p class="lead">Навигация</p>
+    <div class="list-group">
+        <a class="list-group-item" id="addAirf" th:href="@{/add_airfoil}">Добавить новый профиль</a>
+        <a class="list-group-item" id="adm" th:href="@{/adminka}">Админка</a>
+    </div>
+    <span th:each="menuI : ${menu}">
+                <p class="lead" th:text="${menuI.header}">Навигация</p>
+                <div class="list-group">
+                    <a th:each="menuItem : ${menuI.items}" class="list-group-item"
+                       th:href="${'/airfoils/'+menuItem.url}"
+                       th:text="${menuItem.name}">menuItem</a>
+                </div>
+            </span>
+</div>
+
+</body>
+
+</html>

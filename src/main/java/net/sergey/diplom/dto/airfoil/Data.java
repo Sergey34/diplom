@@ -1,37 +1,20 @@
 package net.sergey.diplom.dto.airfoil;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@lombok.Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Data {
     private String fileName;
     private String data;
-    private String reynolds;
-    private String nCrit;
-    private String maxClCd;
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public String getReynolds() {
-        return reynolds;
-    }
-
-    public String getnCrit() {
-        return nCrit;
-    }
-
-    public String getMaxClCd() {
-        return maxClCd;
-    }
+    private String alpha;
+    private double reynolds;
+    private double nCrit;
+    private double maxClCd;
 }

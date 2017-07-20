@@ -58,15 +58,9 @@ public class BezierInterpolation implements Interpolation {
                             - values.get(i).getY() + tgL.getY() / tgL.getX() * values.get(i).getX()) / tmp;
                     if (x > values.get(i).getX() && x < values.get(i + 1).getX()) {
                         if (tgL.getY() > 0.0) {
-                            if (l1 > l2)
-                                l1 = 0.0;
-                            else
-                                l2 = 0.0;
+                            if (l1 > l2) { l1 = 0.0; } else { l2 = 0.0; }
                         } else {
-                            if (l1 < l2)
-                                l1 = 0.0;
-                            else
-                                l2 = 0.0;
+                            if (l1 < l2) { l1 = 0.0; } else { l2 = 0.0; }
                         }
                     }
                 }
@@ -74,7 +68,6 @@ public class BezierInterpolation implements Interpolation {
 
             bezier.get(i).setPoint(1, bezier.get(i).getPoint(1).plus(tgL.multiplication(l1)));
             bezier.get(i).setPoint(2, bezier.get(i).getPoint(2).subtraction(tgR.multiplication(l2)));
-//            System.out.println(bezier);
         }
 
         l1 = Math.abs(tgL.getX()) > EPSILON ? (values.get(n + 1).getX() - values.get(n).getX()) / (2.0 * tgL.getX()) : 1.0;
@@ -119,7 +112,6 @@ public class BezierInterpolation implements Interpolation {
         for (Segment s : spline) {
             for (int i = 0; i <= RESOLUTION; ++i) {
                 s.calc((double) i / RESOLUTION, p);
-//                System.out.println(p.getX() + " " + p.getY());
                 points.add(new Point2D(p));
             }
         }

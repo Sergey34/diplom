@@ -1,10 +1,10 @@
 package net.sergey.diplom.services.stlgenerators.bezierinterpolation;
 
-public class Segment {
+class Segment {
 
     private Point2D[] points = new Point2D[4];
 
-    public static Segment getDefaultSegment() {
+    static Segment getDefaultSegment() {
         Segment segment = new Segment();
         for (int i = 0; i < 4; i++) {
             segment.setPoint(i, new Point2D());
@@ -22,11 +22,11 @@ public class Segment {
         p.setY(nt3 * points[0].getY() + 3.0 * t * nt2 * points[1].getY() + 3.0 * t2 * nt * points[2].getY() + t3 * points[3].getY());
     }
 
-    public Point2D getPoint(int i) {
+    Point2D getPoint(int i) {
         return points[i];
     }
 
-    public void setPoint(int i, Point2D point2D) {
+    void setPoint(int i, Point2D point2D) {
         this.points[i] = point2D;
     }
 }

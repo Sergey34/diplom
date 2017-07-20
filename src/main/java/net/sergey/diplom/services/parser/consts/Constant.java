@@ -1,22 +1,19 @@
 package net.sergey.diplom.services.parser.consts;
 
 import net.sergey.diplom.services.properties.PropertiesHandler;
-import net.sergey.diplom.services.utils.UtilsLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Pattern;
 
+@SuppressWarnings("WeakerAccess")
 @Component
 public class Constant {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final PropertiesHandler propertiesHandler;
     public String DESCRIPTION;
     public Pattern GET_ID_BY_FULL_NAME_PATTERN;
     public Pattern GET_MAXCLCD_PATTERN = Pattern.compile("^(.+) at .+");//63.6 at α=3.75°
-    public Pattern GET_ALPHA_PATTERN = Pattern.compile(".+ at (α=.+°)$");
+    public Pattern GET_ALPHA_PATTERN = Pattern.compile(".+ at α=(.+°)$");
     public Pattern GET_FILE_NAME_BY_URL_PATTERN;
     public Pattern GET_COUNT_PAGES_PATTERN;
     public String REGEX;

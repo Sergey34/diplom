@@ -1,50 +1,27 @@
 package net.sergey.diplom.dto.airfoil;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
+@lombok.Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AirfoilDetail extends AirfoilDTO {
     private List<String> imgCsvName;
     private List<String> stlFilePath;
-    private List<CoordinatesDto> coordinates;
+    private List<CharacteristicsDto> characteristics;
     private String coordView;
-
-    public AirfoilDetail() {
-
-    }
-
-    public List<String> getImgCsvName() {
-        return imgCsvName;
-    }
-
-    public void setImgCsvName(List<String> imgCsvName) {
-        this.imgCsvName = imgCsvName;
-    }
-
-    public List<CoordinatesDto> getCoordinates() {
-        return coordinates;
-    }
-
-    public void setCoordinates(List<CoordinatesDto> coordinates) {
-        this.coordinates = coordinates;
-    }
-
-    public String getCoordView() {
-        return coordView;
-    }
-
-    public void setCoordView(String coordView) {
-        this.coordView = coordView;
-    }
-
-    public List<String> getStlFilePath() {
-        return stlFilePath;
-    }
-
-    public void setStlFilePath(List<String> stlFilePath) {
-        this.stlFilePath = stlFilePath;
-    }
+    private String coordViewPath;
 
     public void addStlFilePath(String filePath) {
+        if (stlFilePath == null) {
+            stlFilePath = new ArrayList<>();
+        }
         stlFilePath.add(filePath);
     }
 }

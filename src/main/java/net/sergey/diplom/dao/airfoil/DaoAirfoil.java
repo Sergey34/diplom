@@ -1,32 +1,57 @@
 package net.sergey.diplom.dao.airfoil;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.domain.airfoil.Coordinates;
-import net.sergey.diplom.domain.airfoil.Prefix;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Repository
-@Transactional
-public interface DaoAirfoil extends CrudRepository<Airfoil, String> {
+@Transactional(propagation = Propagation.MANDATORY)
+public interface DaoAirfoil extends CrudRepository<Airfoil, ObjectId>, PagingAndSortingRepository<Airfoil, ObjectId> {
+    @RestResource(path = "/prefix")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    List<Airfoil> findByPrefixOrderByShortName(@Param("prefix") char prefix, Pageable pageable);
 
-    List<Airfoil> findByPrefixOrderByShortName(Prefix prefix, Pageable pageable);
+    @RestResource(path = "/shortName")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    Airfoil findOneByShortName(@Param("shortName") String shortName);
 
-    Airfoil findOneByShortName(String shortName);
+    @RestResource(path = "/byCharacteristicsIdAndTemplate")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    List<Airfoil> findDistinctAirfoilByCharacteristics_idInAndShortNameRegex(@Param("Characteristics_id") Set<ObjectId> characteristics,
+                                                                             @Param("template") String shortName, Pageable pageRequest);
 
-    int countByPrefix(Prefix prefix);
+    @RestResource(path = "/template")
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    List<Airfoil> findByShortNameRegex(@Param("template") String shortName, Pageable pageRequest);
 
-    List<Airfoil> findAll(Pageable pageRequest);
+    @Transactional(propagation = Propagation.REQUIRED)
+    Iterable<Airfoil> save(Collection<Airfoil> airfoils);
 
-    List<Airfoil> findDistinctAirfoilByCoordinatesInAndShortNameLike(List<Coordinates> coordinates, String shortName, Pageable pageRequest);
+    @RestResource(exported = false)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    int countByPrefix(@Param("prefix") char prefix);
 
-    List<Airfoil> findByShortNameLike(String shortName, Pageable pageRequest);
+    @RestResource(exported = false)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    int countByShortNameRegex(String shortNameTemplate);
 
-    int countByShortNameLike(String shortNameTemplate);
+    @RestResource(exported = false)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    int countDistinctAirfoilByCharacteristics_idInAndShortNameRegex(Set<ObjectId> characteristics, String shortNameTemplate);
 
-    int countDistinctAirfoilByCoordinatesInAndShortNameLike(List<Coordinates> coordinates, String shortNameTemplate);
+    @RestResource(exported = false)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    List<Airfoil> findDistinctAirfoilByCharacteristics_idInAndShortNameRegex(@Param("Characteristics_id") Set<ObjectId> ids,
+                                                                             @Param("template") String shortNameTemplate);
 }

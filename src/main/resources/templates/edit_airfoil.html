@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Airfoil tolls - Edit airfoil</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/homepage.css" rel="stylesheet">
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/add_airfoil.js"></script>
+    <script src="/js/get_dateil_info.js"></script>
+    <script src='/js/tabular-input.min.js'></script>
+    <link type='text/css' rel='stylesheet' href='/css/tabular-input.css'/>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <!--<![endif]&ndash;&gt;-->
+</head>
+<body>
+<!-- Navigation -->
+<div th:replace="fragments/header :: header"></div>
+<!-- Page Content -->
+
+
+<div class="container">
+    <div class="row">
+        <div th:replace="fragments/menu :: list_menu"></div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-sm-12 col-lg-12 col-md-12">
+                    <div class="thumbnail">
+                        <div class="caption">
+                            <div class="content" id="contentid">
+                                <div id="airfoilDetailInfo">
+                                    <div class="panel panel-default">
+                                        <div th:if="${added==false}" id="error">
+                                            Профиль с таким именем уже существует
+                                        </div>
+
+                                        <div class="panel-heading">Добавление профиля с использованием готовых .csv
+                                            файлов
+                                        </div>
+                                        <div class="panel-body">
+                                            <form th:action="@{/add_airfoil}" method="post"
+                                                  enctype="multipart/form-data"
+                                                  id="addAirfoil">
+                                                <label>
+                                                    Название профиля
+                                                    <input th:value="${airfoil.name}" type="text" value="" name="name"/>
+                                                </label>
+                                                </Br>
+                                                <label>
+                                                    Короткое название профиля
+                                                    <input th:value="${airfoil.shortName}" type="text" value="" disabled
+                                                           name="shortName"/>
+                                                </label>
+                                                </Br>
+                                                <label>
+                                                    Детали
+                                                    <input th:value="${airfoil.description}" type="text" value=""
+                                                           name="Details"/>
+                                                </label>
+                                                <a th:href="${airfoil.coordViewPath}"
+                                                   th:text="${airfoil.shortName}+'.dat'"></a>
+                                                </Br>
+                                                <label>
+                                                    Выберите файл для построения графика профиля
+                                                    <input class="fileInput btn btn-default" type="file"
+                                                           name="fileAirfoil"/>
+                                                </label>
+
+                                                </Br>
+                                                <label>
+                                                    Выберите файлы построения графиков
+                                                    <input class="fileInput btn btn-default" name="files"
+                                                           multiple="multiple"
+                                                           value="Выбрать файлы"/>
+                                                </label>
+                                                </Br>
+                                                <input class="btn btn-default" type="submit"/>
+
+                                            </form>
+                                            <p th:each="characteristic, iter : ${airfoil.characteristics}">
+                                                <a th:text="${characteristic.fileName}"
+                                                   th:href="${characteristic.filePath}"></a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">Обновление профиля с заполением таблиц вручную</div>
+                                    <div class="panel-body">
+
+                                        <form enctype="multipart/form-data"
+                                              id="updateAirfoil">
+                                            <label>
+                                                Название профиля
+                                                <input th:value="${airfoil.name}" type="text" value="" name="name"
+                                                       id="airfoilName"/>
+                                            </label>
+                                            <label>
+                                                Короткое название профиля (изменение повлечет создание нового
+                                                профиля)
+                                                <input th:value="${airfoil.shortName}" type="text" value="" disabled
+                                                       name="shortName" id="shortName"/>
+                                            </label>
+                                            </Br>
+                                            <label>
+                                                Детали
+                                                <input th:value="${airfoil.description}" type="text" value=""
+                                                       name="Details" id="description"/>
+                                            </label>
+                                            </Br>
+
+                                        </form>
+                                        <div id="editableTables">
+                                            <input type="button" value="Add New Row" class="btn btn-default"
+                                                   onclick='javascript:$("#viewTab").tabularInput("addRow")'>
+                                            <input type="button" value="Delete Last Row" class="btn btn-default"
+                                                   onclick="javascript:$('#viewTab').tabularInput('deleteRow')">
+                                            <div id="viewTab"></div>
+                                        </div>
+                                        <input type="button" id="saveWab" class="btn btn-default" value="add airfoil">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.container -->
+<div th:replace="fragments/footer :: footer"></div>
+<!-- /.container -->
+
+<script src="/js/bootstrap.min.js"></script>
+<script>
+    getDetailInfo(true);
+    document.getElementById("saveWab").onclick = updateWab;
+</script>
+
+</body>
+</html>

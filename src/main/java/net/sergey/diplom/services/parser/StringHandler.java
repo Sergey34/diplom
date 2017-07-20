@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("WeakerAccess")
 @Component
 public class StringHandler {
     public StringHandler() {

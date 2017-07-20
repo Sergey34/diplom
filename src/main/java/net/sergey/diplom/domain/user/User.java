@@ -1,76 +1,46 @@
 package net.sergey.diplom.domain.user;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "users")
+import java.util.List;
+
+@lombok.Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Builder
+@Document
 public class User {
     @Id
-    @Column(name = "username", unique = true, length = 128)
+    private ObjectId id;
+    @Indexed(unique = true)
     private String userName;
-    @Column(name = "password", columnDefinition = "Text")
     private String password;
-    @Column(name = "enabled")
     private boolean enabled;
-
-
-    public User() {
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                ", enabled=" + enabled +
-                '}';
-    }
+    private List<Authorities> authorities;
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         User user = (User) o;
-
-        if (enabled != user.enabled) return false;
-        if (userName != null ? !userName.equals(user.userName) : user.userName != null) return false;
-        return password != null ? password.equals(user.password) : user.password == null;
+        return userName != null ? userName.equals(user.userName) : user.userName == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = userName != null ? userName.hashCode() : 0;
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (enabled ? 1 : 0);
-        return result;
+        return userName != null ? userName.hashCode() : 0;
     }
 }

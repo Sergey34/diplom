@@ -1,6 +1,7 @@
 package net.sergey.diplom.services.parser;
 
 
+import lombok.extern.slf4j.Slf4j;
 import net.sergey.diplom.dao.menu.DaoMenu;
 import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.menu.MenuItem;
@@ -8,9 +9,6 @@ import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.dto.messages.MessageError;
 import net.sergey.diplom.services.parser.consts.Constant;
 import net.sergey.diplom.services.properties.PropertiesHandler;
-import net.sergey.diplom.services.utils.UtilsLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -30,10 +28,9 @@ import java.util.concurrent.*;
 import static net.sergey.diplom.dto.messages.Message.SC_NOT_IMPLEMENTED;
 import static net.sergey.diplom.dto.messages.Message.SC_OK;
 
-
+@Slf4j
 @Component
 public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private final Constant constants;
     private final ApplicationContext applicationContext;
@@ -69,20 +66,20 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
                 propertiesHandler.load(configParserPath);
             }
         } catch (IOException e) {
-            LOGGER.warn("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties", e);
+            log.warn("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties", e);
             throw new IllegalStateException("Ошибка чтения конфигурации парсера. Проверьте файл /WEB-INF/config.properties", e);
         }
         constants.initConst();
         List<Menu> menu = parseMenu.parse(getMenuItemsInDB());
         daoMenu.save(menu);
-        getAirfoilsByMenuList(menu.get(0).getMenuItems());
+        getAirfoilsByMenuList(menu.get(0).getItems());
     }
 
     private Collection<MenuItem> getMenuItemsInDB() {
         List<Menu> allMenu = daoMenu.findAll();
         for (Menu menu : allMenu) {
             if (menu.getHeader().equals(propertiesHandler.getProperty("menu_Header"))) {
-                return menu.getMenuItems();
+                return menu.getItems();
             }
         }
         return Collections.emptyList();
@@ -92,7 +89,7 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
         Collection<Callable<Void>> futureList = new ArrayList<>();
         for (MenuItem menuItem : menuItems) {
             ParserAirfoil parserAirfoil = applicationContext.getBean(ParserAirfoil.class);
-            parserAirfoil.setPrefix(menuItem.getUrlCode());
+            parserAirfoil.setPrefix(menuItem.getUrl());
             futureList.add(parserAirfoil);
         }
         for (Future<Void> voidFuture : executorService.invokeAll(futureList)) {
@@ -135,11 +132,11 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
 
     private void stop() {
         executorService.shutdownNow();
-        ParserAirfoil.setFinish(true);
+        ParserAirfoil.setFinish();
         try {
             executorService.awaitTermination(60, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            LOGGER.warn("stop Error", e);
+            log.warn("stop Error", e);
         }
         executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
@@ -148,16 +145,16 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
         return parsingIsStarting;
     }
 
-    @Async("executor")
+    @Async
     public Future<Message> startParsing() {
         parsingIsStarting = true;
         try {
             parse();
             return new AsyncResult<>(new Message("Данные успешно загружены", SC_OK));
         } catch (Exception e) {
-            LOGGER.warn("ошибка инициализации базы", e);
+            log.warn("ошибка инициализации базы", e);
             e.printStackTrace();
-            return new AsyncResult<Message>(new MessageError("Произошла ошибка при загрузке данных", SC_NOT_IMPLEMENTED, e.getStackTrace()));
+            return new AsyncResult<>(new MessageError("Произошла ошибка при загрузке данных", SC_NOT_IMPLEMENTED, e.getStackTrace()));
         } finally {
             parsingIsStarting = false;
         }

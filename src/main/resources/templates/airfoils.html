@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Airfoil tolls - Airfoils</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/homepage.css" rel="stylesheet">
+
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/search.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <!--<![endif]&ndash;&gt;-->
+</head>
+
+<body>
+
+<!-- Navigation -->
+<div th:replace="fragments/header :: header"></div>
+<!-- Page Content -->
+
+
+<div class="container">
+    <div class="row">
+        <div th:replace="fragments/menu :: list_menu"></div>
+
+        <div class="col-md-9">
+            <form class="well form-horizontal col-sm-6 col-lg-6 col-md-6" th:action="@{/search_condition}"
+                  method="post">
+                <div class="form-group">
+                    <label class="control-label" for="select01">ShortName</label>
+                    <select id="select01">
+                        <option>Содержит</option>
+                    </select>
+                    <input name="short_name" id="short_name" class="control-input" for="select01">
+                </div>
+                </br>
+                <div class="form-group">
+                    <select name="label">
+                        <option>nCrit</option>
+                    </select>
+                    <select name="action" id="select0">
+                        <option>=</option>
+                        <option><</option>
+                        <option>></option>
+                    </select>
+                    <input name="value" id="value0" class="control-input" for="select0">
+                </div>
+                </br>
+                <div class="form-group">
+                    <select name="label">
+                        <option>maxCL/CD</option>
+                    </select>
+                    <select name="action" id="select1">
+                        <option>=</option>
+                        <option><</option>
+                        <option>></option>
+                    </select>
+                    <input name="value" id="value1" class="control-input" for="select0">
+                </div>
+                </br>
+                <div class="form-group">
+                    <select name="label">
+                        <option>renolds</option>
+                    </select>
+                    <select name="action" id="select2">
+                        <option>=</option>
+                        <option><</option>
+                        <option>></option>
+                    </select>
+                    <input name="value" id="value2" class="control-input" for="select2">
+                </div>
+                </br>
+                <div class="form-actions">
+                    <input type="submit" class="btn btn-primary" value="Найти">
+                </div>
+
+            </form>
+            <div id="airfoil_list">
+                <div th:each="airfoil : ${airfoils}" class="col-sm-6 col-lg-6 col-md-6">
+                    <div class="thumbnail">
+                        <img th:src="${airfoil.image}" alt="">
+                        <div class="caption">
+                            <h4><a th:href="'/airfoil/'+${airfoil.shortName}"
+                                   th:text="${airfoil.shortName}">(a18-il) A18 (original)</a>
+                            </h4>
+                            <p><span th:utext="${airfoil.description}">description</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <nav aria-label="...">
+                <ul class="pagination">
+                    <li th:class="${0==currentPage} ? 'disabled' : 'a'">
+                        <a th:href=" ${1==currentPage} ? '#' : ${url}+'/'+${currentPage-1}">&laquo;</a>
+                    </li>
+
+                    <li th:each="i : ${#numbers.sequence(1, pageCount, 1)}"
+                        th:class="${currentPage==i-1} ? 'active' : 'a'">
+                        <a th:href="${url}+'/'+${i-1}" th:text="${i}"> <span class="sr-only"></span></a>
+                    </li>
+
+                    <li th:class="${pageCount==currentPage+1} ? 'disabled' : 'a'">
+                        <a th:href="${pageCount==currentPage} ? '#': ${url}+'/'+${currentPage+1}">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+
+
+</div>
+<!-- /.container -->
+
+<div th:replace="fragments/footer :: footer"></div>
+<script src="/js/bootstrap.min.js"></script>
+<!--<script>document.getElementById("find").onclick = searchFull;</script>-->
+</body>
+
+</html>

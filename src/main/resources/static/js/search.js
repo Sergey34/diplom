@@ -21,7 +21,7 @@ function searchFull() {
 
     var array = new Array(n);
     for (var i = 0; i < 3 && n != 0; i++) {
-        let val = $("#value" + i).val();
+        var val = $("#value" + i).val();
         console.log("val" + val);
         if (val != undefined && val != "") {
             console.log("add");
@@ -33,7 +33,7 @@ function searchFull() {
             n--;
         }
     }
-    window.location.replace("/airfoilList.html?sf=" + short_name + "&data=" + encodeURIComponent(JSON.stringify(array)));
+    window.location.replace("/search_condition/" + short_name + "?data=" + encodeURIComponent(JSON.stringify(array)));
 
 
     console.log(array);
@@ -45,7 +45,7 @@ function searchFull() {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "/rest/searchAirfoil/" + short_name,
+            url: "/search_condition/" + short_name,
             data: data2,
             dataType: 'json',
             timeout: 600000,

@@ -1,8 +1,6 @@
 package net.sergey.diplom.services.storageservice;
 
-import net.sergey.diplom.services.utils.UtilsLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -18,9 +16,9 @@ import java.nio.file.Paths;
 import java.util.List;
 
 
+@Slf4j
 @Service
 public class FileSystemStorageService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final Path rootLocation;
     @Value("upload-dir")
     private String location = "upload-dir";
@@ -56,13 +54,15 @@ public class FileSystemStorageService {
             } else {
                 throw new IllegalArgumentException("Could not read file: " + filename);
             }
+        } catch (IllegalArgumentException e) {
+            return null;//todo return default file
         } catch (Exception e) {
-            LOGGER.warn("Could not read file: {}", filename, e);
+            log.warn("Could not read file: {}", filename, e);
             return null;
         }
     }
 
-    public Path load(String filename) {
+    private Path load(String filename) {
         return rootLocation.resolve(filename);
     }
 
@@ -74,7 +74,7 @@ public class FileSystemStorageService {
         try {
             Files.createDirectory(Paths.get(location + "/chartTemp"));
         } catch (IOException e) {
-            LOGGER.warn("не удалось создать папку chartTemp", e);
+            log.warn("не удалось создать папку chartTemp", e);
         }
         for (String chartName : chartNames) {
             FileSystemUtils.deleteRecursively(new File(location + "/scadFiles/" + shortName + "-" + chartName + ".csv"));

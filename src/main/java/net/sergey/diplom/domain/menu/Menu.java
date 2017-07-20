@@ -1,85 +1,43 @@
 package net.sergey.diplom.domain.menu;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.util.List;
 
-@Entity
-@Table(name = "menuHeader")
+@lombok.Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Builder
+@Document
 public class Menu {
     @Id
-    @Column(name = "id")
-    private int id;
-    @Column(name = "header")
+    private ObjectId id;
+    @Indexed(unique = true)
     private String header;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "menuHeader_menuItem",
-            joinColumns = {@JoinColumn(name = "headerId")},
-            inverseJoinColumns = {@JoinColumn(name = "ItemId")})
-    private List<MenuItem> menuItems;
-
-
-    public Menu() {
-    }
-
-    public Menu(String header) {
-        this.header = header;
-        this.id = header.hashCode();
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getHeader() {
-        return header;
-    }
-
-    public void setHeader(String header) {
-        this.header = header;
-    }
-
-
-    public List<MenuItem> getMenuItems() {
-        return menuItems;
-    }
-
-    public void setMenuItems(List<MenuItem> menuItems) {
-        this.menuItems = menuItems;
-    }
+    private List<MenuItem> items;
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Menu menu = (Menu) o;
-
-        if (id != menu.id) return false;
-        if (header != null ? !header.equals(menu.header) : menu.header != null) return false;
-        return menuItems != null ? menuItems.equals(menu.menuItems) : menu.menuItems == null;
-
+        return header.equals(menu.header);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (header != null ? header.hashCode() : 0);
-        result = 31 * result + (menuItems != null ? menuItems.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Menu{" +
-                "id=" + id +
-                ", header='" + header + '\'' +
-                ", menuItems=" + menuItems +
-                '}';
+        return header.hashCode();
     }
 }

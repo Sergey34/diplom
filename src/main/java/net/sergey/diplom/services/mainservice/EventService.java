@@ -1,28 +1,21 @@
 package net.sergey.diplom.services.mainservice;
 
 
-import net.sergey.diplom.services.utils.UtilsLogger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Component
+@Slf4j
 public class EventService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsLogger.getStaticClassName());
     private final Map<String, String> progressMap = new ConcurrentHashMap<>();
     private final ConcurrentLinkedQueue<SseEmitter> emitters = new ConcurrentLinkedQueue<>();
-
-    public ConcurrentLinkedQueue<SseEmitter> getEmitters() {
-        return emitters;
-    }
 
     public void addEmitter(SseEmitter emitter) {
         emitters.add(emitter);
@@ -42,10 +35,10 @@ public class EventService {
         for (SseEmitter emitter : emitters) {
             try {
                 emitter.send(progressMap, MediaType.APPLICATION_JSON);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 emitter.complete();
                 emitters.remove(emitter);
-                LOGGER.warn("Ошибка отправки увеомления о работе парсера", e);
+                log.warn("Ошибка отправки увеомления о работе парсера", e);
             }
         }
     }
