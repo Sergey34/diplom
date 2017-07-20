@@ -41,16 +41,12 @@ import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static net.sergey.diplom.dto.messages.Message.SC_NOT_ACCEPTABLE;
-import static net.sergey.diplom.dto.messages.Message.SC_OK;
+import static net.sergey.diplom.services.parser.consts.ConstantApi.*;
 
 @Slf4j
 @Service
 public class ServiceAirfoilTools implements ServiceAirfoil {
-    private static final Message EMPTY_AIRFOIL_SHORT_NAME = new Message("Ошибка при добавлении в базу нового airfoil. Короткое имя профиля не должно быть пустым", SC_NOT_ACCEPTABLE);
-    private static final Message ASS_SUCCESS = new Message("Airfoil успешно добален / обновлен", SC_OK);
-    private static final Message DONE = new Message("done", SC_OK);
-    private static final List<String> CHART_NAMES = Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
+    private static final List<String> CHART_NAMES = Arrays.asList(CL_V_CD, CL_V_ALPHA, CD_V_ALPHA, CM_V_ALPHA, CL_DIV_CD_V_ALPHA);
     private final ParseFileScv parseFileScv;
     private final PropertiesHandler propertiesHandler;
     private final Converter converter;
