@@ -6,11 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.sergey.diplom.dao.Filter;
 import net.sergey.diplom.dao.airfoil.DaoAirfoil;
 import net.sergey.diplom.dao.airfoil.DaoCharacteristics;
-import net.sergey.diplom.dao.menu.DaoMenu;
 import net.sergey.diplom.domain.airfoil.Airfoil;
 import net.sergey.diplom.domain.airfoil.Characteristics;
-import net.sergey.diplom.domain.menu.Menu;
-import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.dto.Condition;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
@@ -58,9 +55,9 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     private final ParseFileScv parseFileScv;
     private final PropertiesHandler propertiesHandler;
     private final Converter converter;
+    private final MenuService menuService;
     private final FileSystemStorageService storageService;
     private final AirfoilStlGenerator stlGenerator;
-    private final DaoMenu daoMenu;
     private final Filter filter;
     private final DaoAirfoil daoAirfoil;
     private final DaoCharacteristics daoCharacteristics;
@@ -71,15 +68,14 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Autowired
     public ServiceAirfoilTools(ParseFileScv parseFileScv, PropertiesHandler propertiesHandler,
-                               Converter converter, FileSystemStorageService storageService,
-                               AirfoilStlGenerator stlGenerator, DaoMenu daoMenu,
-                               Filter filter, DaoAirfoil daoAirfoil, DaoCharacteristics daoCharacteristics) {
+                               Converter converter, MenuService menuService, FileSystemStorageService storageService,
+                               AirfoilStlGenerator stlGenerator, Filter filter, DaoAirfoil daoAirfoil, DaoCharacteristics daoCharacteristics) {
         this.parseFileScv = parseFileScv;
         this.propertiesHandler = propertiesHandler;
         this.converter = converter;
+        this.menuService = menuService;
         this.storageService = storageService;
         this.stlGenerator = stlGenerator;
-        this.daoMenu = daoMenu;
         this.filter = filter;
         this.daoAirfoil = daoAirfoil;
         this.daoCharacteristics = daoCharacteristics;
@@ -117,7 +113,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     private Airfoil add(Airfoil airfoil) {
         try {
-            addMenuItemForNewAirfoil(airfoil);
+            menuService.addMenuItemForNewAirfoil(airfoil);
             daoCharacteristics.save(airfoil.getCharacteristics());
             daoAirfoil.save(airfoil);
             log.debug("Airfoil успешно добален / обновлен");
@@ -145,15 +141,8 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String shortName, int startNumber, int count) {
-        if (conditions == null || conditions.isEmpty()) {
-            return findByShortNameLike(shortName, startNumber, count);
-        }
-        Set<ObjectId> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
-        String shortNameTemplate = getShortNameTemplate(shortName);
-        List<Airfoil> airfoils = daoAirfoil.findDistinctAirfoilByCharacteristics_idInAndShortNameRegex(ids, shortNameTemplate, new PageRequest(startNumber, count));
-        generateFiles(airfoils);
-        return converter.airfoilToAirfoilDto(airfoils);
+    public List<AirfoilDTO> searchAirfoils(String shortName, int startNumber, int count) {
+        return findByShortNameLike(shortName, startNumber, count);
     }
 
     @Override
@@ -185,13 +174,8 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public int countSearchAirfoil(List<Condition> conditions, String shortName) {
-        if (conditions == null || conditions.isEmpty()) {
-            return countByShortNameLike(shortName);
-        }
-        Set<ObjectId> ids = daoCharacteristics.findCharacteristicsByTemplate(filter.toQuery(conditions));
-        String shortNameTemplate = getShortNameTemplate(shortName);
-        return daoAirfoil.countDistinctAirfoilByCharacteristics_idInAndShortNameRegex(ids, shortNameTemplate);
+    public int countSearchAirfoil(String shortName) {
+        return countByShortNameLike(shortName);
     }
 
     @Override
@@ -209,23 +193,6 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
 
-    private void addMenuItemForNewAirfoil(Airfoil airfoil) {
-        if (daoMenu.findMenuByItemsContains(converter.prefixToMenuItem(airfoil.getPrefix())) == null) {
-            List<Menu> allMenu = daoMenu.findAll();
-            if (allMenu.isEmpty()) {
-                allMenu.add(Menu.builder().header(propertiesHandler.getProperty("menu_Header")).items(new ArrayList<>()).build());
-            }
-            for (Menu menu : allMenu) {
-                if (menu.getHeader().equals(propertiesHandler.getProperty("menu_Header"))) {
-                    MenuItem menuItem = converter.prefixToMenuItem(airfoil.getPrefix());
-                    menu.getItems().add(menuItem);
-                    break;
-                }
-            }
-            daoMenu.save(allMenu);
-        }
-    }
-
     private Airfoil getAirfoilByAirfoilEdit(AirfoilEdit airfoilEdit) {
         Airfoil airfoilById = getAirfoilByShortName(airfoilEdit.getShortName());
         Set<Characteristics> characteristicsSet = airfoilEdit.getData().stream().map(data
@@ -241,13 +208,6 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
                 .characteristics(characteristicsSet).build();
     }
 
-    @Override
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Menu> getMenu() {
-        List<Menu> allMenu = daoMenu.findAll();
-        allMenu.forEach(menu -> menu.getItems().sort(Comparator.comparingInt(o -> o.getUrl().charAt(0))));
-        return allMenu;
-    }
 
     @PostConstruct
     public void init() {

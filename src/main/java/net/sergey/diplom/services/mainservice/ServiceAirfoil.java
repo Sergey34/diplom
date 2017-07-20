@@ -1,7 +1,6 @@
 package net.sergey.diplom.services.mainservice;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.dto.Condition;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
@@ -12,8 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface ServiceAirfoil {
-
-    List<Menu> getMenu();
 
     List<AirfoilDTO> getAirfoilsDtoByPrefix(char prefix, int startNumber, int count);
 
@@ -31,13 +28,13 @@ public interface ServiceAirfoil {
 
     Message clearAll();
 
-    List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String name, int startNumber, int count);
+    List<AirfoilDTO> searchAirfoils(String name, int startNumber, int count);
 
     List<AirfoilDTO> findByShortNameLike(String shortName, int startNumber, int count);
 
     int countByShortNameLike(String shortName);
 
-    int countSearchAirfoil(List<Condition> conditions, String shortName);
+    int countSearchAirfoil(String shortName);
 
     List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String template);
 }
