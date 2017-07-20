@@ -6,6 +6,7 @@ import net.sergey.diplom.domain.menu.MenuItem;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
+import net.sergey.diplom.dto.airfoil.AirfoilEdit;
 import net.sergey.diplom.dto.airfoil.CharacteristicsDto;
 import net.sergey.diplom.dto.user.UserDto;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("WeakerAccess")
 @Component
@@ -107,5 +109,19 @@ public class Converter {
 
     public MenuItem prefixToMenuItem(char prefix) {
         return MenuItem.builder().name(String.valueOf(prefix)).url(String.valueOf(prefix)).build();
+    }
+
+    public Airfoil getAirfoilByAirfoilEdit(AirfoilEdit airfoilEdit, Airfoil airfoilById) {
+        Set<Characteristics> characteristicsSet = airfoilEdit.getData().stream().map(data
+                -> Characteristics.builder().coordinatesStl(data.getData()).fileName(data.getFileName())
+                .renolds(data.getReynolds()).nCrit(data.getNCrit()).maxClCd(data.getMaxClCd()).alpha(data.getAlpha()).build()).collect(Collectors.toSet());
+        return Airfoil.builder()
+                .id(airfoilById != null ? airfoilById.getId() : null)
+                .name(airfoilEdit.getAirfoilName())
+                .shortName(airfoilEdit.getShortName())
+                .coordView(airfoilEdit.getViewCsv())
+                .description(airfoilEdit.getDetails())
+                .prefix(airfoilEdit.getShortName().toUpperCase().charAt(0))
+                .characteristics(characteristicsSet).build();
     }
 }

@@ -48,17 +48,21 @@ public class BuilderGraphs {
 
     }
 
-    public void draw(final Airfoil airfoil, List<String> checkedList, String dir) throws Exception {
+    public void draw(final Airfoil airfoil, List<String> checkedList, String dir) {
         String directory = this.storageService.getRootLocation() + "/chartTemp/" + dir;
-        Files.createDirectory(Paths.get(directory));
-        imageHandler.put("chartClCd", new ImageHandler("Cl", "Cd", airfoil.getShortName(), new SimpleStyle(), directory));
-        imageHandler.put("chartClAlpha", new ImageHandler("Cl", "Alpha", airfoil.getShortName(), new SimpleStyle(), directory));
-        imageHandler.put("chartClCdAlpha", new ImageHandler("Cl div Cd", "Alpha", airfoil.getShortName(), new SimpleStyle(), directory));
-        imageHandler.put("chartCdAlpha", new ImageHandler("Cd", "Alpha", airfoil.getShortName(), new SimpleStyle(), directory));
-        imageHandler.put("chartCmAlpha", new ImageHandler("Cm", "Alpha", airfoil.getShortName(), new SimpleStyle(), directory));
+        try {
+            Files.createDirectory(Paths.get(directory));
+            imageHandler.put("chartClCd", new ImageHandler("Cl", "Cd", airfoil.getShortName(), new SimpleStyle(), directory));
+            imageHandler.put("chartClAlpha", new ImageHandler("Cl", "Alpha", airfoil.getShortName(), new SimpleStyle(), directory));
+            imageHandler.put("chartClCdAlpha", new ImageHandler("Cl div Cd", "Alpha", airfoil.getShortName(), new SimpleStyle(), directory));
+            imageHandler.put("chartCdAlpha", new ImageHandler("Cd", "Alpha", airfoil.getShortName(), new SimpleStyle(), directory));
+            imageHandler.put("chartCmAlpha", new ImageHandler("Cm", "Alpha", airfoil.getShortName(), new SimpleStyle(), directory));
 
-        fillXYChart(airfoil, checkedList);
-        executorService.invokeAll(imageHandler.values());
+            fillXYChart(airfoil, checkedList);
+            executorService.invokeAll(imageHandler.values());
+        } catch (InterruptedException | IOException e) {
+            log.warn("не удалось нарисовать ", e);
+        }
     }
 
     private void fillXYChart(final Airfoil airfoil, List<String> checkedList) {

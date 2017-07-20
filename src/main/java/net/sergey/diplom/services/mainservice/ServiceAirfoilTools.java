@@ -41,17 +41,16 @@ import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static net.sergey.diplom.dto.messages.Message.*;
+import static net.sergey.diplom.dto.messages.Message.SC_NOT_ACCEPTABLE;
+import static net.sergey.diplom.dto.messages.Message.SC_OK;
 
 @Slf4j
 @Service
 public class ServiceAirfoilTools implements ServiceAirfoil {
-    private static final Message ADD_AIRFOIL_CONFLICT = new Message("Ошибка при сохранени информации о профиле, возможно Airfoil с таким именем уже существует, Выберите другое имя", SC_CONFLICT);
     private static final Message EMPTY_AIRFOIL_SHORT_NAME = new Message("Ошибка при добавлении в базу нового airfoil. Короткое имя профиля не должно быть пустым", SC_NOT_ACCEPTABLE);
     private static final Message ASS_SUCCESS = new Message("Airfoil успешно добален / обновлен", SC_OK);
     private static final Message DONE = new Message("done", SC_OK);
-    private static final List<String> CHART_NAMES =
-            Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
+    private static final List<String> CHART_NAMES = Arrays.asList("Cl v Cd", "Cl v Alpha", "Cd v Alpha", "Cm v Alpha", "Cl div Cd v Alpha");
     private final ParseFileScv parseFileScv;
     private final PropertiesHandler propertiesHandler;
     private final Converter converter;
@@ -103,11 +102,8 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             log.debug("airfoil не добавлен/обновлен - Короткое имя профиля не должно быть пустым");
             return EMPTY_AIRFOIL_SHORT_NAME;
         }
-        Airfoil airfoil = getAirfoilByAirfoilEdit(airfoilEdit);
-        if (add(airfoil) != null) {
-            storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
-            return ADD_AIRFOIL_CONFLICT;
-        }
+        Airfoil airfoil = converter.getAirfoilByAirfoilEdit(airfoilEdit, getAirfoilByShortName(airfoilEdit.getShortName()));
+        add(airfoil);
         return ASS_SUCCESS;
     }
 
@@ -187,23 +183,6 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         return converter.airfoilToAirfoilDto(airfoils);
     }
 
-
-    private Airfoil getAirfoilByAirfoilEdit(AirfoilEdit airfoilEdit) {
-        Airfoil airfoilById = getAirfoilByShortName(airfoilEdit.getShortName());
-        Set<Characteristics> characteristicsSet = airfoilEdit.getData().stream().map(data
-                -> Characteristics.builder().coordinatesStl(data.getData()).fileName(data.getFileName())
-                .renolds(data.getReynolds()).nCrit(data.getNCrit()).maxClCd(data.getMaxClCd()).alpha(data.getAlpha()).build()).collect(Collectors.toSet());
-        return Airfoil.builder()
-                .id(airfoilById != null ? airfoilById.getId() : null)
-                .name(airfoilEdit.getAirfoilName())
-                .shortName(airfoilEdit.getShortName())
-                .coordView(airfoilEdit.getViewCsv())
-                .description(airfoilEdit.getDetails())
-                .prefix(airfoilEdit.getShortName().toUpperCase().charAt(0))
-                .characteristics(characteristicsSet).build();
-    }
-
-
     @PostConstruct
     public void init() {
         try {
@@ -262,20 +241,12 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     public List<String> updateGraph(String shortName, List<String> checkedList) {
         Airfoil airfoilResult = daoAirfoil.findOneByShortName(shortName);
         String dir = getDirectory();
-        Optional.ofNullable(airfoilResult).ifPresent(airfoil1 -> drawGraphs(checkedList, airfoil1, dir));
+        Optional.ofNullable(airfoilResult).ifPresent(airfoil1 -> getBuilderGraphs().draw(airfoil1, checkedList, dir));
         return CHART_NAMES.stream().map(chartName -> "/files/chartTemp/" + dir + shortName + chartName + ".png").collect(Collectors.toList());
     }
 
     private String getDirectory() {
         return "/" + System.currentTimeMillis() + "/";
-    }
-
-    private void drawGraphs(List<String> checkedList, Airfoil airfoil1, String dir) {
-        try {
-            getBuilderGraphs().draw(airfoil1, checkedList, dir);
-        } catch (Exception e) {
-            log.warn("Ошибка при обработке файловк с координатами", e);
-        }
     }
 
     @Lookup
@@ -291,7 +262,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
             throw new EmptyResultDataAccessException("не найден профиль " + airfoilId, 1);
         }
         String directory = getDirectory();
-        drawGraphs(null, airfoil, directory);
+        getBuilderGraphs().draw(airfoil, null, directory);
         List<String> stlFileNames = stlGenerator.generate(airfoil.getShortName(), airfoil.getCoordView());
         drawViewAirfoil(airfoil);
         return converter.airfoilToAirfoilDetail(airfoil, ServiceAirfoilTools.CHART_NAMES, stlFileNames, directory);
@@ -312,11 +283,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         fillListXListY(x, y, airfoil.getCoordView().split("\n"));
         String directory = storageService.getRootLocation() + "/airfoil_img/";
         ImageHandler imageHandler = new ImageHandler(airfoil.getShortName(), new Xy(x, y, " "), new MinimalStyle(), directory);
-        try {
-            imageHandler.draw();
-        } catch (Exception e) {
-            log.warn("Ошибка при рисовании графиков", e);
-        }
+        imageHandler.draw();
     }
 
     private void fillEmptyFieldsOldValue(MultipartFile fileAirfoil, List<MultipartFile> files, Airfoil airfoil, Airfoil airfoil1) {
