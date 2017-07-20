@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.Collections;
@@ -41,7 +43,7 @@ public class UserService {
         return allAuthorities;
     }
 
-
+    @Transactional(propagation = Propagation.REQUIRED)
     public User addUser(UserView userView) {
         User user = User.builder()
                 .enabled(true)
@@ -59,6 +61,7 @@ public class UserService {
         }
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public UserDto getCurrentUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Boolean isLogin = authentication.isAuthenticated();

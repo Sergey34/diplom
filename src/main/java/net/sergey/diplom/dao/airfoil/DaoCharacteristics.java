@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 @Repository
-@Transactional
+@Transactional(propagation = Propagation.MANDATORY)
 public class DaoCharacteristics {
     private MongoOperations mongoOperations;
 
@@ -23,6 +24,7 @@ public class DaoCharacteristics {
         this.mongoOperations = mongoOperations;
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Set<ObjectId> findCharacteristicsByTemplate(Query query) {
         List<Characteristics> characteristicsList = mongoOperations.find(query, Characteristics.class);
         Set<ObjectId> ids = new HashSet<>();
@@ -32,6 +34,7 @@ public class DaoCharacteristics {
         return ids;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public void save(Collection<Characteristics> characteristics) {
         if (characteristics == null) {return;}
         for (Characteristics characteristic : characteristics) {

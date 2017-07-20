@@ -32,6 +32,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -85,6 +87,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
 
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public Airfoil saveAirfoil(String shortName, String name, String details, MultipartFile fileAirfoil, List<MultipartFile> files) {
         Airfoil airfoil = Airfoil.builder().name(name).description(details).shortName(shortName).prefix(shortName.toUpperCase().charAt(0)).build();
         storageService.removeFiles(airfoil.getShortName(), CHART_NAMES);
@@ -98,6 +101,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public Message saveAirfoil(AirfoilEdit airfoilEdit) {
         if (StringUtils.isEmpty(airfoilEdit.getShortName())) {
             log.debug("airfoil не добавлен/обновлен - Короткое имя профиля не должно быть пустым");
@@ -125,6 +129,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Airfoil getAirfoilByShortName(String airfoilId) {
         Airfoil airfoilById = daoAirfoil.findOneByShortName(airfoilId);
         Optional.ofNullable(airfoilById).ifPresent(this::createDatFile);
@@ -139,6 +144,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String shortName, int startNumber, int count) {
         if (conditions == null || conditions.isEmpty()) {
             return findByShortNameLike(shortName, startNumber, count);
@@ -151,6 +157,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<AirfoilDTO> findByShortNameLike(String shortName, int startNumber, int count) {
         String shortNameTemplate = getShortNameTemplate(shortName);
         List<Airfoil> airfoils = daoAirfoil.findByShortNameRegex(shortNameTemplate, new PageRequest(startNumber, count));
@@ -166,6 +173,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public int countByShortNameLike(String shortName) {
         String shortNameTemplate = getShortNameTemplate(shortName);
         return daoAirfoil.countByShortNameRegex(shortNameTemplate);
@@ -176,6 +184,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public int countSearchAirfoil(List<Condition> conditions, String shortName) {
         if (conditions == null || conditions.isEmpty()) {
             return countByShortNameLike(shortName);
@@ -186,6 +195,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<AirfoilDTO> searchAirfoils(List<Condition> conditions, String template) {
         if (conditions == null || conditions.isEmpty()) {
             return findByShortNameLike(template, 0, Integer.MAX_VALUE);
@@ -197,6 +207,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
         generateFiles(airfoils);
         return converter.airfoilToAirfoilDto(airfoils);
     }
+
 
     private void addMenuItemForNewAirfoil(Airfoil airfoil) {
         if (daoMenu.findMenuByItemsContains(converter.prefixToMenuItem(airfoil.getPrefix())) == null) {
@@ -231,6 +242,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Menu> getMenu() {
         List<Menu> allMenu = daoMenu.findAll();//// TODO: 15.07.17 сортировать в базе
         allMenu.forEach(menu -> menu.getItems().sort(Comparator.comparingInt(o -> o.getUrl().charAt(0))));
@@ -251,6 +263,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<AirfoilDTO> getAirfoilsDtoByPrefix(char prefix, int startNumber, int count) {
         List<Airfoil> airfoilsByPrefix = daoAirfoil.findByPrefixOrderByShortName(prefix, new PageRequest(startNumber, count));
         generateFiles(airfoilsByPrefix);
@@ -290,6 +303,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<String> updateGraph(String shortName, List<String> checkedList) {
         Airfoil airfoilResult = daoAirfoil.findOneByShortName(shortName);
         String dir = getDirectory();
@@ -366,6 +380,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     }
 
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public int getCountAirfoilByPrefix(char prefix) {
         return daoAirfoil.countByPrefix(prefix);
     }
