@@ -244,7 +244,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Menu> getMenu() {
-        List<Menu> allMenu = daoMenu.findAll();//// TODO: 15.07.17 сортировать в базе
+        List<Menu> allMenu = daoMenu.findAll();
         allMenu.forEach(menu -> menu.getItems().sort(Comparator.comparingInt(o -> o.getUrl().charAt(0))));
         return allMenu;
     }

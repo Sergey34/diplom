@@ -79,7 +79,7 @@ public class AirfoilViewController {
 
     @PostMapping(value = "/add_airfoil")
     public String addAirfoil(Map<String, Object> model, @RequestParam("files") List<MultipartFile> files,
-                             @RequestParam("name") String name, @RequestParam("ShortName") String shortName,
+                             @RequestParam("name") String name, @RequestParam("shortName") String shortName,
                              @RequestParam("Details") String details, @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
         Airfoil airfoil = serviceAirfoil.saveAirfoil(shortName, name, details, fileAirfoil, files);
         if (airfoil != null) {
