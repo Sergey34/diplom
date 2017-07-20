@@ -49,7 +49,7 @@ public class UserService {
                 .enabled(true)
                 .password(new BCryptPasswordEncoder().encode(userView.getPassword()))
                 .userName(userView.getName())
-                .authorities(userView.getRoles().stream().map(s -> Authorities.builder().authority(s).username(userView.getName()).build()).collect(Collectors.toList()))
+                .authorities(userView.getRoles().stream().map(s -> Authorities.builder().authority(s).build()).collect(Collectors.toList()))
                 .build();
         try {
             daoUser.save(user);
@@ -80,7 +80,7 @@ public class UserService {
             user.setUserName("admin");
             String password = new BCryptPasswordEncoder().encode("mex_mat");
             user.setPassword(password);
-            Authorities adminRole = new Authorities("ROLE_ADMIN", "ROLE_ADMIN");
+            Authorities adminRole = new Authorities("ROLE_ADMIN");
             user.setAuthorities(Collections.singletonList(adminRole));
             daoUser.save(user);
         }

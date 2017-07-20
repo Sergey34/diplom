@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -23,5 +22,5 @@ public interface DaoMenu extends CrudRepository<Menu, ObjectId>, PagingAndSortin
     Menu findMenuByItemsContains(MenuItem url);
 
     @Transactional(propagation = Propagation.REQUIRED)
-    Collection<Menu> save(Collection<Menu> iterable);
+    <S extends Menu> Iterable<S> save(Iterable<S> iterable);
 }

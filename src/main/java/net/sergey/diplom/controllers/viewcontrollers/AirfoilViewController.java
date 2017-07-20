@@ -1,37 +1,34 @@
 package net.sergey.diplom.controllers.viewcontrollers;
 
 import net.sergey.diplom.domain.airfoil.Airfoil;
-import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.dto.Condition;
 import net.sergey.diplom.dto.airfoil.AirfoilDTO;
 import net.sergey.diplom.dto.airfoil.AirfoilDetail;
 import net.sergey.diplom.dto.airfoil.AirfoilEdit;
 import net.sergey.diplom.dto.messages.Message;
-import net.sergey.diplom.dto.user.UserDto;
+import net.sergey.diplom.services.mainservice.MenuService;
 import net.sergey.diplom.services.mainservice.ServiceAirfoil;
 import net.sergey.diplom.services.usermanagerservice.UserService;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Controller
-public class AirfoilViewController {
+public class AirfoilViewController extends AbstractController {
     private static final int COUNT_ON_PAGE = 21;
     private final ServiceAirfoil serviceAirfoil;
-    private final UserService userService;
+
 
     @Autowired
-    public AirfoilViewController(ServiceAirfoil serviceAirfoil, UserService userService) {
+    public AirfoilViewController(ServiceAirfoil serviceAirfoil, UserService userService, MenuService menuService) {
+        super(menuService, userService);
         this.serviceAirfoil = serviceAirfoil;
-        this.userService = userService;
     }
 
     @GetMapping({"/airfoils/{prefix}/{page}", "/airfoils", "/airfoils/{prefix}", "/"})
@@ -79,7 +76,7 @@ public class AirfoilViewController {
 
     @PostMapping(value = "/add_airfoil")
     public String addAirfoil(Map<String, Object> model, @RequestParam("files") List<MultipartFile> files,
-                             @RequestParam("name") String name, @RequestParam("ShortName") String shortName,
+                             @RequestParam("name") String name, @RequestParam("shortName") String shortName,
                              @RequestParam("Details") String details, @RequestParam("fileAirfoil") MultipartFile fileAirfoil) {
         Airfoil airfoil = serviceAirfoil.saveAirfoil(shortName, name, details, fileAirfoil, files);
         if (airfoil != null) {
@@ -104,8 +101,8 @@ public class AirfoilViewController {
                                  @PathVariable(value = "page", required = false) Integer page) {
         fillMandatoryData(model);
         page = Optional.ofNullable(page).orElse(0);
-        List<AirfoilDTO> airfoils = serviceAirfoil.searchAirfoils(null, template, page, COUNT_ON_PAGE);
-        int pageCount = serviceAirfoil.countSearchAirfoil(null, template);
+        List<AirfoilDTO> airfoils = serviceAirfoil.searchAirfoils(template, page, COUNT_ON_PAGE);
+        int pageCount = serviceAirfoil.countSearchAirfoil(template);
         model.put("airfoils", airfoils);
         model.put("url", "/search/");
         model.put("currentPage", page);
@@ -127,30 +124,9 @@ public class AirfoilViewController {
         return "airfoils";
     }
 
-    private List<Condition> getCondition(Map<String, String[]> parameterMap) {
-        String[] values = parameterMap.get("value");
-        String[] labels = parameterMap.get("label");
-        String[] actions = parameterMap.get("action");
-        List<Condition> conditions = new ArrayList<>();
-        for (int i = 0; i < labels.length; i++) {
-            if (!StringUtils.isEmpty(values[i])) {
-                conditions.add(Condition.builder().action(actions[i]).label(labels[i]).value(Double.parseDouble(values[i])).build());
-            }
-        }
-        return conditions;
-    }
-
     @ResponseBody
     @PostMapping(value = "/store_airfoil")
     public Message updateAirfoilStringCsv(@RequestBody AirfoilEdit airfoilEdit) {
         return serviceAirfoil.saveAirfoil(airfoilEdit);
     }
-
-    private void fillMandatoryData(Map<String, Object> model) {
-        UserDto currentUser = userService.getCurrentUserInfo();
-        List<Menu> menu = serviceAirfoil.getMenu();
-        model.put("user", currentUser);
-        model.put("menu", menu);
-    }
-
 }

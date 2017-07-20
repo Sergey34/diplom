@@ -1,10 +1,9 @@
 package net.sergey.diplom.controllers.viewcontrollers;
 
-import net.sergey.diplom.domain.menu.Menu;
 import net.sergey.diplom.domain.user.User;
 import net.sergey.diplom.dto.messages.Message;
-import net.sergey.diplom.dto.user.UserDto;
 import net.sergey.diplom.dto.user.UserView;
+import net.sergey.diplom.services.mainservice.MenuService;
 import net.sergey.diplom.services.mainservice.ServiceAirfoil;
 import net.sergey.diplom.services.parser.ParserServiceAirfoilTools;
 import net.sergey.diplom.services.usermanagerservice.UserService;
@@ -20,15 +19,15 @@ import java.util.concurrent.Future;
 import static net.sergey.diplom.dto.messages.Message.SC_FORBIDDEN;
 
 @Controller
-public class OtherViewController {
+public class OtherViewController extends AbstractController {
     private final ServiceAirfoil serviceAirfoil;
-    private final UserService userService;
     private final ParserServiceAirfoilTools parserService;
 
+
     @Autowired
-    public OtherViewController(ServiceAirfoil serviceAirfoil, UserService userService, ParserServiceAirfoilTools parserService) {
+    public OtherViewController(ServiceAirfoil serviceAirfoil, UserService userService, ParserServiceAirfoilTools parserService, MenuService menuService) {
+        super(menuService, userService);
         this.serviceAirfoil = serviceAirfoil;
-        this.userService = userService;
         this.parserService = parserService;
     }
 
@@ -75,12 +74,6 @@ public class OtherViewController {
         return "update_database";
     }
 
-    private void fillMandatoryData(Map<String, Object> model) {
-        UserDto currentUser = userService.getCurrentUserInfo();
-        List<Menu> menu = serviceAirfoil.getMenu();
-        model.put("user", currentUser);
-        model.put("menu", menu);
-    }
 
     @ResponseBody
     @RequestMapping(value = "/init", method = RequestMethod.GET)
