@@ -10,8 +10,9 @@ import net.sergey.diplom.dto.messages.MessageError;
 import net.sergey.diplom.services.parser.consts.Constant;
 import net.sergey.diplom.services.properties.PropertiesHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Lookup;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -33,7 +34,6 @@ import static net.sergey.diplom.dto.messages.Message.SC_OK;
 public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
     private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private final Constant constants;
-    private final ApplicationContext applicationContext;
 
     private final PropertiesHandler propertiesHandler;
     private final StringHandler stringHandler;
@@ -47,10 +47,8 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
 
 
     @Autowired
-    public ParserServiceAirfoilTools(ApplicationContext applicationContext, Constant constants,
-                                     PropertiesHandler propertiesHandler, StringHandler stringHandler,
-                                     ParserMenu parseMenu, DaoMenu daoMenu) {
-        this.applicationContext = applicationContext;
+    public ParserServiceAirfoilTools(Constant constants, PropertiesHandler propertiesHandler, StringHandler stringHandler,
+                                     @Qualifier("parser_menu_script") ParserMenu parseMenu, DaoMenu daoMenu) {
         this.constants = constants;
         this.propertiesHandler = propertiesHandler;
         this.stringHandler = stringHandler;
@@ -71,7 +69,11 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
         }
         constants.initConst();
         List<Menu> menu = parseMenu.parse(getMenuItemsInDB());
-        daoMenu.save(menu);
+        try {
+            daoMenu.save(menu);
+        } catch (Exception e) {
+            log.warn(e.getMessage(), e);
+        }
         getAirfoilsByMenuList(menu.get(0).getItems());
     }
 
@@ -88,13 +90,18 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
     private void getAirfoilsByMenuList(Collection<MenuItem> menuItems) throws InterruptedException, ExecutionException {
         Collection<Callable<Void>> futureList = new ArrayList<>();
         for (MenuItem menuItem : menuItems) {
-            ParserAirfoil parserAirfoil = applicationContext.getBean(ParserAirfoil.class);
-            parserAirfoil.setPrefix(menuItem.getUrl());
-            futureList.add(parserAirfoil);
+            ParserAirfoil parserAirfoilImpl = getParserAirfoil();
+            parserAirfoilImpl.setPrefix(menuItem.getUrl());
+            futureList.add(parserAirfoilImpl);
         }
         for (Future<Void> voidFuture : executorService.invokeAll(futureList)) {
             voidFuture.get();
         }
+    }
+
+    @Lookup("parser_airfoil_script")
+    ParserAirfoil getParserAirfoil() {
+        return null;
     }
 
     @Override
@@ -132,7 +139,7 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
 
     private void stop() {
         executorService.shutdownNow();
-        ParserAirfoil.setFinish();
+        getParserAirfoil().setFinish();
         try {
             executorService.awaitTermination(60, TimeUnit.SECONDS);
         } catch (InterruptedException e) {

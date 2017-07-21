@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:lang="http://www.springframework.org/schema/lang" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd">
+
+
+    <beans>
+        <lang:groovy id="parser_menu_script"
+                     refresh-check-delay="5000"
+                     script-source="classpath:net/sergey/diplom/ParserMenuScript.groovy">
+        </lang:groovy>
+        <lang:groovy id="parser_airfoil_script"
+                     refresh-check-delay="5000"
+                     scope="prototype"
+                     script-source="classpath:net/sergey/diplom/ParserAirfoilScript.groovy">
+        </lang:groovy>
+    </beans>
+</beans>

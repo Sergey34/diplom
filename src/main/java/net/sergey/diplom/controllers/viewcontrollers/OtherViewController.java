@@ -5,7 +5,7 @@ import net.sergey.diplom.dto.messages.Message;
 import net.sergey.diplom.dto.user.UserView;
 import net.sergey.diplom.services.mainservice.MenuService;
 import net.sergey.diplom.services.mainservice.ServiceAirfoil;
-import net.sergey.diplom.services.parser.ParserServiceAirfoilTools;
+import net.sergey.diplom.services.parser.Parser;
 import net.sergey.diplom.services.usermanagerservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -21,11 +21,11 @@ import static net.sergey.diplom.dto.messages.Message.SC_FORBIDDEN;
 @Controller
 public class OtherViewController extends AbstractController {
     private final ServiceAirfoil serviceAirfoil;
-    private final ParserServiceAirfoilTools parserService;
+    private final Parser parserService;
 
 
     @Autowired
-    public OtherViewController(ServiceAirfoil serviceAirfoil, UserService userService, ParserServiceAirfoilTools parserService, MenuService menuService) {
+    public OtherViewController(ServiceAirfoil serviceAirfoil, UserService userService, MenuService menuService, Parser parserService) {
         super(menuService, userService);
         this.serviceAirfoil = serviceAirfoil;
         this.parserService = parserService;

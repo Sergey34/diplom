@@ -17,7 +17,7 @@ import java.util.Locale;
 
 @Slf4j
 @Component
-public class AirfoilStlGenerator {
+public abstract class AirfoilStlGenerator {
     private static final String REGEX = ",";
     private static final int b = 100;
     private static final StringBuilder FILE_HEADER = new StringBuilder();
@@ -30,21 +30,12 @@ public class AirfoilStlGenerator {
         FILE_FOOTER.append("\t\t\t],\n\t\tconvexity=10);\n\t}\n}\n\nairfoil(10, 0.2);\n");
     }
 
-    private final List<String> beanNames;
-    private final ApplicationContext context;
-    private final FileSystemStorageService storageService;
+    @Value("#{'${interpolation}'.split(', ?')}")
+    private List<String> beanNames;
 
     @Autowired
-    public AirfoilStlGenerator(ApplicationContext context, @Value("#{'${interpolation}'.split(', ?')}") List<String> beanNames, FileSystemStorageService storageService) {
-        this.context = context;
-        this.storageService = storageService;
-        if (!allBeanNameExist(context, beanNames)) {
-            beanNames.clear();
-            beanNames.add("cube");
-        }
-        this.beanNames = beanNames;
+    private FileSystemStorageService storageService;
 
-    }
 
     private boolean allBeanNameExist(ApplicationContext context, List<String> beanNames) {
         for (String beanName : beanNames) {
@@ -71,10 +62,7 @@ public class AirfoilStlGenerator {
             }
         }
         List<String> fileNames = new ArrayList<>();
-        List<Interpolation> interpolators = new ArrayList<>();
-        for (String beanName : beanNames) {
-            interpolators.add((Interpolation) context.getBean(beanName));
-        }
+        List<Interpolation> interpolators = getInterpolators(beanNames);
 
         for (Interpolation interpolator : interpolators) {
             List<Point2D> spline = interpolator.buildSplineForLists(x, y).applySpline();
@@ -95,4 +83,6 @@ public class AirfoilStlGenerator {
         }
         return fileNames;
     }
+
+    protected abstract List<Interpolation> getInterpolators(List<String> beanName);
 }

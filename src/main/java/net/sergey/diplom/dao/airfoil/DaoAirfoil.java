@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -26,17 +25,14 @@ public interface DaoAirfoil extends CrudRepository<Airfoil, ObjectId>, PagingAnd
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     Airfoil findOneByShortName(@Param("shortName") String shortName);
 
-    @RestResource(path = "/byCharacteristicsIdAndTemplate")
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    List<Airfoil> findDistinctAirfoilByCharacteristics_idInAndShortNameRegex(@Param("Characteristics_id") Set<ObjectId> characteristics,
-                                                                             @Param("template") String shortName, Pageable pageRequest);
-
     @RestResource(path = "/template")
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     List<Airfoil> findByShortNameRegex(@Param("template") String shortName, Pageable pageRequest);
 
+    @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    Iterable<Airfoil> save(Collection<Airfoil> airfoils);
+    <S extends Airfoil> Iterable<S> save(Iterable<S> iterable);
+
 
     @RestResource(exported = false)
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -45,10 +41,6 @@ public interface DaoAirfoil extends CrudRepository<Airfoil, ObjectId>, PagingAnd
     @RestResource(exported = false)
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     int countByShortNameRegex(String shortNameTemplate);
-
-    @RestResource(exported = false)
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    int countDistinctAirfoilByCharacteristics_idInAndShortNameRegex(Set<ObjectId> characteristics, String shortNameTemplate);
 
     @RestResource(exported = false)
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
