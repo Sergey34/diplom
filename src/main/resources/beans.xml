@@ -7,12 +7,18 @@
     <beans>
         <lang:groovy id="parser_menu_script"
                      refresh-check-delay="5000"
-                     script-source="file:scripts/ParserMenuScript.groovy">
+                     script-source="classpath:ParserMenuScript.groovy">
         </lang:groovy>
         <lang:groovy id="parser_airfoil_script"
                      refresh-check-delay="5000"
                      scope="prototype"
-                     script-source="file:scripts/ParserAirfoilScript.groovy">
+                     script-source="classpath:ParserAirfoilScript.groovy">
         </lang:groovy>
+
+        <alias name="parser_airfoil_script" alias="parser_airfoil"/>
+        <!--<alias name="parser_airfoil_impl" alias="parser_airfoil"/>-->
+
+        <alias name="parser_menu_script" alias="parser_menu"/>
+        <!--<alias name="parser_menu_impl" alias="parser_menu"/>-->
     </beans>
 </beans>

@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 import static net.sergey.diplom.services.parser.consts.ConstantApi.GET_COORDINATE_VIEW;
 
 @Scope("prototype")
-@Component
+@Component("parser_airfoil_impl")
 @Slf4j
 public class ParserAirfoilImpl implements ParserAirfoil {
     private static final String ONCLICK = "onclick";

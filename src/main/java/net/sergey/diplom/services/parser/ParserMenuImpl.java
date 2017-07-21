@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Component
+@Component("parser_menu_impl")
 public class ParserMenuImpl implements ParserMenu {
     private final Constant constants;
     private final ConnectionManager connectionManager;

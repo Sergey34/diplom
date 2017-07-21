@@ -48,7 +48,7 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
 
     @Autowired
     public ParserServiceAirfoilTools(Constant constants, PropertiesHandler propertiesHandler, StringHandler stringHandler,
-                                     @Qualifier("parser_menu_script") ParserMenu parseMenu, DaoMenu daoMenu) {
+                                     @Qualifier("parser_menu") ParserMenu parseMenu, DaoMenu daoMenu) {
         this.constants = constants;
         this.propertiesHandler = propertiesHandler;
         this.stringHandler = stringHandler;
@@ -99,7 +99,7 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
         }
     }
 
-    @Lookup("parser_airfoil_script")
+    @Lookup("parser_airfoil")
     ParserAirfoil getParserAirfoil() {
         return null;
     }
