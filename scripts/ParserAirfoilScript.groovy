@@ -1,4 +1,4 @@
-package net.sergey.diplom
+
 
 import groovy.util.logging.Slf4j
 import net.sergey.diplom.dao.airfoil.DaoAirfoil
