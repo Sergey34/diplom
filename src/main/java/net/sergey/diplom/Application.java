@@ -1,10 +1,12 @@
 package net.sergey.diplom;
 
+import net.sergey.diplom.services.parser.ParserAirfoil;
 import net.sergey.diplom.services.stlgenerators.AirfoilStlGenerator;
 import net.sergey.diplom.services.stlgenerators.Interpolation;
 import net.sergey.diplom.services.stlgenerators.bezierinterpolation.BezierInterpolation;
 import net.sergey.diplom.services.stlgenerators.cubespline.CubeSpline;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -17,14 +19,19 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
 @ComponentScan
 @Configuration
-@ImportResource("classpath:beans.xml")
+@ImportResource({"classpath:beans.xml", "file:config/beans.xml"})
 public class Application {
+    @Autowired
+    @Qualifier("parser_airfoil")
+    ParserAirfoil parserAirfoil;
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
@@ -61,6 +68,12 @@ public class Application {
     @Scope("prototype")
     public BezierInterpolation getBezierInterpolation() {
         return new BezierInterpolation();
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println(parserAirfoil.toString());
+
     }
 
     @Configuration
