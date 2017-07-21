@@ -72,7 +72,7 @@ public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
         try {
             daoMenu.save(menu);
         } catch (Exception e) {
-            log.warn(e.getMessage(), e);
+            log.warn(e.getMessage(), e);//// TODO: 21.07.17 как то обработать
         }
         getAirfoilsByMenuList(menu.get(0).getItems());
     }
