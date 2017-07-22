@@ -7,7 +7,6 @@ import net.sergey.diplom.services.mainservice.EventService
 import net.sergey.diplom.services.parser.ParseFileScv
 import net.sergey.diplom.services.parser.ParserAirfoil
 import net.sergey.diplom.services.parser.StringHandler
-import net.sergey.diplom.services.parser.consts.Constant
 import net.sergey.diplom.services.parser.consts.ConstantApi
 import net.sergey.diplom.services.parser.siteconnection.ConnectionManager
 import org.jsoup.nodes.Element
@@ -28,8 +27,8 @@ class ParserAirfoilScript implements ParserAirfoil {
     private static
     final String HTTP_M_SELIG_AE_ILLINOIS_EDU_ADS_COORD_DATABASE_HTML = "http://m-selig.ae.illinois.edu/ads/coord_database.html"
     private static volatile AtomicBoolean finish
+    public static final int TIMEOUT = 10000
     private EventService eventService
-    private Constant constants
     private ParseFileScv parseFileScv
     private ConnectionManager connectionManager
     private StringHandler stringHandler
@@ -38,11 +37,9 @@ class ParserAirfoilScript implements ParserAirfoil {
     private String prefix
 
     @Autowired
-    ParserAirfoilImpl(EventService eventService,
-                      Constant constants, @Qualifier("parser_service") ParseFileScv parseFileScv,
+    ParserAirfoilImpl(EventService eventService, @Qualifier("parser_service") ParseFileScv parseFileScv,
                       ConnectionManager connectionManager, StringHandler stringHandler, DaoAirfoil daoAirfoil, DaoCharacteristics daoCharacteristics) {
         this.eventService = eventService
-        this.constants = constants
         this.parseFileScv = parseFileScv
         this.connectionManager = connectionManager
         this.stringHandler = stringHandler
@@ -58,20 +55,24 @@ class ParserAirfoilScript implements ParserAirfoil {
 
     @Override
     Void call() throws Exception {
-        parseAirfoilByUrl(prefix)
+        try {
+            parseAirfoilByUrl(prefix)
+        } catch (Exception e) {
+            log.warn(e.getMessage(), e)
+        }
         return null
     }
 
-    private void parseAirfoilByUrl(String prefix) throws IOException {
-        String url = ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX + prefix + constants.NO
+    private void parseAirfoilByUrl(String prefix) {
+        String url = ConstantApi.GET_LIST_AIRFOIL_BY_PREFIX + prefix + '&no='
         char prefix1 = prefix.charAt(0)
-        int countPages = createIntByPattern(connectionManager.getJsoupConnect(url, constants.TIMEOUT).get().html(), constants.GET_COUNT_PAGES_PATTERN)
+        int countPages = createIntByPattern(connectionManager.getJsoupConnect(url, TIMEOUT).get().html(), Pattern.compile('Page 1 of ([0-9]+).+'))
         for (int i = 0; i < countPages; i++) {
             if (finish.get()) {
                 return
             }
-            Elements airfoilList = connectionManager.getJsoupConnect(url + i, constants.TIMEOUT).get().body().getElementsByClass(constants.AFSEARCHRESULT).
-                    first().getElementsByTag(constants.TR)
+            Elements airfoilList = connectionManager.getJsoupConnect(url + i, TIMEOUT).get().body().getElementsByClass("afSearchResult").
+                    first().getElementsByTag("tr")
             List<Airfoil> airfoils = parsePage(prefix1, airfoilList, countPages)
             try {
                 for (Airfoil airfoil : airfoils) {
@@ -79,21 +80,21 @@ class ParserAirfoilScript implements ParserAirfoil {
                 }
                 daoAirfoil.save(airfoils)
             } catch (DuplicateKeyException ignored) {
-                log.info("уже существует")
+                log.trace("уже существует", ignored)
             }
         }
         eventService.updateProgress(prefix, 100.0)
     }
 
-    private List<Airfoil> parsePage(char prefix, Elements airfoilList, int countPages) throws IOException {
+    private List<Airfoil> parsePage(char prefix, Elements airfoilList, int countPages) {
         List<Airfoil> airfoils = new ArrayList<>()
         for (int j = 0; j < airfoilList.size(); j += 2) {
-            Elements cell12 = airfoilList.get(j).getElementsByClass(constants.CELL12)
-            if (cell12.first() == null) {
+            Elements cell12 = airfoilList.get(j).getElementsByClass("cell12")
+            if (cell12.first()) {
                 j--//фильтруем реламу
             } else {
                 String name = cell12.text()
-                String idAirfoil = stringHandler.createStringByPattern(name, constants.GET_ID_BY_FULL_NAME_PATTERN)
+                String idAirfoil = stringHandler.createStringByPattern(name, Pattern.compile('\\(([a-zA-Z0-9_-]+)\\) .*'))
                 Airfoil airfoil = parseAirfoilById(idAirfoil)
                 airfoils.add(airfoil)
                 String key = String.valueOf(prefix)
@@ -104,12 +105,9 @@ class ParserAirfoilScript implements ParserAirfoil {
         return airfoils
     }
 
-    private String parseCoordinateView(String shortName) throws IOException {
-        BufferedReader bufferedReader =
-                new BufferedReader(new InputStreamReader(new URL(GET_COORDINATE_VIEW + shortName).openStream()))
-        String line
+    private String parseCoordinateView(String shortName) {
         StringBuilder stringBuilder = new StringBuilder()
-        while ((line = bufferedReader.readLine()) != null) {
+        new BufferedReader(new InputStreamReader(new URL(GET_COORDINATE_VIEW + shortName).openStream())).eachLine { line ->
             String[] split = line.trim().split(" +")
             if (stringHandler.isDoubleStr(split[0]) && stringHandler.isDoubleStr(split[split.length - 1])) {
                 stringBuilder.append(split[0]).append(",").append(split[split.length - 1]).append('\n')
@@ -127,28 +125,29 @@ class ParserAirfoilScript implements ParserAirfoil {
     }
 
     private Set<Characteristics> downloadDetailInfo(Element detail) throws IOException {
-        Elements polar = detail.getElementsByClass(constants.POLAR)
+        Elements polar = detail.getElementsByClass("polar")
         if (polar.size() == 0) {
             return Collections.emptySet()
         }
-        polar = polar.first().getElementsByTag(constants.TR)
+        polar = polar.first().getElementsByTag("tr")
         Set<Characteristics> characteristics = new HashSet<>()
         for (Element element : polar) {
-            Element reynolds = element.getElementsByClass(constants.REYNOLDS).first()
-            Element nCrit = element.getElementsByClass(constants.N_CRIT).first()
-            Element maxClCd = element.getElementsByClass(constants.MAX_CL_CD).first()
-            Element cell7 = element.getElementsByClass(constants.CELL7).first()
-            if (cell7 != null) {
-                Elements a = cell7.getElementsByTag(constants.TEGA)
+            Element reynolds = element.getElementsByClass('cell2').first()
+            Element nCrit = element.getElementsByClass("cell3").first()
+            Element maxClCd = element.getElementsByClass("cell4").first()
+            Element cell7 = element.getElementsByClass("cell7").first()
+            if (cell7) {
+                Elements a = cell7.getElementsByTag("a")
                 if (a.size() != 0) {
-                    String fileName = stringHandler.createStringByPattern(a.attr(constants.HREF), constants.GET_FILE_NAME_BY_URL_PATTERN)
+                    String fileName = stringHandler.createStringByPattern(a.attr("href"), Pattern.compile('polar=(.+)$'))
                     URL urlFile = new URL(ConstantApi.GET_FILE_CSV + fileName)
                     log.debug("url {}{}", ConstantApi.GET_FILE_CSV, fileName)
-                    Characteristics coordinateItem = Characteristics.builder().coordinatesStl(parseFileScv.csvToString(urlFile.openStream())).fileName(fileName + constants.FILE_TYPE).build()
+                    Characteristics coordinateItem = Characteristics.builder()
+                            .coordinatesStl(parseFileScv.csvToString(urlFile.openStream())).fileName(fileName + ".csv").build()
                     coordinateItem.setRenolds(Double.parseDouble(reynolds.text().replace(",", "")))
                     coordinateItem.setNCrit(Double.parseDouble(nCrit.text()))
-                    coordinateItem.setMaxClCd(Double.parseDouble(stringHandler.createStringByPattern(maxClCd.text(), constants.GET_MAXCLCD_PATTERN)))
-                    coordinateItem.setAlpha(stringHandler.createStringByPattern(maxClCd.text(), constants.GET_ALPHA_PATTERN))
+                    coordinateItem.setMaxClCd(Double.parseDouble(stringHandler.createStringByPattern(maxClCd.text(), Pattern.compile('^(.+) at .+'))))
+                    coordinateItem.setAlpha(stringHandler.createStringByPattern(maxClCd.text(), Pattern.compile('.+ at α=(.+°)$')))
                     characteristics.add(coordinateItem)
                 }
             }
@@ -157,7 +156,7 @@ class ParserAirfoilScript implements ParserAirfoil {
     }
 
     private Airfoil parseAirfoilById(String airfoilId) throws IOException {
-        Element detail = connectionManager.getJsoupConnect(ConstantApi.GET_DETAILS + airfoilId, constants.TIMEOUT).get().getElementById("content")
+        Element detail = connectionManager.getJsoupConnect(ConstantApi.GET_DETAILS + airfoilId, TIMEOUT).get().getElementById("content")
         String name = detail.getElementsByTag("h1").get(0).text()
         String description = filterDescription(detail, airfoilId).html()
         String coordinateView = parseCoordinateView(airfoilId)
@@ -169,7 +168,7 @@ class ParserAirfoilScript implements ParserAirfoil {
     }
 
     private Element filterDescription(Element detail, String airfoilId) {
-        Element descriptionFull = detail.getElementsByClass(constants.DESCRIPTION).get(0)
+        Element descriptionFull = detail.getElementsByClass('cell1').get(0)
         for (Element a : descriptionFull.getElementsByTag("a")) {
             if ("UIUC Airfoil Characteristics Database" == a.text()) {
                 replaceUrl(a, HTTP_M_SELIG_AE_ILLINOIS_EDU_ADS_COORD_DATABASE_HTML)

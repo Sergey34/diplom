@@ -53,7 +53,7 @@ class ParserServiceAirfoilToolsScript implements ParseFileScv, Parser {
         try {
             daoMenu.save(menus)
         } catch (DuplicateKeyException e) {
-            log.info("уже существует", e)
+            log.trace("уже существует", e)
         }
         getAirfoilsByMenuList(menus.get(0).getItems())
     }
@@ -76,8 +76,12 @@ class ParserServiceAirfoilToolsScript implements ParseFileScv, Parser {
     }
 
     static void main(String[] args) {
-        def text = new File("/home//projects/ideaProjects/diplom/config/logback.xml").text
-        println text
+        String s=""
+        def result =new BufferedReader(new InputStreamReader(System.in)).eachLine { line ->
+            s+=line
+            return s
+        }
+        println result
     }
 
 
