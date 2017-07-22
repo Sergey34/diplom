@@ -1,3 +1,5 @@
+package groovy
+
 import groovy.util.logging.Slf4j
 import net.sergey.diplom.dao.menu.DaoMenu
 import net.sergey.diplom.domain.menu.Menu

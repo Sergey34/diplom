@@ -24,6 +24,10 @@
         <appender-ref ref="AIRFOIL-AUDIT"/>
         <appender-ref ref="STDOUT"/>
     </logger>
+    <logger name="groovy" level="DEBUG" additivity="false">
+        <appender-ref ref="AIRFOIL-AUDIT"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
     <logger name="org.springframework.transaction" level="TRACE"
             additivity="false">
         <appender-ref ref="AIRFOIL-AUDIT"/>
