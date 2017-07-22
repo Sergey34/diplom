@@ -8,6 +8,7 @@ import net.sergey.diplom.services.mainservice.ServiceAirfoil;
 import net.sergey.diplom.services.parser.Parser;
 import net.sergey.diplom.services.usermanagerservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,8 @@ public class OtherViewController extends AbstractController {
 
 
     @Autowired
-    public OtherViewController(ServiceAirfoil serviceAirfoil, UserService userService, MenuService menuService, Parser parserService) {
+    public OtherViewController(ServiceAirfoil serviceAirfoil, UserService userService, MenuService menuService,
+                               @Qualifier("parser_service") Parser parserService) {
         super(menuService, userService);
         this.serviceAirfoil = serviceAirfoil;
         this.parserService = parserService;

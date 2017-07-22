@@ -6,7 +6,6 @@ import net.sergey.diplom.services.storageservice.FileSystemStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.Locale;
 
 @Slf4j
-@Component
 public abstract class AirfoilStlGenerator {
     private static final String REGEX = ",";
     private static final int b = 100;

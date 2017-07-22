@@ -1,6 +1,5 @@
 package net.sergey.diplom.services.parser;
 
-
 import lombok.extern.slf4j.Slf4j;
 import net.sergey.diplom.dao.menu.DaoMenu;
 import net.sergey.diplom.domain.menu.Menu;
@@ -30,7 +29,7 @@ import static net.sergey.diplom.dto.messages.Message.SC_NOT_IMPLEMENTED;
 import static net.sergey.diplom.dto.messages.Message.SC_OK;
 
 @Slf4j
-@Component
+@Component("parser_service_airfoil_tools")
 public class ParserServiceAirfoilTools implements ParseFileScv, Parser {
     private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private final Constant constants;

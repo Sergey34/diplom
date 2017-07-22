@@ -1,5 +1,3 @@
-
-
 import groovy.util.logging.Slf4j
 import net.sergey.diplom.dao.airfoil.DaoAirfoil
 import net.sergey.diplom.dao.airfoil.DaoCharacteristics
@@ -15,6 +13,7 @@ import net.sergey.diplom.services.parser.siteconnection.ConnectionManager
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.dao.DuplicateKeyException
 
 import java.util.concurrent.atomic.AtomicBoolean
@@ -40,7 +39,7 @@ class ParserAirfoilScript implements ParserAirfoil {
 
     @Autowired
     ParserAirfoilImpl(EventService eventService,
-                      Constant constants, ParseFileScv parseFileScv,
+                      Constant constants, @Qualifier("parser_service") ParseFileScv parseFileScv,
                       ConnectionManager connectionManager, StringHandler stringHandler, DaoAirfoil daoAirfoil, DaoCharacteristics daoCharacteristics) {
         this.eventService = eventService
         this.constants = constants

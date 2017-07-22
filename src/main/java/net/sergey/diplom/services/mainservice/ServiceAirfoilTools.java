@@ -24,6 +24,7 @@ import net.sergey.diplom.services.storageservice.FileSystemStorageService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -62,7 +63,7 @@ public class ServiceAirfoilTools implements ServiceAirfoil {
     private Resource companiesXml;
 
     @Autowired
-    public ServiceAirfoilTools(ParseFileScv parseFileScv, PropertiesHandler propertiesHandler,
+    public ServiceAirfoilTools(@Qualifier("parser_service") ParseFileScv parseFileScv, PropertiesHandler propertiesHandler,
                                Converter converter, MenuService menuService, FileSystemStorageService storageService,
                                AirfoilStlGenerator stlGenerator, Filter filter, DaoAirfoil daoAirfoil, DaoCharacteristics daoCharacteristics) {
         this.parseFileScv = parseFileScv;

@@ -12,6 +12,7 @@ import net.sergey.diplom.services.parser.siteconnection.ConnectionManager;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
@@ -45,7 +46,7 @@ public class ParserAirfoilImpl implements ParserAirfoil {
 
     @Autowired
     public ParserAirfoilImpl(EventService eventService,
-                             Constant constants, ParseFileScv parseFileScv,
+                             Constant constants, @Qualifier("parser_service") ParseFileScv parseFileScv,
                              ConnectionManager connectionManager, StringHandler stringHandler, DaoAirfoil daoAirfoil, DaoCharacteristics daoCharacteristics) {
         this.eventService = eventService;
         this.constants = constants;

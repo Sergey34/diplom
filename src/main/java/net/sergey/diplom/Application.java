@@ -30,7 +30,7 @@ import java.util.List;
 public class Application {
     @Autowired
     @Qualifier("parser_airfoil")
-    ParserAirfoil parserAirfoil;
+    private ParserAirfoil parserAirfoil;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
