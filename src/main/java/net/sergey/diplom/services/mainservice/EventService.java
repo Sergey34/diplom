@@ -38,7 +38,7 @@ public class EventService {
             } catch (Exception e) {
                 emitter.complete();
                 emitters.remove(emitter);
-                log.warn("Ошибка отправки увеомления о работе парсера", e);
+                log.trace("Ошибка отправки увеомления о работе парсера", e);
             }
         }
     }

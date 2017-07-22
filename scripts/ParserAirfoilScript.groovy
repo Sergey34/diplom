@@ -90,7 +90,7 @@ class ParserAirfoilScript implements ParserAirfoil {
         List<Airfoil> airfoils = new ArrayList<>()
         for (int j = 0; j < airfoilList.size(); j += 2) {
             Elements cell12 = airfoilList.get(j).getElementsByClass("cell12")
-            if (cell12.first()) {
+            if (!cell12.first()) {
                 j--//фильтруем реламу
             } else {
                 String name = cell12.text()
@@ -168,7 +168,7 @@ class ParserAirfoilScript implements ParserAirfoil {
     }
 
     private Element filterDescription(Element detail, String airfoilId) {
-        Element descriptionFull = detail.getElementsByClass('cell1').get(0)
+        Element descriptionFull = detail.getElementsByClass("cell1").get(0)
         for (Element a : descriptionFull.getElementsByTag("a")) {
             if ("UIUC Airfoil Characteristics Database" == a.text()) {
                 replaceUrl(a, HTTP_M_SELIG_AE_ILLINOIS_EDU_ADS_COORD_DATABASE_HTML)

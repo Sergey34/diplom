@@ -1,4 +1,3 @@
-import com.mongodb.DuplicateKeyException
 import groovy.util.logging.Slf4j
 import net.sergey.diplom.dao.menu.DaoMenu
 import net.sergey.diplom.domain.menu.Menu
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationContext
 import org.springframework.core.io.Resource
+import org.springframework.dao.DuplicateKeyException
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.AsyncResult
 import org.springframework.web.multipart.MultipartFile
