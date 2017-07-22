@@ -170,7 +170,7 @@ class ParserAirfoilScript implements ParserAirfoil {
     private Element filterDescription(Element detail, String airfoilId) {
         Element descriptionFull = detail.getElementsByClass("cell1").get(0)
         for (Element a : descriptionFull.getElementsByTag("a")) {
-            if ("UIUC Airfoil Characteristics Database" == a.text()) {
+            if ("UIUC Airfoil Coordinates Database" == a.text()) {
                 replaceUrl(a, HTTP_M_SELIG_AE_ILLINOIS_EDU_ADS_COORD_DATABASE_HTML)
                 continue
             }
