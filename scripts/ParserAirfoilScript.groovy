@@ -144,10 +144,10 @@ class ParserAirfoilScript implements ParserAirfoil {
                     log.debug("url {}{}", ConstantApi.GET_FILE_CSV, fileName)
                     Characteristics coordinateItem = Characteristics.builder()
                             .coordinatesStl(parseFileScv.csvToString(urlFile.openStream())).fileName(fileName + ".csv").build()
-                    coordinateItem.setRenolds(Double.parseDouble(reynolds.text().replace(",", "")))
-                    coordinateItem.setNCrit(Double.parseDouble(nCrit.text()))
-                    coordinateItem.setMaxClCd(Double.parseDouble(stringHandler.createStringByPattern(maxClCd.text(), Pattern.compile('^(.+) at .+'))))
-                    coordinateItem.setAlpha(stringHandler.createStringByPattern(maxClCd.text(), Pattern.compile('.+ at α=(.+°)$')))
+                    coordinateItem.setRenolds(reynolds.text().replace(",", "") as double)
+                    coordinateItem.setNCrit((nCrit.text() ?: "0.0") as double)
+                    coordinateItem.setMaxClCd((maxClCd.text().find(/^[\d\.]+/) ?: "0.0") as double)
+                    coordinateItem.setAlpha(maxClCd.text().find(/\d+.\d+°/))// Pattern.compile('.+ at α=(.+°)$'))
                     characteristics.add(coordinateItem)
                 }
             }
@@ -175,7 +175,7 @@ class ParserAirfoilScript implements ParserAirfoil {
                 continue
             }
             if ("Source dat file" == a.text()) {
-                replaceUrl(a, "/files/airfoil_img/" + airfoilId + ".dat")
+                replaceUrl(a, "/files/airfoil_img/${airfoilId}.dat")
                 continue
             }
             a.remove()
