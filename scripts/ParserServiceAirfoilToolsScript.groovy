@@ -75,15 +75,6 @@ class ParserServiceAirfoilToolsScript implements ParseFileScv, Parser {
         }
     }
 
-    static void main(String[] args) {
-        String s=""
-        def result =new BufferedReader(new InputStreamReader(System.in)).eachLine { line ->
-            s+=line
-            return s
-        }
-        println result
-    }
-
 
     ParserAirfoil getParserAirfoil() {
         return applicationContext.getBean("parser_airfoil")
