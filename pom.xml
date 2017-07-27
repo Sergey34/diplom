@@ -27,6 +27,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <mainClass>net.sergey.diplom.Application</mainClass>
+                    <executable>true</executable>
                 </configuration>
             </plugin>
         </plugins>
